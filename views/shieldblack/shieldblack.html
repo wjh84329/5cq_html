@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>屏蔽管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+</head>
+<body>
+<style>
+    .layadmin-homepage-pad-ver {
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+    .layadmin-homepage-pad-img {
+        box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+    }
+</style>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">屏蔽管理</div>
+                <div class="layui-card-body">
+                    <div class="layui-card layui-form test-table-reload-btn" style="margin-bottom: 10px;">
+                        <div class="layui-inline">
+                            <input class="layui-input" name="polymerization" id="test-table-demoReload"
+                                   autocomplete="off" placeholder="快捷搜索">
+                        </div>
+                        <button class="layui-btn" data-type="reload">搜索</button>
+                        <button id="shield-button-add" shiro-event="jax:shieldblack:open-add" class="layui-btn"><i
+                                class="layui-icon">&#xe654;</i>添加
+                        </button>
+                    </div>
+                    <table class="layui-hide" id="auth-table" lay-filter="auth-table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="auth-state" hidden>
+    <button lay-event="update" shiro-event="jax:shieldblack:open-update" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe642;</i>修改
+    </button>
+    <button lay-event="remove" shiro-event="jax:shieldblack:open-remove" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe640;</i>删除
+    </button>
+</div>
+
+<!--添加-->
+<div id="submit-form-add" hidden>
+    <button class="layui-btn" shiro-event="jax:shieldblack:add" lay-submit lay-filter="submit-form-shield">立即提交</button>
+</div>
+<!--修改-->
+<div id="submit-form-update" hidden>
+    <button class="layui-btn" shiro-event="jax:shieldblack:update" lay-submit lay-filter="submit-form-shield">立即提交</button>
+</div>
+<div id="layui-shield" hidden>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form" id="layui-form-shield" lay-filter="component-form-group">
+                    <input type="hidden" id="id" name="id">
+                    <div class="layui-form-item">
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">私服域名</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="url" name="url" placeholder="请输入域名" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">失效方式</label>
+                            <div class="layui-input-inline">
+                                <select id="reason" name="reason" lay-filter="reason">
+                                    <option value="1">永不失效</option>
+                                    <option value="2">发布同url的广告后失效</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-input-block">
+                            <!--操作-->
+                            <div class="layui-footer" id="submit-form-shield-button" style="left: 0;">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../../layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index', //主入口模块
+    }).use(['index', 'table', 'formgs', 'form', 'security', 'layer', 'upload'], function () {
+        var $ = layui.jquery,
+            admin = layui.admin,
+            table = layui.table,
+            formgs = layui.formgs,
+            form = layui.form,//控制添加修改（同一个弹出层）关闭弹出层的索引
+            upload = layui.upload,
+            layer = layui.layer, closeindex;
+
+        table.render({
+            elem: '#auth-table'
+            , url: layui.setter.url + 'shieldblack/select'
+            , title: '屏蔽列表'
+            , cols: [[
+                {field: 'url', title: '私服域名'},
+                {field: 'reason', title: '失效方式', templet: function(d) {
+                    var text = d.reason == "1" ? '永不失效' : '发布同url的广告后失效';
+                    if (d.reason == "2" && d.state != 1) {
+                        return '<span style="text-decoration: line-through;" title="' + (d.reasonstate || '') + '">' + text + '</span>';
+                    }
+                    return text;
+                }, width: 160},
+                {field: 'create_date', title: '创建时间', width: 160},
+                {field: 'update_date', title: '修改时间', width: 160},
+                {fixed: 'right', title: '操作', toolbar: '#auth-state', width: 160}
+            ]]
+            , page: true
+        });
+
+
+        table.on('tool(auth-table)', function (obj) {
+            if (obj.event == 'update') {
+                layer.open({
+                    type: 1,//弹窗类型
+                    area: ['60', '1'],
+                    title: ('【' + obj.data.url + '】'),//题目
+                    shadeClose: false,
+                    content: $("#layui-shield"),//打开的内容
+                    success: function (index, layero) {
+                        formgs.reset('layui-shield');
+                        formgs.get("layui-shield", obj.data);
+                        $("#submit-form-shield-button").html($("#submit-form-update").html());
+                        form.render();
+                        closeindex = layero;
+
+                    },
+                });
+            } else if (obj.event == "remove") {
+                layer.confirm('确定要取消屏蔽【' + obj.data.url + '】这个地址吗？', function (index) {
+                    admin.req({
+                        url: layui.setter.url + "shieldblack/remove/" + obj.data.id
+                    }).done(function (res) {
+                        layer.close(index);
+                        table.reload('auth-table');
+                        layer.msg(res.msg);
+                        $.get({url:layui.setter.url + "ranking/test1"})
+                    })
+                });
+            }
+        })
+
+
+        $('.test-table-reload-btn .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+        //查询
+        var $ = layui.$, active = {
+            reload: function () {
+                var demoReload = $('#test-table-demoReload');
+                table.reload('auth-table', {
+                    page: {curr: 1}//重新从第 1 页开始
+                    , where: {name: demoReload.val()}
+                });
+            },
+        };
+        $("#shield-button-add").on("click", function () {
+            layer.open({
+                type: 1,
+                area: ['60', '1'],
+                title: ("新增屏蔽"),
+                shadeClose: false,
+                content: $("#layui-shield"),
+                success: function (index, layero) {
+                    closeindex = layero;
+                    $("#submit-form-shield-button").html($("#submit-form-add").html());
+                    formgs.reset('layui-shield');
+                    // 默认选择"永不失效"
+                    $("#reason").val(1);
+                    form.render();
+                },
+            });
+        })
+
+        //添加/修改提交
+        form.on('submit(submit-form-shield)', function (data) {
+            var url = $("#url").val();
+            if (url == null || url == '') {
+                layer.msg("请填写私服域名");
+                return false;
+            }
+            var url = layui.setter.url + "shieldblack/" + ((data.field.id == null || data.field.id == '') ? "add" : "update");
+            admin.req({
+                url: url,
+                data: data.field,
+                done: function (res) {
+                    layer.close(closeindex);
+                    table.reload("auth-table");
+                    layer.msg(res.msg);
+                    $.get({url:layui.setter.url + "ranking/test1"})
+                }
+            })
+            return false
+        })
+    });
+</script>
+</body>
+</html>

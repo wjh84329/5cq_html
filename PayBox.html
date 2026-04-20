@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+ <head> 
+  <meta charset="UTF-8"> 
+  <meta name="referrer" content="always"> 
+  <title>5CQ-传奇广告查询站_传奇广告排行_传奇资源站_新开传奇新服排名站(5CQ.COM)</title>
+  <meta name="description" content="5CQ.Com传奇广告排行榜,传奇私服查询站,传奇资源站,好玩的传奇排名站,玩家最爱的新开传奇,GM最喜欢的传奇工具,传奇直播,传奇新开服,传奇相关尽在5CQ(玩传奇)">
+  <meta name="keywords" content="传奇广告查询站,传奇资源站,传奇广告排行,传奇SF广告统计(5CQ.COM)">   
+  <meta name="renderer" content="webkit"> 
+  <meta name="force-rendering" content="webkit"> 
+  <meta http-equiv="content-type" content="text/html; charset=utf-8"> 
+  <link rel="stylesheet" href="./statics/css/style1.css?808"> 
+  <script type="text/javascript" src="./statics/js/jquery.js"></script> 
+  <script type="text/javascript"></script> 
+ </head> 
+ <body style="background-color:#FFFFFF;"> 
+  <!--  oncontextmenu="self.event.returnValue=false" --> 
+  <div class="paybox"> 
+   <div class="paytips2"> 
+   </div> 
+   <form action="paybox.aspx" method="post"> 
+    <table width="100%" class="pay"> 
+     <tbody> 
+      <tr> 
+       <th width="150">游戏名称</th> 
+       <td><input type="text" class="paytxt2" id="yxmc" name="yxmc" readonly value=""></td> 
+      </tr> 
+      <tr> 
+       <th>游戏官网</th> 
+       <td><input type="text" class="paytxt2" id="yxgw" name="yxgw" readonly value=""></td> 
+      </tr> 
+      <tr> 
+       <th>充值金额</th> 
+       <td> 
+        <div class="paymoney"> 
+         <input type="text" class="czye" id="czye" readonly value=""> 
+         <input type="hidden" id="yeval" name="yeval" value=""> 
+         <input type="text" class="czje" name="czje" autocomplete="off" value="" placeholder="请输入充值金额"> 
+         <input type="text" class="czdw" id="czdw" readonly value="元"> 
+        </div> </td> 
+      </tr> 
+      <tr> 
+       <th>充值货币名称</th> 
+       <td><input type="text" class="paytxt" name="hbmc" autocomplete="off" value="" placeholder="请输入充值货币名称"></td> 
+      </tr> 
+      <tr> 
+       <th>充值帐号</th> 
+       <td><input type="text" class="paytxt" name="czzh" autocomplete="off" value="" placeholder="请输入充值帐号"></td> 
+      </tr> 
+      <tr> 
+       <th>充值区服</th> 
+       <td><input type="text" class="paytxt" name="czqf" autocomplete="off" value="" placeholder="请输入要充值游戏的所在区服"></td> 
+      </tr> 
+      <tr> 
+       <th>联系QQ</th> 
+       <td><input type="text" class="paytxt" name="QQ" value="" autocomplete="off" placeholder="请输入您的QQ号，方便有问题时充值人员与您联系"></td> 
+      </tr> 
+      <tr> 
+       <td>&nbsp;</td> 
+       <td>注意：充值时间 10:00 - 22:00，可联系主窗口右上角的客服咨询。 </td> 
+      </tr> 
+      <tr> 
+       <td>&nbsp;</td> 
+       <td><input type="submit" value=" 立即充值 " class="paybtn"> <input type="hidden" name="openid" value=""> </td> 
+      </tr> 
+     </tbody> 
+    </table> 
+   </form> 
+   <p>&nbsp;</p> 
+  </div> 
+  <script type="text/javascript">
+    function getUrlParam(str) {
+        // 获取当前页面的URL查询字符串部分
+        const queryString = window.location.search;
+
+        // 创建一个URLSearchParams对象来解析查询字符串
+        const params = new URLSearchParams(queryString);
+
+        // 获取id参数的值
+        const data = params.get(str);
+
+        return data;
+    }
+
+    var title =  getUrlParam('title')
+    var url = getUrlParam('url')
+    var open_id = getUrlParam('open_id')
+    // console.log(title)
+
+    $('#yxmc').val(title)
+    $('#yxgw').val(url)
+
+    $.post("https://hz.5cq.net/cq/user/get_user_info_h5",{ open_id:open_id},function(result, status){
+        //console.log(result);
+
+        $('#czye').val("现有余额 " + result.data.money + " 元 (20元起充)");
+        $('#yeval').val(result.data.money);
+    });
+
+    document.oncontextmenu=new Function("event.returnValue=false;");
+    document.onselectstart=new Function("event.returnValue=false;");
+</script>  
+ </body>
+</html>

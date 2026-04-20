@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>版块管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+
+
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">版块管理</div>
+                <div class="layui-card-body">
+                    <div class="test-table-reload-btn" style="margin-bottom: 10px;">
+                        <button id="block-button-add" shiro-event="jax:block:open-add" class="layui-btn"><i
+                                class="layui-icon">&#xe654;</i>添加
+                        </button>
+                    </div>
+                    <table id="auth-table" class="layui-hide" lay-filter="auth-table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="auth-state" hidden>
+    <button lay-event="update" shiro-event="jax:block:open-update" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe642;</i>修改
+    </button>
+    <button lay-event="remove" shiro-event="jax:block:open-remove" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe640;</i>删除
+    </button>
+</div>
+
+<!--添加-->
+<div id="submit-form-add" hidden>
+    <button class="layui-btn" shiro-event="jax:block:add" lay-submit lay-filter="submit-form-block">立即提交</button>
+    <!--添加-->
+</div>
+<!--修改-->
+<div id="submit-form-update" hidden>
+    <button class="layui-btn" shiro-event="jax:block:update" lay-submit lay-filter="submit-form-block">立即提交</button>
+<!--    <button type="reset" shiro-event="jax:block:update-reset" class="layui-btn layui-btn-primary">重置</button>-->
+</div>
+<div id="layui-block" hidden>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form" id="layui-form-block" lay-filter="component-form-group">
+                    <div class="layui-form-item">
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">上级版块</label>
+                            <div class="layui-input-block" style="width:57%">
+                                <select name="parent_id" id="parent_id" lay-verify="required" lay-filter="aihao">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">版块名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="name" name="name" lay-verify="required" placeholder="请输入类型名称" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">排序</label>
+                            <div class="layui-input-inline">
+                                <input type="text"  name="sort" lay-verify="required|number" placeholder="请输入排序" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-input-block">
+                            <!--操作-->
+                            <div class="layui-footer" id="submit-form-block-button" style="left: 0;">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="layui-block-update" hidden>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form" id="layui-form-block-update" lay-filter="component-form-group">
+                    <div class="layui-form-item">
+                        <input type="hidden" id="id" name="id">
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">上级版块</label>
+                            <div class="layui-input-block" style="width:57%">
+                                <select name="parent_id" id="parent_id_" lay-verify="required" lay-filter="aihao">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">版块名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="name" lay-verify="required" placeholder="请输入类型名称" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">排序</label>
+                            <div class="layui-input-inline">
+                                <input type="text"  name="sort" lay-verify="required|number" placeholder="请输入排序" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-input-block">
+                            <!--操作-->
+                            <div class="layui-footer" id="update-block-button" style="left: 0;">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../../layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index', //主入口模块
+        treetable: '../treetable/treetable'
+    }).use(['index','treetable', 'table', 'formgs', 'form', 'security', 'layer', 'upload'], function () {
+        var $ = layui.jquery,
+            admin = layui.admin,
+            table = layui.table,
+            formgs = layui.formgs,
+            form = layui.form,//控制添加修改（同一个弹出层）关闭弹出层的索引
+            upload = layui.upload,
+            treetable = layui.treetable,
+            layer = layui.layer, closeindex;
+
+        var typePtype=[];
+        //渲染表格
+        var renderTable = function () {
+            admin.req({
+                url: layui.setter.url + 'block/select' //实际使用请改成服务端真实接口
+                , done: function (res) {
+                    layer.load(2);
+                    typePtype=res.data.pblockList;
+                    treetable.render({
+                        treeColIndex: 0,
+                        treeSpid: 0,
+                        treeIdName: 'id',
+                        treePidName: 'parent_id',
+                        elem: '#auth-table',
+                        data:res.data.blockList,
+                        treeDefaultClose: true,//是否默认折叠
+                        cols: [[
+                            {field: 'name', title: '版块名称'},
+                            {field: 'sort', title: '排序', align: 'center'},
+                            {field: 'is_vip_send', title: '是否开通会员发帖', align: 'center',templet:function (obj) {
+                                    var r =
+                                        '<div class="layui-form" lay-filter="test1" name="is_vipCheckBox">' +
+                                        '<input type="checkbox" name="is_vip_send" data-id="'+obj.id+'" lay-skin="switch" value="'+obj.is_vip_send+'" lay-text="允许|不允许" lay-filter="is_vip_send" '+(obj.is_vip_send ==1?"checked":"")+' >'+
+                                        '</div>'
+                                    return r;}},
+                            {field: 'is_imgmode', title: '模式', align: 'center',templet:function (obj) {
+                                    var r =
+                                        '<div class="layui-form" lay-filter="test1" name="is_imgmodeBox">' +
+                                        '<input type="checkbox" name="is_imgmode" data-id="'+obj.id+'" lay-skin="switch" value="'+obj.is_imgmode+'" lay-text="有图模式|无图模式" lay-filter="is_imgmode" '+(obj.is_imgmode ==1?"checked":"")+' >'+
+                                        '</div>'
+                                    return r;}},
+                            {field: 'create_date', align: 'center', title: '创建时间'},
+                            {field: 'update_date', align: 'center', title: '修改时间'},
+                            {fixed: 'right', width: 215, toolbar: '#auth-state', title: '操作', align: 'center'}
+                        ]],
+                        page: false,
+                        done: function (res, curr, count) {
+                            var d = res.data;
+                            var t = $(".layui-table-body.layui-table-main").find("tr");
+                            for (var i in d) {
+                                if (d[i].parent_id == 0) {
+                                    var shiro = $(t[i]).find("button[shiro-event='jax:block:open-remove']")[0];//获取每行的 发送权限
+                                    $(shiro).hide();
+                                }else{
+                                    var is_vipCheckBox = $(t[i]).find("div[name='is_vipCheckBox']")[0];//获取每行的 发送权限
+                                    $(is_vipCheckBox).hide();
+                                    var is_imgmodeBox = $(t[i]).find("div[name='is_imgmodeBox']")[0];//获取每行的 发送权限
+                                    $(is_imgmodeBox).hide();
+                                }
+                            }
+                            layer.closeAll('loading');
+                        }
+                    });
+                }
+            });
+        }
+        renderTable();
+
+        treetable.operation("#auth-table");
+
+
+        table.on('tool(auth-table)', function (obj) {
+            if (obj.event == 'update') {
+                layer.open({
+                    type: 1,//弹窗类型
+                    area: [12, '45%'],//定义宽和高
+                    title: ('【' + obj.data.name + '】'),//题目
+                    shadeClose: false,//点击遮罩层关闭
+                    content: $("#layui-block-update"),//打开的内容
+                    success: function (index, layero) {
+                        closeindex = layero;
+                        var html="";
+                        for(var i in typePtype){
+                            html+="<option value='"+typePtype[i].id+"'>"+typePtype[i].name+"</option>"
+                        }
+                        $("#parent_id_").html(html);
+                        if(obj.data.parent_id==0){
+                            $("#parent_id_").attr("disabled","disabled");
+                        }
+                        formgs.get("layui-form-block-update", obj.data);
+                        $("#update-block-button").html($("#submit-form-update").html());
+                        //form.render刷新form 如果是针对单一刷新括号里面加上标签名 例：select刷新form.render('select')
+                        form.render();
+
+                    },
+                    end: function () {
+                        //getTableData();//结束之后请求表格数据的方法，新编辑的数据直接存库并展示在页面
+                    }
+                });
+            } else if (obj.event == "remove") {
+                layer.confirm('确定要删除【' + obj.data.name + '】这个类型吗？', function (index) {
+                    admin.req({
+                        url: layui.setter.url + "block/remove/" + obj.data.id
+                    }).done(function (res) {
+                        layer.close(index);
+                        renderTable();
+                        layer.msg(res.msg);
+                    })
+                });
+            }
+        })
+
+        $("#block-button-add").on("click", function () {
+            layer.open({
+                type: 1,
+                area: ['12', '45%'],
+                title: ("新增类型"),
+                shadeClose: false,
+                content: $("#layui-block"),
+                success: function (index, layero) {
+                    closeindex = layero;
+                    formgs.reset('layui-block');
+                    var html="";
+                    for(var i in typePtype){
+                        html+="<option value='"+typePtype[i].id+"'>"+typePtype[i].name+"</option>"
+                    }
+                    $("#parent_id").html(html);
+                    $("#submit-form-block-button").html($("#submit-form-add").html());
+                    form.render();
+                },
+            });
+        })
+
+        //添加/修改提交
+        form.on('submit(submit-form-block)', function (data) {
+            var url = layui.setter.url + "block/" + ((data.field.id == null||data.field.id=='') ? "add" : "update");
+            admin.req({
+                url: url,
+                data: data.field,
+                done: function (res) {
+                    layer.close(closeindex);
+                    renderTable();
+                    layer.msg(res.msg);
+                }
+            })
+            return false
+        })
+
+        //监听单元格编辑s-checkbox
+        form.on('switch(is_vip_send)', function(data){
+            var id=$(this).attr("data-id");
+            var is_vip_send=data.elem.checked?1:0;
+            admin.req({
+                url: layui.setter.url + "block/update",
+                data:{id:id,is_vip_send:is_vip_send},
+            });
+        });
+
+        form.on('switch(is_imgmode)',function(data){
+            var id=$(this).attr("data-id");
+            var is_imgmode=data.elem.checked?1:0;
+            admin.req({
+                url: layui.setter.url + "block/update",
+                data:{id:id,is_imgmode:is_imgmode},
+            });
+        })
+    });
+</script>
+</body>
+</html>

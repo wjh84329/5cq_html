@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>黑名单</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+
+
+</head>
+<body>
+<style>
+    .layadmin-homepage-pad-ver {
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+    .layadmin-homepage-pad-img {
+        box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+    }
+</style>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">黑名单</div>
+                <div class="layui-card-body">
+                    <div class="layui-card layui-form test-table-reload-btn" style="margin-bottom: 10px;">
+                        <div class="layui-inline">
+                            <input class="layui-input" name="polymerization" id="test-table-demoReload"
+                                   autocomplete="off" placeholder="快捷搜索">
+                        </div>
+                        <button class="layui-btn" data-type="reload">搜索</button>
+
+                        <button id="shield-button-add" shiro-event="jax:shield:open-add" class="layui-btn"><i
+                                class="layui-icon">&#xe654;</i>添加
+                        </button>
+
+                        <div class="layui-inline" style="margin-left: 100px">
+                            <label class="layui-form-label">举报扫码</label>
+                            <div class="layui-inline">
+                                <input type="checkbox" id="scan" name="scan" lay-skin="switch" lay-filter="switchscan"
+                                       lay-text="开启|关闭" value='0'>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="layui-hide" id="auth-table" lay-filter="auth-table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="auth-state" hidden>
+    <button lay-event="update" shiro-event="jax:shield:open-update" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe642;</i>修改
+    </button>
+    <button lay-event="remove" shiro-event="jax:shield:open-remove" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe640;</i>删除
+    </button>
+</div>
+
+<!--添加-->
+<div id="submit-form-add" hidden>
+    <button class="layui-btn" shiro-event="jax:shield:add" lay-submit lay-filter="submit-form-shield">立即提交</button>
+    <!--添加-->
+    <!--    <button type="reset" shiro-event="jax:shield:add-reset" class="layui-btn layui-btn-primary">重置</button>&lt;!&ndash;添加&ndash;&gt;-->
+</div>
+<!--修改-->
+<div id="submit-form-update" hidden>
+    <button class="layui-btn" shiro-event="jax:shield:update" lay-submit lay-filter="submit-form-shield">立即提交</button>
+    <!--    <button type="reset" shiro-event="jax:shield:update-reset" class="layui-btn layui-btn-primary">重置</button>-->
+</div>
+<div id="layui-shield" hidden>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form" id="layui-form-shield" lay-filter="component-form-group">
+                    <input type="hidden" id="id" name="id">
+                    <div class="layui-form-item">
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">私服名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="name" name="name" placeholder="请输入名称" class="layui-input">
+                            </div>
+
+                            <label class="layui-form-label">私服域名</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="url" name="url" placeholder="请输入域名" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">QQ</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="QQ" name="qq" placeholder="请输入QQ号码" class="layui-input">
+                            </div>
+
+                            <label class="layui-form-label">手机</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="iphone" name="iphone" placeholder="请输入手机号码" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <div style="margin-left: 50px">
+                                <div class="layui-input-inline" style="position: relative">
+                                    <input type="checkbox" name="reasonstate" lay-skin="primary" value="0"
+                                           lay-filter="reportcheckbox"><span
+                                        style="position: absolute;bottom: -2px">内容涉及赌博</span>
+                                </div>
+                                <div class="layui-input-inline" style="position: relative">
+                                    <input type="checkbox" name="reasonstate" lay-skin="primary" value="1"
+                                           lay-filter="reportcheckbox"><span
+                                        style="position: absolute;bottom: -2px">内容涉及劫持</span>
+                                </div>
+                                <div class="layui-input-inline" style="position: relative">
+                                    <input type="checkbox" name="reasonstate" lay-skin="primary" value="2"
+                                           lay-filter="reportcheckbox"><span
+                                        style="position: absolute;bottom: -2px">内容涉及诈骗</span>
+                                </div>
+                                <div class="layui-input-inline" style="position: relative">
+                                    <input type="checkbox" name="reasonstate" lay-skin="primary" value="3"
+                                           lay-filter="reportcheckbox"><span style="position: absolute;bottom: -2px">其他</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item" id="othercontent">
+                            <textarea class="layui-textarea" style="resize: none;" name="reason"></textarea>
+                        </div>
+
+                        <div class="layui-input-block">
+                            <!--操作-->
+                            <div class="layui-footer" id="submit-form-shield-button" style="left: 0;">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--多张图片展示-->
+    <script type="text/html" id="picPathItem">
+        {{#  if(d.screenshot == undefined || d.screenshot == '' || d.screenshot == null){ }}
+        暂无图片
+        {{#  } else { }}
+        {{# var data=d.screenshot.split(','); for(var i=0;i < data.length;i++){ }}
+        <img width='40' title="点击放大" style="cursor: pointer;" height='40' src="{{ data[i]}}" onclick="photograph(this)"/>
+        {{# } }}
+        {{#  } }}
+    </script>
+</div>
+<script src="../../layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index', //主入口模块
+    }).use(['index', 'table', 'formgs', 'form', 'security', 'layer', 'upload'], function () {
+        var $ = layui.jquery,
+            admin = layui.admin,
+            table = layui.table,
+            formgs = layui.formgs,
+            form = layui.form,//控制添加修改（同一个弹出层）关闭弹出层的索引
+            upload = layui.upload,
+            layer = layui.layer, closeindex;
+        //selectBySetting
+        admin.req({
+            url: layui.setter.url + "shield/selectBySetting"
+        }).done(function (res) {
+            if (res.data.state == 0) {
+                $("#scan").prop('checked', true);
+            } else {
+                $("#scan").prop('checked', false);
+            }
+            form.render();
+        })
+        $("#othercontent").hide();
+
+        // form.on('checkbox(other)', function (data) {
+        //     if (data.elem.checked) {
+        //         $("input:checkbox[name='reasonstate']").attr("checked", false);
+        //         $("#othercontent").show();
+        //         $(".layui-layer-page").height(420);
+        //         $('.layui-layer-content').height(400);
+        //     } else {
+        //         $("#othercontent").hide();
+        //         $("#othercontent textarea").val('');
+        //         $(".layui-layer-page").height(305);
+        //         $('.layui-layer-content').height(262);
+        //     }
+        //     form.render();
+        // })
+        form.on('checkbox(reportcheckbox)', function (data) {
+                if(data.elem.value==3){
+                $("input:checkbox[name='reasonstate'][value!='3']").attr("checked", false);
+                $("#othercontent").show();
+                $(".layui-layer-page").height(420);
+                $('.layui-layer-content').height(400);
+                $("#othercontent textarea").val('');
+            }else{
+                $("#othercontent").hide();
+                $("#othercontent textarea").val('');
+                $(".layui-layer-page").height(305);
+                $('.layui-layer-content').height(262);
+                $("input:checkbox[name='reasonstate'][value='3']").attr("checked", false);
+            }
+            form.render();
+        })
+
+        form.on('switch(switchscan)', function (data) {
+            var state = 0;
+            if (this.checked) {
+                state = 0;
+            } else {
+                state = 1;
+            }
+            admin.req({
+                url: layui.setter.url + "/jax/shield/updateSetting/" + state
+            }).done(function (res) {
+                $.get({url:layui.setter.url + "ranking/test2"})
+            })
+        });
+
+
+        table.render({
+            elem: '#auth-table'
+            , url: layui.setter.url + 'shield/select'
+            , title: '屏蔽列表'
+            , cols: [[
+                {field: 'name', title: '私服名称'},
+                {field: 'url', title: '私服域名'},
+
+                {field: 'iphone', title: '手机号'},
+                {field: 'qq', title: 'QQ'},
+                {
+                    field: 'spontaneous', title: '来自',
+                    templet: function (obj) {
+                        var v = '用户举报';
+                        if (obj.spontaneous != 1) {
+                            v = '自发屏蔽'
+                        }
+                        return v;
+                    }
+                },
+                {
+                    field: 'reason', title: '举报原因',
+                },
+                {
+                    field: 'screenshot', title: '举报截图', sort: false, width: 200, templet: "#picPathItem"
+                },
+                // {
+                //     field: 'screenshot', title: '举报截图',
+                // },
+                {
+                    field: 'state', title: '是否屏蔽', width: 115,
+                    templet: function (obj) {
+                        var r =
+                            '<div class="layui-form" lay-filter="test1">' +
+                            '<input type="checkbox" name="state" data-id="' + obj.id + '" lay-skin="switch" value="' + obj.state + '" lay-text="已屏蔽|未屏蔽" lay-filter="state" ' + (obj.state == 1 ? "checked" : "") + ' >' +
+                            '</div>'
+                        return r;
+                    }
+                },
+                {field: 'create_date', title: '创建时间', width: 160},
+                {field: 'update_date', title: '修改时间', width: 160},
+                {fixed: 'right', title: '操作', toolbar: '#auth-state'}
+            ]]
+            , page: true
+        });
+
+
+        table.on('tool(auth-table)', function (obj) {
+            if (obj.event == 'update') {
+                layer.open({
+                    type: 1,//弹窗类型
+                    area: ['40', '1'],
+                    title: ('【' + obj.data.name + '】'),//题目
+                    shadeClose: false,
+                    content: $("#layui-shield"),//打开的内容
+                    success: function (index, layero) {
+                        formgs.reset('layui-shield');
+                        formgs.get("layui-shield", obj.data);
+                        $("#submit-form-shield-button").html($("#submit-form-update").html());
+                        //form.render刷新form 如果是针对单一刷新括号里面加上标签名 例：select刷新form.render('select')
+                        $("#layui-form-shield input:checkbox[name='other']").prop('checked', false);
+                        $("#layui-form-shield input:checkbox[name='reasonstate']").prop('checked', false);
+
+                        if (obj.data.reasonstate ==3) {
+                            $("#layui-form-shield input:checkbox[name='reasonstate'][value='3']").prop('checked', true);
+                            $("#layui-form-shield input:checkbox[name='reasonstate'][value!='3']").attr("checked", false);
+                            $("#othercontent").show();
+                            $(".layui-layer-page").height(420);
+                            $('.layui-layer-content').height(400);
+                        }else{
+                            var reasonstate = [];
+                            if(obj.data.reasonstate!=null){
+                              if (obj.data.reasonstate.indexOf(",") > -1) {
+                                reasonstate = obj.data.reasonstate.split(",");
+                              } else {
+                                reasonstate.push(obj.data.reasonstate);
+                              }
+                              for (var i in reasonstate) {
+                                $("#layui-form-shield input:checkbox[name='reasonstate']").each(function () {
+                                  if (reasonstate[i] == $(this).val()) {
+                                    $(this).prop('checked', true);
+                                  }
+                                });
+                              }
+                            }
+
+                        }
+                        form.render();
+                        closeindex = layero;
+
+                    },
+                });
+            } else if (obj.event == "remove") {
+                layer.confirm('确定要删除【' + obj.data.name + '】这个私服吗？', function (index) {
+                    admin.req({
+                        url: layui.setter.url + "shield/remove/" + obj.data.id
+                    }).done(function (res) {
+                        layer.close(index);
+                        table.reload('auth-table');
+                        layer.msg(res.msg);
+                        $.get({url:layui.setter.url + "ranking/test2"})
+                    })
+                });
+            }
+        })
+
+
+        $('.test-table-reload-btn .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+        //查询
+        var $ = layui.$, active = {
+            reload: function () {
+                var demoReload = $('#test-table-demoReload');
+                //执行重载
+                console.log(1111);
+                table.reload('auth-table', {
+                    page: {curr: 1}//重新从第 1 页开始
+                    , where: {name: demoReload.val()}
+                });
+            },
+        };
+        $("#shield-button-add").on("click", function () {
+            layer.open({
+                type: 1,
+                area: ['30', '1'],
+                title: ("新增屏蔽"),
+                shadeClose: false,
+                content: $("#layui-shield"),
+                success: function (index, layero) {
+                    closeindex = layero;
+                    formgs.reset('layui-shield');
+                    $("#layui-form-shield input:checkbox[name='other']").prop('checked', false);
+                    $("#layui-form-shield input:checkbox[name='reasonstate']").prop('checked', false);
+                    $("#submit-form-shield-button").html($("#submit-form-add").html());
+                    form.render();
+                },
+            });
+        })
+
+        //添加/修改提交
+        form.on('submit(submit-form-shield)', function (data) {
+            var name = $("#name").val();
+            var url = $("#url").val();
+            if ((name == null || name == '') && (url == null || url == '')) {
+                layer.msg("请填写私服名称或域名");
+                return false;
+            }
+            var reasonstate = '';
+            var reason = '';
+            $("#layui-form-shield input:checkbox[name='reasonstate']").each(function () {
+                if ($(this).is(":checked")) {
+                    reasonstate += $(this).val() + ",";
+                    reason += $(this).nextAll('span').first().text() + ",";
+                    // console.log($(this).nextAll('span').first().text())
+                }
+            });
+            if(reasonstate==''){
+                layer.msg("请选择举报内容");
+                return false;
+            }
+            data.field.spontaneous = 1;
+            // data.spontaneous = 1;
+            // console.log(data.field);
+            // return false;
+            data.field.reason = reason.slice(0,-1)
+            var url = layui.setter.url + "shield/" + ((data.field.id == null || data.field.id == '') ? "add" : "update");
+            admin.req({
+                url: url,
+                data: data.field,
+                done: function (res) {
+                    layer.close(closeindex);
+                    table.reload("auth-table");
+                    layer.msg(res.msg);
+                    $.get({url:layui.setter.url + "ranking/test2"})
+                }
+            })
+            return false
+        })
+
+        //监听单元格编辑s-checkbox
+        form.on('switch(state)', function (data) {
+            var id = $(this).attr("data-id");
+            console.log(data.elem.checked)
+            var state = data.elem.checked ? 1 : 0;
+            update(id, state);
+        });
+
+        //被调用的修改方法
+        function update(id, state) {
+            admin.req({
+                url: layui.setter.url + "shield/update",
+                data: {id: id, state: state},
+                done: function (res) {
+                    layer.msg(res.msg);
+                    $.get({url:layui.setter.url + "ranking/test2"})
+                }
+            });
+        }
+
+
+    });
+
+    // 点击图片变大
+    function photograph(t) {
+        if(t.src == null||t.src == ''){
+            return;
+        }
+        layer.open({
+            type: 1,
+            area: ['75%', '70%'], //宽高
+            shadeClose: true, //开启遮罩关闭
+            title: ("举报截图"),
+            end: function (index, layero) {
+                return false;
+            },
+            content: '<div style="text-align:center"><img src="' + t.src + '" /></div>'
+        });
+    }
+</script>
+</body>
+</html>

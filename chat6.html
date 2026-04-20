@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+ <head> 
+  <meta charset="UTF-8"> 
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+  <style>
+        pre { position: relative; background: #f5f5f5; padding: 1em; }
+        .copy-btn {
+            position: absolute; top: 5px; right: 5px;
+            padding: 2px 8px; background: #4CAF50; color: white;
+            border: none; border-radius: 3px; cursor: pointer;
+        }
+    </style> 
+  <title>5CQ-传奇广告查询站_传奇广告排行_传奇资源站_新开传奇新服排名站(5CQ.COM)</title>
+  <meta name="description" content="5CQ.Com传奇广告排行榜,传奇私服查询站,传奇资源站,好玩的传奇排名站,玩家最爱的新开传奇,GM最喜欢的传奇工具,传奇直播,传奇新开服,传奇相关尽在5CQ(玩传奇)">
+  <meta name="keywords" content="传奇广告查询站,传奇资源站,传奇广告排行,传奇SF广告统计(5CQ.COM)">   
+ </head> 
+ <body> 
+  <div id="content"></div> 
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> 
+  <script>
+    // Markdown 内容
+    const md = `
+\`\`\`js
+function greet() {
+  console.log("Markdown 代码块!");
+}
+\`\`\`
+`;
+
+    // 渲染 Markdown
+    document.getElementById('content').innerHTML = marked.parse(md);
+
+    // 动态添加复制按钮
+    document.querySelectorAll('pre').forEach(pre => {
+        const btn = document.createElement('button');
+        btn.className = 'copy-btn';
+        btn.textContent = '复制';
+
+        btn.onclick = () => {
+            const code = pre.querySelector('code').innerText;
+            navigator.clipboard.writeText(code)
+                .then(() => {
+                    btn.textContent = '✓ 已复制';
+                    setTimeout(() => btn.textContent = '复制', 2000);
+                })
+                .catch(() => {
+                    btn.textContent = '✗ 失败';
+                    setTimeout(() => btn.textContent = '复制', 2000);
+                });
+        };
+
+        pre.appendChild(btn);
+    });
+</script>  
+ </body>
+</html>

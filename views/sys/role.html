@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>角色管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">角色管理</div>
+                <div class="layui-card-body">
+                    <div class="test-table-reload-btn" style="margin-bottom: 10px;">
+                        <div class="layui-inline">
+                            <input class="layui-input" name="id" id="test-table-demoReload" autocomplete="off" placeholder="请输入角色名">
+                        </div>
+                        <button class="layui-btn" data-type="reload">搜索</button>
+                        <button id="role-button-add" shiro-event="sys:role:open-add" class="layui-btn"><i
+                                class="layui-icon">&#xe654;</i>添加
+                        </button>
+                    </div>
+                    <table class="layui-hide" id="auth-table" lay-filter="auth-table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--update add-->
+<div id="layui-role" hidden>
+    <div class="layui-fluid" >
+        <div class="layui-card">
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form" id="layui-form-role" lay-filter="component-form-group">
+                    <input type="hidden" id="id" name="id">
+                    <div class="layui-form-item">
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">角色名</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="name" name="name" lay-verify="required" placeholder="请输入角色名"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">英文名</label>
+                        <div class="layui-input-inline" >
+                            <input type="text" id="enname" name="enname" lay-verify="required" autocomplete="off"
+                                   placeholder="请输入英文名" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">启用</label>
+                        <div class="layui-input-block">
+                            <input type="checkbox" id="is_flag" value="0"  name="is_flag" lay-skin="switch" lay-text="ON|OFF" checked>
+                        </div>
+                    </div>
+                    <!--<div class="layui-form-item">
+                        <label class="layui-form-label">系统数据</label>
+                        <div class="layui-input-block">
+                            <input type="checkbox" id="is_sys" value="0"  name="is_sys" lay-skin="switch" lay-text="ON|OFF">
+                        </div>
+                    </div>-->
+
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">备注</label>
+                        <div class="layui-input-block">
+                            <textarea name="remarks" placeholder="请输入备注" class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+
+
+                    <div class="layui-input-block">
+                        <!--操作-->
+                        <div class="layui-footer" id="submit-form-menu-button" style="left: 0;">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--授权功能-->
+<div class="layui-fluid" hidden id="table-powermenu">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <form class="layui-form" lay-filter="component-form-group">
+                        <div class="test-table-reload-btn" style="margin-bottom: 10px;">
+                            <input name="id" id="powermenu-roleId" hidden>
+                            <button class="layui-btn" id="btn-expand">全部展开</button>
+                            <button class="layui-btn" id="btn-fold">全部折叠</button>
+                            <button class="layui-btn" shiro-event="sys:role:addPowermenu" lay-submit lay-filter="submit-form-powermenu">保存</button>
+                            <!--<button type="reset" shiro-event="sys:role:powermenu-reset" class="layui-btn layui-btn-primary">重置</button>-->
+                            <div class="layui-inline">
+                                <input id="edt-search" type="text" class="layui-input" placeholder="输入关键字"/>
+                            </div>
+                            <button class="layui-btn" id="btn-search">搜索</button>
+                        </div>
+                        <table id="auth-table-powermenu" class="layui-hide" lay-filter="auth-table-powermenu"></table>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 操作列 -->
+<div id="auth-state" hidden>
+    <button lay-event="powermenu" shiro-event="sys:role:powermenu" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe672;</i>授权
+    </button>
+    <button lay-event="update" shiro-event="sys:role:open-update" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe642;</i>修改
+    </button>
+    <button lay-event="remove" shiro-event="sys:role:open-remove" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe640;</i>删除
+    </button>
+</div>
+
+<!--添加-->
+<div id="submit-form-add" hidden>
+    <button class="layui-btn" shiro-event="sys:role:add" lay-submit lay-filter="submit-form-role">立即提交</button><!--添加-->
+    <button type="reset" shiro-event="sys:role:add-reset" class="layui-btn layui-btn-primary">重置</button><!--添加-->
+</div>
+<!--修改-->
+<div id="submit-form-update" hidden>
+    <button class="layui-btn" shiro-event="sys:role:update" lay-submit lay-filter="submit-form-role">立即提交</button>
+    <!--修改-->
+    <button type="reset" shiro-event="sys:role:update-reset" class="layui-btn layui-btn-primary">重置</button>
+</div>
+
+<script src="../../layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index', //主入口模块
+        treetable: '../treetable/treetable'
+    }).use(['index', 'table','formgs','form','security','treetable'], function(){
+        var $ = layui.jquery,
+            admin = layui.admin,
+            table = layui.table,
+            formgs = layui.formgs,
+            form = layui.form,
+            treetable = layui.treetable,
+            closeindex;//控制添加修改（同一个弹出层）关闭弹出层的索引
+
+
+        table.render({
+            elem: '#auth-table'
+            ,url: layui.setter.url + 'role/select'
+            ,title: '用户数据表'
+            ,cols: [[
+                {field:'id', title:'ID', width:80 , fixed: 'left', unresize: true, sort: true}
+                ,{field:'name', title:'角色名',}
+                ,{field:'enname', title:'英文名'}
+                ,{field:'is_flag', title:'启用', width:80 , sort: true,
+                    templet:function (obj) {
+                        if (obj.is_flag==0)return "是"; else return "否";
+                    }
+                 }
+                /*,{field:'is_sys', title:'系统数据',width:100,
+                    templet: function (obj) {
+                        if (obj.is_sys == 0)return "是"; else return "否";
+                    }
+                }*/
+                ,{field:'remarks', title:'备注'}
+                /*,{field:'createname', title:'创建人', sort: true}
+                ,{field:'create_date', title:'创建时间', sort: true}*/
+                ,{field:'updatename', title:'最新修改人'}
+                ,{field:'update_date', title:'最新修改时间'}
+                ,{fixed: 'right', title:'操作', toolbar: '#auth-state', width:220}
+            ]]
+            ,page: true
+        });
+
+
+        //打开修改，删除,授权
+        table.on('tool(auth-table)', function (obj) {
+
+            if (obj.event == "powermenu") {
+                layer.open({
+                    type: 1,//弹窗类型
+                    area: ['80%', '80%'],//定义宽和高
+                    title: ('【' + obj.data.name + '】授权'),//题目
+                    shadeClose: true,//点击遮罩层关闭
+                    content: $("#table-powermenu"),//打开的内容
+                    success: function (index,layero) {
+                        closeindex = layero
+                        $("#powermenu-roleId").val(obj.data.id);
+                        admin.req({
+                            url: layui.setter.url + 'role/selectPowermenu/'+obj.data.id
+                            , done: function (res) {
+                                layer.load(2);
+                                treetable.render({
+                                    treeColIndex: 1,
+                                    treeSpid: 0,
+                                    treeIdName: 'permission',
+                                    treePidName: 'parent_id',
+                                    elem: '#auth-table-powermenu',
+                                    data: res.data.menus,
+                                    cols: [[
+                                        {type: 'checkbox'},
+                                        {field: 'name', minWidth: 200, title: '权限名称'},
+                                        {field: 'permission', title: '权限标识'},
+                                        {field: 'sort', width: 80, align: 'center', title: '排序号'},
+                                        {
+                                            field: 'is_menu', width: 80, align: 'center', templet: function (d) {
+                                                if (d.is_menu == 0) return '<span class="l1ayui-badge-rim">菜单</span>';
+                                                if (d.is_menu == 1) return '<span class="layui-badge layui-bg-gray">按钮</span>';
+                                            }, title: '类型'
+                                        },
+                                    ]],
+                                    done: function (res, curr, count) {
+                                        layer.closeAll('loading');
+                                    }
+                                });
+                            }
+                        });
+
+                    }
+                })
+            }else if (obj.event == 'update') {
+                layui.use(['layer'], function () {
+                    var layer = layui.layer, $ = layui.$;
+                    layer.open({
+                        type: 1,//弹窗类型
+                        area: ['50%', '60%'],//定义宽和高
+                        title: ('【' + obj.data.name + '】修改'),//题目
+                        shadeClose: false,//点击遮罩层关闭
+                        content: $("#layui-role"),//打开的内容
+                        success: function (index, layero) {
+                            formgs.get("layui-form-role", obj.data);
+                            $("#submit-form-menu-button").html($("#submit-form-update").html());
+                            //form.render刷新form 如果是针对单一刷新括号里面加上标签名 例：select刷新form.render('select')
+                            form.render();
+                            closeindex = layero
+                        },
+                        end: function () {
+                            //getTableData();//结束之后请求表格数据的方法，新编辑的数据直接存库并展示在页面
+                        }
+                    });
+                })
+            } else if (obj.event == "remove") {
+                layer.confirm('确定要删除【'+ obj.data.name +'】角色吗？', function (index) {
+                    admin.req({
+                        url:layui.setter.url+"role/remove/"+obj.data.id
+                    }).done(function (res) {
+                        layer.close(index);
+                        table.reload('auth-table');
+                        layer.msg(res.msg);
+                    })
+
+
+                });
+            }
+        })
+
+        //复选中级联选中
+        table.on('checkbox(auth-table-powermenu)', function(obj){
+            if (obj.checked) {
+                if (typeof $(this).attr("class") != 'undefined'){
+                    var checkclass = "";
+                    var arr = $(this).attr("class").split("-");
+                    for (var i = 0;i<arr.length-1;i++){
+                        checkclass += checkclass == ""?arr[i]+"-"+arr[i+1]:"-"+arr[i+1]
+                        $('input[class'+(i==arr.length-2?"^":"")+'="'+checkclass+'"]').prop("checked",true);
+                        $('input[class'+(i==arr.length-2?"^":"")+'="'+checkclass+'"]').next().addClass("layui-form-checked");
+                    }
+                }
+            }else{
+                $('input[class^="'+$(this).attr("class")+'"]').prop("checked",false);
+                $('input[class^="'+$(this).attr("class")+'"]').next().removeClass("layui-form-checked")
+            }
+        })
+
+
+        //查询
+        var $ = layui.$, active = {
+            reload: function(){
+                var demoReload = $('#test-table-demoReload');
+                //执行重载
+                table.reload('auth-table', {
+                    page: {curr: 1 }//重新从第 1 页开始
+                    ,where: {name: $('#test-table-demoReload').val()}
+                });
+            }
+        };
+
+
+
+        //打开添加弹窗
+        $("#role-button-add").on("click", function () {
+            layui.use(['layer'], function () {
+                var layer = layui.layer, $ = layui.$;
+                layer.open({
+                    type: 1,
+                    area: ['50%', '60%'],
+                    title: ("添加菜单/按钮"),
+                    shadeClose: false,
+                    content: $("#layui-role"),
+                    success: function (index, layero) {
+                        formgs.reset('layui-role');
+                        $("#submit-form-menu-button").html($("#submit-form-add").html());
+                        form.render();
+                        closeindex = layero;
+                    },
+                });
+            })
+        })
+
+
+        //添加/修改提交
+        form.on('submit(submit-form-role)', function (data) {
+            var url = layui.setter.url + "role/"+(data.field.id==''?"add":"update");
+            admin.req({
+                url: url,
+                data: data.field,
+                done: function (res) {
+                    layer.close(closeindex);
+                    table.reload("auth-table");
+                    layer.msg(res.msg);
+                }
+            })
+            return false
+        })
+
+
+        //授权
+       form.on('submit(submit-form-powermenu)',function (data) {
+           var arrmenus = null;
+           $("input[name='layTableCheckbox']:checked").each(function(i){
+               if ($(this).val()!='on'){
+                   if (arrmenus==null) arrmenus = $(this).val()
+                   else arrmenus += ","+$(this).val();
+               }
+           });
+
+           if (arrmenus != null && arrmenus != ''){
+               data.field.arrmenus = arrmenus;
+           }
+
+           admin.req({
+               url: layui.setter.url + "role/addPowermenu",
+               data:data.field
+           }).done(function (res) {
+               layer.close(closeindex);
+               layer.msg(res.msg);
+           })
+           return false;
+        })
+
+        //全部展开，折叠，搜索功能
+        treetable.operation("#auth-table-powermenu");
+
+
+
+        $('.test-table-reload-btn .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+
+
+
+
+    });
+</script>
+</body>
+</html>

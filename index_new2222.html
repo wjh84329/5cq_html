@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en">
+ <head> 
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+  <title>5CQ-传奇广告查询站_传奇广告排行_传奇资源站_新开传奇新服排名站(5CQ.COM)</title>
+  <meta name="description" content="5CQ.Com传奇广告排行榜,传奇私服查询站,传奇资源站,好玩的传奇排名站,玩家最爱的新开传奇,GM最喜欢的传奇工具,传奇直播,传奇新开服,传奇相关尽在5CQ(玩传奇)">
+  <meta name="keywords" content="传奇广告查询站,传奇资源站,传奇广告排行,传奇SF广告统计(5CQ.COM)">   
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"> 
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+  <meta name="renderer" content="webkit"> 
+  <meta name="Referrer" content="origin"> 
+  <link rel="stylesheet" href="./statics/css/layer.css"> 
+  <link rel="stylesheet" href="./statics/css/public.css"> 
+  <link rel="stylesheet" href="./statics/DataTables/media/css/jquery.dataTables.min.css"> 
+  <link rel="stylesheet" href="./layuiadmin/layui/css/layui.css" media="all"> 
+  <link rel="stylesheet" href="./layuiadmin/style/admin.css" media="all"> 
+  <script src="./statics/js/jquery-3.2.1.min.js"></script> 
+  <script src="./statics/js/jquery.cookie.js"></script> 
+  <script src="./statics/js/public.js"></script> 
+  <script src="./statics/adminconfig.js"></script> 
+  <script src="./statics/config.js"></script> 
+  <script src="./statics/js/layer.js"></script> 
+  <script src="./layuiadmin/layui/layui.js"></script> 
+  <script src="./statics/js/report.js"></script> 
+  <script type="text/javascript" src="./statics/js/ad1.js"></script> 
+  <script type="text/javascript" src="./statics/js/ad5.js"></script> 
+  <link rel="stylesheet" href="./statics/css/slide-unlock.css"> 
+  <style>
+   .sf-container{
+
+    margin-top: 58px;
+   }
+   .sf-right_contitle {
+    width: 100%;
+    height: 82px;
+    line-height: 52px;
+    background: #FFFFFF;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    font-weight: bold;
+    display: flex;
+    color: #555;
+    font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
+    font-size: 18px;
+   }
+   .sf-title_text{
+    width: 100%;
+    margin-top: 20px;
+    margin-left: 20px;
+    color: #0064BC;
+    font-size: 22px;
+
+   }
+   .sf-title_text_span{
+    float: right;
+    margin-right: 20px;
+    color: #FF5837;
+    font-size: 16px;
+   }
+   .right{
+    float: right;
+    font-size: 16px;
+    color: #ff5837;
+    position: absolute;
+    top: 18px;
+    right: 50px;
+   }
+   .rankingtables th{
+
+             background: #F8F6F4;
+             padding: 10px 0;
+             /* color: #f7f7f7; */
+             text-align: center;
+             /* font-size: 15px; */
+             /* font-weight: 600; */
+             border: solid 1px #c1bcb6
+            }
+   .rankingtables td{
+
+    /* background: #2089d0; */
+    padding: 10px 0;
+    /* color: #f7f7f7; */
+    text-align: center;
+    /* font-size: 15px; */
+    /* font-weight: 600; */
+    border: solid 1px #c1bcb6;
+    background-color: white;
+   }
+        #selectSSRank tr td:nth-child(8) {
+            position: inherit;
+        }
+        #selectSSRank{
+            table-layout: fixed;
+        }
+        #showPic{
+            display: none;
+            width: 30px;
+            height: 30px;
+            position: absolute;
+            top: 4px;
+            left: 6px;
+            cursor: pointer;
+        }
+
+        #showBox:hover  #showPic{
+            display: block;
+        }
+
+        #showPic{
+            display: none;
+            width: 40px;
+            height: 36px;
+            position: absolute;
+            top: 0px;
+            left: 6px;
+            cursor: pointer;
+        }
+        #showBox:hover  #showPic1{
+            display: block;
+        }
+        #showPic1{
+		    display: none;
+            width: 40px;
+            height: 20px;
+            top: 8px;
+            right: 6px;
+		position: absolute;
+        }
+        #hotgif{
+            width: 15px;
+            height: 18px;
+            position: absolute;
+            top: 4px;
+            right: 2px;
+        }
+        #show {
+            width: 530px;
+            height: 800px;
+        }
+        .active_1{
+            color: red!important;
+        }
+        .layui-layer-page{
+            height: auto !important;
+        }
+        .layui-layer-content{
+            height: auto !important;
+        }
+        .indexCommonTitle {
+         overflow: hidden;
+         line-height: 66px;
+         padding: 0 30px;
+         border-top: 2px solid #007aff;
+         border-bottom: 1px solid #ddd;
+         position: relative;
+        }
+
+        .indexCommonTitle .left {
+         float: left;
+        }
+
+        .indexCommonTitle .left span {
+         font-size: 22px;
+         font-weight: bold;
+         color: #0064BC;
+        }
+
+        .indexCommonTitle .left b {
+         font-size: 16px;
+         color: #afafaf;
+         font-weight: bold;
+         margin-left: 12px;
+        }
+
+        .indexCommonTitle .right {
+         float: right;
+         font-size: 16px;
+         color: #ff5837;
+         position: absolute;
+         top: 10px;
+         right: 20px
+        }
+
+        .indexCommonTitle .right img {
+         position: absolute;
+         right: 20px
+        }
+
+        .indexCommonTitle .right .more {
+         margin-left: 10px;
+         vertical-align: -2px;
+        }
+
+        .indexCommonTitle .center {
+         font-size: 14px;
+         line-height: 1.5;
+         width: 658px;
+         position: absolute;
+         left: 50%;
+         top: 50%;
+         -webkit-transform: translate(-50%, -50%);
+         -ms-transform: translate(-50%, -50%);
+         transform: translate(-50%, -50%);
+         color: #da0000;
+         font-weight: bold;
+        }
+        .hotVideo {
+         padding-bottom: 30px;
+        }
+
+        .hotVideo .subList {
+         overflow: hidden;
+         padding: 22px 22px 0;
+        }
+
+        .hotVideo .subList > li {
+         position: relative;
+         width: 360px;
+         margin-right: 48px;
+         float: left;
+         line-height: 36px;
+         padding-left: 26px;
+         font-size: 18px;
+         text-overflow: ellipsis;
+         overflow: hidden;
+         white-space: nowrap;
+        }
+
+        .hotVideo .subList li i.circle {
+         position: absolute;
+         left: 5px;
+         top: 15px;
+         width: 8px;
+         height: 8px;
+         background: #6f7887
+        }
+
+        .hotVideo .subList > li:nth-child(3n) {
+         margin-right: 0;
+        }
+
+        .hotVideo .subList > li .topVideo:hover .pic .mask {
+         top: 0;
+        }
+
+        .hotVideo .subList > li .topVideo:hover .pic .mask {
+         top: 0;
+        }
+
+        .hotVideo .subList > li .topVideo .pic {
+         width: 100%;
+         height: 236px;
+         position: relative;
+         overflow: hidden;
+        }
+
+        .hotVideo .subList > li .topVideo .pic img {
+         display: block;
+         width: 100%;
+         height: 100%;
+        }
+
+        .hotVideo .subList > li .topVideo .pic .mask {
+         position: absolute;
+         background: rgba(0, 0, 0, 0);
+         width: 100%;
+         height: 100%;
+         top: 0;
+         left: 0;
+         -webkit-transition: all .3s;
+         transition: all .3s;
+        }
+
+        .hotVideo .subList > li .topVideo .pic .mask .icon {
+         position: absolute;
+         top: 50%;
+         left: 50%;
+         -webkit-transform: translate(-50%, -50%);
+         -ms-transform: translate(-50%, -50%);
+         transform: translate(-50%, -50%);
+        }
+
+        .hotVideo .subList > li .topVideo .desc {
+         margin: 7px 0;
+         overflow: hidden;
+         text-overflow: ellipsis;
+         white-space: nowrap;
+         font-size: 20px;
+        }
+
+        .hotVideo .subList > li .topVideo .bottom {
+         font-size: 12px;
+         color: #999;
+         overflow: hidden;
+        }
+
+        .hotVideo .subList > li .topVideo .bottom li > div {
+         vertical-align: -1px;
+        }
+
+        .hotVideo .subList > li .topVideo .bottom li:first-child {
+         float: left;
+         margin-right: 50px;
+        }
+
+        .hotVideo .subList > li .topVideo .bottom li:last-child {
+         float: left;
+        }
+
+        .hotVideo .subList > li .moreList {
+        }
+
+        .hotVideo .subList > li .moreList li {
+        }
+        a{
+         cursor: pointer;
+        }
+        /*Í¨ÓÃ-ÓÒÏÂ½Ç¸¡¶¯ÖÃ¶¥*/
+        .toolbar {width: 70px; position: fixed; right: 0; bottom: 68px;  z-index: 301; background: #fff; border-radius: 10px; }
+        .toolbar li a { width: 100%; font-size: 12px; background: #fff; padding: 10px 0; border-bottom: 1px solid #ececec; display: block; text-align: center; position: relative; color: #777; }
+        .toolbar li a:hover { color: #ff552e; }
+        .toolbar li a i { display: block; font-size: 30px; margin: 0 auto 5px auto; color: #ff552e }
+        .wx_kefuhover { position: relative; }
+        .wx_kefu { display: none; position: absolute; right: 80px; top: 0px; width: 160px; padding: 10px; background: #fff; border-radius: 14px; text-align: center; }
+        .wx_kefu img { width: 100%; }
+        .wx_kefuhover:hover .wx_kefu { display: block; }
+        .icon-bar-top { background: url("toolbar.png") -235px -0px no-repeat; height: 30px }
+        .icon-lianxikefu{ background: url("toolbar.png")  20px -0px no-repeat; height: 30px }
+        .icon-bar-group{ background: url("toolbar.png")  -40px -0px no-repeat; height: 30px }
+        .icon-bar-kefu{ background: url("toolbar.png")  -753px -233px no-repeat; height: 30px }
+        .icon-bar-feed{ background: url("toolbar.png")  -175px -0px no-repeat; height: 30px }
+        .total{color: #da0000;}
+
+    </style> 
+ </head> 
+ <body> 
+  <div class="topinfo"> 
+   <div class="wid"> 
+    <div class="topinfo_l">
+      主站域名:[WWW.1PK.COM]-备用域名WWW.4CQ.COM 
+    </div> 
+    <div class="topinfo_c">
+      涉及诈骗,赌博等违法行为请联系我们举报QQ:889787【高价租站】联系QQ:889787 
+    </div> 
+    <div class="topinfo_r"> 
+     <a href="https://hz.szjfxj.com/#/cooperation" target="_blank"> <img src="../statics/images/cksq.png" width="103" border="0"> </a> 
+    </div> 
+   </div> 
+  </div> 
+  <div id="head" style="height: 270px;"> 
+   <script>zhaoff.inithead("#head");</script> 
+  </div> 
+  <!--<div class="navc" id="first_title" style="height: 79px"><script> zhaoff.initftitle("#first_title");</script></div>--> 
+  <div class="navc" id="first_title"> 
+   <div class="nav clearfix" id="cdmenu"> 
+    <a href="/index.html" target="" onclick="openActive('首页','/index.html',1);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
+     <div> 
+      <p>首页</p> 
+      <p>HOME</p> 
+     </div> <em></em> </a> 
+    <a href="/code/ranking.html" target="" onclick="openActive('广告排行','/code/ranking.html',2);" class=" clearfix" style="cursor: pointer"> <img style="display:block;" src="/statics/images/hot.gif" class="icon"> 
+     <div> 
+      <p>广告排行</p> 
+      <p>AD RANKING</p> 
+     </div> <em></em> </a> 
+    <a href="/chat.html" target="" onclick="openActive('AI助手','/chat.html',3);" class=" clearfix" style="cursor: pointer"> <img style="display:block;" src="/statics/images/hot.gif" class="icon"> 
+     <div> 
+      <p>AI助手</p> 
+      <p>AI CHAT</p> 
+     </div> <em></em> </a> 
+    <a href="/code/dataAnalysis.html" target="" onclick="openActive('广告分析','/code/dataAnalysis.html',4);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
+     <div> 
+      <p>广告分析</p> 
+      <p>AD REQUEST</p> 
+     </div> <em></em> </a> 
+    <a href="/code/fastscreen.html" target="" onclick="openActive('广告筛选','/code/fastscreen.html',5);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
+     <div> 
+      <p>广告筛选</p> 
+      <p>AD SEARCH</p> 
+     </div> <em></em> </a> 
+    <a href="/code/report.html" target="" onclick="openActive('黑名单','/code/report.html',6);" class=" clearfix" style="cursor: pointer"> <img style="display:block;" src="/statics/images/hot.gif" class="icon"> 
+     <div> 
+      <p>黑名单</p> 
+      <p>BLACK LIST</p> 
+     </div> <em></em> </a> 
+    <a href="/code/recruTran.html" target="" onclick="openActive('招聘交易','/code/recruTran.html',7);" class=" clearfix" style="cursor: pointer"> <img style="display:block;" src="/statics/images/tj.gif" class="icon"> 
+     <div> 
+      <p>招聘交易</p> 
+      <p>RECRUIT·TRADE</p> 
+     </div> <em></em> </a> 
+    <a href="/code/journalism.html" target="" onclick="openActive('传奇攻略','/code/journalism.html',8);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
+     <div> 
+      <p>传奇攻略</p> 
+      <p>NEWS GUIDE</p> 
+     </div> <em></em> </a> 
+    <a href="/code/publishSites.html" target="" onclick="openActive('发布站点','/code/publishSites.html',9);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
+     <div> 
+      <p>发布站点</p> 
+      <p>PUBLISH SITES</p> 
+     </div> <em></em> </a> 
+    <a href="/code/resourceNavigation.html" target="" onclick="openActive('工具导航','/code/resourceNavigation.html',10);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
+     <div> 
+      <p>工具导航</p> 
+      <p>DATA DOWN</p> 
+     </div> <em></em> </a> 
+   </div> 
+  </div> 
+  <!--代码正文--> 
+  <div class="container" style="text-align: center;width: 1300px;"> 
+   <div style="width:1300px;position:relative;"> 
+    <div class="adv_nav"> 
+     <ul class="adv_banner"> 
+     </ul> 
+     <ul class="adv_text"> 
+     </ul> 
+    </div> 
+   </div> 
+   <!--搜索框--> 
+   <div class="seach_box" style="position:relative;z-index:99;background:#fff;"> 
+    <div style="border-bottom:1px solid #2089d0;text-align:center;position:relative"> 
+     <p style="line-height:35px;color:#2089d0;"> 搜索范围仅限本网站发布站列表收录的站点 </p> 
+    </div> 
+    <div class="seach_content"> 
+     <div class="seach_text"> 
+      <p id="scbar_hot" style="float: left;font-size: 20px"> <strong>热门搜索：</strong> </p> 
+      <p style="height:44px;display:inline;"> <input type="text" name="key" id="key" value="推荐使用域名搜索" class="seach_input" onfocus="inputclear(this);" onblur="inputblur(this)"> </p> 
+      <div style="float: left;background: #0064BC;width: 220px;height: 44px;text-align: center;line-height: 44px;color: #fff;font-size: 16px;margin-left: 10px;cursor: pointer;border-radius: 8px;" id="search_btn" onclick="selectReportByName1()"> 
+       <span>实时搜索</span> 
+      </div> 
+     </div> 
+    </div> 
+   </div> 
+  </div>  
+ </body>
+</html>

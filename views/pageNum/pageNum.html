@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>游戏列表</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+    <style>
+        .pre-text {
+            white-space: pre;
+        }
+        .layui-upload-img{/*width: 290px; height: 93px;*/ margin: 0 10px 10px 0;max-width: 200px;max-height: 200px}
+        .layui-input-block{
+            margin-left: 0!important;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">页面数据</div>
+                <div class="layui-card-body">
+
+                    <table class="layui-hide" id="auth-table" lay-filter="auth-table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="auth-state" hidden>
+    <button lay-event="update" shiro-event="jax:phoneList:openUpdata" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe642;</i>修改
+    </button>
+</div>
+
+
+
+<div id="layui-file-update" hidden>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form" id="layui-form-file-update" lay-filter="component-form-group">
+                    <input type="text" id="filename" name="filename" hidden>
+                    <textarea class="pre-text" id="fileInfo" name="fileInfo" wrap="hard" style="width: 100%;resize: none;"></textarea>
+                    <div class="layui-footer" id="update-file-button" style="left: 0;">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--update add-->
+<div id="layui-resources" hidden>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form" id="layui-form-brand-update" lay-filter="component-form-group">
+                    <div class="layui-form-item">
+                        <input type="hidden" id="id" name="id">
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">页面</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="describe" lay-verify="required" disabled
+                                       class="layui-input" style="background-color: rgba(24,1,1,0.09)">
+                            </div>
+                            <label class="layui-form-label">展示数量</label>
+                            <div class="layui-input-inline">
+                                <input type="number" name="barnum" lay-verify="required"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-input-block">
+                            <!--操作-->
+                            <div class="layui-footer" id="submit-form-brand-button" style="left: 0;margin-left: 520px">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--修改-->
+<div id="submit-form-update" hidden>
+    <button class="layui-btn" shiro-event="jax:mobileGame:update" lay-submit lay-filter="submit-form-brand-up">立即提交</button>
+</div>
+
+<script src="../../layuiadmin/layui/layui.js"></script>
+<script src="../../statics/wangEditor-3.1.1/release/wangEditor.js"></script>
+<script>
+
+
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index', //主入口模块
+        treetable: '../treetable/treetable'
+    }).use(['index', 'table','formgs','form','security','treetable', 'upload','layedit'], function () {
+        var $ = layui.jquery,
+            admin = layui.admin,
+            table = layui.table,
+            formgs = layui.formgs,
+            form = layui.form,
+            upload = layui.upload,
+            treetable = layui.treetable,
+            layedit = layui.layedit,//控制添加修改（同一个弹出层）关闭弹出层的索引
+            closeindex;//控制添加修改（同一个弹出层）关闭弹出层的索引
+        var E = window.wangEditor;
+        var editor2 = new E('#div3');
+        editor2.customConfig.uploadImgMaxSize = 3 * 700 * 700;
+        editor2.customConfig.uploadImgMaxLength = 10;
+        editor2.customConfig.uploadImgTimeout = 0;
+        editor2.customConfig.uploadImgShowBase64 = true;
+        editor2.customConfig.uploadImgHooks = {
+            fail:function (xhr, editor, result) {
+                //上传错误时触发
+                alert("上传图片失败");
+            }
+        };
+
+        editor2.create();
+
+        table.render({
+            elem: '#auth-table'
+            ,url: layui.setter.url+'jax/jaxMobileGame/getSetting'
+            ,title: 'title'
+            ,cols: [[
+                {field: 'describe', title: '页面',},
+                {field: 'barnum', title: '展示数量',},
+                {fixed: 'right', title: '操作', toolbar: '#auth-state',width:150}
+            ]]
+            ,page: true
+        });
+
+
+        //打开修改，删除
+        table.on('tool(auth-table)', function (obj) {
+            if (obj.event == 'update') {
+                layui.use(['layer'], function () {
+                    var layer = layui.layer, $ = layui.$;
+                    layer.open({
+                        type: 1,//弹窗类型
+                        area: ['1500', '30%'],//定义宽和高
+                        title: ('修改'),//题目
+                        shadeClose: false,//点击遮罩层关闭
+                        content: $("#layui-resources"),//打开的内容
+                        success: function (index, layero) {
+                            formgs.reset('layui-resources');
+                            formgs.get("layui-form-brand-update", obj.data);
+                            $("#submit-form-brand-button").html($("#submit-form-update").html());
+                            //form.render刷新form 如果是针对单一刷新括号里面加上标签名 例：select刷新form.render('select')
+                            form.render();
+                            closeindex = layero;
+                            form.render();
+                        },
+                        end: function () {
+                            //getTableData();//结束之后请求表格数据的方法，新编辑的数据直接存库并展示在页面
+                        }
+                    });
+                })
+            }
+        })
+
+
+        //修改提交
+        form.on('submit(submit-form-brand-up)', function (data) {
+            var url = layui.setter.url+'jax/jaxMobileGame/updateSetting';
+            var formdata = new FormData();
+            formdata.append("id",data.field.id);
+            formdata.append("describe",data.field.describe);
+            formdata.append("barnum",data.field.barnum);
+            admin.req({
+                url: url,
+                data: formdata,
+                cache: false, //上传文件不需要缓存
+                processData: false, // 告诉jQuery不要去处理发送的数据
+                contentType: false, // 告诉jQuery不要去设置Content-Type请求头
+                done: function (res) {
+                    layer.close(closeindex);
+                    table.reload("auth-table");
+                    layer.msg(res.msg);
+                    form.render();
+                    $.get(layui.setter.url+"ranking/test2",function (res) {
+
+                    })
+                }
+            })
+            return false
+        })
+
+        //查询
+        var $ = layui.$, active = {
+            reload: function(){
+                var demoReload = $('#test-table-demoReload');
+                //执行重载
+                table.reload('auth-table', {
+                    page: {curr: 1 }//重新从第 1 页开始
+                    ,where: {url: $('#test-table-demoReload').val()}
+                });
+            }
+        };
+
+        //监听单元格编辑s-checkbox
+        form.on('switch(hotRecommend)', function (data) {
+            var id = $(this).attr("data-id");
+            var state = data.elem.checked ? 1 : 0;
+            update1(id, state);
+            console.log(data);
+        });
+
+        //被调用的修改方法
+        function update1(id, hotRecommend) {
+            admin.req({
+                url: layui.setter.url + "jax/jaxMobileGame/update",
+                data: {id: id, hotRecommend: hotRecommend},
+            });
+            table.reload("auth-table");
+        }
+
+
+        //监听单元格编辑s-checkbox
+        form.on('switch(hotFunction)', function (data) {
+            var id = $(this).attr("data-id");
+            var hotFunction = data.elem.checked ? 1 : 0;
+            update(id, hotFunction);
+        });
+
+        //被调用的修改方法
+        function update(id, hotFunction) {
+            admin.req({
+                url: layui.setter.url + "jax/jaxMobileGame/update",
+                data: {id: id, hotFunction: hotFunction},
+            });
+            table.reload("auth-table");
+        }
+
+        $('.test-table-reload-btn .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+        //查询
+        var $ = layui.$, active = {
+            reload: function () {
+                var demoReload = $('#test-table-demoReload');
+                //执行重载
+                table.reload('auth-table', {
+                    page: {curr: 1}//重新从第 1 页开始
+                    , where: {name: demoReload.val()}
+                });
+            },
+            rolequery: function () {
+                var query = $('#table-role-query');
+                //执行重载
+                table.reload('table-role', {
+                    page: {curr: 1}//重新从第 1 页开始
+                    , where: {likename: query.val()}
+                });
+            }
+        };
+
+
+        $('.test-table-reload-btn .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+</script>
+</body>
+</html>

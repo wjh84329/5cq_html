@@ -1,0 +1,1020 @@
+<html>
+ <head> 
+  <link rel="stylesheet" href="../statics/css/user.css"> 
+  <title>5CQ-传奇广告查询站_传奇广告排行_传奇资源站_新开传奇新服排名站(5CQ.COM)</title>
+  <meta name="description" content="5CQ.Com传奇广告排行榜,传奇私服查询站,传奇资源站,好玩的传奇排名站,玩家最爱的新开传奇,GM最喜欢的传奇工具,传奇直播,传奇新开服,传奇相关尽在5CQ(玩传奇)">
+  <meta name="keywords" content="传奇广告查询站,传奇资源站,传奇广告排行,传奇SF广告统计(5CQ.COM)">   
+ </head> 
+ <body> 
+  <style>
+    table.dataTable thead th,
+    table.dataTable thead td {
+      padding: 0px !important;
+      height: 40px;
+    }
+
+    table.dataTable tbody td {
+      padding: 0px !important;
+    }
+
+    table.dataTable thead .sorting_asc {}
+
+    .yelTr {
+      background: yellow;
+    }
+
+    .witTr {
+      background: #fbffb9;
+    }
+
+    .whiteTr {
+      background: #FFFFFF;
+    }
+
+    .divdivds {
+      width: 24.5%;
+      text-align: center;
+      height: 35px;
+      line-height: 35px;
+      padding: 0;
+      background: #680809;
+      margin: 3px;
+      display: inline-block;
+    }
+
+    .divdivds>span {
+      white-space: nowrap;
+      width: 270px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: inline-block;
+      color: #fff !important;
+    }
+
+    .circle {
+      width: 15px;
+      height: 15px;
+      -moz-border-radius: 50px;
+      -webkit-border-radius: 50px;
+      border-radius: 50px;
+      background-color: green;
+      display: inline-block;
+    }
+
+    .member-login {
+      width: 500px;
+      background: #fff;
+    }
+
+    .member-login__banner {
+      height: 72px;
+      line-height: 72px;
+      text-align: center;
+      background: linear-gradient(111deg, #cf0032, #ff8b67);
+      color: #fff;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .member-login__body {
+      padding: 26px 0 34px;
+      text-align: center;
+    }
+
+    .member-login__qr-box {
+      width: 250px;
+      height: 250px;
+      margin: 0 auto;
+      padding: 18px;
+      border: 1px solid #ffd4d4;
+      border-radius: 4px;
+      background: #fff7f7;
+      box-sizing: border-box;
+    }
+
+    .member-login__qr {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: contain;
+      background: #fff;
+    }
+
+    .member-login__tip {
+      margin-top: 16px;
+      color: #333;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .member-login__agreement {
+      margin-top: 18px;
+      color: #666;
+      font-size: 14px;
+      line-height: 24px;
+    }
+
+    .member-login__agreement a {
+      color: #666;
+      text-decoration: underline;
+      cursor: pointer;
+      margin: 0 2px;
+    }
+
+    .member-login__agreement a:hover {
+      color: #c70000;
+    }
+
+    .agreement-modal {
+      padding: 20px 24px;
+      background: #fff;
+    }
+
+    .agreement-modal__title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #222;
+      margin-bottom: 16px;
+    }
+
+    .agreement-modal__content {
+      max-height: 460px;
+      overflow-y: auto;
+      font-size: 14px;
+      line-height: 26px;
+      color: #444;
+      word-break: break-word;
+    }
+
+    .bigButtonFontStyle{
+      font-family: FZDHTJW--GB1-0;
+      font-size: 16px;
+      color: #FFF7AB;
+      text-shadow: 0 1px 0 rgba(0,0,0,0.50);
+      font-weight: 400;
+
+      background: url("/statics/images/bigbutton.png") no-repeat;
+      background-size: contain;
+      width: 172px;
+      height: 54px;
+      margin-top: -20px;
+      float: right;
+      text-align: center;
+      line-height: 48px;
+    }
+    #contactUsModal {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+      padding: 24px 32px 16px 32px;
+      min-width: 600px;
+      /* min-height: 320px; */
+      font-size: 15px;
+      color: #333;
+      display: none;
+    }
+    .contactus-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 12px;
+      text-align: left;
+    }
+    .contactus-close-btn {
+      position: absolute;
+      right: 18px;
+      top: 12px;
+      font-size: 22px;
+      color: #888;
+      cursor: pointer;
+      z-index: 10001;
+    }
+    .contactus-close-btn:hover {
+      color: #c00;
+    }
+    .contactus-flex {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: flex-start;
+    }
+    .contactus-table {
+      border-collapse: collapse;
+      min-width: 340px;
+      margin-right: 32px;
+    }
+    .contactus-table td {
+      border: 1px solid #e0e0e0;
+      padding: 10px 12px;
+      font-size: 15px;
+      vertical-align: middle;
+    }
+    .contactus-qrcode {
+      min-width: 170px;
+      text-align: center;
+      align-self: center;
+    }
+    .contactus-agent {
+      margin: 12px 0 0 0;
+      text-align: left;
+      font-size: 15px;
+    }
+    .contactus-warning {
+      margin: 8px 0 0 0;
+      text-align: left;
+      font-size: 14px;
+    }
+    /*#rankingtable2 tbody{
+      width: 1300px!important;
+      display: inline-table;
+  }*/
+  </style> 
+  <!--<script type="text/javascript" src="https://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js"></script>--> 
+  <script type="text/javascript" src="/statics/wxLogin.js"></script> 
+  <div id="myLogin" class="member-login" style="display:none;"> 
+   <div class="member-login__banner">
+     微信扫码登录 
+   </div> 
+   <div class="member-login__body"> 
+    <div class="member-login__qr-box"> 
+     <img id="wximg" src="" class="member-login__qr" alt="微信登录二维码"> 
+    </div> 
+    <div class="member-login__tip">
+      请使用微信扫描二维码 
+    </div> 
+    <div class="member-login__agreement">
+      登录和注册即同意 
+     <a href="javascript:;" class="js-open-agreement" data-type="privacy">隐私政策</a> 和 
+     <a href="javascript:;" class="js-open-agreement" data-type="user">用户协议</a> 
+    </div> 
+   </div> 
+  </div> 
+  <div id="agreementModal" style="display:none;"> 
+   <div class="agreement-modal"> 
+    <div class="agreement-modal__title" id="agreementTitle"></div> 
+    <div class="agreement-modal__content" id="agreementContent">
+      加载中... 
+    </div> 
+   </div> 
+  </div> 
+  <script>
+    var customer = getUser();
+    if (customer != undefined) {
+      var html = '';
+      html += '<div style="display: flex;color: red;">'
+      //html+="<img src='"+customer.headimg+"' width='36px' height='36px' style='margin-top: -10px;margin-left:-30px'/> &nbsp;&nbsp;&nbsp;&nbsp;";
+      //html+= "<span>"+(customer.name==null?'':customer.name)+"</span>";
+      //html+= "<a href='/code/user.html' style='margin-left: 10px;color: darkred;cursor: pointer'>个人中心";
+      // html += "<span id='mesSpan' hidden style='bottom:7px;width:10px;height: 10px;display: none;background: red;border-radius: 50%;'></span>";
+      html += "</a>";
+      html += '</div>';
+      //html+=  "<div onclick='tuiSp()' class='exit1'>退出登录</div>";
+      html += "<div onclick='toPersonalPage()' class='toPersonalPageimages bigButtonFontStyle'>个人中心</div>";
+      html += "<div onclick='contactus()' class='weixinimages bigButtonFontStyle'>联系我们</div>";
+      // html+=  "<div onclick='herf()' class='authorization'>查询授权</div>";
+      $("#userName").html(html);
+      // $('.toPersonalPageimages').css('background','url("/statics/images/Cqq2_zx.png") no-repeat');
+      var message = new FormData();
+      message.append('cus_Id', customer.id);
+      admin.req({
+        url: jaxui.url + 'customer/selectIsCus_id',
+        processData: false,
+        contentType: false,
+        data: message,
+        done: function (result) {
+          if (result.msg = '操作成功') {
+            var zj = result.data.zj;
+            if (zj > 0) {
+              $("#mesSpan").css("display", "inline-block");
+              $("#mesSpan").css("width", "10px");
+            } else {
+              $("#mesSpan").css("display", "none");
+              $("#mesSpan").css("width", "0px");
+            }
+          }
+        }
+      })
+    } else {
+      $("#userName").html(
+        '<div onclick="myLogin(1)" class="qqimages bigButtonFontStyle">登录注册</div>' +
+        '<div onclick="contactus()" class="weixinimages bigButtonFontStyle">联系我们</div>'
+        // '<div onclick="herf()" class="authorization">查询授权</div>'
+
+      );
+    }
+
+    // if ($.cookie('hzusertoken') != null) {
+    //   $('.toPersonalPageimages').css('background', 'url("/statics/images/Cqq2_zx.png") no-repeat');
+    //   $('.toPersonalPageimages').css('background-size', 'contain');
+    //   //添加点击事件
+    //   // $('.toPersonalPageimages').click(function () {
+    //   //     location.href='/code/user.html';
+    //   //   })
+    // } else {
+    //   $('.toPersonalPageimages').css('background', 'url("/statics/images/Cqq1.png") no-repeat');
+    //   $('.toPersonalPageimages').css('background-size', 'contain');
+    // }
+
+    if ($.cookie('hzusertoken') != null) {
+      $('.toPersonalPageimages').html('个人中心');
+    } else {
+      $('.toPersonalPageimages').html('登录注册');
+    }
+
+
+    // 点击授权即跳转固定页面
+    function herf() {
+      window.open("http://e.baidu.com/lp/lpapply6/?refer=4163050&sdclkid=A52D15FD152GbSD6bLq&bd_vid=10841530636886688952");
+    }
+
+    //签到
+    function getData() {
+      //获取本月总共有30天还是31天
+      // 创建一个新的Date对象，表示当前日期
+      var currentDate = new Date();
+
+      // 获取当前年份和月份
+      var currentYear = currentDate.getFullYear();
+      var currentMonth = currentDate.getMonth() + 1; // 注意：getMonth()返回的是0-11的月份值，所以需要加1
+
+      // 为了获取本月的天数，我们需要创建一个表示下个月第一天的Date对象
+      // 然后将其日期部分减1，这样我们就可以得到本月的最后一天
+      var nextMonthFirstDay = new Date(currentYear, currentMonth, 1);
+      // var lastDayOfCurrentMonth = new Date(nextMonthFirstDay - (nextMonthFirstDay.getTimezoneOffset() * 60000)).getDate();
+      var lastDayOfCurrentMonth = new Date(currentYear, currentMonth, 0).getDate();
+      // 注意：上面的代码行考虑了时区偏移，但通常情况下，你可以简化如下：
+      // var lastDayOfCurrentMonth = new Date(currentYear, currentMonth, 0).getDate();
+      // 因为当月份设为超出当前月份的值（如13）时，Date对象会自动回滚到下一个月的第一天前的一天，即本月的最后一天
+
+      // 显示本月的天数
+      console.log("本月天数: " + lastDayOfCurrentMonth);
+      var customer = getUser();
+      console.log(customer)
+      if (customer == null) {
+        myLogin()
+        return;
+      } else {
+        window.location.href = '/code/user.html';
+        return;
+      }
+
+      // var formdate = new FormData();
+      // formdate.append("open_id", customer.openid);
+
+      //获取签到信息
+      $.ajax({
+        url: 'https://hz.5cq.net/cq/user/user_report',
+        // processData: false,
+        // contentType: false,
+        type: 'POST',
+        data: {
+          open_id: customer.openid,
+        },
+        dataType: 'json',
+        headers: {
+          'boxVersion': '1.0.0', // 在这里添加你的自定义头
+          // 可以继续添加其他头信息
+          'token': $.cookie('hzusertoken')
+        },
+        // async: false,
+        success: function (result) {
+          var data = result.data;
+          // console.log(result)
+          if (result.code == 0 || result.code == 1 || result.code == 2 || result.code == 200) {
+            // console.log(data)
+            var html = '';
+            html += `<div id="el-id-7469-30" class="el-dialog__body" style="background-color: transparent;">
+                            <div data-v-44ffe2e1="" data-v-b22930f7="" class="sign-in"><img onclick="closereport()" data-v-44ffe2e1=""
+                                                                                            src="../statics/images/sign-close.png"
+                                                                                            alt="/" class="sign-close">
+                                <div data-v-44ffe2e1="" class="sign-body">
+                                    <div data-v-44ffe2e1="" class="sign-title el-tooltip__trigger el-tooltip__trigger">
+                                        <div data-v-44ffe2e1="" class="sign-title-text" style="color: red">
+                                            请前往盒子领取累计签到奖励
+                                        </div>
+                                    </div>
+                                    <ul data-v-44ffe2e1="" id="datelist">`
+            for (var i = 0; i < lastDayOfCurrentMonth; i++) {
+              // console.log(i)
+              html += `<li data-v-44ffe2e1="" class="report">
+                                        <p data-v-44ffe2e1="" class="sign-days">第${i + 1}天</p>
+                                        <img data-v-44ffe2e1="" src="../statics/images/more-coin.png" alt="/">
+                                        <p data-v-44ffe2e1="" class="sign-coin">${data.num}金币</p>
+                                        <img data-v-44ffe2e1="" src="../statics/images/already.png" class="sign-already" alt="/" style="${i + 1 <= data.day ? 'display: block' : 'display:none'}">
+                                    </li>`
+            }
+            html += `</ul>
+                                    </div>
+                                </div>
+                            </div>`
+            // $("#datelist").html(html);
+            /*$('.sign-close').click(function () {
+                layer.closeAll();
+            })*/
+            var windowWidth = $(window).width();
+           console.log(windowWidth)
+           var windowHeight = $(window).height();
+           console.log(windowHeight)
+            layer.open({
+              type: 1,
+              title: false,
+              closeBtn: 0,
+              anim: 2,
+              shade: 0.4,
+              area: ['auto', 'auto'],
+            //   offset: [parseInt((windowWidth-1170)/2)+'px', parseInt((windowHeight-615)/2)+'px'],
+              content: html, //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+              success: function (layero, index) {
+                console.log(layero)
+                // $(layero).css('background-color','hsla(0, 0%, 100%, 0)');
+                $(layero).css('background-color', 'transparent');
+                $(layero).css('box-shadow', '0 4px 8px rgb(0 0 0 / 0%)');
+              }
+            });
+            $('.report').click(function () {
+              $(this).addClass('is-active');
+              var formdate1 = new FormData();
+              // formdate1.append("open_id", customer.openid);
+              // formdate1.append("type", 1);
+              $.ajax({
+                url: 'https://hz.5cq.net/cq/user/add_report',
+                dataType: 'json',
+                type: 'POST',
+                data: {
+                  open_id: customer.openid,
+                },
+                // async: false,
+                headers: {
+                  'boxVersion': '1.0.0', // 在这里添加你的自定义头
+                  // 可以继续添加其他头信息
+                  'token': $.cookie('hzusertoken')
+                },
+                success: function (result) {
+                  var data = result.data;
+                  // console.log(result.msg)
+                  if (result.code == 200) {
+                    $.ajax({
+                      url: 'https://hz.5cq.net/cq/user/setCoin',
+                      dataType: 'json',
+                      type: 'POST',
+                      data: {
+                        open_id: customer.openid,
+                        type: 1,
+                      },
+                      // async: false,
+                      headers: {
+                        'boxVersion': '1.0.0', // 在这里添加你的自定义头
+                        // 可以继续添加其他头信息
+                        'token': $.cookie('hzusertoken')
+                      },
+                      success: function (result) {
+                        var data = result.data;
+                        console.log(result.msg)
+                        if (result.code == 200) {
+                          // console.log(data)
+                          /*layer.msg('签到成功', {
+                              icon: 1,
+                              time: 4000 //2秒关闭（如果不配置，默认是3秒）
+                          }, function(){
+                              //do something
+                              layer.closeAll();
+                          });*/
+                          $.ajax({
+                            url: 'https://hz.5cq.net/cq/user/user_report',
+                            // processData: false,
+                            // contentType: false,
+                            type: 'POST',
+                            data: {
+                              open_id: customer.openid,
+                            },
+                            dataType: 'json',
+                            headers: {
+                              'boxVersion': '1.0.0', // 在这里添加你的自定义头
+                              // 可以继续添加其他头信息
+                              'token': $.cookie('hzusertoken')
+                            },
+                            // async: false,
+                            success: function (result) {
+                              var data = result.data;
+                              // console.log(result)
+                              if (result.code == 1 || result.code == 200) {
+                                // console.log(data)
+                                var html = '';
+                                for (var i = 0; i < lastDayOfCurrentMonth; i++) {
+                                  // console.log(i)
+                                  html += `<li data-v-44ffe2e1="" class="report">
+                                        <p data-v-44ffe2e1="" class="sign-days">第${i + 1}天</p>
+                                        <img data-v-44ffe2e1="" src="../statics/images/more-coin.png" alt="/">
+                                        <p data-v-44ffe2e1="" class="sign-coin">${data.num}金币</p>
+                                        <img data-v-44ffe2e1="" src="../statics/images/already.png" class="sign-already" alt="/" style="${i + 1 <= data.day ? 'display: block' : 'display:none'}">
+                                    </li>`
+                                }
+                                $("#datelist").html(html);
+                                layer.msg('签到成功')
+                                // $("#datelist").html(html);
+                                /*$('.sign-close').click(function () {
+                                    layer.closeAll();
+                                })*/
+
+                              } else {
+                                console.log(data)
+                                return;
+                              }
+                            }
+                          })
+                          // layer.msg(result.msg);
+                          // layer.closeAll();
+                        } else {
+                          console.log(data)
+                          return;
+                        }
+                      }
+                    })
+                  } else {
+                    console.log(data)
+                    layer.msg(result.msg);
+                    return;
+                  }
+                }
+              })
+            })
+          } else if (result.code == 401) {
+            myLogin()
+            return;
+          }
+          else {
+            console.log(data)
+            return;
+          }
+        },
+        error: function (err) {
+          console.log(err)
+          if (err.status == 401) {
+            myLogin()
+            return;
+          } else {
+            console.log(err)
+            return;
+          }
+        }
+      })
+    }
+
+    function closereport() {
+      layer.closeAll();
+    }
+
+    //打开联系我们
+    function contactus() {
+      if ($("#contactUsModal").length === 0) {
+        var html = `
+          <div id="contactUsModal">
+            <span class="contactus-close-btn" onclick="closecontactus()">×</span>
+            <div class="contactus-title">联系我们</div>
+            <div class="contactus-flex">
+              <table class="contactus-table">
+                <tr>
+                 <td>黑名单投诉举报</td>
+                  <td style="display: flex;align-items: center;">
+                    <a class="icon-qq" href="http://wpa.qq.com/msgrd?v=3&uin=1839728&site=qq&menu=yes" target="_blank">
+                    </a>
+                    <span style="margin-left:10px;">QQ：1839728</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>5CQ站长建议反馈</td>
+                  <td style="display: flex;align-items: center;">
+                    <a class="icon-qq" href="http://wpa.qq.com/msgrd?v=3&uin=3067585&site=qq&menu=yes" target="_blank">
+                      
+                    </a>
+                    <span style="margin-left:10px;">QQ：3067585</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>微信</td>
+                  <td style="color:red;font-weight:bold;">扫码加微信&gt;&gt;&gt;</td>
+                </tr>
+              </table>
+              <div class="contactus-qrcode">
+                <span class="icon-wx"></span><br/>
+              </div>
+            </div>
+            <div class="contactus-agent" style="display: flex;justify-content: center;">
+              <span style="color:blue;">广告推广请联系代理</span>
+            </div>
+            <div class="contactus-warning">
+              <span style="color:red;font-weight:bold;display: flex;justify-content: center;">
+                谨防骗子：如有投诉建议，请联系站长
+              </span>
+            </div>
+          </div>
+        `;
+        $("body").append(html);
+        $("#contactUsModal").fadeIn();
+      } else {
+        $("#contactUsModal").fadeIn();
+      }
+    }
+    function closecontactus() {
+      $("#contactUsModal").fadeOut();
+    }
+
+
+
+    /********************************************点击页面中的登录/注册按钮开始*******************************************************/
+    // 点击登录按钮
+    // var timeTranslate;
+    var loginLayerIndex = null;
+    var loginPollingTimer = null;
+    var loginOpening = false;
+    //1--刷新页面
+    function myLogin(up_id = '') {
+      if (loginOpening || loginLayerIndex !== null) {
+        return;
+      }
+      loginOpening = true;
+      var uuid = getUUID();
+      admin.req({
+        url: 'https://hz.5cq.net/cq/user/qrcode',
+        processData: false,
+        contentType: false,
+        data: {},
+        async: false,
+        done: function (result) {
+          // console.log(result.data);
+          $('#wximg').attr('src', result.data)
+          var key = result.key
+          var timeTranslate = null
+          if (result.code == 200) {
+            var index = layer.open({
+              type: 1,
+              title: '会员登录',
+              closeBtn: 1,
+              shadeClose: true,
+              area: ['500px', 'auto'],
+              skin: 'member-login-layer',
+              content: $("#myLogin"),
+              success: function (layero, index) {
+                loginLayerIndex = index;
+                loginOpening = false;
+                loginPollingTimer = setInterval(function () {
+                  var formdate = new FormData();
+                  formdate.append("key", key);
+                  if (up_id != '') {
+                    formdate.append("up_id", up_id);
+                  }
+                  $.ajax({
+                    url: 'https://hz.5cq.net/cq/user/get_user_info',
+                    type: 'POST',
+                    processData: false, // 告诉jQuery不要去处理发送的数据
+                    contentType: false, // 告诉jQuery不要去设置Content-Type请求头
+                    data: formdate, // 假设formdate是已经定义好的要发送的数据
+                    headers: {
+                      'boxVersion': '1.0.0', // 在这里添加你的自定义头
+                      // 可以继续添加其他头信息
+                    },
+                    success: function (res) {
+                      // 处理成功的响应
+                      if (res.code == 200) {
+                        console.log(res);
+                        layer.close(index);
+                        // var result = res.data
+                        clearInterval(timeTranslate);
+                        $.cookie('userinfo', JSON.stringify(res.data), { path: '/' });
+                        var formdate1 = new FormData();
+                        formdate1.append("uuid", uuid);
+                        formdate1.append("openId", res.data.open_id);
+                        formdate1.append("nickname", res.data.nickname);
+                        formdate1.append("headImgUrl", res.data.avatar);
+                        formdate1.append("token", res.token);
+                        admin.req({
+                          url: jaxui.url + 'wx/wxlogin/login',
+                          processData: false,
+                          contentType: false,
+                          data: formdate1,
+                          async: false,
+                          done: function (result) {
+                            // console.log(result)
+                            if (result.data) {
+                              layer.close(index);
+                              if (loginPollingTimer) {
+                                clearInterval(loginPollingTimer);
+                                loginPollingTimer = null;
+                              }
+                              // console.log(result.customer)
+                              // $.cookie('user', JSON.stringify(result.customer), { path: '/' });
+                              // $.cookie('token',result.token,{ path: '/' });
+                              // $.cookie('usertoken',result.token,{ path: '/' });
+                              var expireDate = new Date();
+                              expireDate.setTime(expireDate.getTime() + 60 * 60 * 1000);
+
+                              $.cookie('hzusertoken', result.token, {
+                                expires: expireDate,
+                                path: '/'
+                              });
+                              result.customer.phone = res.data.phone || '';
+                              $.cookie('user', JSON.stringify(result.customer), { expires: expireDate, path: '/' });
+                              $.cookie('userinfo', JSON.stringify(result.customer), { expires: expireDate, path: '/' });
+                              $.cookie('token', result.token, { expires: expireDate, path: '/' });
+                              window.location.reload();
+                              // 当前页面
+                              var currentUrl = window.location.href;
+                              window.location.href = '/code/user.html';
+                            }
+                          }
+                        })
+                      }
+                    },
+                    error: function (xhr, status, error) {
+                      // 处理错误情况
+                      console.error("Error occurred: " + error);
+                    }
+                  });
+                }, 250);
+              },
+              end: function() {
+                if (loginPollingTimer) {
+                  clearInterval(loginPollingTimer);
+                  loginPollingTimer = null;
+                }
+                loginLayerIndex = null;
+                loginOpening = false;
+              }
+            });
+          }else{
+            loginOpening = false;
+          }
+        }
+      })
+    }
+    function closeA() {
+      $("#myLogin").fadeToggle();
+      $("#zzcDiv").css("display", "none");
+    }
+
+    function fetchAgreementContent(type, callback) {
+      $.ajax({
+        url: 'https://hz.5cq.net/cq/' + 'business/h5config',
+        type: 'GET',
+        dataType: 'json',
+        data: {
+          type: type
+        },
+        headers: {
+          boxVersion: '1.0.0'
+        },
+        success: function (res) {
+          if (String(res.code) === '200' || String(res.code) === '0') {
+            callback(null, res.data || {});
+          } else {
+            callback(res.msg || '获取协议内容失败');
+          }
+        },
+        error: function () {
+          callback('获取协议内容失败');
+        }
+      });
+    }
+
+    function openAgreementModal(type) {
+      var titleMap = {
+        privacy: '隐私政策',
+        user: '用户协议'
+      };
+
+      $('#agreementTitle').text(titleMap[type] || '协议内容');
+      $('#agreementContent').html('加载中...');
+
+      layer.open({
+        type: 1,
+        title: false,
+        area: ['760px', '542px'],
+        offset: '300px',
+        shadeClose: true,
+        content: $('#agreementModal'),
+        success: function () {
+          fetchAgreementContent(type, function (err, data) {
+            if (err) {
+              $('#agreementContent').html('<div style="color:#999;">' + err + '</div>');
+              return;
+            }
+
+            // var html = data.yszc || data.fwxy || data.detail || '';
+            if(type === 'privacy') {
+              var html = data.yszc || '';
+            } else if(type === 'user') {
+              var html = data.fwxy || '';
+            }
+            $('#agreementContent').html(html || '<div style="color:#999;">暂无内容</div>');
+          });
+        }
+      });
+    }
+    $(document)
+      .off('click.userAgreement')
+      .on('click.userAgreement', '.js-open-agreement', function () {
+        var type = $(this).data('type');
+        openAgreementModal(type);
+      });
+
+    // 点击注册按钮
+    // function register() {
+    //     $("#registForm").fadeToggle();
+    //     $("#zzcDiv").css("display","block");
+    // }
+    function closeB() {
+      $("#registForm").fadeToggle();
+      $("#zzcDiv").css("display", "none");
+    }
+
+    // 点击联系按钮
+    function lianxi() {
+      $("#lianxiForm").fadeToggle();
+      $("#zzcDiv").css("display", "block");
+    }
+    function closey() {
+      $("#lianxiForm").fadeToggle();
+      $("#zzcDiv").css("display", "none");
+    }
+
+    /********************************************点击页面中的登录/注册按钮结束*******************************************************/
+
+
+    /********************************************点击登录页面中的忘记密码和注册按钮开始*******************************************************/
+    // 点击注册
+    function regist() {
+      $("#registForm").fadeToggle();
+      $("#myLogin").fadeToggle();
+      $("#zzcDiv").css("display", "block");
+    }
+    //点击忘记密码
+    function resetPwd() {
+      $("#resetPwdForm").fadeToggle();
+      $("#myLogin").fadeToggle();
+      $("#zzcDiv").css("display", "block");
+    }
+    /********************************************点击登录页面中的忘记密码和注册按钮结束*******************************************************/
+
+
+    /********************************************点击登录页面中的点击注册按钮开始****************************************************/
+    // 点击立即登录
+    function login() {
+      $("#registForm").fadeToggle();
+      $("#myLogin").fadeToggle();
+      $("#zzcDiv").css("display", "block");
+    }
+    /********************************************点击登录页面中的点击注册按钮结束****************************************************/
+
+
+    /********************************************点击登录页面中的点击忘记密码按钮开始****************************************************/
+    //点击注册
+    function registTwo() {
+      $("#resetPwdForm").fadeToggle();
+      $("#registForm").fadeToggle();
+      $("#zzcDiv").css("display", "block");
+    }
+    //点击返回登录
+    function backLogin() {
+      $("#resetPwdForm").fadeToggle();
+      $("#myLogin").fadeToggle();
+      $("#zzcDiv").css("display", "block");
+    }
+    //关闭
+    function closeC() {
+      $("#resetPwdForm").fadeToggle();
+      $("#zzcDiv").css("display", "none");
+    }
+    /********************************************点击登录页面中的点击忘记密码按钮开始****************************************************/
+
+
+    //关闭联系我们
+    function closecontactus() {
+      $("#contactUsModal").fadeToggle();
+      $("#zzcDiv").css("display", "none");
+    }
+
+    //跳转到个人中心页面
+    function toPersonalPage() {
+      //判断是否登录
+      if ($.cookie('user') == null) {
+        myLogin();
+        return;
+      }
+      location.href = '/code/user.html';
+    }
+
+    function userA() {
+      location.href = 'code/newUser/user.html'
+    }
+
+    function tuiSp() {
+      var pathname = window.location.pathname;
+      if (pathname == "/code/user.html") {
+        location.href = '/index.html'
+      } else {
+        location.reload();
+      }
+      $.removeCookie('user', { path: '/' });
+      $.removeCookie('token', { path: '/' });
+      /*$("#userName").html("" +
+          '   <a onclick="register()" style="cursor:pointer;">注册</a>/' +
+          '   <a onclick="myLogin()" style="cursor:pointer;">登录</a>'
+      );*/
+    }
+    //sxl2
+    function iframeA(state, that) {
+      $(that).addClass("active");
+      $(that).siblings().removeClass("active");
+      if (state == 0) {
+        $('.ifram').attr('src', 'code/home.html');
+      } else if (state == 1) {
+        $('.ifram').attr('src', 'code/dataAnalysis.html')
+      } else if (state == 2) {
+        $('.ifram').attr('src', 'code/publishSites.html')
+      } else if (state == 3) {
+        $('.ifram').attr('src', 'code/fastscreen.html')
+      } else if (state == 4) {
+        $('.ifram').attr('src', 'code/ranking.html')
+      } else if (state == 5) {
+        $('.ifram').attr('src', 'code/recruTran.html')
+        return;
+      } else if (state == 6) {
+        layer.msg('Search code正在开发中敬请期待!!!');
+        return;
+      } else if (state == 7) {
+        $('.ifram').attr('src', 'code/forumFunction.html')
+        return;
+      } else if (state == 8) {
+        $('.ifram').attr('src', 'code/liveBroadcast.html')
+      } else if (state == 9) {
+        $('.ifram').attr('src', 'code/resourceNavigation.html')
+      } else if (state == 10) {
+        $('.ifram').attr('src', 'code/websfilQuery.html')
+      } else if (state == 11) {
+        $('.ifram').attr('src', 'code/newUser/user.html')
+      } else if (state == 13) {
+        $('.ifram').attr('src', 'code/articleList.html')
+      }
+    }
+    function setIframeHeight(el) {
+      el.style.height = (el.contentWindow.document.body.offsetHeight + 100) + 'px'
+    }
+
+
+  </script> 
+  <!-- 招聘底版调用 --> 
+  <script>
+
+    // 招聘交易查看联系方式
+    var id = $("#id").val();
+    //联系我们
+    function contactUs() {
+      if ($.cookie('user') != null) {
+        parent.layer.open({
+          type: 1
+          , title: "联系我们"
+          , content: $("#lxfs").html()
+          , btn: ['取消']
+          , btnAlign: 'r' //按钮居中
+          , shade: 0 //不显示遮罩
+          , area: ["500px", "350px"]
+          , yes: function (index, layero) {
+            parent.layer.closeAll();
+          }
+          , btn2: function (index, layero) {
+            parent.layer.closeAll();
+          }
+        });
+      } else {
+        myLogin();
+      }
+    }
+
+    var getDate = function () {
+      var date = new Date();
+      var year = date.getFullYear(); //获取完整的年份(4位)
+      var month = date.getMonth() + 1; //获取当前月份(0-11,0代表1月)
+      var day = date.getDate(); //获取当前日(1-31)
+      if (month < 10) {
+        month = '0' + month;
+      }
+      if (day < 10) {
+        day = '0' + day;
+      }
+      return year + '' + month + '' + day;
+    }
+
+    var getUUID = function () {
+      return 'xxxx-xxxx-xxxx-xxxx-xxxx'.replace(/[xy]/g, function (c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+      });
+    }
+
+  </script>  
+ </body>
+</html>

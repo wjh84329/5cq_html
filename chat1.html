@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+ <head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>5CQ-传奇广告查询站_传奇广告排行_传奇资源站_新开传奇新服排名站(5CQ.COM)</title>
+  <meta name="description" content="5CQ.Com传奇广告排行榜,传奇私服查询站,传奇资源站,好玩的传奇排名站,玩家最爱的新开传奇,GM最喜欢的传奇工具,传奇直播,传奇新开服,传奇相关尽在5CQ(玩传奇)">
+  <meta name="keywords" content="传奇广告查询站,传奇资源站,传奇广告排行,传奇SF广告统计(5CQ.COM)">   
+  <link rel="stylesheet" href="./statics/css/bootstrap.min.css"> 
+  <!--    <script src="./layuiadmin/layui/layui.js"></script>--> 
+  <style>
+        .chat-window {
+            /*height: 400px;*/
+            overflow-y: auto;
+        }
+        .message {
+            padding: 10px;
+            margin: 5px;
+            border-radius: 10px;
+        }
+        .user-message {
+            background-color: #e9ecef;
+            align-self: flex-end;
+            text-align: right;
+        }
+        .bot-message {
+            background-color: #d4edda;
+            align-self: flex-start;
+            text-align: left;
+        }
+    </style> 
+ </head> 
+ <body> 
+  <div class="container mt-5"> 
+   <div class="row"> 
+    <div class="col-md-12 chat-window" id="chatWindow"> 
+     <!-- 示例消息 --> 
+     <div class="message bot-message">
+       你好！有什么我可以帮助你的吗？ 
+     </div> 
+    </div> 
+   </div> 
+   <div class="row mt-3"> 
+    <div class="col-md-12"> 
+     <input type="text" class="form-control" id="userInput" placeholder="输入信息后按回车发送"> 
+    </div> 
+   </div> 
+  </div> 
+  <!--<script src="./statics/js/jquery-3.2.1.min.js"></script>--> 
+  <!--<script src="./statics/js/jquery.slim.min.js"></script>--> 
+  <!--<script src="./statics/js/bootstrap.bundle.min.js"></script>--> 
+  <script src="./statics/layui/layui.js"></script> 
+  <script>
+    layui.use(['element', 'rate'], function () {
+        var element = layui.element;
+        var $ = layui.jquery;
+        var baseUrl ="http://jaxone.5cq.com/server/"
+        $(document).ready(function() {
+            // 自动滚动到聊天窗口底部
+            function scrollToBottom() {
+                var objDiv = document.getElementById("chatWindow");
+                objDiv.scrollTop = objDiv.scrollHeight;
+            }
+            scrollToBottom(); // 初始滚动到底部
+            $('#userInput').on('keydown', function(e) {
+                if (e.key === 'Enter') { // 按下Enter键时触发
+                    var userMessage = $(this).val().trim();
+                    if (userMessage) {
+                        addMessage(userMessage, 'user'); // 添加用户消息到聊天窗口
+                        $(this).val(''); // 清空输入框
+                        addMessage("思考中……", 'bot'); // 添加机器人的回复到聊天窗口
+                        setTimeout(function() { // 模拟自动回复延迟
+                            $.ajax({
+                                //返回相同的session
+                                url: baseUrl + 'ranking/chat',
+                                type: 'POST',
+                                data: {
+                                    'message': userMessage,
+                                },
+                                ContentType: "application/json; charset=utf-8",
+                                // timeout: 10000,    //超时时间
+                                dataType: 'json',
+                                success: function (data, textStatus, jqXHR) {
+                                    var message = data.choices[0].message.content;
+                                    console.log(data.choices[0].message.content);
+                                    addMessage(message, 'bot'); // 添加机器人的回复到聊天窗口
+                                    scrollToBottom(); // 每次添加消息后滚动到底部
+                                },error: function (jqXHR, textStatus, errorThrown) {
+                                    addMessage("哎呀，出错了！", 'bot'); // 添加机器人的回复到聊天窗口
+                                    scrollToBottom(); // 每次添加消息后滚动到底部
+                                },done: function (data, textStatus, jqXHR) {
+                                    console.log(textStatus);
+                                }
+                            });
+                            /*var botResponse = "Sure, I'm here to help!"; // 定义自动回复内容
+                            addMessage(botResponse, 'bot'); // 添加机器人的回复到聊天窗口*/
+                        }, 1000); // 延迟1秒后添加消息，模拟处理时间
+                    }
+                }
+            });
+            // 添加消息到聊天窗口的函数
+            function addMessage(message, sender) {
+                if($('#chatWindow div:last').text() === "思考中……"){
+                    $('#chatWindow div:last').remove();
+                }
+                var messageClass = sender === 'user' ? 'user-message' : 'bot-message';
+                let escapedMessage = message.replace(/\n/g, '<br>');
+                $('#chatWindow').append(`<div class="message ${messageClass}">${escapedMessage}</div>`);
+                scrollToBottom(); // 每次添加消息后滚动到底部
+            }
+        });
+    })
+
+</script>  
+ </body>
+</html>

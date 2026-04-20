@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>私服发布</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+    <style>
+        .layadmin-homepage-pad-ver {
+            padding-top: 15px;
+            padding-bottom: 15px;
+        }
+
+        .layadmin-homepage-pad-img {
+            box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+        }
+
+        /*.layui-table-cell {            overflow: visible !important;        }*/
+
+        .layui-table-body {
+            overflow: visible;
+        }
+        .layui-table td .layui-table-cell {
+            line-height: 28px;
+        }
+        .layui-anim-upbit{
+            position: absolute;
+        }
+        /* 调整高度 */
+        td .layui-form-select {
+            margin-top: -10px;
+            margin-left: -15px;
+            margin-right: -15px;
+        }
+
+        .layui-table-box{
+            overflow: visible!important;
+        }
+        .layui-upload-img{width: 100%; height: 33px; margin: 0 10px 10px 0;}
+    </style>
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">广告管理</div>
+                <div class="layui-card-body">
+                    <div class="test-table-reload-btn" style="margin-bottom: 10px;">
+                        <button id="publish-button-add" shiro-event="sys:publish:open-add" class="layui-btn"><i
+                                class="layui-icon">&#xe654;</i>添加
+                        </button>
+                        <button id="publish-button-del" shiro-event="sys:publish:open-removes" data-type="getid"
+                                class="layui-btn"><i
+                                class="layui-icon">&#xe654;</i>批量删除
+                        </button>
+                        <input id="ids" type="text" hidden>
+                    </div>
+                    <table class="layui-hide" id="auth-table" lay-filter="auth-table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="auth-state" hidden>
+    <button lay-event="update" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe642;</i>上传
+    </button>
+    <button lay-event="remove" shiro-event="sys:publish:open-remove" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe640;</i>删除
+    </button>
+</div>
+
+<!--添加-->
+<div id="submit-form-add" hidden>
+    <button class="layui-btn" lay-submit lay-filter="submit-form-publish">立即提交</button>
+    <!--添加-->
+    <button type="reset" class="layui-btn layui-btn-primary">重置</button><!--添加-->
+</div>
+
+<div id="submit-form-update" hidden>
+    <button class="layui-btn" lay-submit lay-filter="submit-form-publish">立即提交</button>
+</div>
+
+
+<div id="layui-publish" hidden>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form" id="layui-form-resources" lay-filter="component-form-group">
+                    <div class="layui-form-item">
+                        <input type="hidden" id="id" name="id">
+
+                        <div>
+
+                            <div style="width: 30%;float: left">
+                                <div class="layui-form-item layui-form-text" >
+                                    <label class="layui-form-label">广告标题</label>
+                                    <div class="layui-input-inline" style="width: 212px">
+                                        <input type="text" id="name" name="name" lay-verify="required" placeholder="请输入标题名称"
+                                               class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item layui-form-text" >
+                                    <label class="layui-form-label">广告链接</label>
+                                    <div class="layui-input-inline" style="width: 212px">
+                                        <input type="text" id="url" name="url" lay-verify="required" placeholder="请输入广告链接"
+                                               class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item layui-form-text" style="width: 340px">
+                                    <label class="layui-form-label">广告排序</label>
+                                    <div class="layui-input-inline" style="width: 212px">
+                                        <input type="text" id="sort" name="sort" lay-verify="required|number" placeholder="请输入排序"
+                                               class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item layui-form-text" style="width: 340px">
+                                    <label class="layui-form-label">广告状态</label>
+                                    <div class="layui-input-inline">
+                                        <input type="radio" name="state" value="0" title="正常">
+                                        <input type="radio" name="state" value="1" title="不显示">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item layui-form-text" style="width: 340px">
+                                    <label class="layui-form-label">广告类型</label>
+                                    <div class="layui-input-inline">
+                                        <input type="radio" name="type" value="1" title="横幅">
+                                        <input type="radio" name="type" value="2" title="对联">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item layui-form-text" style="width: 340px">
+                                    <label class="layui-form-label">开始时间</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" id="starttime" name="starttime" lay-verify="required" placeholder="请选择开始时间"
+                                               class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item layui-form-text" style="width: 340px">
+                                    <label class="layui-form-label">结束时间</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" id="endtime" name="endtime" lay-verify="required" placeholder="请选择结束时间"
+                                               class="layui-input">
+                                    </div>
+                                </div>
+                                <!--<div class="layui-form-item layui-form-text"  style="width: 340px">
+                                    <label class="layui-form-label">链接地址</label>
+                                    <div class="layui-input-inline" style="width: 212px">
+                                        <input type="text" id="http" name="http" lay-verify="required" placeholder="请输入链接地址"
+                                               class="layui-input">
+                                    </div>
+                                </div>-->
+                                <!--<div class="layui-form-item layui-form-text"  style="width: 340px">
+                                    <label class="layui-form-label">排序</label>
+                                    <div class="layui-input-inline" style="width: 212px">
+                                        <input type="text" id="sort" name="sort" lay-verify="required|number" placeholder="排序"
+                                               class="layui-input">
+                                    </div>
+                                </div>-->
+                            </div>
+                            <div style="width: 65%;float: right">
+                                <div class="layui-card-body" style="padding: 0px 0px">
+                                    <div class="layui-upload">
+                                        <button type="button" class="layui-btn" id="test-upload-normal">上传图片</button>
+                                        <div class="layui-upload-list">
+                                            <img class="layui-upload-img" id="test-upload-normal-img">
+                                            <p id="test-upload-demoText"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="layui-form-item layui-form-text">
+
+                        </div>
+                        <div class="layui-input-block">
+                            <!--操作-->
+                            <div class="layui-footer" id="submit-form-publish-button" style="left: 0;">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<button style="display: none" type="button" class="layui-btn sss" id="test-upload-type1"><i class="layui-icon"></i>上传文件
+</button>
+<script type="text/html" id="timeTpl">
+    <input type="text" id="startdate_{{d.id}}" value="{{d.startdate}}" readonly="readonly"
+           class="layui-input layui-input-date" style="margin-top: -3px;text-align: center"/>
+</script>
+<script type="text/html" id="checkboxTpl">
+    <!-- 这里的 checked 的状态只是演示 -->
+    <input type="checkbox" name="lock" id="{{d.id}}" value="{{d.state}}" data-start="{{d.starttime}}" data-end="{{d.endtime}}" title="展示" lay-filter="lockDemo" {{ d.state == 0 ? 'checked' : '' }}>
+</script>
+<script src="../../layuiadmin/layui/layui.js"></script>
+<!--<script src="../../statics/js/jquery-3.2.1.min.js"></script>-->
+<script>
+    var arr = [];
+    var price = '';
+    var user = JSON.parse(window.localStorage.getItem("user"));
+    /*$(document).ready(function() {
+        $('textarea[name="text"]').on('input', function() {
+            // 获取textarea的当前值
+            var textareaValue = $(this).val();
+            console.log(textareaValue)
+        });
+    })*/
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index', //主入口模块
+    }).use(['index', 'table', 'formgs', 'form', 'security', 'layer', 'upload', 'laydate'], function () {
+        var $ = layui.jquery,
+            admin = layui.admin,
+            table = layui.table,
+            formgs = layui.formgs,
+            form = layui.form,//控制添加修改（同一个弹出层）关闭弹出层的索引
+            laydate = layui.laydate,
+            upload = layui.upload,
+            layer = layui.layer, closeindex;
+        laydate.render({
+            format: 'yyyy-MM-dd',
+            theme: 'grid',
+            trigger: 'click',
+            elem: '#starttime',
+            type: 'date',
+        });
+        laydate.render({
+            format: 'yyyy-MM-dd',
+            theme: 'grid',
+            trigger: 'click',
+            elem: '#endtime',
+            type: 'date',
+        });
+        table.render({
+            elem: '#auth-table'
+            , url: layui.setter.url + 'ranking/selectAdAll'
+            , title: '广告管理'
+            , cols: [[
+                {type: 'checkbox'}
+                , {field: 'sort', title: '排序',width: 80, edit: 'text'}
+                , {field: 'imgurl', title: '图片',templet: function (data) {
+                        return `<img src="../../statics/upload/${data.imgurl}" style="width: 100%">`;
+                    }}
+                , {field: 'name', title: '标题', sort: false,width: 200, edit: 'text'}
+                , {field: 'url', title: '链接', sort: false,width: 200, edit: 'text'}
+                , {field: 'type', title: '广告类型',width: 110, sort: false,templet: function (data) {
+                        if(data.type==1){
+                            return `<span style="color: #00a0e9">横幅广告</span>`
+                        }else {
+                            return `<span style="color: red">对联广告</span>`
+                        }
+                    }}
+                , {field: 'starttime', title: '开始时间',width: 110, sort: false,templet: function (data) {
+                        return `<span class="start" data-id="${data.id}">${data.starttime.substring(0,10)}</span>`;
+                    }}
+                , {field: 'endtime', title: '结束时间',width: 110, sort: false,templet: function (data) {
+                        return `<span class="end" data-id="${data.id}">${data.endtime.substring(0,10)}</span>`;
+                    }}
+                , {title: '广告状态', sort: false,width: 120, templet: '#checkboxTpl'}
+                , {fixed: 'right', title: '操作', toolbar: '#auth-state',width: 140}
+            ]]
+            , page: true
+
+
+        });
+        // 监听单元格点击事件
+        document.querySelector('.layui-table-body').addEventListener('click', function(e){
+            var target = e.target;
+            if(target.classList.contains('start') || target.classList.contains('end')){
+                var id = target.getAttribute('data-id');
+                var data = {}
+                // 弹出日期选择器
+                laydate.render({
+                    elem: target
+                    ,format: 'yyyy-MM-dd'
+                    ,type: 'date' // 选择日期时间，可根据需求修改为'date'（仅日期）或'time'（仅时间）
+                    ,done: function(value, date, endDate){
+                        if(value){
+                            // 更新单元格内容
+                            target.innerText = value;
+                            if(target.classList.contains('start')){
+                                data = {
+                                    id: id,
+                                    starttime: value,
+                                    endtime:''
+                                }
+                            }else {
+                                data = {
+                                    id: id,
+                                    starttime: '',
+                                    endtime:value
+                                }
+                            }
+                            var url = layui.setter.url + "ranking/update";
+                            admin.req({
+                                url: url,
+                                data: data,
+                                done: function (res) {
+                                    // table.reload("auth-table");
+                                    layer.msg(res.msg);
+                                }
+                            })
+                            // 可选：通过表格重载或其他方式更新数据源和表格显示（根据实际需求实现）
+                            // 例如，发送AJAX请求更新服务器上的数据，并重新渲染表格
+                        }
+                    }
+                });
+            }
+        });
+
+        table.on('edit(auth-table)', function (obj) {
+            var value = obj.value //得到修改后的值
+                , data = obj.data //得到所在行所有键值
+            let url = layui.setter.url + "ranking/update";
+            admin.req({
+                url: url,
+                data: {
+                    id: data.id,
+                    name: data.name,
+                    imgurl: data.imgurl,
+                    sort: data.sort,
+                    starttime: data.starttime,
+                    endtime: data.endtime,
+                    url: data.url,
+                    state: data.state,
+                },
+                done: function (res) {
+                    // table.reload("auth-table");
+                    layer.msg(res.msg);
+                }
+            })
+        });
+        form.on('checkbox(lockDemo)', function(obj){
+            console.log(obj)
+            // layer.tips(this.value + ' ' + this.name + '：'+ obj.elem.checked, obj.othis);
+            var id = this.id
+            var state = obj.elem.checked?0:1
+            let url = layui.setter.url + "ranking/update";
+            admin.req({
+                url: url,
+                data: {
+                    id: id,
+                    starttime: this.dataset.start,
+                    endtime: this.dataset.end,
+                    state: state,
+                },
+                done: function (res) {
+                    // table.reload("auth-table");
+                    layer.msg(res.msg);
+                }
+            })
+        });
+        //普通图片上传
+        var fileUpload="";
+        var uploadInst_ = upload.render({
+            elem: '#test-upload-normal'
+            ,before: function(obj){
+                //预读本地文件示例，不支持ie8
+                obj.preview(function(index, file, result){
+                    fileUpload=file;
+                    $('#test-upload-normal-img').attr('src', result); //图片链接（base64）
+                });
+            }
+        });
+
+
+
+
+
+        var uploadInst = upload.render({
+            elem: '#test-upload-type1'
+            , ext: 'jpg|png|gif'
+            , url: layui.setter.url + 'ranking/update'
+            , accept: "file"
+            , size: 10240
+            , before: function (obj) {
+                this.data = {id: aid,starttime:'',endtime:''};
+                obj.preview(function (index, file, result) {
+                    $('#test-upload-normal-img').attr('src', result); //图片链接（base64）
+                });
+            }
+            , done: function (res) {
+                res.code == 0 ? layer.msg('上传失败') : layer.msg('上传成功');
+                table.reload("auth-table");
+            }
+            , error: function () {
+                //演示失败状态，并实现重传
+                var demoText = $('#test-upload-demoText');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-mini demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function () {
+                    uploadInst.upload();
+                });
+            }
+        });
+
+        table.on('tool(auth-table)', function (obj) {
+            if (obj.event == "remove") {
+                layer.confirm('确定要删除【' + obj.data.name + '】这个广告吗？', function (index) {
+                    admin.req({
+                        url: layui.setter.url + "ranking/deleteid/" + obj.data.id,
+                        data:{id:obj.data.id}
+                    }).done(function (res) {
+                        layer.close(index);
+                        table.reload('auth-table');
+                        layer.msg(res.msg);
+                    })
+                });
+            }else if (obj.event == "update") {
+                aid = obj.data.id;
+                $("#test-upload-type1").click();
+            }
+        })
+
+        table.on('checkbox(table)', function (obj) {
+            var data = obj.data;
+        });
+
+        $("#publish-button-del").on("click", function () {
+            layer.confirm('确定删除吗?', {btn: ['确定删除', '取消']}, function (index) {
+                var a1 = $("#ids").val(); //取得已获取的ids
+                if(a1==""){
+                    layer.msg("尚未选择要删除的数据");
+                    return
+                }
+                admin.req({
+                    url: layui.setter.url + "ranking/deleteList/" + a1,
+                    data:{ids:a1}
+                }).done(function (res) {
+                    layer.close(index);
+                    table.reload('auth-table');
+                    layer.msg(res.msg);
+                })
+            });
+        })
+
+
+        var $ = layui.$, active = {
+            getid: function () {
+                var arrx = [];
+                var checkStatus = table.checkStatus('auth-table')
+                    , data = checkStatus.data;
+                for (var i = 0; i < data.length; i++) {    //循环筛选出id
+                    arrx.push(data[i].id);
+                }
+                $("#ids").val(arrx);
+            },
+            reload: function () {
+                var demoReload = $('#test-table-demoReload');
+                //执行重载
+                table.reload('auth-table', {
+                    page: {curr: 1}//重新从第 1 页开始
+                    , where: {name: demoReload.val()}
+                });
+            },
+            rolequery: function () {
+                var query = $('#table-role-query');
+                //执行重载
+                table.reload('table-role', {
+                    page: {curr: 1}//重新从第 1 页开始
+                    , where: {likename: query.val()}
+                });
+            }
+        };
+        $("#publish-button-add").on("click", function () {
+            layer.open({
+                type: 1,
+                area: ['1200px', '660px'],
+                title: ("新增广告发布"),
+                shadeClose: false,
+                content: $("#layui-publish"),
+                success: function (index, layero) {
+                    document.querySelector('input[name="state"][value="0"]').checked = true;
+                    document.querySelector('input[name="type"][value="1"]').checked = true;
+                    $("#submit-form-publish-button").html($("#submit-form-add").html());
+                    form.render();
+                },
+            });
+        })
+        $('textarea[name="text"]').on('input', function() {
+            // 获取textarea的当前值
+            var text = $(this).val();
+            var dataArr = new Array();
+            var objArr = text.trim().split('\n');
+            objArr = spArr(objArr, 8);
+            console.log(objArr[0])
+            var textArr = objArr[0]
+             for (var v in textArr) {
+                 var vvv = textArr[v].replace("：", ":");
+                 var val = vvv.substring(vvv.indexOf(':') + 1).trim();
+                 var qz = vvv.substring(0, vvv.indexOf(':')).trim();
+                 console.log(qz)
+                 console.log(val)
+                 if(qz.indexOf('开区时间') > -1){
+                    $('input[name="startdate"]').val(val.slice(0,10))
+                 }
+            }
+        });
+        //添加/修改提交
+        form.on('submit(submit-form-publish)', function (data) {
+            /*console.log(data.field)
+            return false;*/
+            var url = layui.setter.url + "ranking/add";
+            var formdata = new FormData();
+            formdata.append("name",data.field.name);
+            formdata.append("imgurl",'');
+            formdata.append("url",data.field.url);
+            formdata.append("sort",data.field.sort);
+            formdata.append("state",data.field.state);
+            /*formdata.append("sort",data.field.sort);*/
+            formdata.append("starttime",data.field.starttime);
+            formdata.append("endtime",data.field.endtime);
+            formdata.append("file",fileUpload);
+            formdata.append("type",data.field.type)
+            admin.req({
+                url: url,
+                data: formdata,
+                cache: false, //上传文件不需要缓存
+                processData: false, // 告诉jQuery不要去处理发送的数据
+                contentType: false, // 告诉jQuery不要去设置Content-Type请求头
+                done: function (res) {
+                    layer.closeAll();
+                    table.reload("auth-table");
+                    layer.msg(res.msg);
+                }
+            })
+            return false
+
+        })
+
+        $('.test-table-reload-btn .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+        var map = new Map();
+        map.set("服务器名", 'name');
+        map.set("服务器IP", 'ipname');
+        map.set("线路类型", 'line');
+        map.set("版本介绍", 'versiondepict');
+        map.set("客服QQ", 'kfqq');
+        map.set("主页地址", 'url');
+        map.set("开区时间", 'datetime');
+        map.set("投放站点", 'launch');
+        function showHtml(url, datas) {
+
+            //判断是否为FormData
+            var result;
+            $.ajax({
+                //返回相同的session
+                xhrFields: {
+                    withCredentials: true
+                },
+                url: url,
+                type: 'POST',
+                async: false,    //或false,是否异步
+                data: datas,
+                cache: false,
+                processData: false,
+                contentType: false,
+                timeout: 10000,    //超时时间
+                dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+                beforeSend: function (xhr) {
+                },
+                success: function (data, textStatus, jqXHR) {
+                    result = data;
+                },
+                error: function (xhr, textStatus) {
+                    result = JSON.parse('{"flag":false,"message":"showHtml-ajax-请求连接异常"}');
+                }
+            });
+            return result;
+        }
+    });
+    var jqb = function (v) {
+        v.select();
+        document.execCommand("copy");
+    }
+
+    function spArr(arrv, num) { //arr是你要分割的数组，num是以几个为一组
+        let newArr = [] //首先创建一个新的空数组。用来存放分割好的数组
+        for (let i = 0; i < arrv.length;) { //注意：这里与for循环不太一样的是，没有i++
+            newArr.push(arrv.slice(i, i += num));
+        }
+        return newArr
+    }
+
+    function checkAttribute(data){
+        if(data==null){
+            data= "";
+        }
+        return data;
+    }
+
+</script>
+</body>
+</html>

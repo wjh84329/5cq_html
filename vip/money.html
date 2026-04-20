@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+ <head> 
+  <meta charset="UTF-8"> 
+  <title>5CQ-传奇广告查询站_传奇广告排行_传奇资源站_新开传奇新服排名站(5CQ.COM)</title>
+  <meta name="description" content="5CQ.Com传奇广告排行榜,传奇私服查询站,传奇资源站,好玩的传奇排名站,玩家最爱的新开传奇,GM最喜欢的传奇工具,传奇直播,传奇新开服,传奇相关尽在5CQ(玩传奇)">
+  <meta name="keywords" content="传奇广告查询站,传奇资源站,传奇广告排行,传奇SF广告统计(5CQ.COM)">   
+  <link type="text/css" rel="stylesheet" href="../statics/css/viphome.css"> 
+  <style>
+        html, body {
+            overflow: hidden !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+    </style> 
+ </head> 
+ <body> 
+  <div id="wrap"> 
+   <table width="100%" class="common form list"> 
+    <tbody> 
+     <tr> 
+      <th colspan="2">账户余额</th> 
+     </tr> 
+     <tr> 
+      <th width="150">用户名</th> 
+      <td id="login_name"></td> 
+     </tr> 
+     <tr> 
+      <th>余额</th> 
+      <td id="money"></td> 
+     </tr> 
+     <tr> 
+      <th>可透支额度</th> 
+      <td id="quota"></td> 
+     </tr> 
+     <tr> 
+      <th>&nbsp;</th> 
+      <th>&nbsp;</th> 
+     </tr> 
+    </tbody> 
+   </table> 
+  </div> 
+  <script src="../layuiadmin/layui/layui.js"></script> 
+  <script src="../statics/js/jquery-3.2.1.min.js"></script> 
+  <script>
+    layui.config({
+        base: '../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index', //主入口模块
+    }).use(['index', 'table', 'formgs', 'form', 'security', 'layer', 'upload', 'laydate'], function(){
+        var $ = layui.jquery,
+            form = layui.form,
+            admin = layui.admin,
+            formgs = layui.formgs;
+        // layui.setter.url = 'http://localhost:8086/server/'
+        admin.req({
+            url: layui.setter.url + 'getUserInfogin' //实际使用请改成服务端真实接口
+            ,data:{
+                token: localStorage.getItem('vipvtoken')
+            }
+            , done: function (res) {
+                $('#money').text(res.data.money)
+                $('#login_name').text(res.data.login_name)
+                $('#quota').text(res.data.quota)
+            }
+        })
+    })
+</script>  
+ </body>
+</html>

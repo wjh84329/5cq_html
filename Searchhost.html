@@ -1,0 +1,1442 @@
+<!doctype html>
+<html lang="en">
+ <head> 
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+  <title>5CQ-传奇广告查询站_传奇广告排行_传奇资源站_新开传奇新服排名站(5CQ.COM)</title>
+  <meta name="description" content="5CQ.Com传奇广告排行榜,传奇私服查询站,传奇资源站,好玩的传奇排名站,玩家最爱的新开传奇,GM最喜欢的传奇工具,传奇直播,传奇新开服,传奇相关尽在5CQ(玩传奇)">
+  <meta name="keywords" content="传奇广告查询站,传奇资源站,传奇广告排行,传奇SF广告统计(5CQ.COM)">   
+  <!--  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">--> 
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+  <meta name="renderer" content="webkit"> 
+  <meta name="Referrer" content="origin"> 
+  <link rel="stylesheet" href="./statics/css/layer.css"> 
+  <link rel="stylesheet" href="./statics/css/public.css"> 
+  <link rel="stylesheet" href="./statics/DataTables/media/css/jquery.dataTables.min.css"> 
+  <link rel="stylesheet" href="./layuiadmin/layui/css/layui.css" media="all"> 
+  <link rel="stylesheet" href="./layuiadmin/style/admin.css" media="all"> 
+  <script src="./statics/js/jquery-3.2.1.min.js"></script> 
+  <script src="./statics/js/jquery.cookie.js"></script> 
+  <script src="./statics/js/public.js"></script> 
+  <script src="./statics/adminconfig.js"></script> 
+  <script src="./statics/config.js"></script> 
+  <script src="./statics/js/layer.js"></script> 
+  <script src="./layuiadmin/layui/layui.js"></script> 
+  <script src="./statics/js/report.js"></script> 
+  <!--    <script type="text/javascript" src="./statics/js/ad1.js"></script>--> 
+  <script type="text/javascript" src="./statics/js/ad5.js"></script> 
+  <link rel="stylesheet" href="./statics/css/slide-unlock.css"> 
+  <style>
+        .sf-container {
+
+            margin-top: 58px;
+        }
+
+        #adleft {
+            left: 0;
+            top: 150px;
+        }
+
+        #adright {
+            right: 0;
+            top: 150px;
+        }
+
+        #adleft, #adright {
+            width: 250px;
+            height: 313px;
+            font: 14px/20px arial;
+            text-align: center;
+            position: absolute;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        .ows-close {
+            position: absolute;
+            left: 118px;
+            bottom: 0px;
+            width: 21px;
+            height: 21px;
+            background: url(https://www.5cq.com/static/5cq/ows-close.png) no-repeat center;
+            cursor: pointer;
+        }
+
+        .sf-right_contitle {
+            width: 100%;
+            height: 82px;
+            line-height: 52px;
+            background: #FFFFFF;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            font-weight: bold;
+            display: flex;
+            color: #555;
+            font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
+            font-size: 18px;
+        }
+
+        .sf-title_text {
+            width: 100%;
+            margin-top: 20px;
+            margin-left: 20px;
+            color: red;
+            font-size: 22px;
+
+        }
+
+        .sf-title_text_span {
+            float: right;
+            margin-right: 20px;
+            color: #FF5837;
+            font-size: 16px;
+        }
+
+        .right {
+            float: right;
+            font-size: 16px;
+            color: #ff5837;
+            position: absolute;
+            top: 18px;
+            right: 50px;
+        }
+
+        .rankingtables th {
+
+            background: #F8F6F4;
+            padding: 10px 0;
+            /* color: #f7f7f7; */
+            text-align: center;
+            /* font-size: 15px; */
+            /* font-weight: 600; */
+            border: solid 1px #c1bcb6
+        }
+
+        .rankingtables td {
+
+            /* background: red; */
+            padding: 10px 0;
+            /* color: #f7f7f7; */
+            text-align: center;
+            /* font-size: 15px; */
+            /* font-weight: 600; */
+            border: solid 1px #c1bcb6;
+            background-color: white;
+        }
+
+        #selectSSRank tr td:nth-child(8) {
+            position: inherit;
+        }
+
+        #selectSSRank {
+            table-layout: fixed;
+        }
+
+        #showPic {
+            display: block;
+            width: 30px;
+            height: 30px;
+            position: absolute;
+            top: 4px;
+            left: 6px;
+            cursor: pointer;
+        }
+
+        #showBox:hover #showPic {
+            display: block;
+        }
+
+        #showPic {
+            display: none;
+            width: 40px;
+            height: 36px;
+            position: absolute;
+            top: 0px;
+            left: 6px;
+            cursor: pointer;
+        }
+
+        #showBox:hover #showPic1 {
+            display: block;
+        }
+
+        #showPic1 {
+            display: none;
+            width: 40px;
+            height: 20px;
+            top: 8px;
+            right: 6px;
+            position: absolute;
+        }
+
+        #hotgif {
+            width: 15px;
+            height: 18px;
+            position: absolute;
+            top: 4px;
+            right: 2px;
+        }
+
+        #show {
+            width: 530px;
+            height: 800px;
+        }
+
+        .active_1 {
+            color: red !important;
+        }
+
+        .layui-layer-page {
+            height: auto !important;
+        }
+
+        .layui-layer-content {
+            height: auto !important;
+        }
+
+        .indexCommonTitle {
+            overflow: hidden;
+            line-height: 66px;
+            padding: 0 30px;
+            border-top: 2px solid red;
+            border-bottom: 1px solid #ddd;
+            position: relative;
+        }
+
+        .indexCommonTitle .left {
+            float: left;
+        }
+
+        .indexCommonTitle .left span {
+            font-size: 22px;
+            font-weight: bold;
+            color: red;
+        }
+
+        .indexCommonTitle .left b {
+            font-size: 16px;
+            color: #afafaf;
+            font-weight: bold;
+            margin-left: 12px;
+        }
+
+        .indexCommonTitle .right {
+            float: right;
+            font-size: 16px;
+            color: #ff5837;
+            position: absolute;
+            top: 10px;
+            right: 20px
+        }
+
+        .indexCommonTitle .right img {
+            position: absolute;
+            right: 20px
+        }
+
+        .indexCommonTitle .right .more {
+            margin-left: 10px;
+            vertical-align: -2px;
+        }
+
+        .indexCommonTitle .center {
+            font-size: 14px;
+            line-height: 1.5;
+            width: 658px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            -webkit-transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            color: #d33f3f;
+            font-weight: bold;
+        }
+
+        .hotVideo {
+            /*padding-bottom: 30px;*/
+            background: white;
+        }
+
+        .hotVideo .subList {
+            overflow: hidden;
+            padding: 22px 22px 0;
+        }
+
+        .hotVideo .subList > li {
+            position: relative;
+            width: 360px;
+            margin-right: 48px;
+            float: left;
+            line-height: 36px;
+            padding-left: 26px;
+            font-size: 18px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .hotVideo .subList li i.circle {
+            position: absolute;
+            left: 5px;
+            top: 15px;
+            width: 8px;
+            height: 8px;
+            background: #6f7887
+        }
+
+        .hotVideo .subList > li:nth-child(3n) {
+            margin-right: 0;
+        }
+
+        .hotVideo .subList > li .topVideo:hover .pic .mask {
+            top: 0;
+        }
+
+        .hotVideo .subList > li .topVideo:hover .pic .mask {
+            top: 0;
+        }
+
+        .hotVideo .subList > li .topVideo .pic {
+            width: 100%;
+            height: 236px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hotVideo .subList > li .topVideo .pic img {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .hotVideo .subList > li .topVideo .pic .mask {
+            position: absolute;
+            background: rgba(0, 0, 0, 0);
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            -webkit-transition: all .3s;
+            transition: all .3s;
+        }
+
+        .hotVideo .subList > li .topVideo .pic .mask .icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -webkit-transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+        }
+
+        .hotVideo .subList > li .topVideo .desc {
+            margin: 7px 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 20px;
+        }
+
+        .hotVideo .subList > li .topVideo .bottom {
+            font-size: 12px;
+            color: #999;
+            overflow: hidden;
+        }
+
+        .hotVideo .subList > li .topVideo .bottom li > div {
+            vertical-align: -1px;
+        }
+
+        .hotVideo .subList > li .topVideo .bottom li:first-child {
+            float: left;
+            margin-right: 50px;
+        }
+
+        .hotVideo .subList > li .topVideo .bottom li:last-child {
+            float: left;
+        }
+
+        .hotVideo .subList > li .moreList {
+        }
+
+        .hotVideo .subList > li .moreList li {
+        }
+
+        a {
+            cursor: pointer;
+        }
+
+        /*Í¨ÓÃ-ÓÒÏÂ½Ç¸¡¶¯ÖÃ¶¥*/
+        .toolbar {
+            width: 70px;
+            position: fixed;
+            right: 8%;
+            bottom: 100px;
+            z-index: 301;
+            background: #fff;
+            border-radius: 10px;
+        }
+
+        .toolbar li a {
+            width: 100%;
+            font-size: 12px;
+            background: #fff;
+            padding: 10px 0;
+            border-bottom: 1px solid #ececec;
+            display: block;
+            text-align: center;
+            position: relative;
+            color: #777;
+        }
+
+        .toolbar li a:hover {
+            color: #ff552e;
+        }
+
+        .toolbar li a i {
+            display: block;
+            font-size: 30px;
+            margin: 0 auto 5px auto;
+            color: #ff552e
+        }
+
+        .wx_kefuhover {
+            position: relative;
+        }
+
+        .wx_kefu {
+            display: none;
+            position: absolute;
+            right: 80px;
+            top: 0px;
+            width: 160px;
+            padding: 10px;
+            background: #fff;
+            border-radius: 14px;
+            text-align: center;
+        }
+
+        .wx_kefu img {
+            width: 100%;
+        }
+
+        .wx_kefuhover:hover .wx_kefu {
+            display: block;
+        }
+
+        .icon-bar-top {
+            background: url("toolbar.png") -235px -0px no-repeat;
+            height: 30px
+        }
+
+        .icon-lianxikefu {
+            background: url("toolbar.png") 20px -0px no-repeat;
+            height: 30px
+        }
+
+        .icon-bar-group {
+            background: url("toolbar.png") -40px -0px no-repeat;
+            height: 30px
+        }
+
+        .icon-bar-kefu {
+            background: url("toolbar.png") -753px -233px no-repeat;
+            height: 30px
+        }
+
+        .icon-bar-feed {
+            background: url("toolbar.png") -175px -0px no-repeat;
+            height: 30px
+        }
+
+        .total {
+            color: #d33f3f;
+        }
+
+        .astrong {
+            margin-right: 8px;
+            background: linear-gradient(to bottom, #fc6c01, #632821);
+            background-image: linear-gradient(red, rgb(99, 40, 33));
+            background-position-x: initial;
+            background-position-y: initial;
+            background-size: initial;
+            background-repeat-x: initial;
+            background-repeat-y: initial;
+            background-attachment: initial;
+            background-origin: initial;
+            /* -webkit-background-clip: text; */
+            background-color: initial;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        /*
+
+  .clearfix .link a {
+   color: #fff;
+   margin-right: 28px;
+  }
+
+  .clearfix .link a em {
+   display: inline-block;
+   width: 1px;
+   height: 14px;
+   background: #fff;
+   vertical-align: -2.5px;
+   margin-left: 28px;
+  }
+
+  .p1 {
+   text-align: center;
+   margin-top: 28px;
+  }
+
+  .p1 span {
+   font-size: 16px;
+   color: rgba(255, 255, 255, 0.8);
+  }
+
+  .p1 em {
+   color: rgba(193, 193, 193, 0.8);
+  }
+
+  .p2 {
+   text-align: center;
+   margin: 18px 0;
+  }
+
+  .p2 > * {
+   display: inline-block;
+   color: rgba(255, 255, 255, 0.8);
+  }
+
+  .p2 .icon-link {
+   vertical-align: -2px;
+   margin-right: 6px;
+  }
+
+  .p2 > * a {
+   color: inherit;
+   margin-right: 10px;
+  }
+
+  .textfoot {
+   color: rgba(255, 255, 255, 0.5);
+   margin-bottom: 8px;
+   text-align: center;
+  }
+  */
+
+        /*.layui-table tbody tr  td{
+         font-size: 12px;
+         overflow: hidden;
+         text-overflow: ellipsis;
+         !*white-space: normal;*!
+         !*display: -webkit-box;*!
+         -webkit-line-clamp: 1;
+        }*/
+        .layui-table {
+            width: 100%;
+            background-color: #fff;
+            color: #666;
+            table-layout: fixed;
+        }
+
+        @media screen {
+            .toolbar {
+                display: block;
+            }
+        }
+
+        /* 隐藏工具提示的默认样式 */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 100px; /* 根据需要调整宽度 */
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 5px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%; /* 相对于元素底部的位置 */
+            left: 50%;
+            margin-left: -50px; /* 提示框宽度的一半，用于居中 */
+            opacity: 0;
+            transition: opacity 0.3s;
+            /* 可选：添加一个小箭头指向元素 */
+            /* border-top: 5px solid #555;
+            border-right: 5px solid transparent;
+            border-left: 5px solid transparent;
+            margin-left: -10px; (调整以居中箭头) */
+        }
+
+        /* 当鼠标悬停在包含工具提示的元素上时显示工具提示 */
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        /*#iplist tr:not(:first-child),
+        #hostlist tr:not(:first-child) {
+            display: none;
+        }*/
+        /* 默认隐藏所有行 */
+        /*#iplist tr,
+        #hostlist tr {
+            display: none;
+        }*/
+        /* 显示首行 */
+        #iplist tr:first-child,
+        #hostlist tr:first-child {
+            display: table-row;
+        }
+    </style> 
+ </head> 
+ <body> 
+  <!--代码正文--> 
+  <div class="container" style="text-align: center;"> 
+   <!-- 首页点击  点击查看展示 --> 
+   <div class="seach_result" id="selectReportByNameOrDate" hidden> 
+    <div> 
+     <table class="layui-table"> 
+      <thead style="background: red"> 
+       <tr style="background-color: #c9d3e7;border: 1px solid #c9d3e7;"> 
+        <th colspan="8" style="font-size: 16px;font-weight: 700;color: white" id="iplisthead"> 
+         <!--该服网站IP：<span style="color: white;margin-right: 30px">103.8.222.71</span>同时有<span
+                                           style="color: white">5</span>个游戏运行在此服务器上--> 
+         <!--<button class="toggle-btn" onclick="toggleRows('iplist', this)"
+                                style="margin-left: 20px; padding: 2px 10px; background: #fff; color: #c9d3e7; border: none; border-radius: 3px;">
+                            显示全部
+                        </button>--> </th> 
+       </tr> 
+       <tr style="background-color: #c9d3e7"> 
+        <th width="11%" style="text-align: center">游戏名称</th> 
+        <th width="12%" style="text-align: center">服务器名</th> 
+        <th width="11%" style="text-align: center">线路类别</th> 
+        <th width="20%" style="text-align: center">游戏介绍</th> 
+        <th width="10%" style="text-align: center">客服QQ</th> 
+        <th width="21%" style="text-align: center">网址</th> 
+        <th width="9%" style="text-align: center">广告投入</th> 
+        <th width="6%" style="text-align: center">游戏数据</th> 
+       </tr> 
+      </thead> 
+      <colgroup> 
+       <col style="width: 10%"> 
+       <col style="width: 13%"> 
+       <col style="width: 11%"> 
+       <col style="width: 17%"> 
+       <col style="width: 9%"> 
+       <col style="width: 23%"> 
+       <col style="width: 7%"> 
+       <col style="width: 10%"> 
+      </colgroup> 
+      <tbody id="iplist"> 
+       <!--<tr>
+                             <td>包包●火龙单职业</td>
+                             <td>产出不封顶●搬砖</td>
+                             <td>长期服非快餐</td>
+                             <td>免费领赞助●无暗坑●材料货币满地●无</td>
+                             <td>稳定搬砖养老</td>
+                             <td>http://103.8.222.71:1699</td>
+                             <td>￥2.4万</td>
+                             <td>查看数据</td>
+                         </tr>--> 
+      </tbody> 
+     </table> 
+    </div> 
+    <!-- 日期 私服名称汇总 --> 
+   </div> 
+  </div> 
+  <script>
+    $(document).ready(function () {
+        var url = getUrlParam('url')
+        /* var ip = $.cookie('ip_'+encodeURIComponent(url))
+         var host = $.cookie('host_'+encodeURIComponent(url))
+         var id = $.cookie('id_'+encodeURIComponent(url))
+      console.log(host)*/
+        var id = sessionStorage.getItem('urlid')
+        var ip = sessionStorage.getItem('urlip')
+        var host = sessionStorage.getItem('urlhost')
+
+        var formdata = new FormData();
+        formdata.append('url', url);
+        formdata.append('ip', ip);
+        formdata.append('host', host);
+        formdata.append('id', id);
+
+        $.ajax({
+
+            //返回相同的session
+            url: baseUrl + 'report/selectReportByNameOrDate',
+
+            type: 'POST',
+
+            data: formdata,
+
+            processData: false,
+
+            contentType: false,
+
+            timeout: 10000,    //超时时间
+
+            dataType: 'json',
+
+            success: function (data, textStatus, jqXHR) {
+
+                // console.log(data)
+                selectReportByNameOrDateInit(data, url);
+
+            },
+
+            error: function (xhr, textStatus) {
+
+                result = JSON.parse('{"flag":false,"message":"showHtml-ajax-请求连接异常"}');
+
+            }
+
+        });
+
+
+    })
+
+    //获取url参数
+    function getUrlParam(str) {
+        // 获取当前页面的URL查询字符串部分
+        const queryString = window.location.search;
+
+        // 创建一个URLSearchParams对象来解析查询字符串
+        const params = new URLSearchParams(queryString);
+
+        // 获取id参数的值
+        const data = params.get(str);
+
+        return data;
+    }
+
+    function dataLi(that) {
+
+        $(that).addClass("curr");
+
+        $(that).siblings().removeClass('curr');
+
+        var attrDiv = $(that).attr('data-name');
+
+        // $("#DetailsByName3")
+
+        if (attrDiv == 1) {
+
+            $("#DetailsByName").show();
+
+            $("#DetailsByName2").hide();
+
+            $("#DetailsByName3").hide();
+
+            $("#DetailsByName4").hide();
+
+        }
+
+        if (attrDiv == 2) {
+
+            $("#DetailsByName2").show();
+
+            $("#DetailsByName").hide();
+
+            $("#DetailsByName3").hide();
+
+            $("#DetailsByName4").hide();
+
+        }
+
+        if (attrDiv == 3) {
+
+            $("#DetailsByName3").show();
+
+            $("#DetailsByName").hide();
+
+            $("#DetailsByName2").hide();
+
+            $("#DetailsByName4").hide();
+
+        }
+
+        if (attrDiv == 4) {
+
+            $("#DetailsByName4").show();
+
+            $("#DetailsByName").hide();
+
+            $("#DetailsByName2").hide();
+
+            $("#DetailsByName3").hide();
+
+        }
+
+    }
+
+    function selectReportByNameOrDateInit(result, url) {
+        console.log(url)
+        var ZHData = result.ZHData;
+        if (ZHData != null) {
+
+            var html = '';
+
+            var num = parseFloat(0);
+
+            for (var i = 0; i < ZHData.length; i++) {
+
+                html += '<tr>';
+
+                html += '<td>' + ((ZHData[i].website).replace("http://", "").replace("https://", "").replace("www.", "").replace("/", "")) + '</td>';
+
+                html += '<td class="icon-combined-shape-copy" data-num="' + ZHData[i].thnum + '">' + ZHData[i].th + '</td>';
+
+                html += '<td class="icon-combined-shape-copy" data-num="' + ZHData[i].gsnum + '">' + ZHData[i].gs + '</td>';
+
+                html += '<td class="icon-combined-shape-copy" data-num="' + ZHData[i].txnum + '">' + ZHData[i].tx + '</td>';
+
+                html += '<td class="icon-combined-shape-copy" data-num="' + ZHData[i].txgdnum + '">' + ZHData[i].txgd + '</td>';
+
+                html += '<td class="icon-combined-shape-copy" data-num="' + ZHData[i].jpnum + '">' + ZHData[i].jp + '</td>';
+
+                html += '<td class="icon-combined-shape-copy" data-num="' + ZHData[i].qthnum + '">' + ZHData[i].qth + '</td>';
+
+                html += '<td>' + ZHData[i].zj + '</td>';
+
+                html += '</tr>';
+
+                num += parseFloat(ZHData[i].zj);
+
+            }
+
+            html += '<tr><td colspan="8">截止当前广告总价:' + num + '</td></tr>';
+
+            $('#ZHselectReportByNameOrDateTableTB').html(html);
+            $(".icon-combined-shape-copy").hover(
+                function () {
+                    var num = $(this).data('num');
+                    layer.tips('数量：' + num, this);
+                }, function () {
+                    // console.log('离开')
+                    layer.closeAll();
+                }
+            )
+
+            $("#loding_box").hide();
+
+            JRData(result.JRData);
+
+            DateData(result.pmList, result.DateData, result.pm);
+
+            DetailsByName(result.DetailsByName);
+            iplist(result.iplist, url)
+            hostlist(result.hostlist, url)
+            $('#selectReportByNameOrDate').show();
+
+        }
+
+    }
+
+    function iplist(iplist, url) {
+        // console.log(url)
+        if (iplist.length > 0) {
+            var headhtml = `该服网站IP：<span style="color: white;margin-right: 30px">${iplist[0].ip}</span>同时有<span style="color: white">${iplist.length}</span>个游戏运行在此服务器上`;
+            var html = '';
+            $('#iplist').html('')
+            $('#iplisthead').html(headhtml)
+            $.each(iplist, function (index, item) {
+                html += `<tr>
+                        <td class="tdclass">${item.name}</td>
+                        <td class="tdclass">${item.ipname}</td>
+                        <td class="tdclass">${item.line}</td>
+                        <td class="tdclass">${item.versiondepict}</td>
+                        <td class="tdclass">${item.kfqq}</td>
+                        <td class="tdclass" style="color: ${item.url == url ? 'red' : ''}">${item.url}</td>
+                        <td class="tdclass">${item.allmoney}</td>
+                        <td class="tdclass"><a href="javascript:void(0);" class="djck" onclick="selectReportByNameOrDate(${stringify(item)});"><span class="click-look" style="background: #c9d3e7 !important;">点击查看</span></a></td>
+                    </tr>`
+            })
+            $('#iplist').html(html)
+            // 设置初始状态
+            // $('#iplist tr:not(:first)').hide();
+        } else {
+            $('#iplist').parent().html('')
+        }
+        // $('#iplist tr:not(:first-child)').hide();
+    }
+
+    function hostlist(hostlist, url) {
+        if (hostlist.length > 0) {
+            var headhtml = `根据网站根域名：<span style="color: white;margin-right: 30px">${hostlist[0].host}</span> 匹配到<span style="color: white">${hostlist.length}</span>个游戏
+<button class="toggle-btn"
+        onclick="toggleRows('hostlist', this)"
+        style="margin-left:20px;padding:2px 10px;background:#fff;color:#c9d3e7;border:none;border-radius:3px">
+    显示全部
+</button>`;
+            var html = '';
+            $('#hostlist').html('')
+            $('#hostlisthead').html(headhtml)
+            $.each(hostlist, function (index, item) {
+                html += `<tr>
+                        <td class="tdclass">${item.name}</td>
+                        <td class="tdclass">${item.ipname}</td>
+                        <td class="tdclass">${item.line}</td>
+                        <td class="tdclass">${item.versiondepict}</td>
+                        <td class="tdclass">${item.kfqq}</td>
+                        <td class="tdclass" style="color: ${item.url == url ? 'red' : ''}">${item.url}</td>
+                        <td class="tdclass">${item.allmoney}</td>
+                        <td class="tdclass"><a href="javascript:void(0);" class="djck" onclick="selectReportByNameOrDate(${stringify(item)});"><span class="click-look" style="background: #c9d3e7 !important;">点击查看</span></a></td>
+                    </tr>`
+            })
+            $('#hostlist').html(html)
+            // 设置初始状态
+            // $('#hostlist tr:not(:first)').hide();
+        } else {
+            $('#hostlist').parent().html('')
+        }
+        // $('#hostlist tr:not(:first-child)').hide();
+    }
+
+    function JRData(JRData) {
+
+        if (JRData != null) {
+
+            var html = '';
+
+            var num = parseFloat(0);
+
+            for (var i = 0; i < JRData.length; i++) {
+
+                html += '<tr>';
+
+                html += '<td>' + ((JRData[i].website).replace("http://", "").replace("https://", "").replace("www.", "").replace("/", "")) + '</td>';
+
+                html += '<td class="icon-combined-shape-copy" data-num="' + JRData[i].thnum + '">' + JRData[i].th + '</td>';
+
+                html += '<td class="icon-combined-shape-copy" data-num="' + JRData[i].gsnum + '">' + JRData[i].gs + '</td>';
+
+                html += '<td class="icon-combined-shape-copy" data-num="' + JRData[i].txnum + '">' + JRData[i].tx + '</td>';
+
+                html += '<td class="icon-combined-shape-copy" data-num="' + JRData[i].txgdnum + '">' + JRData[i].txgd + '</td>';
+
+                html += '<td class="icon-combined-shape-copy" data-num="' + JRData[i].jpnum + '">' + JRData[i].jp + '</td>';
+
+                html += '<td class="icon-combined-shape-copy" data-num="' + JRData[i].qthnum + '">' + JRData[i].qth + '</td>';
+
+                html += '<td>' + JRData[i].zj + '</td>';
+
+                html += '</tr>';
+
+                num += parseFloat(JRData[i].zj);
+
+            }
+
+            html += '<tr><td colspan="8">今日当前总价:' + num + '</td></tr>';
+
+            $('#JRselectReportByNameOrDateTableTB').html(html);
+            $(".icon-combined-shape-copy").hover(
+                function () {
+                    var num = $(this).data('num');
+                    layer.tips('数量：' + num, this);
+                }, function () {
+                    // console.log('离开')
+                    layer.closeAll();
+                }
+            )
+
+        }
+
+    }
+
+
+    function DateData(pmList, data, pm) {
+
+        var html = '<th>站点/日期</th>';
+        for (var i = 0; i < 8; i++) {
+            var mydate = new Date(getDay(i));
+            var m = mydate.getMonth() + 1
+            var k = (m < 10 ? "0" + m : m) + '月' + (mydate.getDate() < 10 ? "0" + mydate.getDate() : mydate.getDate()) + '日';
+            html += '<th class="dth' + i + '">' + k + '</th>';
+        }
+        html += '<th>合计</th>'
+        html += '<th>广告总价排名</th>'
+        html += '<th>发布站总广告数</th>'
+        $('#selectDateNameHZTH').html(html);
+        var dataHtml = '';
+        for (var v in data) {
+            var base = data[v].baseurl;
+            dataHtml += '<tr><td>' + base + '</td>';
+            var infos = data[v].infos;
+            var money = 0;
+            var datetimes = new Map();
+            var datenums = new Map();
+            for (var l in infos) {
+                datetimes.set(infos[l].atime, infos[l].contexts);
+                datenums.set(infos[l].atime, infos[l].num);
+            }
+            for (var i = 0; i < 8; i++) {
+                var mydate = new Date(getDay(i));
+                var m = mydate.getMonth() + 1
+                var k = (m < 10 ? "0" + m : m) + '-' + (mydate.getDate() < 10 ? "0" + mydate.getDate() : mydate.getDate());
+                var num = datenums.get(k) ? datenums.get(k) : 0
+                if (datetimes.get(k) != null && datetimes.get(k) != '') {
+                    money += parseFloat(datetimes.get(k));
+                    dataHtml += '<td class="dtd' + i + ' icon-combined-shape-copy" data-num="' + num + '">' + datetimes.get(k) + '</td>'
+                } else {
+                    money += parseFloat(0);
+                    dataHtml += '<td class="dtd' + i + ' icon-combined-shape-copy" data-num="' + num + '">0</td>'
+                }
+            }
+            dataHtml += '<td class="moneyCount" data-count="' + parseFloat(money) + '">' + parseFloat(money) + '</td>';
+            for (var v in pmList) {
+                // console.log(pmList[v])
+                if (pmList[v] && pmList[v].baseurl && pmList[v].baseurl.indexOf(base) > -1) {
+                    if (pmList[v].count != '---') {
+                        dataHtml += '<td>第' + pmList[v].count + '名</td>';
+                    } else {
+                        dataHtml += '<td><img style="display:block;margin: auto"  src="/statics/images/hot.gif" class="icon"></td>';
+                    }
+                    dataHtml += '<td class="totalZ" data-count="' + pmList[v].totalcount + '">共' + pmList[v].totalcount + '个</td>';
+                    break;
+                }
+                /*else {
+                 dataHtml += '<td>无</td>';
+                 dataHtml += '<td class="totalZ" data-count="' + pmList[v].totalcount + '">无</td>';
+                }*/
+            }
+            dataHtml += '</tr>';
+        }
+        $('#selectDateNameHZTB').html(dataHtml);
+        for (var i = 0; i < 8; i++) {
+            var total = 0;
+            $(".dtd" + i).each(function () {
+                total += parseFloat($(this).text());
+            })
+            if (total == 0) {
+                $(".dtd" + i).remove();
+                $(".dth" + i).remove();
+            }
+        }
+        var dataHtml = $('#selectDateNameHZTB').html();
+
+        dataHtml += '<tr>';
+        dataHtml += '<td>统计</td>';
+        for (var i = 0; i < 8; i++) {
+            var total = 0;
+            $(".dtd" + i).each(function () {
+                total += parseFloat($(this).text());
+            })
+            if (total == 0) {
+                $(".dtd" + i).remove();
+                $(".dth" + i).remove();
+            } else {
+                dataHtml += '<td>' + total + '</td>';
+            }
+        }
+        var count = 0;
+        $('.totalZ').each(function () {
+            count += Number($(this).data('count'));
+        })
+        var moneyCount = 0;
+        $('.moneyCount').each(function () {
+            moneyCount += Number($(this).data('count'));
+        })
+        dataHtml += '<td>' + moneyCount + '</td>';
+        dataHtml += '<td>' + (pm == null ? '未排名' : '总排名第' + pm + '名') + '</td>';
+        dataHtml += '<td>共' + count + '个</td>';
+        dataHtml += '</tr>';
+        $('#selectDateNameHZTB').html(dataHtml);
+        $(".icon-combined-shape-copy").hover(
+            function () {
+                var num = $(this).data('num');
+                layer.tips('数量：' + num, this);
+            }, function () {
+                // console.log('离开')
+                layer.closeAll();
+            }
+        )
+
+    }
+
+    function DetailsByName(data) {
+        //今天
+        var tjdate = new Date(getDay(0));
+        var jtm = tjdate.getMonth() + 1 < 10 ? 0 + "" + (tjdate.getMonth() + 1) : tjdate.getMonth() + 1;
+        var jt = (tjdate.getFullYear()) + '' + jtm + '' + (tjdate.getDate() < 10 ? 0 + "" + tjdate.getDate() : tjdate.getDate());
+        //昨天
+        var ztdate = new Date(getDay(-1));
+        var ztm = ztdate.getMonth() + 1 < 10 ? 0 + "" + (ztdate.getMonth() + 1) : ztdate.getMonth() + 1;
+        var zt = (tjdate.getFullYear()) + '' + ztm + '' + (ztdate.getDate() < 10 ? 0 + "" + ztdate.getDate() : ztdate.getDate());
+        //前天
+        var qtdate = new Date(getDay(-2));
+        var qtm = qtdate.getMonth() + 1 < 10 ? 0 + "" + (qtdate.getMonth() + 1) : qtdate.getMonth() + 1;
+        var qt = (tjdate.getFullYear()) + '' + qtm + '' + (qtdate.getDate() < 10 ? 0 + "" + qtdate.getDate() : qtdate.getDate());
+        var jtData = new Array();//今日
+        var ztData = new Array();//昨天
+        var qtData = new Array();//前天
+        var wlData = new Array();//未来
+        //网站集合，信息集合
+        for (var i = 0; i < data.length; i++) {
+            var map = data[i].tableMap;
+            var jtNewMap = new Array();
+            var ztNewMap = new Array();
+            var qtNewMap = new Array();
+            var wlNewMap = new Array();
+            for (var j = 0; j < map.length; j++) {
+                var time = map[j].datet.replace(/-/g, '');
+                if (time == jt) {
+                    jtNewMap.push(map[j])
+                }
+                if (time == zt) {
+                    ztNewMap.push(map[j])
+                }
+                if (time == qt) {
+                    qtNewMap.push(map[j])
+                }
+                if (time > jt) {
+                    wlNewMap.push(map[j])
+                }
+            }
+            if (jtNewMap.length != 0) {
+                var infos = new Object();
+                infos.baseurl = data[i].baseurl;
+                infos.tableMap = jtNewMap;
+                jtData.push(infos)
+            }
+            if (ztNewMap.length != 0) {
+                var infos = new Object();
+                infos.baseurl = data[i].baseurl;
+                infos.tableMap = ztNewMap;
+                ztData.push(infos)
+            }
+            if (qtNewMap.length != 0) {
+                var infos = new Object();
+                infos.baseurl = data[i].baseurl;
+                infos.tableMap = qtNewMap;
+                qtData.push(infos)
+            }
+            if (wlNewMap.length != 0) {
+                var infos = new Object();
+                infos.baseurl = data[i].baseurl;
+                infos.tableMap = wlNewMap;
+                wlData.push(infos)
+            }
+        }
+        var html = '';
+        var jrMoney = 0;
+        var vHtml = '';
+        vHtml += '<colgroup>';
+        vHtml += '<col style="width:9%"></col>';
+        vHtml += '<col style="width:9%"></col>';
+        vHtml += '<col style="width:9%"></col>';
+        vHtml += '<col style="width:9%"></col>';
+        vHtml += '<col style="width:16%"></col>';
+        vHtml += '<col style="width:10%"></col>';
+        vHtml += '<col style="width:20%"></col>';
+        vHtml += '<col style="width:5%"></col>';
+        vHtml += '<col style="width:100px"></col>';
+        vHtml += '<col style="width:5%"></col>';
+        vHtml += '<col style="width:3%"></col>';
+        vHtml += '</colgroup>';
+        for (var i = 0; i < jtData.length; i++) {
+            var money = 0;
+            var table = '';
+            var baseurl = jtData[i].baseurl
+            table += '<tr>';
+            table += '<td>服务器名</td>';
+            table += '<td>IP</td>';
+            table += '<td>开机时间</td>';
+            table += '<td>线路</td>';
+            table += '<td>版本介绍</td>';
+            table += '<td>客服QQ</td>';
+            table += '<td>主页地址</td>';
+            table += '<td>数量</td>';
+            table += '<td>类型</td>';
+            table += '<td>价格</td>';
+            table += '<td>举报</td>';
+            table += '</tr>'
+            var tableMap = jtData[i].tableMap;
+            for (var j = 0; j < tableMap.length; j++) {
+                var classType = '';
+                if (tableMap[j].type == 1) {
+                    classType = 'yelTr';
+                } else if (tableMap[j].type == 5) {
+                    classType = 'witTr';
+                } else if (tableMap[j].type == 2 || tableMap[j].type == 3) {
+                    classType = 'whiteTr';
+                }
+                table += '<tr class="' + classType + '">';
+                table += '<td><a href="' + tableMap[j].url + '" target="_blank">' + tableMap[j].name + '</a></td>';
+                table += '<td><a href="' + tableMap[j].url + '" target="_blank">' + tableMap[j].ipname + '</a></td>';
+                table += '<td><a href="' + tableMap[j].url + '" target="_blank">' + tableMap[j].datetime + '</a></td>';
+                table += '<td><a href="' + tableMap[j].url + '" target="_blank">' + tableMap[j].line + '</a></td>';
+                table += '<td><a href="' + tableMap[j].url + '" target="_blank">' + tableMap[j].versiondepict + '</a></td>';
+                table += '<td><a href="' + tableMap[j].url + '" target="_blank">' + tableMap[j].kfqq + '</a></td>';
+                table += '<td><a href="' + tableMap[j].url + '" target="_blank">' + tableMap[j].url + '</a></td>';
+                //  table += '<td width="3%"><span class="report" onclick="report('+JSON.stringify(tableMap[j].name).replace(/"/g, '&quot;')+','+JSON.stringify(tableMap[j].url).replace(/"/g, '&quot;')+')"><img src="/statics/images/report.png"></span></td>';
+                table += '<td>' + tableMap[j].num + '</td>';
+                var v = '';
+                if (tableMap[j].type == 1) {
+                    v = '<div class="tableMap' + tableMap[j].type + '">套黄</div>';
+                } else if (tableMap[j].type == 2) {
+                    v = '<div class="tableMap' + tableMap[j].type + '">通宵推荐</div>';
+                } else if (tableMap[j].type == 3) {
+                    v = '<div class="tableMap' + tableMap[j].type + '">通宵固顶</div>';
+                } else if (tableMap[j].type == 4) {
+                    v = '<div class="tableMap' + tableMap[j].type + '">全天固顶</div>';
+                } else if (tableMap[j].type == 5) {
+                    v = '<div class="tableMap' + tableMap[j].type + '">改时</div>';
+                } else if (tableMap[j].type == 6) {
+                    v = '<div class="tableMap' + tableMap[j].type + '">全天套黄</div>';
+                }
+                table += '<td>' + v + '</td>';
+                table += '<td>' + tableMap[j].zj + '</td>';
+                table += '<td><span class="report" onclick="report(' + JSON.stringify(tableMap[j].name).replace(/"/g, '&quot;') + ',' + JSON.stringify(tableMap[j].url).replace(/"/g, '&quot;') + ')"><img src="/statics/images/report.png"></span></td>';
+                table += '</tr>';
+                jrMoney += parseFloat(tableMap[j].zj);
+                money += parseFloat(tableMap[j].zj);
+            }
+            table = '<tr style="background-color: red"><th  colspan="11" style="font-weight: bold;color:#f6f6f6" >' + baseurl + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;广告金额￥<span style="color: white">' + money + '</span></th></tr>' + table;
+            html += table
+        }
+        html += '<tr style="background: red;color: red;font-size: 20px;height: 50px"><td colspan="11"  style="color: red">总金额:' + jrMoney + '</td></tr>';
+        html = vHtml + html
+        $('#DetailsByName').html(html);
+        var html1 = '';
+        var wlMoney = 0;
+        for (var i = 0; i < wlData.length; i++) {
+            var money = 0;
+            var table = '';
+            var baseurl = wlData[i].baseurl
+            table += '<tr>';
+            table += '<td>服务器名</td>';
+            table += '<td>IP</td>';
+            table += '<td>开机时间</td>';
+            table += '<td>线路</td>';
+            table += '<td>版本介绍</td>';
+            table += '<td>客服QQ</td>';
+            table += '<td>主页地址</td>';
+            table += '<td>数量</td>';
+            table += '<td>类型</td>';
+            table += '<td>价格</td>';
+            table += '<td>举报</td>';
+            table += '</tr>'
+            var tableMap = wlData[i].tableMap;
+            for (var j = 0; j < tableMap.length; j++) {
+                var classType = '';
+                if (tableMap[j].type == 1) {
+                    classType = 'yelTr';
+                } else if (tableMap[j].type == 5) {
+                    classType = 'witTr';
+                } else if (tableMap[j].type == 2 || tableMap[j].type == 3) {
+                    classType = 'whiteTr';
+                }
+                table += '<tr class="' + classType + '">';
+                table += '<td><a href="' + tableMap[j].url + '" target="_blank">' + tableMap[j].name + '</a></td>';
+                table += '<td><a href="' + tableMap[j].url + '" target="_blank">' + tableMap[j].ipname + '</a></td>';
+                table += '<td><a href="' + tableMap[j].url + '" target="_blank">' + tableMap[j].datetime + '</a></td>';
+                table += '<td><a href="' + tableMap[j].url + '" target="_blank">' + tableMap[j].line + '</a></td>';
+                table += '<td><a href="' + tableMap[j].url + '" target="_blank">' + tableMap[j].versiondepict + '</a></td>';
+                table += '<td><a href="' + tableMap[j].url + '" target="_blank">' + tableMap[j].kfqq + '</a></td>';
+                table += '<td><a href="' + tableMap[j].url + '" target="_blank">' + tableMap[j].url + '</a></td>';
+                //  table += '<td width="3%"><span class="report" onclick="report('+JSON.stringify(tableMap[j].name).replace(/"/g, '&quot;')+','+JSON.stringify(tableMap[j].url).replace(/"/g, '&quot;')+')"><img src="/statics/images/report.png"></span></td>';
+                table += '<td>' + tableMap[j].num + '</td>';
+                var v = '';
+                if (tableMap[j].type == 1) {
+                    v = '<div class="tableMap' + tableMap[j].type + '">套黄</div>';
+                } else if (tableMap[j].type == 2) {
+                    v = '<div class="tableMap' + tableMap[j].type + '">通宵推荐</div>';
+                } else if (tableMap[j].type == 3) {
+                    v = '<div class="tableMap' + tableMap[j].type + '">通宵固顶</div>';
+                } else if (tableMap[j].type == 4) {
+                    v = '<div class="tableMap' + tableMap[j].type + '">全天固顶</div>';
+                } else if (tableMap[j].type == 5) {
+                    v = '<div class="tableMap' + tableMap[j].type + '">改时</div>';
+                } else if (tableMap[j].type == 6) {
+                    v = '<div class="tableMap' + tableMap[j].type + '">全天套黄</div>';
+                }
+                table += '<td>' + v + '</td>';
+                table += '<td>' + tableMap[j].zj + '</td>';
+                table += '<td><span class="report" onclick="report(' + JSON.stringify(tableMap[j].name).replace(/"/g, '&quot;') + ',' + JSON.stringify(tableMap[j].url).replace(/"/g, '&quot;') + ')"><img src="/statics/images/report.png"></span></td>';
+                table += '</tr>';
+                wlMoney += parseFloat(tableMap[j].zj);
+                money += parseFloat(tableMap[j].zj);
+            }
+            table = '<tr style="background-color: #2aaae3"><th colspan="11">' + baseurl + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;广告金额￥<span style="color: white">' + money + '</span></th></tr>' + table;
+            html1 += table
+        }
+        html1 += '<tr style="background: red;color: #fff;font-size: 20px;height: 50px"><td colspan="11"  style="color: red">总金额:' + wlMoney + '</td></tr>';
+        html1 = vHtml + html1
+        $('#DetailsByName2').html(html1);
+        var html2 = '';
+        var ztMoney = 0;
+        for (var i = 0; i < ztData.length; i++) {
+            var money = 0;
+            var table = '';
+            var baseurl = ztData[i].baseurl;
+            table += '<tr>';
+            table += '<td>服务器名</td>';
+            table += '<td>IP</td>';
+            table += '<td>开机时间</td>';
+            table += '<td>线路</td>';
+            table += '<td>版本介绍</td>';
+            table += '<td>客服QQ</td>';
+            table += '<td>主页地址</td>';
+            table += '<td>数量</td>';
+            table += '<td>类型</td>';
+            table += '<td>价格</td>';
+            table += '<td>举报</td>';
+            table += '</tr>'
+            var tableMap = ztData[i].tableMap;
+            for (var j = 0; j < tableMap.length; j++) {
+                var classType = '';
+                if (tableMap[j].type == 1) {
+                    classType = 'yelTr';
+                } else if (tableMap[j].type == 5) {
+                    classType = 'witTr';
+                } else if (tableMap[j].type == 2 || tableMap[j].type == 3) {
+                    classType = 'whiteTr';
+                }
+                table += '<tr class="' + classType + '">';
+                table += '<td><a href="' + tableMap[j].url + '" target="_blank">' + tableMap[j].name + '</a></td>';
+                table += '<td><a href="' + tableMap[j].url + '" target="_blank">' + tableMap[j].ipname + '</a></td>';
+                table += '<td><a href="' + tableMap[j].url + '" target="_blank">' + tableMap[j].datetime + '</a></td>';
+                table += '<td><a href="' + tableMap[j].url + '" target="_blank">' + tableMap[j].line + '</a></td>';
+                table += '<td><a href="' + tableMap[j].url + '" target="_blank">' + tableMap[j].versiondepict + '</a></td>';
+                table += '<td><a href="' + tableMap[j].url + '" target="_blank">' + tableMap[j].kfqq + '</a></td>';
+                table += '<td><a href="' + tableMap[j].url + '" target="_blank">' + tableMap[j].url + '</a></td>';
+                //  table += '<td width="3%"><span class="report" onclick="report('+JSON.stringify(tableMap[j].name).replace(/"/g, '&quot;')+','+JSON.stringify(tableMap[j].url).replace(/"/g, '&quot;')+')"><img src="/statics/images/report.png"></span></td>';
+                table += '<td>' + tableMap[j].num + '</td>';
+                var v = '';
+                if (tableMap[j].type == 1) {
+                    v = '<div class="tableMap' + tableMap[j].type + '">套黄</div>';
+                } else if (tableMap[j].type == 2) {
+                    v = '<div class="tableMap' + tableMap[j].type + '">通宵推荐</div>';
+                } else if (tableMap[j].type == 3) {
+                    v = '<div class="tableMap' + tableMap[j].type + '">通宵固顶</div>';
+                } else if (tableMap[j].type == 4) {
+                    v = '<div class="tableMap' + tableMap[j].type + '">全天固顶</div>';
+                } else if (tableMap[j].type == 5) {
+                    v = '<div class="tableMap' + tableMap[j].type + '">改时</div>';
+                } else if (tableMap[j].type == 6) {
+                    v = '<div class="tableMap' + tableMap[j].type + '">全天套黄</div>';
+                }
+                table += '<td>' + v + '</td>';
+                table += '<td>' + tableMap[j].zj + '</td>';
+                table += '<td><span class="report" onclick="report(' + JSON.stringify(tableMap[j].name).replace(/"/g, '&quot;') + ',' + JSON.stringify(tableMap[j].url).replace(/"/g, '&quot;') + ')"><img src="/statics/images/report.png"></span></td>';
+                table += '</tr>';
+                ztMoney += parseFloat(tableMap[j].zj);
+                money += parseFloat(tableMap[j].zj);
+            }
+            table = '<tr style="background-color: #2aaae3"><th colspan="11">' + baseurl + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;广告金额￥<span style="color: white">' + money + '</span></th></tr>' + table;
+            html2 += table
+        }
+        html2 += '<tr  style="background: red;color: #fff;font-size: 20px;height: 50px"><td colspan="11"  style="color: red">总金额:' + ztMoney + '</td></tr>';
+        html2 = vHtml + html2
+        $('#DetailsByName3').html(html2);
+        var html3 = '';
+        var qtMoney = 0;
+        for (var i = 0; i < qtData.length; i++) {
+            var money = 0;
+            var table = '';
+            var baseurl = qtData[i].baseurl
+            table += '<tr>';
+            table += '<td>服务器名</td>';
+            table += '<td>IP</td>';
+            table += '<td>开机时间</td>';
+            table += '<td>线路</td>';
+            table += '<td>版本介绍</td>';
+            table += '<td>客服QQ</td>';
+            table += '<td>主页地址</td>';
+            table += '<td>数量</td>';
+            table += '<td>类型</td>';
+            table += '<td>价格</td>';
+            table += '<td>举报</td>';
+            table += '</tr>'
+            var tableMap = qtData[i].tableMap;
+            for (var j = 0; j < tableMap.length; j++) {
+                var classType = '';
+                if (tableMap[j].type == 1) {
+                    classType = 'yelTr';
+                } else if (tableMap[j].type == 5) {
+                    classType = 'witTr';
+                } else if (tableMap[j].type == 2 || tableMap[j].type == 3) {
+                    classType = 'whiteTr';
+                }
+                table += '<tr class="' + classType + '">';
+                table += '<td><a href="' + tableMap[j].url + '" target="_blank">' + tableMap[j].name + '</a></td>';
+                table += '<td><a href="' + tableMap[j].url + '" target="_blank">' + tableMap[j].ipname + '</a></td>';
+                table += '<td><a href="' + tableMap[j].url + '" target="_blank">' + tableMap[j].datetime + '</a></td>';
+                table += '<td><a href="' + tableMap[j].url + '" target="_blank">' + tableMap[j].line + '</a></td>';
+                table += '<td><a href="' + tableMap[j].url + '" target="_blank">' + tableMap[j].versiondepict + '</a></td>';
+                table += '<td><a href="' + tableMap[j].url + '" target="_blank">' + tableMap[j].kfqq + '</a></td>';
+                table += '<td><a href="' + tableMap[j].url + '" target="_blank">' + tableMap[j].url + '</a></td>';
+                // table += '<td width="3%"><span class="report" onclick="report('+JSON.stringify(tableMap[j].name).replace(/"/g, '&quot;')+','+JSON.stringify(tableMap[j].url).replace(/"/g, '&quot;')+')"><img src="/statics/images/report.png"></span></td>';
+                tableMap[j].name
+                table += '<td>' + tableMap[j].num + '</td>';
+                var v = '';
+                if (tableMap[j].type == 1) {
+                    v = '<div class="tableMap' + tableMap[j].type + '">套黄</div>';
+                } else if (tableMap[j].type == 2) {
+                    v = '<div class="tableMap' + tableMap[j].type + '">通宵推荐</div>';
+                } else if (tableMap[j].type == 3) {
+                    v = '<div class="tableMap' + tableMap[j].type + '">通宵固顶</div>';
+                } else if (tableMap[j].type == 4) {
+                    v = '<div class="tableMap' + tableMap[j].type + '">全天固顶</div>';
+                } else if (tableMap[j].type == 5) {
+                    v = '<div class="tableMap' + tableMap[j].type + '">改时</div>';
+                } else if (tableMap[j].type == 6) {
+                    v = '<div class="tableMap' + tableMap[j].type + '">全天套黄</div>';
+                }
+                table += '<td>' + v + '</td>';
+                table += '<td>' + tableMap[j].zj + '</td>';
+                table += '<td><span class="report" onclick="report(' + JSON.stringify(tableMap[j].name).replace(/"/g, '&quot;') + ',' + JSON.stringify(tableMap[j].url).replace(/"/g, '&quot;') + ')"><img src="/statics/images/report.png"></span></td>';
+                table += '</tr>';
+                qtMoney += parseFloat(tableMap[j].zj);
+                money += parseFloat(tableMap[j].zj);
+            }
+            table = '<tr style="background-color: #2aaae3"><th colspan="11">' + baseurl + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;广告金额￥<span style="color: white">' + money + '</span></th></tr>' + table;
+            html3 += table
+        }
+        html3 += '<tr style="background: red;color: #fff;font-size: 20px;height: 50px"><td colspan="11"  style="color: red">总金额:' + qtMoney + '</td></tr>';
+        html3 = vHtml + html3
+        $('#DetailsByName4').html(html3);
+    }
+
+    function selectReportByNameOrDate(data, url) {
+        url = data.url
+        ip = data.ip
+        host = data.host
+        id = data.id
+        /*$.cookie('ip_'+encodeURIComponent(url),ip)
+        $.cookie('host_'+encodeURIComponent(url),host)
+        $.cookie('id_'+encodeURIComponent(url),id)*/
+        sessionStorage.setItem('urlid', id)
+        sessionStorage.setItem('urlip', ip)
+        sessionStorage.setItem('urlhost', host)
+        window.open(`./../Search.html?url=${url}`)
+    }
+    function toggleRows(tableId, button) {
+        const table = document.getElementById(tableId);
+        const rows = table.getElementsByTagName('tr');
+        let shouldShow = button.textContent.includes('显示');
+
+        // 从第二行开始切换（保留表头）
+        for (let i = 1; i < rows.length; i++) {
+            rows[i].style.display = shouldShow ? 'table-row' : 'none';
+        }
+
+        // 切换按钮状态
+        button.textContent = shouldShow ? '收起列表' : '显示全部';
+        button.style.backgroundColor = shouldShow ? '#4CAF50' : '#fff';
+        button.style.color = shouldShow ? 'white' : '#c9d3e7';
+    }
+</script> 
+  <script>
+</script>  
+ </body>
+</html>

@@ -1,0 +1,12 @@
+['首页','HOME','/index.html',false,['index','']],
+['广告排行','AD. RANKING','/code/ranking.html',true,['ranking']],
+['手游排行','MA.RANKING','/code/phoneRank.html',true,['phoneRank']],
+['广告筛选','FA.NETWORK','/code/fastscreen.html',false,['fastscreen']],
+['黑名单','BLACK LIST','/code/report.html',false,['report','']],
+['招聘交易','RECRUIT·TRADE','/code/recruTran.html',false,['recruTran','recruTran_edit']],
+['免费资源','F·RESOURCES','/code/forumFunction.html',true,['forumFunction','forumFunction_edit']],
+['玩家群.主播','PG.AND.A','/code/playerGroup.html',false,['playerGroup']],
+['品牌大服','BRAND SERVER','/code/ppdf.html',true,['ppdf','']],
+['新闻公告','NEWS','/code/journalism.html',false,['journalism']],
+['发布站点','PUBLISH SITES','/code/publishSites.html',false,['publishSites']],
+['工具导航','SITE NAVIGATION','/code/resourceNavigation.html',false,['resourceNavigation']]

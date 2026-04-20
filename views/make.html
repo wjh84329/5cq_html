@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>静态化</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+
+
+</head>
+<body>
+<style>
+    .layadmin-homepage-pad-ver {
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+    .layadmin-homepage-pad-img {
+        box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+    }
+</style>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">静态化</div>
+                <div class="layui-card-body">
+                    <div class="test-table-reload-btn" style="margin-bottom: 10px;">
+<!--                        <div class="layui-inline">-->
+<!--                            <div class="layui-input-inline">-->
+<!--                                <input type="text" name="start_time" class="layui-input" id="start_time"-->
+<!--                                       placeholder="开始时间(修改时间)">-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <br><br>-->
+                            <button id="all" shiro-event="jax:web:all" lay-submit lay-filter="submit-form-all"
+                                    class="layui-btn" data-type="reload">更新所有网站
+                            </button>
+                            <button id="index" shiro-event="jax:web:index" lay-submit lay-filter="submit-form-index" class="layui-btn"><i
+                                    class="layui-icon">&#xe654;</i>广告查询
+                            </button>
+
+                            <button id="publishSites" shiro-event="jax:web:publishSites" lay-submit lay-filter="submit-form-publishSites" class="layui-btn"><i
+                                    class="layui-icon">&#xe654;</i>发布站点
+                            </button>
+                            <button id="recruTran" shiro-event="jax:web:recruTran" lay-submit lay-filter="submit-form-recruTran" class="layui-btn"><i
+                                    class="layui-icon">&#xe654;</i>招聘交易
+                            </button>
+                            <button id="forumFunction" shiro-event="jax:web:forumFunction" lay-submit lay-filter="submit-form-forumFunction" class="layui-btn"><i
+                                    class="layui-icon">&#xe654;</i>传奇论坛
+                            </button>
+                            <button id="resourceNavigation" shiro-event="jax:web:resourceNavigation" lay-submit lay-filter="submit-form-resourceNavigation" class="layui-btn"><i
+                                    class="layui-icon">&#xe654;</i>资源导航
+                            </button>
+                            <button id="articleList" shiro-event="jax:web:articleList" lay-submit lay-filter="submit-form-articleList" class="layui-btn"><i
+                                    class="layui-icon">&#xe654;</i>文章列表
+                            </button>
+                            <button id="updatePage" shiro-event="jax:web:updatePage" lay-submit lay-filter="submit-form-updatePage" class="layui-btn"><i
+                                    class="layui-icon">&#xe654;</i>上下页更新
+                            </button>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">网站栏目</label>
+                        <div class="layui-input-block">
+                            <textarea name="column" id="column" placeholder="请输入栏目数据" class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">友情链接</label>
+                        <div class="layui-input-block">
+                            <textarea name="friendurl" id="friendurl" placeholder="友情链接"
+                                      class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">网站底部</label>
+                        <div class="layui-input-block">
+                            <textarea name="bottom" id="bottom" placeholder="请输入底部数据" class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+
+                    <button id="config" class="layui-btn"  shiro-event="jax:web:config" lay-submit lay-filter="submit-form-config" class="layui-btn">
+                        更新网站数据
+                    </button>
+                    <table class="layui-hide" id="auth-table" lay-filter="auth-table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="../../layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index', //主入口模块
+    }).use(['index', 'layer','form'], function () {
+        var $ = layui.jquery,
+            admin = layui.admin,
+            form = layui.form,
+            layer = layui.layer;
+        //执行一个laydate实例
+        // laydate.render({
+        //     elem: '#start_time' //指定元素
+        // });
+
+
+        $.ajax({
+            url: "/statics/column_data.txt",
+            type: 'GET',
+            sync: true,
+            datatype: "text",
+            cache: false,
+            success: function (data) {
+                document.getElementById("column").value = data;
+            }
+        })
+
+        $.ajax({
+            url: "/statics/friendurl_data.txt",
+            type: 'GET',
+            sync: true,
+            datatype: "text",
+            cache: false,
+            success: function (data) {
+                document.getElementById("friendurl").value = data;
+            }
+        })
+
+        $.ajax({
+            url: "/statics/bottom_data.txt",
+            type: 'GET',
+            sync: true,
+            datatype: "text",
+            cache: false,
+            success: function (data) {
+                document.getElementById("bottom").value = data;
+            }
+        })
+
+
+        $("#all").on("click", function () {
+            var url = layui.setter.url + "jax/html/all"
+
+            var index = layer.msg('处理中', {
+                icon: 16
+                , shade: 0.01
+                , time: false
+            });
+
+            admin.req({
+                url: url,
+                done: function (res) {
+                    layer.close(index);
+                    layer.msg(res.msg);
+                }
+            })
+        })
+
+        $("#index").on("click", function () {
+            var url = layui.setter.url + "jax/html/index"
+
+            var index = layer.msg('处理中', {
+                icon: 16
+                , shade: 0.01
+                , time: false
+            });
+
+            admin.req({
+                url: url,
+                done: function (res) {
+                    layer.close(index);
+                    layer.msg(res.msg);
+                }
+            })
+        })
+        $("#publishSites").on("click", function () {
+            var url = layui.setter.url + "jax/html/publishSites"
+
+            var index = layer.msg('处理中', {
+                icon: 16
+                , shade: 0.01
+                , time: false
+            });
+
+            admin.req({
+                url: url,
+                done: function (res) {
+                    layer.close(index);
+                    layer.msg(res.msg);
+                }
+            })
+        })
+
+        $("#recruTran").on("click", function () {
+            var url = layui.setter.url + "jax/html/recruTran"
+
+            var index = layer.msg('处理中', {
+                icon: 16
+                , shade: 0.01
+                , time: false
+            });
+
+            admin.req({
+                url: url,
+                done: function (res) {
+                    layer.close(index);
+                    layer.msg(res.msg);
+                }
+            })
+        })
+
+        $("#forumFunction").on("click", function () {
+            var url = layui.setter.url + "jax/html/forumFunction"
+
+            var index = layer.msg('处理中', {
+                icon: 16
+                , shade: 0.01
+                , time: false
+            });
+
+            admin.req({
+                url: url,
+                done: function (res) {
+                    layer.close(index);
+                    layer.msg(res.msg);
+                }
+            })
+        })
+
+        $("#resourceNavigation").on("click", function () {
+            var url = layui.setter.url + "jax/html/resourceNavigation"
+
+            var index = layer.msg('处理中', {
+                icon: 16
+                , shade: 0.01
+                , time: false
+            });
+
+            admin.req({
+                url: url,
+                done: function (res) {
+                    layer.close(index);
+                    layer.msg(res.msg);
+                }
+            })
+        })
+
+        $("#articleList").on("click", function () {
+            console.log("ddddddddddddddddddddddgggggggggggg")
+           // var time = document.getElementById("start_time").value;
+            var url = layui.setter.url + "jax/html/articleList";//?time=" + time
+
+            var index = layer.msg('处理中', {
+                icon: 16
+                , shade: 0.01
+                , time: false
+            });
+
+            admin.req({
+                url: url,
+                done: function (res) {
+                    layer.close(index);
+                    layer.msg(res.msg);
+                }
+            })
+        })
+
+        $("#updatePage").on("click", function () {
+            var url = layui.setter.url + "jax/html/updatePage";
+            var index = layer.msg('处理中', {
+                icon: 16
+                , shade: 0.01
+                , time: false
+            });
+            admin.req({
+                url: url,
+                done: function (res) {
+                    layer.close(index);
+                    layer.msg(res.msg);
+                }
+            })
+        })
+
+
+        $("#config").on("click", function () {
+            var column = document.getElementById("column").value;
+            var friendurl = document.getElementById("friendurl").value;
+            var bottom = document.getElementById("bottom").value;
+            var url = layui.setter.url + "jax/html/config";
+
+            var index = layer.msg('处理中', {
+                icon: 16
+                , shade: 0.01
+                , time: false
+            });
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: {column: column, friendurl: friendurl, bottom: bottom},
+                cache: false,
+                success: function (res) {
+                    layer.close(index);
+                    layer.msg(res.msg);
+                    setTimeout("document.location.reload();", 3000);
+                }
+            })
+            layer.close(index);
+            return false;
+        })
+
+
+    });
+</script>
+</body>
+</html>

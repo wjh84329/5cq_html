@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>登录日志</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+</head>
+<body>
+<style>
+    .layadmin-homepage-pad-ver {
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+    .layadmin-homepage-pad-img {
+        box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+    }
+</style>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <div class="test-table-reload-btn" style="margin-bottom: 10px;">
+                        <div class="layui-inline">
+                            <input class="layui-input" name="username" id="username"
+                                   autocomplete="off" placeholder="用户">
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">开始时间</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="start" id="start" lay-verify="date" placeholder="yyyy-MM-dd"
+                                       autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">结束时间</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="end" id="end" lay-verify="date" placeholder="yyyy-MM-dd"
+                                       autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <button class="layui-btn" data-type="reload">搜索</button>
+                    </div>
+                    <table class="layui-hide" id="auth-table" lay-filter="auth-table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../../layuiadmin/layui/layui.js"></script>
+<script>
+
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index', //主入口模块
+    }).use(['index', 'table', 'layer', 'laydate'], function () {
+        var $ = layui.jquery,
+            admin = layui.admin,
+            table = layui.table,
+            laydate = layui.laydate,
+            layer = layui.layer;
+        var nowTime = new Date().valueOf();
+        var end = laydate.render({
+            elem: '#end', //指定元素
+            value: new Date(),
+            format: 'yyyy-MM-dd',
+            btns: [],
+            showBottom: false,
+            max: nowTime,
+            done: function (value, date) {
+                start.config.max = {
+                    year: date.year,
+                    month: date.month - 1,//关键
+                    date: date.date,
+                }
+                var startDate = start.config;
+                if ($('#start').val() > $("#end").val()) {
+                    $("#start").val($("#end").val());
+                }
+            }
+        });
+
+
+        var start = laydate.render({
+            elem: '#start', //指定元素
+            format: 'yyyy-MM-dd',
+            value: new Date(),
+            btns: [],
+            showBottom: false,
+            max: nowTime,
+            done: function (value, date) {
+                end.config.min = {
+                    year: date.year,
+                    month: date.month - 1, //关键
+                    date: date.date,
+                };
+            }
+        });
+        table.render({
+            elem: '#auth-table'
+            , url: layui.setter.url + 'loginlog/select'
+            , title: '用户数据表'
+            , cols: [[
+                {field: 'id', title: 'ID', width: 80, fixed: 'left', unresize: true, sort: true}
+                , {field: 'title', title: '标题',}
+                , {field: 'username', title: '用户', sort: true,}
+                , {field: 'ipaddress', title: 'IP', sort: true,}
+                , {field: 'mac', title: '网卡MAC地址'}
+                , {field: 'devicename', title: '设备',}
+                , {field: 'browser', title: '浏览器',}
+                , {field: 'browserversion', title: '浏览器版本'}
+                , {field: 'type', title: '业务类型', sort: true}
+                , {
+                    field: 'responsetime', title: '响应时间', sort: true, templet: function (d) {
+                        return d.responsetime + '毫秒';
+                    }
+                }
+                , {field: 'createtime', title: '请求时间', sort: true,}
+            ]],
+            initSort: {
+                field: 'createtime', type: 'desc'
+            }
+            , page: true
+        });
+
+
+        //查询
+        var $ = layui.$, active = {
+            reload: function () {
+                var username = $('#username').val();
+                var start = $('#start').val();
+                var end = $('#end').val();
+                console.log(start, end);
+                //执行重载
+                table.reload('auth-table', {
+                    page: {curr: 1}//重新从第 1 页开始
+                    , where: {username: username, start: start, end: end}
+                });
+            }
+        };
+        $('.test-table-reload-btn .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+</script>
+</body>
+</html>

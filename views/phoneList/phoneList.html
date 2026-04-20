@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>游戏列表</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+  <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+  <script src="../../statics/js/jquery-3.2.1.min.js"></script>
+  <script src="../../statics/js/jquery.cookie.js"></script>
+  <script src="../../statics/js/public.js"></script>
+  <style>
+    .pre-text {
+      white-space: pre;
+    }
+    .layui-input-block{
+      margin-left: 0!important;
+    }
+  </style>
+
+</head>
+<body>
+
+<div class="layui-fluid">
+  <div class="layui-row layui-col-space15">
+    <div class="layui-col-md12">
+      <div class="layui-card">
+        <div class="layui-card-header">游戏列表</div>
+        <div class="layui-card-body">
+          <div class="test-table-reload-btn" style="margin-bottom: 10px;">
+            <div class="layui-inline">
+              <input class="layui-input" name="name" id="test-table-demoReload"
+                     autocomplete="off" placeholder="请输入游戏名称">
+            </div>
+            <button class="layui-btn" data-type="reload">搜索</button>
+            <button id="role-button-add" shiro-event="jax:phoneList:openAdd" class="layui-btn"><i
+              class="layui-icon">&#xe654;</i>添加
+            </button>
+          </div>
+          <table class="layui-hide" id="auth-table" lay-filter="auth-table"></table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="auth-state" hidden>
+  <button lay-event="update" shiro-event="jax:phoneList:openUpdata" class="layui-btn layui-btn-primary layui-btn-xs"><i
+    class="layui-icon">&#xe642;</i>修改
+  </button>
+  <button lay-event="remove" shiro-event="jax:mobileGame:delete" class="layui-btn layui-btn-primary layui-btn-xs"><i
+    class="layui-icon">&#xe640;</i>删除
+  </button>
+</div>
+
+
+
+<div id="layui-file-update" hidden>
+  <div class="layui-fluid">
+    <div class="layui-card">
+      <div class="layui-card-body" style="padding: 15px;">
+        <form class="layui-form" id="layui-form-file-update" lay-filter="component-form-group">
+          <input type="text" id="filename" name="filename" hidden>
+          <textarea class="pre-text" id="fileInfo" name="fileInfo" wrap="hard" style="width: 100%;resize: none;"></textarea>
+          <div class="layui-footer" id="update-file-button" style="left: 0;">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--update add-->
+<div id="layui-resources" hidden>
+  <div class="layui-fluid">
+    <div class="layui-card">
+      <div class="layui-card-body" style="padding: 15px;">
+        <form class="layui-form" id="layui-form-brand-update" lay-filter="component-form-group">
+          <div class="layui-form-item">
+            <input type="hidden" id="id" name="id">
+            <div class="layui-form-item layui-form-text">
+              <label class="layui-form-label">游戏名称</label>
+              <div class="layui-input-inline">
+                <input type="text" name="name" lay-verify="required" placeholder="请输入中文名称"
+                       class="layui-input">
+              </div>
+              <label class="layui-form-label">平台</label>
+              <div class="layui-input-inline" style="width: 182px">
+                <select name="platform" lay-verify="required">
+                  <option value="0">全部</option>
+                  <option value="1">Android</option>
+                  <option value="2">IOS</option>
+                  <option value="3">PC</option>
+                </select>
+              </div>
+              <label class="layui-form-label">类型</label>
+              <div class="layui-input-inline" style="width: 182px">
+                <select name="type" lay-verify="required" id="gameType">
+                </select>
+              </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+              <label class="layui-form-label">浏览次数</label>
+              <div class="layui-input-inline">
+                <input type="text" name="downloaded" lay-verify="required" placeholder="请输入浏览次数"
+                       class="layui-input">
+              </div>
+              <label class="layui-form-label">语言</label>
+              <div class="layui-input-inline">
+                <input type="text" name="language" lay-verify="required" placeholder="请输入语言"
+                       class="layui-input">
+              </div>
+              <label class="layui-form-label">大小</label>
+              <div class="layui-input-inline">
+                <input type="text" name="file_size" lay-verify="required" placeholder="请输入游戏大小"
+                       class="layui-input">
+              </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+              <label class="layui-form-label">版本</label>
+              <div class="layui-input-inline">
+                <input type="text" name="edition" lay-verify="required" placeholder="请输入游戏版本"
+                       class="layui-input">
+              </div>
+
+              <label class="layui-form-label">厂商</label>
+              <div class="layui-input-inline">
+                <input type="text" name="manufacturer" lay-verify="required" placeholder="请输入游戏厂商"
+                       class="layui-input">
+              </div>
+
+              <label class="layui-form-label">排序</label>
+              <div class="layui-input-inline">
+                <input type="number" name="ranking" lay-verify="required" placeholder="排序数字"
+                       class="layui-input">
+              </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+              <label class="layui-form-label" style="white-space: nowrap">安卓下载地址</label>
+              <div class="layui-input-inline">
+                <input type="text" name="androidUrl" lay-verify="required" placeholder="请输入安卓下载地址"
+                       class="layui-input">
+              </div>
+              <label class="layui-form-label" style="white-space: nowrap">苹果下载地址</label>
+              <div class="layui-input-inline">
+                <input type="text" name="iphoneUrl" lay-verify="required" placeholder="请输入苹果下载地址"
+                       class="layui-input">
+              </div>
+              <label class="layui-form-label" style="white-space: nowrap">PC下载地址</label>
+              <div class="layui-input-inline">
+                <input type="text" name="pcUrl" lay-verify="required" placeholder="请输入PC下载地址"
+                       class="layui-input">
+              </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+              <label class="layui-form-label" style="white-space: nowrap">游戏简介</label>
+              <div class="layui-input-inline">
+                <input type="text" name="introduce" lay-verify="required" placeholder="请输入游戏简介"
+                       class="layui-input">
+              </div>
+            </div>
+            <div class="layui-card-body">
+              <button type="button" class="layui-btn" id="test1">上传封面</button>
+              <div class="layui-upload" style="display: flex">
+                <div class="layui-upload-list">
+                  <div class="layui-upload-list">
+                    <img class="layui-upload-img" style="width: 200px;height: 200px" id="demo1">
+                    <input style="display: none" id="portrait" name="portrait"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="layui-card-body">
+              <div class="layui-upload">
+                <button type="button" class="layui-btn" id="test2">多图片上传</button>
+                <div class="layui-upload-list" id="demo2" style="display: flex"></div>
+              </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+              <div class="layui-input-block">
+                <div id="div3"></div>
+              </div>
+            </div>
+            <div class="layui-input-block">
+              <!--操作-->
+              <div class="layui-footer" id="submit-form-brand-button" style="left: 0;">
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--添加-->
+<div id="submit-form-add" hidden>
+  <button class="layui-btn" shiro-event="jax:mobileGame:add" lay-submit lay-filter="submit-form-brand-up">立即提交</button>
+  <button type="reset" shiro-event="" class="layui-btn layui-btn-primary">重置</button>
+</div>
+<!--修改-->
+<div id="submit-form-update" hidden>
+  <button class="layui-btn" shiro-event="jax:mobileGame:update" lay-submit lay-filter="submit-form-brand-up">立即提交</button>
+</div>
+
+<script src="../../layuiadmin/layui/layui.js"></script>
+<script src="../../statics/wangEditor-3.1.1/release/wangEditor.js"></script>
+<script>
+  var fileArr=[];
+  var fmFile=null;
+  function handleDelete(v,index){
+    $(v).parent().remove();
+    for (var i = 0; i < fileArr.length; i++) {
+      if(fileArr[i].index===index){
+        fileArr.splice(i,1);
+      }
+    }
+  }
+  layui.config({
+    base: '../../../layuiadmin/' //静态资源所在路径
+  }).extend({
+    index: 'lib/index', //主入口模块
+    treetable: '../treetable/treetable'
+  }).use(['index', 'table','formgs','form','security','treetable', 'upload','layedit'], function () {
+    var $ = layui.jquery,
+      admin = layui.admin,
+      table = layui.table,
+      formgs = layui.formgs,
+      form = layui.form,
+      upload = layui.upload,
+      treetable = layui.treetable,
+      layedit = layui.layedit,//控制添加修改（同一个弹出层）关闭弹出层的索引
+      closeindex;//控制添加修改（同一个弹出层）关闭弹出层的索引
+    var E = window.wangEditor;
+    var editor2 = new E('#div3');
+    editor2.customConfig.uploadImgMaxSize = 3 * 700 * 700;
+    editor2.customConfig.uploadImgMaxLength = 10;
+    editor2.customConfig.uploadImgTimeout = 0;
+    editor2.customConfig.uploadImgShowBase64 = true;
+    editor2.customConfig.uploadImgHooks = {
+      fail:function (xhr, editor, result) {
+        //上传错误时触发
+        alert("上传图片失败");
+      }
+    };
+    upload.render({
+      elem: '#test1'
+      ,url: '' //此处用的是第三方的 http 请求演示，实际使用时改成您自己的上传接口即可。
+      ,before: function(obj){
+        //预读本地文件示例，不支持ie8
+        obj.preview(function(index, file, result){
+          $('#demo1').attr('src', result); //图片链接（base64）
+          fmFile = file
+        });
+      }
+    });
+    upload.render({
+      elem: '#test2'
+      ,url: ''
+      ,multiple: true
+      ,before: function(obj){
+        //预读本地文件示例，不支持ie8
+        obj.preview(function(index, file, result){
+          var len = $('#demo2').children().length;
+          if(len>=3){
+            return false
+          }else{
+            var html ='<div style="margin-right: 8px;position: relative">';
+              html +=   '<img class="layui-upload-img0 deleteIcon"  onclick="handleDelete(this,'+len+')" src="../../statics/images/delete.png" style="width: 20px;height: 20px;position: absolute;right: 0px;z-index: 9;cursor: pointer">';
+              html +=   '<img style="width: 200px;height: 200px" src="'+ result +'" alt="'+ file.name +'" class="layui-upload-img">';
+              html += '</div>';
+            var fileData = {
+              index: len,
+              file: file
+            }
+            fileArr.push(fileData)
+            $('#demo2').append(html)
+          }
+        });
+      }
+    });
+    editor2.create();
+    table.render({
+      elem: '#auth-table'
+      ,url: layui.setter.url+'jax/jaxMobileGame/list'
+      ,title: '采集服'
+      ,cols: [[
+        {
+          field: 'portrait', align:'center', title: 'Logo',
+          templet: function (obj) {
+            if (obj.portrait != '' && obj.portrait != null) {
+              var t = obj.portrait;
+              obj.portrait = '<img  style="height:28px" onclick="tc(\'' + t + '\')"   src="' + t + '"/>';
+            }else{
+              obj.portrait='暂无图片';
+            }
+            return obj.portrait;
+          }
+        },
+        {field: 'name', title: '游戏名称', sort: true,},
+        {field: 'typeName', title: '游戏类型', sort: true,},
+        {field: 'introduce', title: '游戏简介', sort: true,},
+        {field: 'language', title: '游戏语言', sort: true,},
+        {field: 'file_size', title: '游戏大小', sort: true,},
+        {field: 'downloaded', title: '下载次数', sort: true,},
+        // {field: 'platform', title: '平台', sort: true,},
+        {field: 'edition', title: '版本', sort: true,},
+        // {field: 'ranking', title: '排序', sort: true,},
+        {
+          field: 'hotRecommend', title: '是否推荐', width: 115,
+          templet: function (obj) {
+            var r =
+              '<div class="layui-form" lay-filter="hotRecommend">' +
+              '<input type="checkbox" name="hotRecommend" data-id="' + obj.id + '" lay-skin="switch" value="' + obj.hotRecommend + '" lay-text="已推荐|未推荐" lay-filter="hotRecommend" ' + (obj.hotRecommend == 1 ? "checked" : "") + ' >' +
+              '</div>'
+            return r;
+          }
+        },
+        {
+          field: 'hotFunction', title: '是否热门', width: 115,
+          templet: function (obj) {
+            var r =
+              '<div class="layui-form" lay-filter="hotFunction">' +
+              '<input type="checkbox" name="hotFunction" data-id="' + obj.id + '" lay-skin="switch" value="' + obj.hotFunction + '" lay-text="是|否" lay-filter="hotFunction" ' + (obj.hotFunction == 1 ? "checked" : "") + ' >' +
+              '</div>'
+            return r;
+          }
+        },
+        {field: 'manufacturer', title: '厂商', sort: true,},
+        , {fixed: 'right', title: '操作', toolbar: '#auth-state',width:150}
+      ]]
+      ,page: true
+    });
+
+    $.ajax({
+      url: layui.setter.url + 'jax/jaxBrandGameType/list',
+      type: 'get',
+      data:{page:1,limit:500},
+      dataType: 'json',
+      success: function (data, textStatus, jqXHR) {
+        var html='';
+        for(var i=0;i<data.data.length;i++){
+          html+="<option value='"+data.data[i].id+"'>"+data.data[i].type_name+"</option>"
+        }
+        $("#gameType").html(html);
+      }
+    })
+
+    //打开修改，删除
+    table.on('tool(auth-table)', function (obj) {
+      fileArr=[];
+      fmFile=null;
+      $('#demo1').removeAttr('src');
+      $("#demo2").empty();
+      $("#portrait").val('')
+      if (obj.event == 'update') {
+        layer.open({
+          type: 1,//弹窗类型
+          area: ['1500', '85%'],//定义宽和高
+          title: ('修改'),//题目
+          shadeClose: false,//点击遮罩层关闭
+          content: $("#layui-resources"),//打开的内容
+          success: function (index, layero) {
+            closeindex = layero;
+            formgs.reset('layui-resources');
+            formgs.get("layui-form-brand-update", obj.data);
+            editor2.txt.html("");
+            editor2.txt.html(obj.data.details);
+            $(".deleteIcon").css("display",'none');
+            if(obj.data.platform == "1") {
+              $("input[name='popupar']").prop("checked", true);
+            } else {
+              $("input[name='popupar']").prop("checked", false);
+            }
+            $('#demo1').attr('src', obj.data.portrait);
+            $("#portrait").val(obj.data.portrait)
+            if(obj.data.screenshot){
+              var screens = obj.data.screenshot.split(",");
+              var html = '';
+              for(var i = 0; i < screens.length; i++) {
+                html +='<div style="margin-right: 8px;position: relative">';
+                html +=   '<img class="layui-upload-img0 deleteIcon"  onclick="handleDelete(this)" src="../../statics/images/delete.png" style="width: 20px;height: 20px;position: absolute;right: 0px;z-index: 9;cursor: pointer">';
+                html +=   '<img style="width: 200px;height: 200px"  src="'+ screens[i] +'"  class="layui-upload-img">';
+                html +=   '<input style="display: none"  name="screenshot" value="'+ screens[i] +'"  class="layui-upload-img">';
+                html += '</div>';
+              }
+            }
+            $('#demo2').append(html);
+            $("#submit-form-brand-button").html($("#submit-form-update").html());
+            form.render();
+          },
+        });
+      } else if (obj.event == "remove") {
+        layer.confirm('确定要删除吗？', function (index) {
+          admin.req({
+            url:layui.setter.url+'jax/jaxMobileGame/delete?id='+obj.data.id,
+          }).done(function (res) {
+            layer.close(index);
+            table.reload('auth-table');
+            layer.msg(res.msg);
+            form.render();
+          })
+        });
+      }
+    })
+
+
+    //修改提交
+    form.on('submit(submit-form-brand-up)', function (data) {
+      data.field.details=editor2.txt.html();
+      var url = layui.setter.url+'jax/jaxMobileGame/'+ ((data.field.id == null||data.field.id=='') ? "add" : "update");
+      var formdata = new FormData();
+      formdata.append("id",data.field.id);
+      formdata.append("name",data.field.name);
+      formdata.append("introduce",data.field.introduce);
+      formdata.append("type",data.field.type);
+      formdata.append("language",data.field.language);
+      formdata.append("file_size",data.field.file_size);
+      formdata.append("downloaded",data.field.downloaded);
+      formdata.append("platform",data.field.platform);
+      formdata.append("edition",data.field.edition);
+      formdata.append("manufacturer",data.field.manufacturer);
+      formdata.append("details",data.field.details);
+      formdata.append("ranking",data.field.ranking);
+      formdata.append("iphoneUrl",data.field.iphoneUrl);
+      formdata.append("androidUrl",data.field.androidUrl);
+      formdata.append("pcUrl",data.field.pcUrl);
+      if(data.field.screenshot){
+        formdata.append("screenshot",data.field.screenshot);
+      }
+      if(data.field.portrait){
+        formdata.append("portrait",data.field.portrait);
+      }
+      for(var i = 0; i < fileArr.length; i++){
+        formdata.append("screenshots",fileArr[i].file);
+      }
+      if(fmFile){
+        formdata.append("portraitImg",fmFile);
+      }
+      admin.req({
+        url:  layui.setter.url+'jax/jaxMobileGame/'+ ((data.field.id == null||data.field.id=='') ? "add" : "update"),
+        data: formdata,
+        cache: false, //上传文件不需要缓存
+        processData: false, // 告诉jQuery不要去处理发送的数据
+        contentType: false, // 告诉jQuery不要去设置Content-Type请求头
+        done: function (res) {
+          layer.close(closeindex);
+          table.reload("auth-table");
+          layer.msg(res.msg);
+        }
+      })
+      return false
+    })
+
+
+    //打开添加弹窗
+    $("#role-button-add").on("click", function () {
+      fileArr=[];
+      fmFile=null;
+      $('#demo1').removeAttr('src');
+      $("#demo2").empty();
+      $("#portrait").val('')
+      layer.open({
+        type: 1,
+        area: ['1500', '85%'],
+        title: ("添加"),
+        shadeClose: false,
+        content: $("#layui-resources"),
+        success: function (index, layero) {
+          formgs.reset('layui-resources');
+          editor2.txt.html("");
+          $(".deleteIcon").css("display",'block');
+          $("#submit-form-brand-button").html($("#submit-form-add").html());
+          closeindex = layero;
+          form.render();
+        },
+      });
+    })
+
+    //查询
+    var $ = layui.$, active = {
+      reload: function(){
+        var demoReload = $('#test-table-demoReload');
+        //执行重载
+        table.reload('auth-table', {
+          page: {curr: 1 }//重新从第 1 页开始
+          ,where: {url: $('#test-table-demoReload').val()}
+        });
+      }
+    };
+
+    //监听单元格编辑s-checkbox
+    form.on('switch(hotRecommend)', function (data) {
+      var id = $(this).attr("data-id");
+      var state = data.elem.checked ? 1 : 0;
+      update1(id, state);
+      console.log(data);
+    });
+
+    //被调用的修改方法
+    function update1(id, hotRecommend) {
+      admin.req({
+        url: layui.setter.url + "jax/jaxMobileGame/updateState",
+        data: {id: id, hotRecommend: hotRecommend},
+      });
+      table.reload("auth-table");
+    }
+
+
+    //监听单元格编辑s-checkbox
+    form.on('switch(hotFunction)', function (data) {
+      var id = $(this).attr("data-id");
+      var hotFunction = data.elem.checked ? 1 : 0;
+      update(id, hotFunction);
+    });
+
+    //被调用的修改方法
+    function update(id, hotFunction) {
+      admin.req({
+        url: layui.setter.url + "jax/jaxMobileGame/updateState",
+        data: {id: id, hotFunction: hotFunction},
+      });
+      table.reload("auth-table");
+    }
+
+    $('.test-table-reload-btn .layui-btn').on('click', function(){
+      var type = $(this).data('type');
+      active[type] ? active[type].call(this) : '';
+    });
+
+    //查询
+    var $ = layui.$, active = {
+      reload: function () {
+        var demoReload = $('#test-table-demoReload');
+        //执行重载
+        table.reload('auth-table', {
+          page: {curr: 1}//重新从第 1 页开始
+          , where: {name: demoReload.val()}
+        });
+      },
+      rolequery: function () {
+        var query = $('#table-role-query');
+        //执行重载
+        table.reload('table-role', {
+          page: {curr: 1}//重新从第 1 页开始
+          , where: {likename: query.val()}
+        });
+      }
+    };
+
+
+    $('.test-table-reload-btn .layui-btn').on('click', function () {
+      var type = $(this).data('type');
+      active[type] ? active[type].call(this) : '';
+    });
+  });
+</script>
+</body>
+</html>

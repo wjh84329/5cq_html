@@ -1,0 +1,1232 @@
+<!doctype html>
+<html lang="en">
+ <head> 
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+  <title>5CQ-传奇广告查询站_传奇广告排行_传奇资源站_新开传奇新服排名站(5CQ.COM)</title>
+  <meta name="description" content="5CQ.Com传奇广告排行榜,传奇私服查询站,传奇资源站,好玩的传奇排名站,玩家最爱的新开传奇,GM最喜欢的传奇工具,传奇直播,传奇新开服,传奇相关尽在5CQ(玩传奇)">
+  <meta name="keywords" content="传奇广告查询站,传奇资源站,传奇广告排行,传奇SF广告统计(5CQ.COM)">   
+  <!--  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">--> 
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+  <meta name="renderer" content="webkit"> 
+  <meta name="Referrer" content="origin"> 
+  <link rel="stylesheet" href="../statics/css/layer.css"> 
+  <link rel="stylesheet" href="../statics/css/public.css"> 
+  <link rel="stylesheet" href="../statics/css/slide-unlock.css"> 
+  <link rel="stylesheet" href="../statics/layui/css/layui.css"> 
+  <script src="../statics/js/jquery-3.2.1.min.js"></script> 
+  <script src="../statics/js/jquery.cookie.js"></script> 
+  <script src="../statics/adminconfig.js"></script> 
+  <script src="../statics/js/public.js"></script> 
+  <script src="../statics/config.js"></script> 
+  <style>
+        .main .content-box li .hotbtn {
+            display: inline-block;
+            height: 16px;
+            background: url(/statics/images/new/heart2.png) no-repeat;
+            padding-left: 20px;
+            line-height: 16px;
+        }
+
+        /*/ ÍøÕ¾µ¼º½ /*/
+        li {
+            list-style: none;
+        }
+
+        .witem {
+            height: 40px;
+            line-height: 40px;
+            list-style: none;
+            font-size: 15px;
+            font-weight: 800;
+            display: block;
+            border: solid 1px #1a73e8;
+            width: 120px;
+            text-align: center;
+            cursor: pointer;
+            margin-left: 10px;
+            background: #1a73e8;
+            color: #FFFFFF;
+        }
+
+        .webtxt {
+            overflow: hidden;
+            margin-bottom: 10px;
+            background: #FFF
+        }
+
+        ul.weblist {
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        ul.weblist li {
+            width: 240px;
+            height: 108px;
+            padding: 10px;
+            list-style: none;
+            /*float: left;*/
+            overflow: hidden;
+        }
+
+        ul.weblist li span {
+            color: #999999;
+            margin-left: 10px;
+        }
+
+        ul.weblist li a.title {
+            font-size: 15px;
+            text-decoration: none;
+            color: #333333;
+        }
+
+        ul.weblist li a:hover {
+            text-decoration: underline;
+            color: #FF0000;
+        }
+
+        .webinfo {
+            border: 1px solid #ddd;
+            padding: 7px 2px;
+            overflow: hidden;
+            background-color: #FFFFFF;
+            text-align: center;
+        }
+
+        .webinfo:hover {
+            border: solid 1px #DA0000;
+        }
+
+        .pagebox {
+            background: #f9f9f9;
+            overflow: hidden;
+        }
+
+        .commonContent {
+            background: #FFF
+        }
+
+        .pic {
+            margin-bottom: 20px
+        }
+
+        .save {
+            background: url(/static/21cq/icon_2.png) 0px -3px no-repeat;
+        }
+
+        .free {
+            background: url(/static/21cq/icon_2.png) 0px -73px no-repeat;
+        }
+
+        .bind {
+            background: url(/static/21cq/icon_2.png) 0px -144px no-repeat;
+        }
+
+        .save, .free, .bind {
+            float: left;
+            font-size: 13px;
+            color: #989898;
+            padding-left: 20px;
+            margin-right: 15px;
+        }
+
+        .infodesc li {
+            margin-bottom: 7px;
+        }
+
+        .infodesc span {
+            color: #989898;
+        }
+
+        .bigtitle {
+            border-bottom: 1px solid #eee; /* padding: 20px 0px 0px 0px; */
+            height: 53px;
+            position: relative;
+            margin: 30px 0 20px 0;
+        }
+
+        .bigtitle h4 {
+            max-width: 1200px;
+            font-size: 20px;
+            color: #202020;
+            font-weight: 500;
+            border-bottom: 3px solid #3c8de6;
+            padding-bottom: 12px;
+            position: absolute;
+            top: 10px;
+            left: 0px;
+            white-space: nowrap;
+        }
+
+        .download {
+            height: 40px
+        }
+
+        .download {
+            height: 34px;
+        }
+
+        .download a {
+            width: 150px;
+            height: 34px;
+            line-height: 34px;
+            text-align: center;
+            color: #fff;
+            font-size: 14px;
+            background: #f60;
+            display: block;
+            float: left;
+            margin: 18px 4px 0 10px;
+            border-radius: 4px;
+        }
+
+        .download a em {
+            display: block;
+            width: 36px;
+            height: 34px;
+            line-height: 34px;
+            border-right: 1px solid #f16202;
+            background: url(/static/21cq/xiazai-2.png) no-repeat 11px 0px;
+            float: left;
+        }
+
+        .art_content {
+            line-height: 180%;
+            font-size: 16px;
+        }
+
+        .gh_wenz {
+            padding: 10px;
+            margin-top: 40px;
+            font-size: 16px;
+            color: #303030;
+        }
+
+        .gh_wenz a:hover {
+            text-decoration: underline;
+            color: #da0000;
+        }
+
+        .bg11111 {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-radius: 5px;
+            border: 1px solid #e6e6e6;
+            height: 70px;
+            background-color: gainsboro;
+            cursor: pointer;
+        }
+
+        .bg11111color {
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: orange
+        }
+
+        .xzgj .bg11111:hover {
+            color: white;
+            background-color: red;
+        }
+        .background-container {
+            position: relative;
+            width: 400px;
+            height: 300px;
+            overflow: hidden; /* 确保背景不会溢出容器 */
+        }
+
+        .background-layers {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image:
+                    linear-gradient(to bottom right, rgba(255, 126, 95, 0.5), rgba(254, 180, 123, 0.5)),
+                    linear-gradient(to bottom right, #ff7e5f, #feb47b);
+            /* 第一个渐变层是半透明的，作为“上层” */
+            /* 第二个渐变层是全色的，作为“下层” */
+            transform: skewY(-10deg); /* 倾斜背景 */
+            transform-origin: bottom left; /* 倾斜的起点 */
+        }
+
+        .text-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) skewY(10deg); /* 反向倾斜以抵消背景的倾斜 */
+            color: white;
+            text-align: center;
+            width: 100%; /* 或者设置为具体的宽度 */
+        }
+        .clearfix .link a {
+            color: #fff;
+            margin-right: 28px;
+        }
+        .clearfix .link a em {
+            display: inline-block;
+            width: 1px;
+            height: 14px;
+            background: #fff;
+            vertical-align: -2.5px;
+            margin-left: 28px;
+        }
+        .p1 {
+            text-align: center;
+            margin-top: 28px;
+        }
+        .p1 span {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        .p1 em {
+            color: rgba(193, 193, 193, 0.8);
+        }
+        .p2 {
+            text-align: center;
+            margin: 18px 0;
+        }
+        .p2 > * {
+            display: inline-block;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        .p2 .icon-link {
+            vertical-align: -2px;
+            margin-right: 6px;
+        }
+        .p2 > * a {
+            color: inherit;
+            margin-right: 10px;
+        }
+        .textfoot {
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        /*.xzbj {
+            background: rgb(107, 107, 107);
+        }*/
+
+        /*body .xzbj .layui-layer-title {
+            background: rgb(107, 107, 107);
+            color: white;
+            border-color: grey;
+            font-size: 16px;
+            height: 50px;
+            line-height: 50px;
+        }*/
+
+        /*body .xzbj .layui-layer-title{background:#c00; color:#fff; border: none;}
+        body .xzbj .layui-layer-btn{border-top:1px solid #E9E7E7}
+        body .xzbj .layui-layer-btn a{background:#333;}
+        body .xzbj .layui-layer-btn .layui-layer-btn1{background:#999;}*/
+    </style> 
+ </head> 
+ <body> 
+  <div class="topinfo"> 
+   <div class="wid" style="width: 100%;justify-content: space-around"> 
+    <div class="topinfo_l">
+      同步站:Www.Chacq.Com[查传奇] 
+    </div> 
+    <div class="topinfo_c">
+      通知：严厉打击带有赌博的游戏，欢迎监督举报(举报经查实现金红包奖励) 
+    </div> 
+    <div class="topinfo_r"> 
+     <a href="/" style="color: white;margin-right: 15px">首页</a> 
+     <a href="./recruTran.html" style="color: white;margin-right: 15px" target="_blank">招聘交易发布</a> 
+     <a href="#" style="color: white;margin-right: 15px" onclick="shoucang()">收藏网址</a> 
+     <a href="5cq.com传奇站.url" download="5cq.com传奇站.url" style="color: white;margin-right: 15px">保存桌面</a> 
+    </div> 
+   </div> 
+  </div> 
+  <div id="head" style="height: 270px;"> 
+   <script>zhaoff.inithead("#head");</script> 
+  </div> 
+  <!--<div class="navc" id="first_title" style="height: 79px"><script> zhaoff.initftitle("#first_title");</script></div>--> 
+  <!--  <script src="../statics/js/cdmenu.js"></script> --> 
+  <div class="navc" id="first_title"> 
+   <div class="nav clearfix" id="cdmenu"> 
+    <a href="/index.html" target="" onclick="openActive('首页','/index.html',1);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
+     <div> 
+      <p>首页</p> 
+      <p>HOME</p> 
+     </div> <em></em> </a> 
+    <a href="/code/ranking.html" target="" onclick="openActive('广告排行','/code/ranking.html',2);" class=" clearfix" style="cursor: pointer"> <img style="display:block;" src="/statics/images/hot.gif" class="icon"> 
+     <div> 
+      <p>广告排行</p> 
+      <p>AD RANKING</p> 
+     </div> <em></em> </a> 
+    <a href="/chat.html" target="" onclick="openActive('AI助手','/chat.html',3);" class=" clearfix" style="cursor: pointer"> <img style="display:block;" src="/statics/images/hot.gif" class="icon"> 
+     <div> 
+      <p>AI助手</p> 
+      <p>AI CHAT</p> 
+     </div> <em></em> </a> 
+    <a href="/code/dataAnalysis.html" target="" onclick="openActive('广告分析','/code/dataAnalysis.html',4);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
+     <div> 
+      <p>广告分析</p> 
+      <p>AD REQUEST</p> 
+     </div> <em></em> </a> 
+    <a href="/code/fastscreen.html" target="" onclick="openActive('广告筛选','/code/fastscreen.html',5);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
+     <div> 
+      <p>广告筛选</p> 
+      <p>AD SEARCH</p> 
+     </div> <em></em> </a> 
+    <a href="/code/report.html" target="" onclick="openActive('黑名单','/code/report.html',6);" class=" clearfix" style="cursor: pointer"> <img style="display:block;" src="/statics/images/hot.gif" class="icon"> 
+     <div> 
+      <p>黑名单</p> 
+      <p>BLACK LIST</p> 
+     </div> <em></em> </a> 
+    <a href="/code/recruTran.html" target="" onclick="openActive('招聘交易','/code/recruTran.html',7);" class=" clearfix" style="cursor: pointer"> <img style="display:block;" src="/statics/images/tj.gif" class="icon"> 
+     <div> 
+      <p>招聘交易</p> 
+      <p>RECRUIT·TRADE</p> 
+     </div> <em></em> </a> 
+    <a href="/code/journalism.html" target="" onclick="openActive('传奇攻略','/code/journalism.html',8);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
+     <div> 
+      <p>传奇攻略</p> 
+      <p>NEWS GUIDE</p> 
+     </div> <em></em> </a> 
+    <a href="/code/publishSites.html" target="" onclick="openActive('发布站点','/code/publishSites.html',9);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
+     <div> 
+      <p>发布站点</p> 
+      <p>PUBLISH SITES</p> 
+     </div> <em></em> </a> 
+    <a href="/code/resourceNavigation.html" target="" onclick="openActive('工具导航','/code/resourceNavigation.html',10);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
+     <div> 
+      <p>工具导航</p> 
+      <p>DATA DOWN</p> 
+     </div> <em></em> </a> 
+   </div> 
+  </div> 
+  <div id="downlink" style="display: none;position: relative;height: 100%"> 
+   <div style="display: flex;flex-direction: column;padding-top: 5%;padding-left: 10%"> 
+    <div class=""> 
+     <img id="imgurl" src="../../statics/upload/c8f9a720-9907-4c82-a6f1-1c914709cae8.jpg" alt="热血传奇2003客户端"> 
+    </div> 
+    <div style="margin-top: 5%"> 
+     <h1 style="font-size: 25px" id="toolsName">热血传奇2003客户端</h1> 
+     <div style="font-size: 15px;margin-top: 1%"> 
+      <svg t="1719374719900" class="icon" viewbox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8286" width="15" height="15"> 
+       <path d="M934.4 147.85024h-41.1392s-96-2.73664-192-41.07264c-98.74688-41.06496-164.57216-87.61344-164.57216-87.61344L512 0l-24.68352 16.42752S421.48608 62.976 322.74432 104.04096c-96 41.07264-192 41.07264-192 41.07264H89.6v432.59648C89.6 794.0096 363.88608 1024 512 1024s422.4-229.9904 422.4-446.28992V147.85024z m-120.68352 191.65696L509.25824 646.15936c-8.22784 8.21504-19.2 10.95168-30.1696 10.95168-8.22784 0-19.2-2.73664-24.6912-8.21504L248.68864 484.608c-16.45568-13.68832-21.94176-41.07008-5.48608-57.4976 13.71392-16.42752 41.1392-21.9008 57.6-5.47584l178.28352 142.3744 279.77216-279.2576a39.81568 39.81568 0 0 1 57.6 0c16.45568 16.42752 13.71392 38.32832-2.74432 54.75584z m0 0" fill="#1296db" p-id="8287"></path> 
+      </svg> 
+      <span>安全</span> 
+      <svg t="1719374893911" class="icon" viewbox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10546" width="15" height="15"> 
+       <path d="M728.576 593.92v71.68H285.184v-69.12C116.224 630.784 0 703.488 0 786.944c0 117.76 229.376 212.992 512 212.992s512-95.232 512-212.992c0-85.504-120.832-158.72-295.424-193.024z" fill="#80D3A8" p-id="10547"></path> 
+       <path d="M819.2 685.568l-242.688 139.776c-40.96 23.552-88.064 23.552-129.024 0L204.8 685.568c-40.96-23.552-64.512-64-64.512-111.616V293.888c0-47.616 23.552-88.064 64.512-111.616L447.488 41.984c40.96-23.552 88.064-23.552 129.024 0L819.2 181.76c40.96 23.552 64.512 64 64.512 111.616V573.44c0 47.616-23.552 88.064-64.512 112.128z m-110.592-142.336c-2.048-15.872-10.24-23.552-23.552-23.552-13.824 0.512-21.504 8.192-23.552 23.552 0.512 10.24-1.024 18.944-3.072 26.112-2.56 7.168-8.192 10.752-16.896 11.264h-74.752c-8.704-1.024-13.312-5.632-13.824-13.824V502.784h88.576c16.384 0.512 24.576-7.68 24.064-24.064V371.712c0.512-16.384-7.68-24.064-24.064-24.064h-44.544c13.312-15.872 24.576-32.768 33.792-51.712 7.68-18.944 1.536-29.696-18.432-31.744H477.696c1.536-11.776-2.56-20.48-12.288-26.624-9.728-6.144-19.456-4.096-29.184 6.144-32.256 41.472-69.12 74.752-109.568 100.352-11.264 9.728-13.312 20.48-6.656 31.744s16.384 14.336 28.672 9.728c4.096-1.536 7.168-3.072 8.192-4.608v98.304c-1.024 16.896 7.168 25.088 24.064 24.064h80.384c-20.992 41.984-64 70.656-129.024 85.504-13.312 5.632-18.944 14.848-15.872 27.648 3.072 13.312 11.776 19.456 27.136 18.432 32.256-6.656 62.976-18.944 92.16-36.864 29.184-17.92 52.224-45.568 69.12-81.92v71.68c0.512 26.624 15.872 40.448 46.08 41.472H645.12c18.944 0.512 33.792-5.12 45.568-16.896 11.264-11.776 17.408-33.792 17.92-65.536v-3.584z m-185.344-130.56v-19.456h82.432c8.192-0.512 12.288 3.584 12.288 11.264v41.472c0 8.192-4.096 12.288-12.288 11.264h-84.992c1.536-10.752 2.56-25.6 2.56-44.544z m13.824-65.536H402.432c15.872-11.776 30.208-24.576 43.52-38.912h108.032c7.68-1.024 10.24 1.024 6.656 5.632-6.656 10.24-14.336 21.504-23.552 33.28z m-121.856 46.08h62.464v14.336c-0.512 20.992-1.536 37.376-4.096 49.664H415.232c-8.704 1.024-12.8-3.072-12.288-11.264V404.48c-0.512-7.68 3.584-11.264 12.288-11.264z" fill="#00A651" p-id="10548"></path> 
+      </svg> 
+      <span>免费</span> 
+      <svg t="1719377182662" class="icon" viewbox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="21466" width="15" height="15"> 
+       <path d="M654.010508 934.429144c-82.366095-19.881471-516.91825-153.371349-551.000772-624.846236 0 0-76.685674 284.021016 90.886726 548.160562 122.129037 193.134291 301.062277 184.613661 400.469633 139.170298 213.015762 19.881471 343.66543-62.484624 343.66543-62.484624-96.567146 34.082522-258.459125 5.68042-284.021017 0M176.855201 0C145.612889 142.010508 142.772679 261.299335 159.81394 360.706691c19.881471-79.525885 53.963993-116.448617 53.963993-116.448617-34.082522 93.726935-25.561891 195.974501-19.881471 232.897234 19.881471 51.123783 45.443363 96.567146 73.845464 136.330088 0-144.850718 53.963993-227.216813 53.963993-227.216814-28.402102 136.330088 8.52063 275.500386 19.881471 312.423118 36.922732 34.082522 73.845464 62.484624 110.768197 88.046516-36.922732-173.25282 11.360841-284.021016 11.36084-284.021017-5.68042 144.850718 53.963993 284.021016 76.685675 335.1448 90.886725 42.603152 159.051769 56.804203 159.051769 56.804203s113.608407-329.464379-195.974501-553.840982C273.422346 173.25282 176.855201 0 176.855201 0" fill="#1C9307" p-id="21467"></path> 
+      </svg> 
+      <span>无捆绑</span> 
+     </div> 
+    </div> 
+    <div class="infodesc" style="margin-top: 5%"> 
+     <li id="downloadCount"><span>下载次数：</span> 12</li> 
+     <li id="fileSize"><span>文件大小：</span> 297MB</li> 
+     <li id="createTime"><span>添加时间：</span> 2024-06-18 20:43:07</li> 
+     <li id="unzipPassword"><span>解压密码：</span> 1pk.com</li> 
+    </div> 
+    <div style="margin-top: 5%" id="description" class="art_content"> 
+    </div> 
+   </div> 
+   <div id="download" style="position: absolute;bottom: 0;padding: 10px;height: 40px;display: flex;justify-content: space-around;align-items: center;width: 95%;border-top: 1px solid gray"> 
+    <!--<a href="" class="layui-btn layui-btn-radius layui-btn-danger" style="width: 25%">百度云<i style="margin-left: 10%" class="layui-icon">&#xe681;</i></a>
+        <button class="layui-btn layui-btn-radius layui-btn-danger" style="width: 25%">华为云<i style="margin-left: 10%" class="layui-icon">&#xe681;</i></button>
+        <button class="layui-btn layui-btn-radius layui-btn-danger" style="width: 25%">阿里云<i style="margin-left: 10%" class="layui-icon">&#xe681;</i></button>--> 
+   </div> 
+  </div> 
+  <!--代码正文--> 
+  <div class="container" style="margin-top: 20px;margin-bottom: 360px"> 
+   <div class="container" style="height: 950px">
+     \ 
+    <div class="agentqq"> 
+     <div class="title">
+       如果想收入您的站点或者业务请联系我们 
+     </div> 
+     <ul class="clearfix" style="height: 36px;">
+       . 
+      <li><a href="https://jq.qq.com/?_wv=1027&amp;k=BkVnYYIE" target="_blank"> <img src="/statics/images/qqqun.gif" alt="传奇私服"> <span>5CQ传奇圈交流群:3067585</span> </a></li> 
+      <li><a href="http://wpa.qq.com/msgrd?v=3&amp;uin=3067585&amp;site=qq&amp;menu=yes" target="_blank"> <img src="/statics/images/qq_icon.gif" alt="传奇版本"> <span>商务合作:3067585</span> </a></li> 
+     </ul> 
+    </div> 
+    <div class="pagebox" style="background-color: white"> 
+     <div style="margin-top: 40px"> 
+      <div> 
+       <button class="layui-btn layui-btn-danger"><i style="font-size: 24px" class="layui-icon"></i>工具下载</button> 
+      </div> 
+      <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="border: 1px solid gainsboro;margin: initial"> 
+       <ul class="layui-tab-title gjxz"> 
+        <li class="layui-this" style="min-width: initial">热门</li> 
+       </ul> 
+       <div class="layui-tab-content gjxzlist"> 
+       </div> 
+      </div> 
+     </div> 
+    </div> 
+    <div class="container" style="margin-top: 20px"> 
+     <div class="main" style="border: initial;background: initial"> 
+      <div class="main-content"> 
+       <div style="background: white"> 
+        <div> 
+         <button class="layui-btn layui-btn-danger"><i style="font-size: 24px" class="layui-icon"></i>传奇网址相关导航</button> 
+        </div> 
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief1" style="border: 1px solid gainsboro;margin: initial"> 
+         <ul class="layui-tab-title linkname"> 
+          <li class="layui-this" style="min-width: initial">热门</li> 
+         </ul> 
+         <div class="layui-tab-content linklist"> 
+          <!--                                11111--> 
+         </div> 
+        </div> 
+       </div> 
+       <div style="margin-top: 20px;background: white"> 
+        <div> 
+         <button class="layui-btn layui-btn-danger"><i style="font-size: 24px" class="layui-icon"></i>在线帮助文档集合</button> 
+        </div> 
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief2" style="border: 1px solid gainsboro;margin: initial"> 
+         <ul class="layui-tab-title helpname"> 
+          <li class="layui-this" style="min-width: initial">热门</li> 
+         </ul> 
+         <div class="layui-tab-content helplist"> 
+          <!--                                11111--> 
+         </div> 
+        </div> 
+       </div> 
+      </div> 
+     </div> 
+     <div class="adv_cate"> 
+      <ul class="adv_banner"> 
+      </ul> 
+      <ul class="adv_text"> 
+      </ul> 
+     </div> 
+    </div> 
+    <div class="container" style="margin-top: 20px"> 
+     <div class="adv_cate"> 
+      <ul class="adv_banner"> 
+      </ul> 
+      <ul class="adv_text"> 
+      </ul> 
+     </div> 
+    </div> 
+    <br> 
+    <script>
+            (function () {
+                var bp = document.createElement('script');
+                var curProtocol = window.location.protocol.split(':')[0];
+                if (curProtocol === 'https') {
+                    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+                } else {
+                    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+                }
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(bp, s);
+            })();
+        </script> 
+    <div id="tcHtml"> 
+     <!--sxl用户信息操作，注册，登录，联系我们--> 
+     <script>$("#tcHtml").load("/statics/userinfo.html");</script> 
+    </div> 
+    <script src="../statics/js/jquery.slideunlock.js"></script> 
+    <script src="../statics/js/jquery.cookie.js"></script> 
+    <script src="../statics/js/layer.js"></script> 
+    <script type="text/javascript" src="../statics/DataTables/media/js/jquery.dataTables.min.js"></script> 
+   </div> 
+  </div> 
+  <div id="footer" style="width:100%;margin: 30px auto 0;box-sizing: border-box;background: #1f1f24;padding: 30px 0 20px"> 
+   <div class="clearfix" style="width: 100%;margin: 0 auto"> 
+    <div class="link clearfix" style="border-bottom: 1px solid #36363a;padding-bottom: 30px;text-align: center" id="wzlm"> 
+    </div> 
+    <p class="p1"> <span>开服广告在线查询站 &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span> <em>为 新开传奇网站，单职业传奇，复古传奇，传奇手游 提供一个传奇发布网交流平台 </em> <a rel="nofollow" href="/statics/sitemap.html" target="_blank" style="color: white;margin-left: 20px">网站地图<em></em></a> </p> 
+    <p class="p2"> <span><em class="icon-link"></em>友情链接：</span> <a rel="nofollow" href="https://www.5cq.com" target="_blank">传奇广告查询 <em>|</em></a> <a rel="nofollow" href="https://www.1sf.com/" target="_blank">1SF传奇资源站 <em>|</em></a> <a rel="nofollow" href="https://www.2sf.com/" target="_blank"> 2SF传奇资源站 <em>|</em></a> <a rel="nofollow" href="https://www.5cq.com/duty.html" target="_blank">免责申明 <em>|</em></a> </p> 
+   </div> 
+   <p class="textfoot">拒绝盗版游戏 注意自我保护 谨防受骗上当 适度游戏益脑 沉迷游戏伤身 合理安排时间 享受健康生活</p> 
+   <p class="textfoot">本站只收录官方授权游戏信息，非官方授权游戏请在办理业务之前告知.</p> 
+   <p class="textfoot">*注释：网站数据匀采集互联网，有不良信息举报联系我们，将会尽快核实处理，站长QQ：3067585</p> 
+   <p class="textfoot"> <a style="color: white;text-align: center;width: 100%" target="_blank" id="beian" href="https://beian.miit.gov.cn">Copyright 2019-2027 All Rights Reserved </a><a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank" style="color: #fff"> 信产部ICP备案号：黔ICP备2022005643号　| </a> <span style="color: #fff">营业执照注册证号：91522301MABP8XJ71N </span> <a id="_pingansec_bottomimagesmall_shiming" target="_blank" href="//si.trustutn.org/info?sn=840240419040948778244&amp;certType=1"><img src="//v.trustutn.org/images/cert/realname_small_img.png"></a><script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1281074630'%3E%3C/span%3E%3Cscript src='https://s4.cnzz.com/z.js%3Fid%3D1281074630%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script></p> 
+   <p></p> 
+  </div> 
+  <script src="../statics/layui/layui.js"></script> 
+  <script>
+    layui.use('element', function () {
+        var element = layui.element;
+
+        var list;
+        var linklist;
+        var helplist;
+        var rm1;
+        var rm2;
+        var rm3;
+        $.ajax({
+            //返回相同的session
+            url: baseUrl + 'hcategory/selectRm',
+            type: 'POST',
+            timeout: 10000,    //超时时间
+            dataType: 'json',
+            success: function (data, textStatus, jqXHR) {
+                rm1 = data.list
+                console.log(rm1)
+                rmhtml(rm1);
+            },
+            error: function (xhr, textStatus) {
+                result = JSON.parse('{"flag":false,"message":"showHtml-ajax-请求连接异常"}');
+            }
+        });
+        $.ajax({
+            //返回相同的session
+            url: baseUrl + 'hcategory/selectLinkRm',
+            type: 'POST',
+            timeout: 10000,    //超时时间
+            dataType: 'json',
+            success: function (data, textStatus, jqXHR) {
+                console.log(data)
+                rm2 = data.list
+                rm2html(rm2)
+            },
+            error: function (xhr, textStatus) {
+                result = JSON.parse('{"flag":false,"message":"showHtml-ajax-请求连接异常"}');
+            }
+        });
+        $.ajax({
+            //返回相同的session
+            url: baseUrl + 'hcategory/selectLinkRm1',
+            type: 'POST',
+            timeout: 10000,    //超时时间
+            dataType: 'json',
+            success: function (data, textStatus, jqXHR) {
+                console.log(data)
+                rm3 = data.list
+                rm3html(rm3)
+            },
+            error: function (xhr, textStatus) {
+                result = JSON.parse('{"flag":false,"message":"showHtml-ajax-请求连接异常"}');
+            }
+        });
+        $.ajax({
+            //返回相同的session
+            url: baseUrl + 'hcategory/toolsSelect',
+            type: 'POST',
+            timeout: 10000,    //超时时间
+            dataType: 'json',
+            success: function (data, textStatus, jqXHR) {
+                list = data.list;
+                let html = ''
+                list.forEach(item => {
+                    html += `<li>${item.name}</li>`
+                })
+                $('.gjxz').append(html)
+            },
+            error: function (xhr, textStatus) {
+                result = JSON.parse('{"flag":false,"message":"showHtml-ajax-请求连接异常"}');
+            }
+        });
+        $.ajax({
+            //返回相同的session
+            url: baseUrl + 'hcategory/select',
+            type: 'POST',
+            timeout: 10000,    //超时时间
+            dataType: 'json',
+            success: function (data, textStatus, jqXHR) {
+                console.log(data)
+                linklist = data.list
+                let html = ''
+                linklist.forEach(item => {
+                    html += `<li>${item.name}</li>`
+                })
+                $('.linkname').append(html)
+            },
+            error: function (xhr, textStatus) {
+                result = JSON.parse('{"flag":false,"message":"showHtml-ajax-请求连接异常"}');
+            }
+        });
+        $.ajax({
+            //返回相同的session
+            url: baseUrl + 'hcategory/select1',
+            type: 'POST',
+            timeout: 10000,    //超时时间
+            dataType: 'json',
+            success: function (data, textStatus, jqXHR) {
+                console.log(data)
+                helplist = data.list
+                let html = ''
+                helplist.forEach(item => {
+                    html += `<li>${item.name}</li>`
+                })
+                $('.helpname').append(html)
+            },
+            error: function (xhr, textStatus) {
+                result = JSON.parse('{"flag":false,"message":"showHtml-ajax-请求连接异常"}');
+            }
+        });
+
+        element.on('tab(docDemoTabBrief)', function (data) {
+            if (this.innerText != '热门') {
+                var html = ''
+                html += '<ul class="weblist">'
+                var data = list[data.index - 1].toolsList
+                $.each(data, function (index, item) {
+                    html += `<li class="xzgj" data-id="${item.id}" style="background: white;height: 70px;padding: 5px">
+                                <div class="bg11111" style="">
+                                    <div style="padding: 8px;">
+                                        <img src="../statics/upload/${item.imgurl}" style="border-radius: 5px" width="40" height="40">
+                                    </div>
+                                    <div style="width: 120px;">
+                                        <div class="bg11111color" style="">${item.name}</div>
+                                        <div style="font-size: 9px;margin-top: 5px">${item.file_size / 100}MB-${item.download_count}次下载</div>
+                                    </div>
+                                    <div style="width: 40px">
+                                        <svg t="1722139302775" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                                             xmlns="http://www.w3.org/2000/svg" p-id="4299" width="30" height="70">
+                                            <path d="M918.3 468.6c-18.8 0-34 15.2-34 34v309.6c0 6.6-14.4 18.7-38 18.7H190.2c-23.5 0-38-12.1-38-18.7V486c0-18.8-15.2-34-34-34s-34 15.2-34 34v326.3c0 24.8 12.8 48.4 35 64.7 19.4 14.2 44.6 22 71 22h656.1c26.4 0 51.6-7.8 71-22 22.2-16.3 35-39.9 35-64.7V502.6c0-18.7-15.3-34-34-34z"
+                                                  fill="#d81e06" p-id="4300"></path>
+                                            <path d="M450.4 679.4c17.8 18 41.5 28 66.8 28.1h0.5c25.1 0 48.8-9.7 66.6-27.4l154.4-152.8c13.3-13.2 13.5-34.7 0.2-48.1-13.2-13.3-34.7-13.5-48.1-0.2L551.3 617.1c0.6-2.6 1-5.3 1-8.1V149.1c0-18.8-15.2-34-34-34s-34 15.2-34 34V609c0 3.2 0.5 6.3 1.3 9.3L345.9 477.1c-13.2-13.3-34.7-13.5-48.1-0.2-13.3 13.2-13.5 34.7-0.2 48.1l152.8 154.4z"
+                                                  fill="#d81e06" p-id="4301"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </li>`
+                })
+                html += '</ul>'
+                $(".gjxzlist").html(html)
+                $(".xzgj").click(function () {
+                    var id = $(this).data('id')
+                    console.log(id)
+                    $.ajax({
+                        //返回相同的session
+                        url: baseUrl + 'hcategory/selectToolsDetail?id=' + id,
+                        type: 'POST',
+                        timeout: 10000,    //超时时间
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR) {
+                            console.log(data)
+                            let tools = data.data;
+                            $("#imgurl").attr("src", "../../statics/upload/" + tools.imgurl)
+                            $("#toolsName").text(tools.name)
+                            $("#downloadCount").html('<span>下载次数：</span> ' + tools.download_count)
+                            $("#fileSize").html('<span>文件大小：</span> ' + tools.file_size)
+                            $("#createTime").html('<span>添加时间：</span> ' + tools.create_date)
+                            $("#unzipPassword").html('<span>解压密码：</span> ' + tools.unzip_password)
+                            $(".art_content").html(tools.description)
+                            //<a rel="nofollow" target="_blank" href="https://pan.baidu.com/s/1M0wEQKUJnqCDupsrHJeOmQ?pwd=lj54"><em></em>百度网盘下载</a>
+                            let download = data.download
+                            if (download) {
+                                let html = ''
+                                download.forEach(item => {
+                                    html += `<a href="${item.url}" target="_blank" class="layui-btn layui-btn-radius layui-btn-danger" style="width: 25%">${item.name}<i style="margin-left: 10%" class="layui-icon">&#xe681;</i></a>`
+                                })
+                                $("#download").html(html)
+                            }
+                            // 获取浏览器窗口的可见高度（不包括工具栏等）
+                            var winHeight = $(window).height();
+
+                            // 假设弹出层的标题栏和底部栏的总高度为 100px（这只是一个示例值）
+                            var extraHeight = 100;
+
+                            // 设置弹出层的高度为浏览器窗口高度减去额外高度
+                            var layerHeight = winHeight - extraHeight;
+
+                            // 使用 layer.open 方法打开弹出层，并设置其高度
+                            layer.open({
+                                type: 1, // 这里假设是页面层
+                                title: '工具下载',
+                                offset: 'rt',
+                                skin: 'xzbj',
+                                shadeClose: true,
+                                shade: 0.1,
+                                area: ['500px', winHeight + 'px'], // 宽度自动，高度为我们计算的值
+                                content: $("#downlink"),
+                                success: function (layero, index) {
+                                    $('body').css('overflow', 'hidden')
+                                },
+                                end: function () {
+                                    $('body').css('overflow', ''); // 或者设置为 'auto' 或 'scroll'，取决于你的需要
+                                }
+                            });
+                        },
+                        error: function (xhr, textStatus) {
+                            result = JSON.parse('{"flag":false,"message":"showHtml-ajax-请求连接异常"}');
+                        }
+                    });
+                })
+            } else {
+                rmhtml(rm1)
+            }
+
+            /*console.log(this); //当前Tab标题所在的原始DOM元素
+            console.log(data); //当前Tab标题所在的原始DOM元素
+            console.log(data.index); //得到当前Tab的所在下标
+            console.log(data.elem); //得到当前的Tab大容器*/
+        });
+        element.on('tab(docDemoTabBrief1)', function (data) {
+            if (this.innerText != '热门') {
+                if (window.localStorage.getItem("totaltoken") != null) {
+                    var totaltoken = window.localStorage.getItem("totaltoken").split(',');
+                } else {
+                    var totaltoken = []
+                }
+                var html = ''
+                html += '<div class="content-box curr">'
+                html += '<ul class="time-list">'
+                var data = linklist[data.index - 1].resourcesList
+                $.each(data, function (index, item) {
+                    html += '<li style="width: 18%">';
+                    html += '<div style="border:1px solid #ddd;padding:2px" class="content-item">';
+                    html += '<div>';
+                    html += '<a href="./resourceNavigation_tz.html?url=' + (item.http.indexOf("http") < 0 ? "http://" + item.http : item.http) + '&urlname=' + item.name + '" target="_blank""><img src="./../../statics/upload/' + item.imgurl + '"></a>';
+                    html += '</div>';
+                    html += '<div style="text-align:center;position:relative">';
+                    html += '<a href="./resourceNavigation_tz.html?url=' + (item.http.indexOf("http") < 0 ? "http://" + item.http : item.http) + '&urlname=' + item.name + '" target="_blank"">' + item.name + '</a>';
+                    html += '<span style="position:absolute;right:5px;bottom:8px;display:inline-block;line-height:20px;font-size:14px">';
+                    if (totaltoken.indexOf(item.id.toString()) !== -1) {
+                        html += '<a href="javascript:void(0);" class="hotbtn hotbtn-not" style="background: url(../../statics/images/heart1.png) no-repeat" id="' + item.id + '" data-id="' + item.id + '">' + item.total + '</a>';
+                    } else {
+                        html += '<a href="javascript:void(0);" class="hotbtn hotbtn-not" id="' + item.id + '" data-id="' + item.id + '">' + item.total + '</a>';
+                    }
+
+                    html += '</span>';
+                    html += '</div>';
+                    html += '</li>';
+                })
+                html += '<p class="clear"></p>';
+                html += '</ul>';
+                html += '</div>';
+                $(".linklist").html(html)
+                $(".hotbtn-not").click(function () {
+                    var id = $(this).data('id')
+                    var totaltoken = window.localStorage.getItem("totaltoken");
+                    var arr = new Array();
+                    var code = 0;
+                    //如果不存在，说明第一次登陆站点
+                    var total = $('#' + id).text();
+                    if (totaltoken != null && totaltoken != '') {
+                        var flag = true;
+                        arr = totaltoken.split(",");
+                        for (var v in arr) {
+                            if (arr[v] == id) {//判断是否点击过
+                                //点击过的---
+                                code = 1;
+                                total = Number(total) - 1;
+                                arr.splice(v, 1);
+                                $("#" + id).css("background", "");
+                                flag = false;//说明点击过
+                                break;
+                            }
+                        }
+                        if (flag) {
+                            total = Number(total) + 1;
+                            arr.push(id);
+                            $("#" + id).css("background", "url(../../statics/images/heart1.png) no-repeat");
+                        }
+                        window.localStorage.setItem("totaltoken", arr);
+                        window.localStorage.setItem("date", datetime());
+                        $('#' + id).text(total);
+                        //后台执行修改
+                    } else {
+                        total = Number(total) + 1;
+                        arr.push(id);
+                        $("#" + id).css("background", "url(../../statics/images/heart1.png) no-repeat");
+                        window.localStorage.setItem("totaltoken", id);
+                        window.localStorage.setItem("date", datetime());
+                    }
+
+                    $.ajax({
+                        //返回相同的session
+                        url: baseUrl + 'hcategory/update',
+                        type: 'POST',
+                        data: {
+                            'code': code,
+                            'id': id
+                        },
+                        timeout: 10000,    //超时时间
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR) {
+                            $('#' + id).text(total);
+                        },
+                        error: function (xhr, textStatus) {
+                            result = JSON.parse('{"flag":false,"message":"showHtml-ajax-请求连接异常"}');
+                        }
+                    });
+                })
+            } else {
+                rm2html(rm2)
+            }
+        });
+        element.on('tab(docDemoTabBrief2)', function (data) {
+            if (this.innerText != '热门') {
+                if (window.localStorage.getItem("totaltoken") != null) {
+                    var totaltoken = window.localStorage.getItem("totaltoken").split(',');
+                } else {
+                    var totaltoken = []
+                }
+                var html = ''
+                html += '<div class="content-box curr">'
+                html += '<ul class="time-list">'
+                var data = helplist[data.index - 1].helpList
+                $.each(data, function (index, item) {
+                    html += '<li style="width: 18%">';
+                    html += '<div style="border:1px solid #ddd;padding:2px" class="content-item">';
+                    html += '<div>';
+                    html += '<a href="./resourceNavigation_tz.html?url=' + (item.http.indexOf("http") < 0 ? "http://" + item.http : item.http) + '&urlname=' + item.name + '" target="_blank"><img src="./../../statics/upload/' + item.imgurl + '"></a>';
+                    html += '</div>';
+                    html += '<div style="text-align:center;position:relative">';
+                    html += '<a href="./resourceNavigation_tz.html?url=' + (item.http.indexOf("http") < 0 ? "http://" + item.http : item.http) + '&urlname=' + item.name + '" target="_blank"">' + item.name + '</a>';
+                    html += '<span style="position:absolute;right:5px;bottom:8px;display:inline-block;line-height:20px;font-size:14px">';
+                    if (totaltoken.indexOf(item.id.toString()) !== -1) {
+                        html += '<a href="javascript:void(0);" class="hotbtn hotbtn-not" style="background: url(../../statics/images/heart1.png) no-repeat" id="' + item.id + '" data-id="' + item.id + '">' + item.total + '</a>';
+                    } else {
+                        html += '<a href="javascript:void(0);" class="hotbtn hotbtn-not" id="' + item.id + '" data-id="' + item.id + '">' + item.total + '</a>';
+                    }
+
+                    html += '</span>';
+                    html += '</div>';
+                    html += '</li>';
+                })
+                html += '<p class="clear"></p>';
+                html += '</ul>';
+                html += '</div>';
+                $(".helplist").html(html)
+                $(".hotbtn-not").click(function () {
+                    var id = $(this).data('id')
+                    var totaltoken = window.localStorage.getItem("totaltoken");
+                    var arr = new Array();
+                    var code = 0;
+                    //如果不存在，说明第一次登陆站点
+                    var total = $('#' + id).text();
+                    if (totaltoken != null && totaltoken != '') {
+                        var flag = true;
+                        arr = totaltoken.split(",");
+                        for (var v in arr) {
+                            if (arr[v] == id) {//判断是否点击过
+                                //点击过的---
+                                code = 1;
+                                total = Number(total) - 1;
+                                arr.splice(v, 1);
+                                $("#" + id).css("background", "");
+                                flag = false;//说明点击过
+                                break;
+                            }
+                        }
+                        if (flag) {
+                            total = Number(total) + 1;
+                            arr.push(id);
+                            $("#" + id).css("background", "url(../../statics/images/heart1.png) no-repeat");
+                        }
+                        window.localStorage.setItem("totaltoken", arr);
+                        window.localStorage.setItem("date", datetime());
+                        $('#' + id).text(total);
+                        //后台执行修改
+                    } else {
+                        total = Number(total) + 1;
+                        arr.push(id);
+                        $("#" + id).css("background", "url(../../statics/images/heart1.png) no-repeat");
+                        window.localStorage.setItem("totaltoken", id);
+                        window.localStorage.setItem("date", datetime());
+                    }
+
+                    $.ajax({
+                        //返回相同的session
+                        url: baseUrl + 'hcategory/update1',
+                        type: 'POST',
+                        data: {
+                            'code': code,
+                            'id': id
+                        },
+                        timeout: 10000,    //超时时间
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR) {
+                            $('#' + id).text(total);
+                        },
+                        error: function (xhr, textStatus) {
+                            result = JSON.parse('{"flag":false,"message":"showHtml-ajax-请求连接异常"}');
+                        }
+                    });
+                })
+            } else {
+                rm3html(rm2)
+            }
+        });
+
+        function datetime() {
+            var now = new Date();
+            var year = now.getFullYear();       //年
+            var month = now.getMonth() + 1;     //月
+            var day = now.getDate();
+            console.log(year + "" + month + "" + day);
+            return year + "" + month + "" + day;
+
+        }
+
+        function rmhtml() {
+            var html = ''
+            html += '<ul class="weblist">'
+            var data = rm1
+            $.each(data, function (index, item) {
+                html += `<li class="xzgj" data-id="${item.id}" style="background: white;height: 70px;padding: 5px">
+                                <div class="bg11111" style="">
+                                    <div style="padding: 8px;">
+                                        <img src="../statics/upload/${item.imgurl}" style="border-radius: 5px" width="40" height="40">
+                                    </div>
+                                    <div style="width: 120px;">
+                                        <div class="bg11111color" style="">${item.name}</div>
+                                        <div style="font-size: 9px;margin-top: 5px">${item.file_size / 100}MB-${item.download_count}次下载</div>
+                                    </div>
+                                    <div style="width: 40px">
+                                        <svg t="1722139302775" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                                             xmlns="http://www.w3.org/2000/svg" p-id="4299" width="30" height="70">
+                                            <path d="M918.3 468.6c-18.8 0-34 15.2-34 34v309.6c0 6.6-14.4 18.7-38 18.7H190.2c-23.5 0-38-12.1-38-18.7V486c0-18.8-15.2-34-34-34s-34 15.2-34 34v326.3c0 24.8 12.8 48.4 35 64.7 19.4 14.2 44.6 22 71 22h656.1c26.4 0 51.6-7.8 71-22 22.2-16.3 35-39.9 35-64.7V502.6c0-18.7-15.3-34-34-34z"
+                                                  fill="#d81e06" p-id="4300"></path>
+                                            <path d="M450.4 679.4c17.8 18 41.5 28 66.8 28.1h0.5c25.1 0 48.8-9.7 66.6-27.4l154.4-152.8c13.3-13.2 13.5-34.7 0.2-48.1-13.2-13.3-34.7-13.5-48.1-0.2L551.3 617.1c0.6-2.6 1-5.3 1-8.1V149.1c0-18.8-15.2-34-34-34s-34 15.2-34 34V609c0 3.2 0.5 6.3 1.3 9.3L345.9 477.1c-13.2-13.3-34.7-13.5-48.1-0.2-13.3 13.2-13.5 34.7-0.2 48.1l152.8 154.4z"
+                                                  fill="#d81e06" p-id="4301"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </li>`
+            })
+            html += '</ul>'
+            $(".gjxzlist").html(html)
+            $(".xzgj").click(function () {
+                var id = $(this).data('id')
+                console.log(id)
+                $.ajax({
+                    //返回相同的session
+                    url: baseUrl + 'hcategory/selectToolsDetail?id=' + id,
+                    type: 'POST',
+                    timeout: 10000,    //超时时间
+                    dataType: 'json',
+                    success: function (data, textStatus, jqXHR) {
+                        console.log(data)
+                        let tools = data.data;
+                        $("#imgurl").attr("src", "../../statics/upload/" + tools.imgurl)
+                        $("#toolsName").text(tools.name)
+                        $("#downloadCount").html('<span>下载次数：</span> ' + tools.download_count)
+                        $("#fileSize").html('<span>文件大小：</span> ' + tools.file_size)
+                        $("#createTime").html('<span>添加时间：</span> ' + tools.create_date)
+                        $("#unzipPassword").html('<span>解压密码：</span> ' + tools.unzip_password)
+                        $(".art_content").html(tools.description)
+                        //<a rel="nofollow" target="_blank" href="https://pan.baidu.com/s/1M0wEQKUJnqCDupsrHJeOmQ?pwd=lj54"><em></em>百度网盘下载</a>
+                        let download = data.download
+                        if (download) {
+                            let html = ''
+                            download.forEach(item => {
+                                html += `<a href="${item.url}" target="_blank" class="layui-btn layui-btn-radius layui-btn-danger" style="width: 25%">${item.name}<i style="margin-left: 10%" class="layui-icon">&#xe681;</i></a>`
+                            })
+                            $("#download").html(html)
+                        }
+                        // 获取浏览器窗口的可见高度（不包括工具栏等）
+                        var winHeight = $(window).height();
+
+                        // 假设弹出层的标题栏和底部栏的总高度为 100px（这只是一个示例值）
+                        var extraHeight = 100;
+
+                        // 设置弹出层的高度为浏览器窗口高度减去额外高度
+                        var layerHeight = winHeight - extraHeight;
+
+                        // 使用 layer.open 方法打开弹出层，并设置其高度
+                        layer.open({
+                            type: 1, // 这里假设是页面层
+                            title: '工具下载',
+                            offset: 'rt',
+                            skin: 'xzbj',
+                            shadeClose: true,
+                            shade: 0.1,
+                            area: ['500px', winHeight + 'px'], // 宽度自动，高度为我们计算的值
+                            content: $("#downlink"),
+                            success: function (layero, index) {
+                                $('body').css('overflow', 'hidden')
+                            },
+                            end: function () {
+                                $('body').css('overflow', ''); // 或者设置为 'auto' 或 'scroll'，取决于你的需要
+                            }
+                        });
+                    },
+                    error: function (xhr, textStatus) {
+                        result = JSON.parse('{"flag":false,"message":"showHtml-ajax-请求连接异常"}');
+                    }
+                });
+            })
+        }
+
+        function rm2html() {
+            if (window.localStorage.getItem("totaltoken") != null) {
+                var totaltoken = window.localStorage.getItem("totaltoken").split(',');
+            } else {
+                var totaltoken = []
+            }
+            var html = ''
+            html += '<div class="content-box curr">'
+            html += '<ul class="time-list">'
+            var data = rm2
+            $.each(data, function (index, item) {
+                html += '<li style="width: 18%">';
+                html += '<div style="border:1px solid #ddd;padding:2px" class="content-item">';
+                html += '<div>';
+                html += '<a href="./resourceNavigation_tz.html?url=' + (item.http.indexOf("http") < 0 ? "http://" + item.http : item.http) + '&urlname=' + item.name + '" target="_blank""><img src="./../../statics/upload/' + item.imgurl + '"></a>';
+                html += '</div>';
+                html += '<div style="text-align:center;position:relative">';
+                html += '<a href="./resourceNavigation_tz.html?url=' + (item.http.indexOf("http") < 0 ? "http://" + item.http : item.http) + '&urlname=' + item.name + '" target="_blank"">' + item.name + '</a>';
+                html += '<span style="position:absolute;right:5px;bottom:8px;display:inline-block;line-height:20px;font-size:14px">';
+                if (totaltoken.indexOf(item.id.toString()) !== -1) {
+                    html += '<a href="javascript:void(0);" class="hotbtn hotbtn-not" style="background: url(../../statics/images/heart1.png) no-repeat" id="' + item.id + '" data-id="' + item.id + '">' + item.total + '</a>';
+                } else {
+                    html += '<a href="javascript:void(0);" class="hotbtn hotbtn-not" id="' + item.id + '" data-id="' + item.id + '">' + item.total + '</a>';
+                }
+
+                html += '</span>';
+                html += '</div>';
+                html += '</li>';
+            })
+            html += '<p class="clear"></p>';
+            html += '</ul>';
+            html += '</div>';
+            $(".linklist").html(html)
+            $(".hotbtn-not").click(function () {
+                var id = $(this).data('id')
+                var totaltoken = window.localStorage.getItem("totaltoken");
+                var arr = new Array();
+                var code = 0;
+                //如果不存在，说明第一次登陆站点
+                var total = $('#' + id).text();
+                if (totaltoken != null && totaltoken != '') {
+                    var flag = true;
+                    arr = totaltoken.split(",");
+                    for (var v in arr) {
+                        if (arr[v] == id) {//判断是否点击过
+                            //点击过的---
+                            code = 1;
+                            total = Number(total) - 1;
+                            arr.splice(v, 1);
+                            $("#" + id).css("background", "");
+                            flag = false;//说明点击过
+                            break;
+                        }
+                    }
+                    if (flag) {
+                        total = Number(total) + 1;
+                        arr.push(id);
+                        $("#" + id).css("background", "url(../../statics/images/heart1.png) no-repeat");
+                    }
+                    window.localStorage.setItem("totaltoken", arr);
+                    window.localStorage.setItem("date", datetime());
+                    $('#' + id).text(total);
+                    //后台执行修改
+                } else {
+                    total = Number(total) + 1;
+                    arr.push(id);
+                    $("#" + id).css("background", "url(../../statics/images/heart1.png) no-repeat");
+                    window.localStorage.setItem("totaltoken", id);
+                    window.localStorage.setItem("date", datetime());
+                }
+
+                $.ajax({
+                    //返回相同的session
+                    url: baseUrl + 'hcategory/update',
+                    type: 'POST',
+                    data: {
+                        'code': code,
+                        'id': id
+                    },
+                    timeout: 10000,    //超时时间
+                    dataType: 'json',
+                    success: function (data, textStatus, jqXHR) {
+                        $('#' + id).text(total);
+                    },
+                    error: function (xhr, textStatus) {
+                        result = JSON.parse('{"flag":false,"message":"showHtml-ajax-请求连接异常"}');
+                    }
+                });
+            })
+        }
+
+        function rm3html() {
+            if (window.localStorage.getItem("totaltoken") != null) {
+                var totaltoken = window.localStorage.getItem("totaltoken").split(',');
+            } else {
+                var totaltoken = []
+            }
+            var html = ''
+            html += '<div class="content-box curr">'
+            html += '<ul class="time-list">'
+            var data = rm3
+            $.each(data, function (index, item) {
+                html += '<li style="width: 18%">';
+                html += '<div style="border:1px solid #ddd;padding:2px" class="content-item">';
+                html += '<div>';
+                html += '<a href="./resourceNavigation_tz.html?url=' + (item.http.indexOf("http") < 0 ? "http://" + item.http : item.http) + '&urlname=' + item.name + '" target="_blank""><img src="./../../statics/upload/' + item.imgurl + '"></a>';
+                html += '</div>';
+                html += '<div style="text-align:center;position:relative">';
+                html += '<a href="./resourceNavigation_tz.html?url=' + (item.http.indexOf("http") < 0 ? "http://" + item.http : item.http) + '&urlname=' + item.name + '" target="_blank"">' + item.name + '</a>';
+                html += '<span style="position:absolute;right:5px;bottom:8px;display:inline-block;line-height:20px;font-size:14px">';
+                if (totaltoken.indexOf(item.id.toString()) !== -1) {
+                    html += '<a href="javascript:void(0);" class="hotbtn hotbtn-not" style="background: url(../../statics/images/heart1.png) no-repeat" id="' + item.id + '" data-id="' + item.id + '">' + item.total + '</a>';
+                } else {
+                    html += '<a href="javascript:void(0);" class="hotbtn hotbtn-not" id="' + item.id + '" data-id="' + item.id + '">' + item.total + '</a>';
+                }
+
+                html += '</span>';
+                html += '</div>';
+                html += '</li>';
+            })
+            html += '<p class="clear"></p>';
+            html += '</ul>';
+            html += '</div>';
+            $(".helplist").html(html)
+            $(".hotbtn-not").click(function () {
+                var id = $(this).data('id')
+                var totaltoken = window.localStorage.getItem("totaltoken");
+                var arr = new Array();
+                var code = 0;
+                //如果不存在，说明第一次登陆站点
+                var total = $('#' + id).text();
+                if (totaltoken != null && totaltoken != '') {
+                    var flag = true;
+                    arr = totaltoken.split(",");
+                    for (var v in arr) {
+                        if (arr[v] == id) {//判断是否点击过
+                            //点击过的---
+                            code = 1;
+                            total = Number(total) - 1;
+                            arr.splice(v, 1);
+                            $("#" + id).css("background", "");
+                            flag = false;//说明点击过
+                            break;
+                        }
+                    }
+                    if (flag) {
+                        total = Number(total) + 1;
+                        arr.push(id);
+                        $("#" + id).css("background", "url(../../statics/images/heart1.png) no-repeat");
+                    }
+                    window.localStorage.setItem("totaltoken", arr);
+                    window.localStorage.setItem("date", datetime());
+                    $('#' + id).text(total);
+                    //后台执行修改
+                } else {
+                    total = Number(total) + 1;
+                    arr.push(id);
+                    $("#" + id).css("background", "url(../../statics/images/heart1.png) no-repeat");
+                    window.localStorage.setItem("totaltoken", id);
+                    window.localStorage.setItem("date", datetime());
+                }
+
+                $.ajax({
+                    //返回相同的session
+                    url: baseUrl + 'hcategory/update1',
+                    type: 'POST',
+                    data: {
+                        'code': code,
+                        'id': id
+                    },
+                    timeout: 10000,    //超时时间
+                    dataType: 'json',
+                    success: function (data, textStatus, jqXHR) {
+                        $('#' + id).text(total);
+                    },
+                    error: function (xhr, textStatus) {
+                        result = JSON.parse('{"flag":false,"message":"showHtml-ajax-请求连接异常"}');
+                    }
+                });
+            })
+        }
+    });
+</script>  
+ </body>
+</html>

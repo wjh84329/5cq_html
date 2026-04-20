@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>文件管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+    <style>
+        .pre-text {
+            white-space: pre;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">文件管理</div>
+                <div class="layui-card-body">
+                    <div class="test-table-reload-btn" style="margin-bottom: 10px;">
+                        <div class="layui-inline">
+                            <input class="layui-input" name="cfilename" id="test-table-cfilename"
+                                   autocomplete="off" placeholder="请输入文件名称">
+
+                        </div>
+                        <div class="layui-inline">
+                            <input class="layui-input" name="cname" id="test-table-cname"
+                                   autocomplete="off" placeholder="请输入游客名称">
+                        </div>
+                        <div class="layui-inline">
+                            <input class="layui-input" name="cemail" id="test-table-cemail"
+                                   autocomplete="off" placeholder="请输入游客邮箱">
+                        </div>
+
+                        <button class="layui-btn" data-type="reload">搜索</button>
+                        <button id="customer-button-add" shiro-event="sys:customer:open-add" class="layui-btn"><i
+                                class="layui-icon">&#xe654;</i>添加
+                        </button>
+                    </div>
+                    <table class="layui-hide" id="auth-table" lay-filter="auth-table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="auth-state" hidden>
+    <button lay-event="update" shiro-event="jax:file:open-update" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe642;</i>修改
+    </button>
+    <button lay-event="remove" shiro-event="jax:file:open-remove" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe640;</i>删除
+    </button>
+</div>
+
+
+
+<div id="submit-form-update" hidden>
+    <button class="layui-btn" shiro-event="jax:file:update" lay-submit lay-filter="submit-form-file">立即提交</button>
+</div>
+
+<div id="layui-file-update" hidden>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form" id="layui-form-file-update" lay-filter="component-form-group">
+                    <input type="text" id="filename" name="filename" hidden>
+                    <textarea class="pre-text" id="fileInfo" name="fileInfo" wrap="hard" style="width: 100%;resize: none;"></textarea>
+                    <div class="layui-footer" id="update-file-button" style="left: 0;">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="../../layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index', //主入口模块
+    }).use(['index', 'table', 'formgs', 'form', 'security', 'layer'], function () {
+        var $ = layui.jquery,
+            admin = layui.admin,
+            table = layui.table,
+            formgs = layui.formgs,
+            form = layui.form,//控制添加修改（同一个弹出层）关闭弹出层的索引
+            layer = layui.layer, closeindex;
+        table.render({
+            elem: '#auth-table'
+            , url: layui.setter.url + 'file/select'
+            , title: '文件管理'
+            , cols: [[
+                 {field: 'email', title: '电子邮箱',width:500,templet:function (obj) {
+                         if(obj.email==''||obj.email==null){
+                             obj.email='未登陆用户'
+                         }
+                         return obj.email;
+                     }}
+                , {field: 'filename', title: '文件名称'}
+                , {field: 'create_date', title: '创建时间', sort: true}
+                , {fixed: 'right', title: '操作', toolbar: '#auth-state',width:150}
+            ]]
+            , page: true
+        });
+
+
+        table.on('tool(auth-table)', function (obj) {
+            if (obj.event == 'update') {
+                admin.req({
+                    url: layui.setter.url + 'file/read',
+                    data: {filename:obj.data.filename},
+                    done: function (res) {
+                        if(res.code==0){
+                            layer.open({
+                                type: 1,//弹窗类型
+                                area: ['90%', '80%'],//定义宽和高
+                                title: ('【' + obj.data.filename + '】'),//题目
+                                shadeClose: false,//点击遮罩层关闭
+                                content: $("#layui-file-update"),//打开的内容
+                                success: function (index, layero) {
+                                    closeindex = layero;
+                                    formgs.get("layui-form-file-update", obj.data);
+                                    $("#update-file-button").html($("#submit-form-update").html());
+                                    $("#fileInfo").height($(".layui-layer-content").height()-120)
+                                    $("#fileInfo").val(res.data);
+                                    form.render();
+                                },
+                                end: function () {
+                                    //getTableData();//结束之后请求表格数据的方法，新编辑的数据直接存库并展示在页面
+                                }
+                            });
+                        }
+                    }
+                })
+
+
+            } else if (obj.event == "remove") {
+                layer.confirm('确定要删除【' + obj.data.filename + '】这个文件吗？', function (index) {
+                    admin.req({
+                        url: layui.setter.url + "file/remove/" + obj.data.id+"/"+obj.data.filename
+                    }).done(function (res) {
+                        layer.close(index);
+                        table.reload('auth-table');
+                        layer.msg(res.msg);
+                    })
+                });
+            }
+        })
+
+        //修改
+        form.on('submit(submit-form-file)', function (data) {
+            var url = layui.setter.url + "file/update";
+            admin.req({
+                url: url,
+                data: data.field,
+                done: function (res) {
+                    layer.close(closeindex);
+                    table.reload("auth-table");
+                    layer.msg(res.msg);
+                }
+            })
+            return false
+        })
+
+
+        var $ = layui.$, active = {
+            reload: function () {
+                var filename = $('#test-table-cfilename');
+                var name = $('#test-table-cname');
+                var cemail = $('#test-table-cemail');
+                //执行重载
+                table.reload('auth-table', {
+                    page: {curr: 1}//重新从第 1 页开始
+                    , where: {name: name.val(),email:cemail.val(),filename:filename.val()}
+                });
+            },
+            rolequery: function () {
+                var query = $('#table-role-query');
+                //执行重载
+                table.reload('table-role', {
+                    page: {curr: 1}//重新从第 1 页开始
+                    , where: {likename: query.val()}
+                });
+            }
+        };
+
+        //查询
+        /*var $ = layui.$, active = {
+            reload: function () {
+                var demoReload = $('#test-table-demoReload');
+                //执行重载
+                table.reload('auth-table', {
+                    page: {curr: 1}//重新从第 1 页开始
+                    , where: {name: demoReload.val()}
+                });
+            },
+            rolequery: function () {
+                var query = $('#table-role-query');
+                //执行重载
+                table.reload('table-role', {
+                    page: {curr: 1}//重新从第 1 页开始
+                    , where: {likename: query.val()}
+                });
+            }
+        };*/
+        /*$("#customer-button-add").on("click", function () {
+            layer.open({
+                type: 1,
+                area: ['50%', '60%'],
+                title: ("新增发布私服"),
+                shadeClose: false,
+                content: $("#layui-customer"),
+                success: function (index, layero) {
+                    closeindex = layero;
+                    formgs.reset('layui-customer');
+                    $("#submit-form-customer-button").html($("#submit-form-add").html());
+                    form.render();
+                },
+            });
+        })
+    */
+
+        $('.test-table-reload-btn .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+</script>
+</body>
+</html>

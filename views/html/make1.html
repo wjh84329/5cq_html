@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>静态化</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+
+
+</head>
+<body>
+<style>
+    .layadmin-homepage-pad-ver {
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+    .layadmin-homepage-pad-img {
+        box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+    }
+</style>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">网站设置</div>
+                <div class="layui-card-body">
+                    <div class="test-table-reload-btn" style="margin-bottom: 10px;">
+                        <button id="sitemap" lay-submit lay-filter="submit-form-all"
+                                class="layui-btn" data-type="reload">生成网站地图
+                        </button>
+                        <button id="addTab" lay-submit lay-filter="submit-form-all"
+                                class="layui-btn" data-type="reload">添加底部栏目
+                        </button>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">底部栏目</label>
+                        <div class="layui-input-block">
+                            <div class="layui-btn-container">
+                                <button class="layui-btn layui-btn-warm"><span class="textinfo">栏目1</span><i class="layui-icon" style="margin-left: 10px">&#x1006;</i></button>
+                                <button class="layui-btn layui-btn-warm"><span class="textinfo">栏目2</span><i class="layui-icon" style="margin-left: 10px">&#x1006;</i></button>
+                                <button class="layui-btn layui-btn-warm"><span class="textinfo">栏目3</span><i class="layui-icon" style="margin-left: 10px">&#x1006;</i></button>
+                                <button class="layui-btn layui-btn-warm"><span class="textinfo">栏目4</span><i class="layui-icon" style="margin-left: 10px">&#x1006;</i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">注释</label>
+                        <div class="layui-input-block">
+                            <textarea name="zhushi" id="zhushi" placeholder="注释"
+                                      class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">备案信息</label>
+                        <div class="layui-input-block">
+                            <textarea name="zhushi" id="beian" placeholder="备案信息"
+                                      class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="../../layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index', //主入口模块
+    }).use(['index', 'layer','form'], function () {
+        var $ = layui.jquery,
+            admin = layui.admin,
+            form = layui.form,
+            layer = layui.layer;
+        //执行一个laydate实例
+        // laydate.render({
+        //     elem: '#start_time' //指定元素
+        // });
+        $('.textinfo').click(function () {
+            console.log('编辑')
+        })
+        $('.layui-icon').click(function () {
+            console.log('删除')
+        })
+    });
+</script>
+</body>
+</html>

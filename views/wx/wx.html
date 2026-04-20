@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>微信回复</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+
+
+</head>
+<body>
+<style>
+</style>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card layui-form">
+                <div class="layui-card-header">微信回复列表</div>
+                <div class="layui-card-body">
+                    <div class="layui-card layui-form" style="margin-bottom: 10px;">
+                        <!--                        -->
+
+<!--                                                <button class="layui-btn" data-type="reload" id="reload">搜索</button>-->
+                        <button id="wx-button-add" shiro-event="jax:wx:add-open" class="layui-btn"><i
+                                class="layui-icon">&#xe654;</i>添加
+                        </button>
+                    </div>
+                    <table class="layui-hide" id="auth-table" lay-filter="auth-table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="auth-state" hidden>
+    <button lay-event="update" shiro-event="jax:wx:update-open" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe642;</i>修改
+    </button>
+    <button lay-event="remove" shiro-event="jax:wx:remove" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe640;</i>删除
+    </button>
+</div>
+
+
+<div id="submit-form-add" hidden>
+    <button class="layui-btn" shiro-event="jax:wx:add" lay-submit lay-filter="submit-form-wx">立即提交</button>
+    <!--    <button type="reset" shiro-event="jax:wx:add-reset" class="layui-btn layui-btn-primary">重置</button>&lt;!&ndash;添加&ndash;&gt;-->
+</div>
+<!--修改-->
+<div id="submit-form-update" hidden>
+    <button class="layui-btn" shiro-event="jax:wx:update" lay-submit lay-filter="submit-form-wx">立即提交</button>
+    <!--    <button type="reset" shiro-event="jax:wx:update-reset" class="layui-btn layui-btn-primary">重置</button>-->
+</div>
+<div id="layui-wx" hidden>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form" id="layui-form-wx" lay-filter="component-form-group">
+                    <div class="layui-form-item">
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">关键字</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="keyword" lay-verify="required" autocomplete="off"
+                                       placeholder="请输入游戏名称" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">回复内容</label>
+                            <div class="layui-input-block">
+                                <textarea name="message" style="width: 400px" placeholder="请输入回复内容" autocomplete="off"
+                                          placeholder="" class="layui-textarea"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-input-block">
+                        <!--操作-->
+                        <div class="layui-footer" id="submit-form-wx-button" style="left: 0;">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="layui-wx-update" hidden>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form" id="layui-form-wx-update" lay-filter="component-form-group">
+                    <div class="layui-form-item">
+                        <input type="hidden" id="id" name="id">
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">关键字</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="keyword" lay-verify="required" autocomplete="off"
+                                       placeholder="关键字" class="layui-input">
+                            </div>
+
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">回复内容</label>
+                            <div class="layui-input-block">
+                                <textarea name="message" style="width: 400px" placeholder="请输入回复内容" autocomplete="off"
+                                          placeholder="" class="layui-textarea"></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-input-block">
+                            <!--操作-->
+                            <div class="layui-footer" id="update-wx-button" style="left: 0;">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../../layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index', //主入口模块
+    }).use(['index', 'table', 'formgs', 'form', 'security', 'layer'], function () {
+        var $ = layui.jquery,
+            admin = layui.admin,
+            table = layui.table,
+            formgs = layui.formgs,
+            form = layui.form,//控制添加修改（同一个弹出层）关闭弹出层的索引
+            layer = layui.layer, closeindex;
+        table.render({
+            elem: '#auth-table'
+            , url: layui.setter.url + 'wx/select'
+            , title: '微信回复列表'
+            , cols: [[
+                {field: 'keyword', title: '关键字', width: 320,}
+                , {field: 'message', title: '回复内容',}
+                , {fixed: 'right', title: '操作', toolbar: '#auth-state', width: 160}
+            ]]
+            , page: true
+        });
+        table.on('tool(auth-table)', function (obj) {
+            if (obj.event == 'update') {
+                layer.open({
+                    type: 1,//弹窗类型
+                    area: ['60', '40%'],//定义宽和高
+                    title: ('【' + obj.data.keyword + '】关键字'),//题目
+                    shadeClose: false,//点击遮罩层关闭
+                    content: $("#layui-wx-update"),//打开的内容
+                    success: function (index, layero) {
+                        closeindex = layero;
+                        formgs.get("layui-form-wx-update", obj.data);
+                        $("#update-wx-button").html($("#submit-form-update").html());
+                        form.render();
+
+                    },
+                    end: function () {
+                        //getTableData();//结束之后请求表格数据的方法，新编辑的数据直接存库并展示在页面
+                    }
+                });
+            } else if (obj.event == "remove") {
+                layer.confirm('确定要删除这个微信回复么？', function (index) {
+                    admin.req({
+                        url: layui.setter.url + "wx/remove/" + obj.data.id,
+                    }).done(function (res) {
+                        layer.close(index);
+                        table.reload('auth-table');
+                        layer.msg(res.msg);
+                    })
+                });
+            }
+        })
+        //查询
+        // var $ = layui.$, active = {
+        //     reload: function () {
+        //         var info = $("#info").val();
+        //         var surplus = $("#surplus").val();
+        //         var state = $("#state").val();
+        //         var nullifysate = $("#nullifysate").val()
+        //         //执行重载
+        //         table.reload('auth-table', {
+        //             page: {curr: 1}//重新从第 1 页开始
+        //             , where: {info: info, surplus: surplus, state: state, nullifysate: nullifysate}
+        //         });
+        //     },
+        // };
+        $("#wx-button-add").on("click", function () {
+            layer.open({
+                type: 1,
+                area: ['60', '40%'],
+                title: ("新增微信回复"),
+                shadeClose: false,
+                content: $("#layui-wx"),
+                success: function (index, layero) {
+                    closeindex = layero;
+                    formgs.reset('layui-wx');
+                    $("#submit-form-wx-button").html($("#submit-form-add").html());
+                    form.render();
+                },
+            });
+        })
+
+        //添加/修改提交
+        form.on('submit(submit-form-wx)', function (data) {
+            var result = 'add';
+            if (data.field.id != null && data.field.id != '') {
+                result = 'update';
+            }
+            var url = layui.setter.url + "wx/" + result;
+            admin.req({
+                url: url,
+                data: data.field,
+                done: function (res) {
+                    layer.close(closeindex);
+                    table.reload("auth-table");
+                    layer.msg(res.msg);
+                }
+            });
+            return false;
+        })
+
+        // $('#reload').on('click', function () {
+        //     var type = $(this).data('type');
+        //     active[type] ? active[type].call(this) : '';
+        // });
+    });
+</script>
+</body>
+</html>

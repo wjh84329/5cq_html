@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>用户管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+
+
+</head>
+<body>
+<style>
+    .layadmin-homepage-pad-ver {
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+    .layadmin-homepage-pad-img {
+        box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+    }
+</style>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <div class="test-table-reload-btn" style="margin-bottom: 10px;">
+                        <div class="layui-inline">
+                            <input class="layui-input" name="polymerization" id="test-table-demoReload"
+                                   autocomplete="off" placeholder="请输入姓名、手机号、工号">
+                        </div>
+                        <button class="layui-btn" data-type="reload">搜索</button>
+                    </div>
+                    <table class="layui-hide" id="auth-table" lay-filter="auth-table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script id="switchTpl" type="text/html">
+    <input type="checkbox" shiro-event="sys:userfrozen:update" name="login_flag" value={{d.id}} lay-skin="switch" lay-text="启用|冻结" lay-filter="login_flag" {{ d.login_flag == 0 ? 'checked' : '' }}>
+</script>
+<script src="../../layuiadmin/layui/layui.js"></script>
+<script>
+
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index', //主入口模块
+    }).use(['index', 'table',  'form', 'security', 'layer'], function () {
+        var $ = layui.jquery,
+            admin = layui.admin,
+            table = layui.table,
+            form = layui.form,//控制添加修改（同一个弹出层）关闭弹出层的索引
+            layer = layui.layer, closeindex;
+        table.render({
+            elem: '#auth-table'
+            , url: layui.setter.url + 'frozen/select'
+            , title: '用户数据表'
+            , cols: [[
+                {field: 'id', title: 'ID', width: 80, fixed: 'left', unresize: true, sort: true}
+                , {field: 'name', title: '姓名',}
+                , {field: 'no', title: '工号', sort: true,}
+                , {
+                    field: 'is_sys', title: '系统数据', width: 100, sort: true,
+                    templet: function (obj) {
+                        if (obj.is_sys == 0) return "是"; else return "否";
+                    }
+                }
+                , {field: 'email', title: '邮箱'}
+                , {field: 'phone', title: '手机',}
+                , {field: 'remarks', title: '备注'}
+                , {field: 'createname', title: '创建人', sort: true}
+                , {field: 'create_date', title: '创建时间', sort: true}
+                , {field: 'updatename', title: '最新修改人', sort: true}
+                , {field: 'update_date', title: '最新修改时间', sort: true}
+                , {field: 'login_flag', fixed: 'right', title: '操作', width: 90, templet:"#switchTpl"}
+            ]]
+            , page: true
+        });
+
+        form.on('switch(login_flag)', function(data) {
+            var swithcData = data;
+            var id=data.value;
+            var login_flag='';
+            if(data.elem.checked == true){
+                login_flag=0
+            }else{
+                login_flag=1;
+            }
+            admin.req({
+                url:layui.setter.url + 'frozen/update',
+                type:'POST',
+                data:{'id':id,'login_flag':login_flag},
+                dataType:'json',
+                success:function(res){
+                    if(res.code!=0){
+                        layer.msg(res.msg);
+                        var em = $(swithcData.othis[0]);
+                        var classList=swithcData.othis[0].classList;
+                        var v=em.children('em').text();
+                        if(data.elem.checked == true){
+                            data.elem.checked=false;
+                            swithcData.othis[0].classList.remove('layui-form-onswitch');
+                            em.children('em').text('冻结');
+                        }else{
+                            data.elem.checked=true;
+                            swithcData.othis[0].classList.add('layui-form-onswitch');
+                            em.children('em').text('启用');
+
+                        }
+                    }
+                }
+            })
+        });
+
+        //查询
+        var $ = layui.$, active = {
+            reload: function () {
+                var demoReload = $('#test-table-demoReload');
+                //执行重载
+                table.reload('auth-table', {
+                    page: {curr: 1}//重新从第 1 页开始
+                    , where: {demoReload: demoReload.val()}
+                });
+            }
+        };
+        $('.test-table-reload-btn .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+</script>
+</body>
+</html>

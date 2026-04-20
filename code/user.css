@@ -1,0 +1,1079 @@
+
+.content { border: 0px !important; }
+.main { border: 0px solid #adb; margin-top: 0px; margin-bottom: 10px; background: #fff; }
+.adminLi { display: none; }
+
+.review-list { list-style-type: none; padding: 0; }
+.review-list li { border-bottom: 1px solid #ccc !important; padding: 10px; margin-bottom: 5px; }
+
+.review-info { display: flex; justify-content: space-between; }
+.review-content { flex: 1; }
+.review-metadata { display: flex; align-items: center; }
+.review-metadata div { margin-right: 10px; }
+
+.layui-rate li { border-bottom: 0px solid #ccc !important; }
+
+.layui-layer-setwin .layui-layer-close2 {
+    position: absolute;
+    right: -28px;
+    top: -28px;
+    width: 30px;
+    height: 30px;
+    margin-left: 0;
+    background-position: -149px -31px;
+    display: none;
+    _display: none;
+}
+
+#reports .el-dialog__body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 80px;
+}
+
+/* ========== 个人首页（静态版，匹配截图） ========== */
+#personHome.ph-static{
+    background:#fff;
+    padding:12px 12px 18px;
+    box-sizing:border-box;
+}
+#personHome.ph-static .phs-title{
+    border-bottom:1px dashed #cacaca;
+    padding:10px 0 12px;
+    text-align:center;
+    font-size:20px;
+    margin:6px 0 14px;
+    color:#222;
+    font-weight:800;
+}
+
+/* 顶部 6 卡 */
+#personHome.ph-static .phs-top{
+    display:grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr; /* 用户/排行榜/加成/金币/钱包/右侧按钮 */
+    border:1px solid #eee;
+    background:#fff;
+}
+#personHome.ph-static .phs-card{
+    min-height:120px;
+    border-right:1px solid #eee;
+    padding:14px 16px;
+    box-sizing:border-box;
+    background:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+#personHome.ph-static .phs-card:last-child{border-right:0;}
+
+/* 用户卡：左头像+修改资料；右昵称+两行信息 */
+#personHome.ph-static .phs-user{
+    justify-content:flex-start;
+    align-items:flex-start;
+    gap:14px;
+}
+#personHome.ph-static .phs-avatarcol{
+    width:86px;
+    flex:0 0 86px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+    margin-top:4px;
+}
+#personHome.ph-static .phs-avatar{
+    width:64px;height:64px;border-radius:50%;
+    background:
+        radial-gradient(circle at 35% 35%, #ffffff 0%, #f2f2f2 55%, #e8e8e8 100%);
+    border:1px solid #e6e6e6;
+    position:relative;
+    overflow:hidden;
+}
+/* 简单头像剪影（纯 CSS 占位） */
+#personHome.ph-static .phs-avatar:before{
+    content:"";
+    position:absolute;
+    left:50%;top:18px;
+    width:22px;height:22px;
+    border-radius:50%;
+    transform:translateX(-50%);
+    background:#cfcfcf;
+}
+#personHome.ph-static .phs-avatar:after{
+    content:"";
+    position:absolute;
+    left:50%;top:38px;
+    width:40px;height:28px;
+    border-radius:18px 18px 8px 8px;
+    transform:translateX(-50%);
+    background:#cfcfcf;
+}
+#personHome.ph-static .phs-edit{
+    width:74px;height:24px;line-height:24px;
+    text-align:center;border-radius:4px;
+    background:#666;color:#fff;
+    font-size:12px;text-decoration:none;
+}
+#personHome.ph-static .phs-userinfo{flex:1;min-width:0;}
+#personHome.ph-static .phs-name{
+    font-size:16px;font-weight:900;color:#222;
+    margin:2px 0 8px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+#personHome.ph-static .phs-meta{
+    font-size:12px;color:#666;line-height:1.9;
+}
+#personHome.ph-static .phs-meta .k{color:#333;font-weight:800;}
+#personHome.ph-static .phs-meta .v{color:#555;font-weight:800;}
+#personHome.ph-static .phs-meta .sep{display:inline-block;width:16px;}
+
+/* 排行榜卡 */
+#personHome.ph-static .phs-rank{
+    background:linear-gradient(180deg,#ffd7b0 0%, #fff 72%) !important;
+    flex-direction:column;
+    gap:10px;
+    text-align:center;
+}
+#personHome.ph-static .phs-rank .t{
+    font-size:14px;font-weight:900;color:#333;
+    white-space:nowrap;
+}
+#personHome.ph-static .phs-rank .rbig{
+    font-size:34px;font-weight:1000;color:#d60000;
+    line-height:1;
+    white-space:nowrap;
+}
+
+/* 指标卡 */
+#personHome.ph-static .phs-metric{
+    flex-direction:column;
+    gap:8px;
+    text-align:center;
+}
+#personHome.ph-static .phs-metric .t{
+    font-size:14px;font-weight:900;color:#333;
+    white-space:nowrap;
+}
+#personHome.ph-static .phs-metric .big{
+    font-size:44px;line-height:1;
+    font-weight:1000;color:#d60000;
+    white-space:nowrap;
+    display:flex;align-items:baseline;justify-content:center;gap:4px;
+}
+#personHome.ph-static .phs-metric .big small{
+    font-size:14px;font-weight:900;
+}
+#personHome.ph-static .phs-btn{
+    width:108px;height:28px;line-height:28px;
+    border-radius:4px;background:#d60000;color:#fff;
+    text-decoration:none;font-size:12px;font-weight:900;
+    text-align:center;
+}
+
+/* 右侧按钮卡 */
+#personHome.ph-static .phs-actions{
+    flex-direction:column;
+    align-items:flex-end;
+    justify-content:center;
+    gap:10px;
+}
+#personHome.ph-static .phs-act{
+    width:150px;height:34px;line-height:34px;
+    text-align:center;border-radius:6px;
+    background:#ff6a00;color:#fff;
+    text-decoration:none;
+    font-size:12px;font-weight:1000;
+}
+
+/* 第二排：签到 + 累计签到奖励 */
+#personHome.ph-static .phs-row2{
+    margin-top:12px;
+    /* display:grid;
+    grid-template-columns: 1fr 330px;
+    gap:12px; */
+}
+
+#personHome.ph-static .phs-sign{
+    border:1px solid #eee;
+    background:#fff;
+    padding:10px;
+    box-sizing:border-box;
+}
+#personHome.ph-static .phs-days{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:10px;
+    margin-top: 10px;
+}
+#personHome.ph-static .phs-day{
+    border:2px solid #ffe29a;
+    background:#fff7d7;
+    border-radius:12px;
+    height:92px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    box-sizing:border-box;
+    user-select:none;
+}
+#personHome.ph-static .phs-day .d1{
+    font-size:13px;color:#333;font-weight:1000;
+    margin-bottom:8px;line-height:1;
+    white-space:nowrap;
+}
+#personHome.ph-static .phs-day .d2{
+    width:26px;height:26px;border-radius:50%;
+    /* background: radial-gradient(circle at 35% 35%, #ffe8bf 0%, #ffc55b 55%, #ff9f00 100%); */
+    /* box-shadow: inset 0 -2px 0 rgba(0,0,0,.08); */
+    background: url(../statics/images/gold.png) no-repeat;
+    background-size: 26px;
+    margin-bottom:8px;
+}
+#personHome.ph-static .phs-day .d3{
+    font-size:12px;color:#ff6a00;font-weight:1000;
+    line-height:1.1;white-space:nowrap;
+}
+#personHome.ph-static .phs-day.signed .d2{opacity:0;}
+#personHome.ph-static .phs-day.signed::after{
+    content:"✓";
+    position:absolute;
+    left:50%;top:32px;
+    transform:translateX(-50%);
+    width:24px;height:24px;border-radius:50%;
+    background:#22c55e;color:#fff;
+    font-size:16px;font-weight:1000;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 2px 10px rgba(0,0,0,.12);
+}
+
+/* 在线进度条 + 刻度 */
+#personHome.ph-static .phs-progress{
+    position:relative;
+    margin-top:10px;
+    padding-top:18px;
+}
+#personHome.ph-static .phs-marks{
+    width:100%;
+    position:absolute;
+    /* left:5%;
+    right:5%; */
+    top:0;
+    /* display:flex; */
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:6px;
+    text-align:center;
+    /* justify-content:space-between; */
+    font-size:11px;
+    color:#999;
+
+}
+#personHome.ph-static .phs-bar{
+    height:4px;border-radius:999px;
+    background:#f2f2f2;
+    overflow:hidden;
+    margin:auto 100px;
+}
+#personHome.ph-static .phs-bar .fill{
+    display:block;height:100%;
+    width:1%; /* 静态演示：你想显示多少就改百分比 */
+    background:linear-gradient(90deg,#ff2d2d 0%, #ffb000 100%);
+}
+
+/* 宝箱（占位） */
+#personHome.ph-static .phs-chests{
+    margin-top:12px;
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:10px;
+    align-items:start;
+}
+#personHome.ph-static .phs-chestcol{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+}
+
+#personHome.ph-static .phs-tag{
+    height:22px;line-height:22px;
+    padding:0 10px;border-radius:4px;
+    font-size:12px;font-weight:1000;
+    background:#efefef;color:#999;
+    white-space:nowrap;
+}
+#personHome.ph-static .phs-tag.on{background:#16a34a;color:#fff;}
+
+/* 右侧：累计签到奖励 */
+#personHome.ph-static .phs-rewards{
+    border:1px solid #eee;
+    background:#fff;
+    padding:10px;
+    box-sizing:border-box;
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+    align-content:start;
+}
+#personHome.ph-static .phs-reward{
+    border:1px solid #eee;
+    border-radius:10px;
+    padding:10px;
+    background:#fff;
+    box-sizing:border-box;
+}
+#personHome.ph-static .phs-reward .r1{font-size:12px;color:#333;font-weight:1000;margin-bottom:6px;}
+#personHome.ph-static .phs-reward .r2{font-size:12px;color:#ff6a00;font-weight:1000;line-height:1.2;}
+#personHome.ph-static .phs-reward .r3{margin-top:8px;font-size:12px;color:#999;white-space:nowrap;}
+
+/* 第三排：左(任务) 右(金币打怪) */
+#personHome.ph-static .phs-row3{
+    margin-top:12px;
+    display:grid;
+    grid-template-columns: 1fr 450px;
+    gap:12px;
+}
+#personHome.ph-static .phs-block{
+    border:1px solid #eee;
+    background:#fff;
+}
+#personHome.ph-static .phs-hd{
+    height:46px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 12px;
+    border-bottom:1px solid #f1f1f1;
+    background:#fafafa;
+    box-sizing:border-box;
+}
+.phs-hd2{
+    height:30px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 12px;
+    border-bottom:1px solid #f1f1f1;
+    background:#fafafa;
+    box-sizing:border-box;
+}
+#personHome.ph-static .phs-hd .l{font-weight:1000;color:#333;}
+#personHome.ph-static .phs-hd .r{font-size:12px;color:#999;}
+#personHome.ph-static .phs-task{
+    display:grid;
+    grid-template-columns: 1.4fr .8fr .6fr;
+    gap:10px;
+    align-items:center;
+    padding:10px 12px;
+    border-bottom:1px solid #f5f5f5;
+    font-size:13px;
+    box-sizing:border-box;
+}
+#personHome.ph-static .phs-task:last-child{border-bottom:0;}
+#personHome.ph-static .phs-task .a{color:#333;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+#personHome.ph-static .phs-task .b{color:#999;white-space:nowrap;}
+#personHome.ph-static .phs-task .c{text-align:right;}
+#personHome.ph-static .phs-pill{
+    display:inline-block;
+    min-width:64px;
+    text-align:center;
+    padding:6px 10px;
+    border-radius:4px;
+    font-size:12px;
+    border:1px solid #ddd;
+    background:#f7f7f7;
+    color:#666;
+    user-select:none;
+}
+#personHome.ph-static .phs-pill.danger{
+    background:#d60000;border-color:#d60000;color:#fff;
+}
+
+/* 日常任务表格（按截图的蓝色按钮风格） */
+#personHome.ph-static .phs-tablewrap{padding:10px 12px 12px;}
+#personHome.ph-static table.phs-table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:13px;
+}
+
+#personHome.ph-static .phs-table th,
+#personHome.ph-static .phs-table td{
+    border:1px solid #f0f0f0;
+    padding:8px 8px;
+    vertical-align:middle;
+}
+#personHome.ph-static .phs-table th{
+    background:#fafafa;
+    color:#333;
+    font-weight:1000;
+    white-space:nowrap;
+}
+
+.phs-table2{
+    width:100%;
+    border-collapse:collapse;
+    font-size:13px;
+}
+#personHome.ph-static .phs-table2 th,
+#personHome.ph-static .phs-table2 td{
+    border:1px solid #f0f0f0;
+    padding:5px 1px;
+    vertical-align:middle;
+    text-align:center;
+}
+
+#personHome.ph-static .phs-bluebtn{
+    display:inline-block;
+    height:24px;line-height:24px;
+    padding:0 10px;border-radius:4px;
+    background:#1e88e5;color:#fff;text-decoration:none;
+    font-size:12px;font-weight:1000;
+    white-space:nowrap;
+}
+
+/* 金币打怪九宫格（右侧） */
+#personHome.ph-static .phs-arena{
+    border:1px solid #d60000;
+    background:#fff;
+    box-sizing:border-box;
+}
+#personHome.ph-static .phs-arenaTip{
+    padding:10px 12px;
+    color:#666;
+    font-size:12px;
+    line-height:1.6;
+    border-bottom:1px solid #f1f1f1;
+}
+#personHome.ph-static .phs-grid9{
+    padding:12px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+    box-sizing:border-box;
+}
+#personHome.ph-static .phs-slot{
+    border:1px solid #eee;
+    border-radius:10px;
+    overflow:hidden;
+    background:#d9d9d9;
+    position:relative;
+    height:130px;
+}
+#personHome.ph-static .phs-slot.mid{
+    /* 叠加：图在上，渐变在下（保留你现在的背景色效果） */
+    /* background-image:
+        radial-gradient(circle at 30% 30%, #ffb000 0%, #F7930A 55%, #EF3534 100%); */
+    background-repeat: no-repeat;
+    background-position: center center;
+
+    /* 需要多大就改这里：contain(完整显示) / cover(铺满裁切) / 具体像素 */
+    background-size: cover;
+
+    /* 保留你原来的圆角等（如果已有可不写） */
+    border-radius: 10px;
+    position: relative;
+}
+
+#personHome.ph-static .phs-slot.mid .phs-pointer{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* background-image: url('../statics/images/start.png'); */
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 105px 112px;
+    z-index: 10;
+}
+#personHome.ph-static .phs-img{
+    position:absolute;
+    inset:0;
+    /* background:
+        radial-gradient(circle at 35% 35%, rgba(255,255,255,.16) 0%, rgba(255,255,255,0) 55%),
+        linear-gradient(180deg, rgba(255,255,255,.06) 0%, rgba(0,0,0,.0) 60%),
+        #111; */
+    /* background: url('../statics/images/001.gif'); */
+    background-size: 133px 130px;
+    opacity:1;
+}
+#personHome.ph-static .phs-cap{
+    position:absolute;
+    left:0;right:0;bottom:8px;
+    text-align:center;
+    font-size:12px;
+    font-weight:1000;
+    color:#ffd000; /* 截图里的黄字 */
+    text-shadow:0 1px 2px rgba(0,0,0,.6);
+    pointer-events:none;
+    /* background: url('../statics/images/start.png'); */
+}
+.can-claim {
+    background: red;
+    line-height: 25px;
+    text-align: center;
+    color: white;
+    border-radius: 5px;
+}
+.ybcz-class {
+    background-color: #ffda19 !important;
+    color: #EC504E !important;
+    font-weight: bold !important;
+}
+.layui-border-red {
+    border-width: 1px;
+    border-style: solid;
+    border-color: #ff5722 !important;
+    color: #ff5722 !important;
+}
+.layui-border-red:hover {
+    border-width: 1px;
+    border-style: solid;
+    border-color: #ff5722 !important;
+    color: white !important;
+    background-color: #ff5722 !important;
+}
+.menu-wrapper li a {
+    border-bottom: 0px dashed #cacaca !important;
+    padding-bottom: 0px !important;
+    padding: 5px !important;
+}
+/* 响应式 */
+@media (max-width: 1400px){
+    #personHome.ph-static .phs-top{grid-template-columns:1fr 1fr;}
+    #personHome.ph-static .phs-card{border-right:0;border-bottom:1px solid #eee;}
+    #personHome.ph-static .phs-card:nth-child(2n){border-left:1px solid #eee;}
+    #personHome.ph-static .phs-card:nth-last-child(-n+2){border-bottom:0;}
+    #personHome.ph-static .phs-row2,
+    #personHome.ph-static .phs-row3{grid-template-columns:1fr;}
+    #personHome.ph-static .phs-actions{align-items:center;}
+}
+
+/* 幸运转盘样式 */
+.turntable {
+  height: 80%;
+  background: url('../statics/images/turntable-bg.png') no-repeat center center;
+  background-size: 100% 100%;
+  border-radius: 6px;
+  padding: 40px 20px;
+  box-sizing: border-box;
+}
+
+.turntable-top {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 60px;
+}
+
+.turntable-top-item {
+  width: 182px;
+  height: 34px;
+  line-height: 34px;
+  text-align: center;
+  background: url('../statics/images/turntable-tab-1.png') no-repeat center center;
+  background-size: 100% 100%;
+  color: #a8640a;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 0 12px;
+}
+
+.turntable-top-item.is-active {
+  background: url('../statics/images/turntable-tab-2.png') no-repeat center center;
+  background-size: 100% 100%;
+  color: #fff;
+}
+
+.turntable-wrapper {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  position: relative;
+  padding-right: 60px;
+}
+
+.turntable-wrapper > img {
+  position: absolute;
+  right: 10px;
+  top: 0px;
+  width: 66px;
+  height: 66px;
+  z-index: 1;
+  cursor: pointer;
+  animation: 1s both infinite swing;
+}
+
+.lucky-canvas {
+  margin-top: 40px;
+  position: relative;
+}
+
+.lucky-grid {
+  position: relative;
+  width: 501px;
+  height: 445px;
+  transition: transform 3s ease-out;
+}
+
+.lucky-block {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.lucky-prizes {
+  position: absolute;
+  top: 40px;
+  left: 72px;
+  width: 357px;
+  height: 365px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 0;
+  z-index: 2;
+}
+
+.lucky-prize {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.prize-img {
+  width: 90%;
+  height: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.prize-img img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.prize-text {
+  position: absolute;
+  bottom: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #A8640A;
+  text-align: center;
+}
+
+.lucky-button {
+  position: absolute;
+  top: 166px;
+  left: 194px;
+  width: 112px;
+  height: 112px;
+  z-index: 3;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.button-img {
+  width: 112px;
+  height: 112px;
+  position: relative;
+}
+
+.button-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.button-text {
+  position: absolute;
+  top: 67px;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.scroll-wrapper {
+  margin-top: 40px;
+  width: 452px;
+  background: url('../statics/images/turntable-records-bg.png') no-repeat center center;
+  background-size: 100% 100%;
+  height: 412px;
+  padding: 0 16px;
+  padding-top: 48px;
+  box-sizing: border-box;
+}
+
+.scroll-view {
+  height: 352px;
+  overflow-y: scroll;
+  background-color: #fff;
+}
+
+.scroll-view ul {
+  animation: scroll var(--turntable-duration, 10s) linear infinite normal;
+}
+
+.scroll-view ul:hover {
+  animation-play-state: paused;
+}
+
+.scroll-view li {
+  list-style: none;
+  border-bottom: 1px solid #d1bfa9;
+  font-size: 12px;
+  color: #666666;
+}
+
+.scroll-view li:hover {
+  background-color: #f0f9ff;
+}
+
+.scroll-view p {
+  display: flex;
+  line-height: 32px;
+  margin: 0;
+}
+
+.scroll-view p > span {
+  text-align: center;
+}
+
+.scroll-view p > span.w-1\/5 {
+  width: 20%;
+}
+
+.scroll-view p > span.w-2\/5 {
+  width: 40%;
+}
+
+.scroll-view p > span.color-red {
+  color: #fa5204;
+}
+
+.scroll-view p > span.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 动画效果 */
+@keyframes scroll {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(var(--turntable-height, -480px));
+  }
+}
+
+@keyframes swing {
+  20% {
+    transform: rotate(15deg);
+  }
+  40% {
+    transform: rotate(-10deg);
+  }
+  60% {
+    transform: rotate(5deg);
+  }
+  80% {
+    transform: rotate(-5deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+/* ========== end 个人首页静态版 ========== */
+
+.pep-wrap{padding:14px 16px 6px;}
+.pep-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px dashed #eee;}
+.pep-row:last-child{border-bottom:0;}
+.pep-k{width:90px;flex:0 0 90px;color:#333;font-weight:800;}
+.pep-v{flex:1;min-width:0;color:#666;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.pep-v.muted{color:#aaa;}
+.pep-actions{flex:0 0 auto;}
+.phs-rank-link, .phs-exp-link { 
+    cursor: pointer; 
+    background: #d60000 !important;
+    color: white !important;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 900;
+    text-decoration: none;
+}
+
+/* 关键词弹窗（贴近截图） */
+.gk-wrap{ padding:14px 16px 16px; box-sizing:border-box; }
+.gk-titlebar{
+    height:44px; line-height:44px;
+    background:#f3f3f3;
+    text-align:center;
+    color:#333;
+    font-weight:900;
+    border:1px solid #eee;
+    border-radius:2px;
+}
+.gk-hot{
+    padding:14px 6px 6px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    justify-content:flex-start;
+}
+.gk-chip{
+    border:1px solid #e6e6e6;
+    background:#fff;
+    color:#111;
+    border-radius:10px;
+    padding:6px 12px;
+    font-size:14px;
+    line-height:1;
+    cursor:pointer;
+    user-select:none;
+}
+.gk-chip.active{
+    border-color:#16a34a;
+    color:#16a34a;
+    box-shadow:0 0 0 2px rgba(22,163,74,.10) inset;
+}
+.gk-form{
+    margin-top:12px;
+    display:flex;
+    gap:12px;
+    align-items:center;
+}
+.gk-input{
+    flex:1;
+    height:36px;
+    border:1px solid #ddd;
+    padding:0 10px;
+    box-sizing:border-box;
+    outline:none;
+}
+.gk-save{
+    width:110px;
+    height:36px;
+    border:1px solid #ddd;
+    background:#f5f5f5;
+    cursor:pointer;
+}
+
+/* 打怪规则弹窗样式（尽量贴近截图） */
+.ar-wrap{ padding:14px 16px 18px; }
+.ar-rules{
+    border:1px dashed #e5e5e5;
+    padding:12px 12px;
+    color:#333;
+    line-height:1.9;
+    background:#fff;
+}
+.ar-title{
+    margin-top:14px;
+    background:#efefef;
+    border:1px solid #e5e5e5;
+    text-align:center;
+    font-weight:900;
+    padding:10px 0;
+}
+.ar-grid{
+    display:grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap:12px;
+    padding:12px 6px 2px;
+}
+.ar-item{
+    /* background:#111;
+    border:1px solid #333; */
+    height:120px;
+    position:relative;
+    overflow:hidden;
+}
+/* 图片占位：你有真实怪物图后，把这里改成 background-image 或改成 <img> */
+.ar-pic{
+    position:absolute; inset:0;
+    background:
+        radial-gradient(circle at 30% 25%, rgba(255,255,255,.18), rgba(255,255,255,0) 60%),
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,0) 60%),
+        #e6e6e6;
+}
+.ar-name{
+    position:absolute; left:0; right:0; bottom:6px;
+    text-align:center;
+    font-weight:900;
+    color:#ffd000;
+    text-shadow:0 1px 2px rgba(0,0,0,.7);
+}
+
+/* 让 layer 内容区别出现滚动条/白底 */
+.bag-layer .layui-layer-content{ overflow: hidden !important; padding: 0 !important; background: transparent !important; }
+/* === 修复：默认显示 layer 右上角关闭按钮（你之前全局隐藏导致无法关闭） === */
+    .layui-layer-setwin .layui-layer-close2,
+    .layui-layer-setwin .layui-layer-close1{
+    display: block !important;
+}
+
+/* 如果你确实希望某些弹窗不显示关闭按钮，只对指定 skin 隐藏 */
+.sr-layer .layui-layer-setwin .layui-layer-close2,
+.sr-layer .layui-layer-setwin .layui-layer-close1{
+    display: none !important;
+}
+
+/* 背包背景：整张 bags.png */
+.bag-wrap{
+    position: relative;
+    width: 980px;   /* 会在 JS 里按图片真实尺寸覆盖 */
+    height: 650px;  /* 会在 JS 里按图片真实尺寸覆盖 */
+    background: url("../statics/images/bags.png") no-repeat center center;
+    background-size: 100% 100%;
+}
+
+/* 背包格子布局 */
+.bag-grid{
+    display: grid;
+    grid-template-columns: repeat(12, 42px);
+    grid-template-rows: repeat(10, 42px);
+    gap: 1px;
+}
+
+/* 背包格子样式 */
+.bag-slot{
+    width: 42px;
+    height: 42px;
+    /* border: 1px solid #ccc; */
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* 背包物品悬浮效果 */
+.bag-item:hover{
+    box-shadow: 0 0 10px rgba(255, 204, 0, 0.8);
+    background-color: rgba(255, 204, 0, 0.3);
+}
+
+/* 底部覆盖层（贴近你截图的布局） */
+.bag-footer{
+    position:absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 64px;
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    padding: 0 18px 12px;
+    box-sizing:border-box;
+    pointer-events: none; /* 默认不拦截，按钮自己再开启 */
+}
+.bag-currency{
+    font-weight: 900;
+    font-size: 18px;
+    line-height: 1;
+}
+.bag-gold{ color: #ffd000; margin-right: 28px; text-shadow: 0 1px 2px rgba(0,0,0,.7); }
+.bag-yb{ color: #ffd000; text-shadow: 0 1px 2px rgba(0,0,0,.7); }
+
+.bag-actions{ display:flex; gap:12px; pointer-events: auto; }
+.bag-btn{
+    height: 20px;
+    padding: 0 8px;
+    border: 1px solid #7a5f2f;
+    background: rgba(0,0,0,.55);
+    color: #ffd000;
+    font-weight: 900;
+    cursor: pointer;
+}
+.bag-btn:hover{ background: rgba(0,0,0,.70); }
+.layui-btn-sm {
+    height: 25px;
+    line-height: 25px;
+    padding: 0 10px;
+    font-size: 12px;
+}
+.mall-tab-btn { 
+    padding: 5px 15px; 
+    margin-right: 10px; 
+    border: 1px solid #ddd; background: #fff; cursor: pointer; border-radius: 3px; 
+} 
+.mall-tab-btn.active { 
+    background: #ff6a00; 
+    color: #fff; 
+    border-color: #ff6a00; 
+} 
+.mall-buy-btn { 
+    padding: 5px 10px; 
+    background: #ff6a00; 
+    color: #fff; 
+    border: 0; 
+    border-radius: 3px; 
+    cursor: pointer; 
+    display: inline-block; 
+    margin-top: 5px; 
+} 
+.mall-goods-item { 
+    border: 1px solid #ddd; 
+    padding: 10px; 
+    border-radius: 8px; 
+    text-align: center; 
+    background: #fff; 
+    min-height: 220px; 
+    width: 180px; 
+    box-sizing: border-box; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: space-between; 
+    transition: all 0.3s ease; 
+} 
+.mall-goods-item:hover { 
+    transform: translateY(-5px); 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
+    border-color: #ff6a00; 
+} 
+.mall-goods-image { 
+    height: 100px; 
+    width: 160px; 
+    margin: 0 auto 10px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+} 
+.mall-goods-image img { 
+    max-width: 100%; 
+    max-height: 100%; 
+    object-fit: contain; 
+} 
+.mall-goods-title { 
+    margin-bottom: 8px; 
+    font-weight: bold; 
+    font-size: 14px; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    white-space: nowrap; 
+    max-width: 160px; 
+    margin: 0 auto; 
+} 
+.mall-goods-price { 
+    margin-bottom: 10px; 
+    color: #ff4d4f; 
+    font-weight: bold; 
+    font-size: 16px; 
+} 
+.mall-goods-list { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
+    gap: 20px; 
+    max-width: 100%; 
+    padding: 0 20px; 
+}

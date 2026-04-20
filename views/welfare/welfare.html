@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>开抢列表</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+
+
+</head>
+<body>
+<style>
+    i{
+          display:block;
+          background:#f00;
+          border-radius:50%;
+          width:5px;
+          height:5px;
+          top:0px;
+          right:0px;
+          position:absolute;
+    }
+    .layui-laydate-content > .layui-laydate-list {
+        padding-bottom: 0px;
+        overflow: hidden;
+    }
+
+    .layui-laydate-content > .layui-laydate-list > li {
+        width: 50%
+    }
+
+    .merge-box .scrollbox .merge-list {
+        padding-bottom: 5px;
+    }
+
+    .layui-laydate-list.laydate-time-list > li {
+        width: 50%;
+    }
+
+
+    /*.layui-laydate-list.laydate-time-list > li:nth-child(3) {*/
+    /*    display: none !important;*/
+    /*}*/
+
+    /*.layui-laydate-list.laydate-time-list > li:nth-child(2) > ol > li {*/
+    /*    display: none;*/
+    /*}*/
+
+    /*.layui-laydate-list.laydate-time-list > li:nth-child(2) > ol > li:nth-child(15n+1) {*/
+    /*    display: list-item;*/
+    /*}*/
+
+
+</style>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card layui-form">
+                <div class="layui-card-header">开抢私服列表</div>
+                <div class="layui-card-body">
+                    <div class="layui-card layui-form" style="margin-bottom: 10px;">
+                        <div class="layui-inline" style="width:120px">
+                            <input class="layui-input" name="info" id="info"
+                                   autocomplete="off" placeholder="请输入关键词">
+                        </div>
+                        <div class="layui-inline" style="width:120px">
+                            <input class="layui-input" name="surplus" id="surplus"
+                                   onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                   onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                   autocomplete="off" placeholder="<=剩余数量">
+                        </div>
+                        <div class="layui-inline" style="width: 120px">
+                            <select name="state" lay-filter="state" id="state">
+                                <option value="">开抢状态</option>
+                                <option value="1">已开抢</option>
+                                <option value="2">未开抢</option>
+                                <option value="3">已抢光</option>
+                                <option value="4">未开放</option>
+                            </select>
+                        </div>
+                        <div class="layui-inline" style="width: 120px">
+                            <select name="nullifysate" id="nullifysate" lay-verify="">
+                                <option value="">私服状态</option>
+                                <option value="1">发布中</option>
+                                <option value="2">已过期</option>
+                            </select>
+                        </div>
+
+                        <button class="layui-btn" data-type="reload" id="reload">搜索</button>
+                        <button id="welfare-button-add" shiro-event="jax:welfare:add-open" class="layui-btn"><i
+                                class="layui-icon">&#xe654;</i>添加
+                        </button>
+                    </div>
+                    <table class="layui-hide" id="auth-table" lay-filter="auth-table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="auth-state" hidden>
+    <button lay-event="update" shiro-event="jax:welfare:update-open" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe642;</i>修改
+    </button>
+    <button lay-event="remove" shiro-event="jax:welfare:remove-open" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe640;</i>删除
+    </button>
+</div>
+
+<!--添加-->
+<div id="submit-form-add" hidden>
+    <button class="layui-btn" shiro-event="jax:welfare:add" lay-submit lay-filter="submit-form-welfare">立即提交</button>
+    <!--添加-->
+    <button type="reset" shiro-event="jax:welfare:add-reset" class="layui-btn layui-btn-primary">重置</button><!--添加-->
+</div>
+<!--修改-->
+<div id="submit-form-update" hidden>
+    <button class="layui-btn" shiro-event="jax:welfare:update" lay-submit lay-filter="submit-form-welfare">立即提交</button>
+    <!--    <button type="reset" shiro-event="jax:welfare:update-reset" class="layui-btn layui-btn-primary">重置</button>-->
+</div>
+<div id="layui-welfare" hidden>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form" id="layui-form-welfare" lay-filter="component-form-group">
+                    <div class="layui-form-item">
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">游戏名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="name" lay-verify="required" autocomplete="off"
+                                       placeholder="请输入游戏名称" class="layui-input">
+                            </div>
+                            <label class="layui-form-label">IP地址</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="ip" autocomplete="off" placeholder="请输入IP地址"
+                                       class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">线路</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="line" autocomplete="off" placeholder="请输入线路"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label">联系方式</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="qq" autocomplete="off" placeholder="请输入联系方式"
+                                       class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">关键词</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="crux" autocomplete="off" placeholder="请输入关键词"
+                                       class="layui-input">
+                            </div>
+
+                            <label class="layui-form-label">截止时间</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="deadline" id="add-deadline" readonly autocomplete="off"
+                                       lay-verify="required" placeholder="请输入截止时间" class="layui-input">
+                            </div>
+                        </div>
+
+
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label"><span style="color: red">礼包金额</span></label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="money" autocomplete="off" lay-verify="required"
+                                       placeholder="请输入礼包金额"
+                                       onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                       onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label"><span style="color: red">礼包总数</span></label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="total" autocomplete="off" lay-verify="required"
+                                       placeholder="请输入礼包总数"
+                                       onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                       onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label"><span style="color: red">发放时间</span></label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="granttime" lay-verify="required" readonly id="add-granttime"
+                                       autocomplete="off" placeholder="请输入礼包发放时间" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">主页地址</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="weburl" autocomplete="off" lay-verify="required"
+                                       placeholder="请输入主页地址"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">采集地址</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="acquisition" autocomplete="off" lay-verify="required"
+                                       placeholder="采集游戏大区地址"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-input-block">
+                        <!--操作-->
+                        <div class="layui-footer" id="submit-form-welfare-button" style="left: 0;">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="layui-welfare-update" hidden>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form" id="layui-form-welfare-update" lay-filter="component-form-group">
+                    <div class="layui-form-item">
+                        <input type="hidden" id="id" name="id">
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">游戏名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="name" lay-verify="required" autocomplete="off"
+                                       placeholder="请输入游戏名称" class="layui-input">
+                            </div>
+                            <label class="layui-form-label">IP地址</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="ip" autocomplete="off" placeholder="请输入IP地址"
+                                       class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">线路</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="line" autocomplete="off" placeholder="请输入线路"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label">联系方式</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="qq" autocomplete="off" placeholder="请输入联系方式"
+                                       class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">关键词</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="crux" autocomplete="off" placeholder="请输入关键词"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label">截止时间</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="deadline" id="update-deadline" readonly autocomplete="off"
+                                       lay-verify="required" placeholder="请输入截止时间" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label"><span style="color: red">礼包金额</span></label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="money" autocomplete="off" lay-verify="required"
+                                       placeholder="请输入礼包金额"
+                                       onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                       onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label"><span style="color: red">礼包总数</span></label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="total" autocomplete="off" lay-verify="required"
+                                       placeholder="请输入礼包总数"
+                                       onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                       onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label"><span style="color: red">发放时间</span></label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="granttime" lay-verify="required" readonly id="update-granttime"
+                                       autocomplete="off" placeholder="请输入礼包发放时间" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">主页地址</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="weburl" autocomplete="off" lay-verify="required"
+                                       placeholder="请输入主页地址"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">采集地址</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="acquisition" autocomplete="off" lay-verify="required"
+                                       placeholder="采集游戏大区地址"
+                                       class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-input-block">
+                            <!--操作-->
+                            <div class="layui-footer" id="update-welfare-button" style="left: 0;">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../../layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index', //主入口模块
+    }).use(['index', 'table', 'formgs', 'form', 'security', 'layer', 'laydate'], function () {
+        var $ = layui.jquery,
+            admin = layui.admin,
+            table = layui.table,
+            formgs = layui.formgs,
+            form = layui.form,//控制添加修改（同一个弹出层）关闭弹出层的索引
+            laydate = layui.laydate,
+            layer = layui.layer, closeindex;
+        laydate.render({
+            format: 'yyyy-MM-dd HH:mm',
+            theme: 'grid',
+            elem: '#add-deadline',
+            type: 'datetime',
+            min: 0,
+        });
+
+        laydate.render({
+            format: 'yyyy-MM-dd HH:mm',
+            theme: 'grid',
+            min: 0,
+            elem: '#add-granttime',
+            type: 'datetime',
+        });
+
+        laydate.render({
+            format: 'yyyy-MM-dd HH:mm',
+            theme: 'grid',
+            min: 0,
+            elem: '#update-deadline',
+            type: 'datetime',
+        });
+
+        laydate.render({
+            format: 'yyyy-MM-dd HH:mm',
+            theme: 'grid',
+            min: 0,
+            elem: '#update-granttime',
+            type: 'datetime',
+        });
+
+        table.render({
+            elem: '#auth-table'
+            , url: layui.setter.url + 'welfare/select'
+            , title: '开抢私服'
+            , cols: [[
+                {field: 'name', title: '私服名称', width: 120,}
+                , {
+                    field: 'state', title: '开抢状态',
+                    templet: function (obj) {
+                        var v = '';
+                        switch (obj.state) {
+                            case 1:
+                                v = '已开抢';
+                                break;
+                            case 2:
+                                v = '未开抢';
+                                break;
+                            case 3:
+                                v = '<span style="color: red">已抢光</span>';
+                                break;
+                            case 4:
+                                v = '暂未开放';
+                                break;
+                            default:
+                                v = '';
+                                break;
+                        }
+                        return v;
+                    }
+                }
+                , {
+                    field: 'nullifysate', title: '私服状态',
+                    templet: function (obj) {
+                        var v = '';
+                        switch (obj.nullifysate) {
+                            case 1:
+                                v = '发布中';
+                                break;
+                            case 2:
+                                v = '<span style="color: red">已过期</span>';
+                                break;
+                            default:
+                                v = '';
+                                break;
+                        }
+                        return v;
+                    }
+                }
+                , {field: 'granttime', title: '开抢时间', width: 180}
+                , {field: 'money', title: '价格',}
+                , {field: 'occupy', title: '剩余数量',}
+                , {field: 'total', title: '总数',}
+
+                // , {field: 'ip', title: '私服IP',}
+                // , {field: 'version', title: '版本介绍'}
+                // , {field: 'line', title: '线路',}
+                // , {field: 'qq', title: '联系方式',}
+                // , {field: 'weburl', title: '私服地址',}
+                , {field: 'deadline', title: '广告截止时间', width: 180}
+                // , {field: 'acquisition', title: '采集地址',}
+
+                , {fixed: 'right', title: '操作', toolbar: '#auth-state', width: 160}
+            ]]
+            , page: true
+        });
+        table.on('tool(auth-table)', function (obj) {
+            if (obj.event == 'update') {
+                layer.open({
+                    type: 1,//弹窗类型
+                    area: [1, '70%'],//定义宽和高
+                    title: ('【' + obj.data.name + '】私服信息'),//题目
+                    shadeClose: false,//点击遮罩层关闭
+                    content: $("#layui-welfare-update"),//打开的内容
+                    success: function (index, layero) {
+                        closeindex = layero;
+                        formgs.get("layui-form-welfare-update", obj.data);
+                        if (obj.data.state == 1 && getDate() < obj.data.deadline.trim()) {
+                            $("#update-granttime").attr("disabled", "disabled");
+                            $("#update-granttime").css("background-color", "cornsilk");
+
+                            $("#layui-form-welfare-update input[name='total']").attr("disabled", "disabled");
+                            $("#layui-form-welfare-update input[name='total']").css("background-color", "cornsilk");
+
+                            $("#layui-form-welfare-update input[name='money']").attr("disabled", "disabled");
+                            $("#layui-form-welfare-update input[name='money']").css("background-color", "cornsilk");
+
+                            $("#layui-form-welfare-update input[name='acquisition']").attr("disabled", "disabled");
+                            $("#layui-form-welfare-update input[name='acquisition']").css("background-color", "cornsilk");
+                        } else {
+                            $("#update-granttime").attr("disabled", null);
+                            $("#update-granttime").css("background-color", "white");
+
+                            $("#layui-form-welfare-update  input[name='total']").attr("disabled", null);
+                            $("#layui-form-welfare-update  input[name='total']").css("background-color", "white");
+
+                            $("#layui-form-welfare-update input[name='money']").attr("disabled", null);
+                            $("#layui-form-welfare-update input[name='money']").css("background-color", "white");
+
+                            $("#layui-form-welfare-update input[name='acquisition']").attr("disabled", null);
+                            $("#layui-form-welfare-update input[name='acquisition']").css("background-color", "white");
+                        }
+
+
+                        $("#update-welfare-button").html($("#submit-form-update").html());
+                        //form.render刷新form 如果是针对单一刷新括号里面加上标签名 例：select刷新form.render('select')
+                        form.render();
+
+                    },
+                    end: function () {
+                        //getTableData();//结束之后请求表格数据的方法，新编辑的数据直接存库并展示在页面
+                    }
+                });
+            } else if (obj.event == "remove") {
+                var example = window.location.protocol+"//"+window.location.host;
+                layer.confirm('确定要删除【' + obj.data.name + '】这个私服吗？', function (index) {
+                    admin.req({
+                        url: layui.setter.url + "welfare/remove",
+                        data: {id:obj.data.id,example:example},
+                    }).done(function (res) {
+                        layer.close(index);
+                        table.reload('auth-table');
+                        layer.msg(res.msg);
+                    })
+                });
+            }
+        })
+        //查询
+        var $ = layui.$, active = {
+            reload: function () {
+                var info = $("#info").val();
+                var surplus = $("#surplus").val();
+                var state = $("#state").val();
+                var nullifysate = $("#nullifysate").val()
+                //执行重载
+                table.reload('auth-table', {
+                    page: {curr: 1}//重新从第 1 页开始
+                    , where: {info: info, surplus: surplus, state: state, nullifysate: nullifysate}
+                });
+            },
+        };
+        $("#welfare-button-add").on("click", function () {
+            layer.open({
+                type: 1,
+                area: ['1', '70%'],
+                title: ("新增私服礼包"),
+                shadeClose: false,
+                content: $("#layui-welfare"),
+                success: function (index, layero) {
+                    closeindex = layero;
+                    formgs.reset('layui-welfare');
+                    $("#types").val(1);
+                    $("#submit-form-welfare-button").html($("#submit-form-add").html());
+                    form.render();
+                },
+            });
+        })
+
+        //添加/修改提交
+        form.on('submit(submit-form-welfare)', function (data) {
+            var request = '';
+            if ((data.field.granttime.trim() > data.field.deadline.trim() || getDate() > data.field.deadline.trim())) {
+                layer.msg("礼包发放时间和截止时间必须大于当前时间，且截止时间必须大于等于礼包的发放时间");
+                return false;
+            }
+            if (data.field.id == '' || data.field.id == null) {
+                request = 'add';
+                var url = layui.setter.url + "welfare/" + request;
+                admin.req({
+                    url: url,
+                    data: data.field,
+                    done: function (res) {
+                        layer.close(closeindex);
+                        table.reload("auth-table");
+                        layer.msg(res.msg);
+                    }
+                });
+                return false;
+            } else {
+                request = 'update';
+                layer.confirm('如果私服礼包不是开抢状态，提交后则会重置礼包信息，是否修改？',
+                    {btn: ['确定', '取消']}, function () {
+                        var url = layui.setter.url + "welfare/" + request;
+                        admin.req({
+                            url: url,
+                            data: data.field,
+                            done: function (res) {
+                                layer.close(closeindex);
+                                table.reload("auth-table");
+                                layer.msg(res.msg);
+                            }
+                        });
+                    });
+                return false;
+            }
+        })
+
+        $('#reload').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+
+        $("#surplus").bind('keyup', function () {
+            var v = $(this).val();
+            if ((v != null && v != '' && !isNaN(v))) {
+                var select = 'dd[lay-value=1]';
+                $('#state').siblings("div.layui-form-select").find('dl').find(select).click();
+                //$("#state").find("option[value='1']").click();
+            }
+        });
+
+        form.on('select(state)', function (data) {
+            var v = $("#state").val();
+            if (v != 1) {
+                $("#surplus").val('');
+            }
+        });
+
+    });
+
+    function getDate() {
+        var now = new Date();
+        var year = now.getFullYear();      　　 //年
+        var month = now.getMonth() + 1;     //月
+        if (month < 10) {
+            month = "0" + month;
+        }
+        var day = now.getDate();
+        if (day < 10) {
+            day = "0" + day;
+        }
+        //日
+        var hh = now.getHours();            　　//时
+        var mm = now.getMinutes();             //分
+        return year + "-" + month + "-" + day + " " + hh + ":" + mm;
+    }
+</script>
+</body>
+</html>

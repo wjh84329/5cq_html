@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>新闻状态</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+    <script src="/statics/js/public.js"></script>
+    <style>
+        .pre-text {
+            white-space: pre;
+        }
+    </style>
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">新闻状态</div>
+                <div class="layui-card-body">
+                    <div class="test-table-reload-btn" style="margin-bottom: 10px;">
+                        <!--<div class="layui-inline">-->
+                            <!--<input class="layui-input" name="url" id="test-table-demoReload"-->
+                                   <!--autocomplete="off" placeholder="请输入新闻状态">-->
+                        <!--</div>-->
+
+                        <!--<button class="layui-btn" data-type="reload">搜索</button>-->
+                        <button id="role-button-add" shiro-event="jax:own:open-add" class="layui-btn"><i
+                                class="layui-icon">&#xe654;</i>新增状态
+                        </button>
+                    </div>
+                    <table class="layui-hide" id="auth-table" lay-filter="auth-table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="auth-state" hidden>
+    <button lay-event="update"  class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe642;</i>修改
+    </button>
+    <button lay-event="remove"  class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe640;</i>删除
+    </button>
+</div>
+
+
+<div id="layui-file-update" hidden>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form" id="layui-form-file-update" lay-filter="component-form-group">
+                    <input type="text" id="filename" name="filename" hidden>
+                    <textarea class="pre-text" id="fileInfo" name="fileInfo" wrap="hard" style="width: 100%;resize: none;"></textarea>
+                    <div class="layui-footer" id="update-file-button" style="left: 0;">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--update add-->
+<div id="layui-role" hidden>
+    <div class="layui-fluid" >
+        <div class="layui-card">
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form" id="layui-form-role" lay-filter="component-form-group">
+                    <input type="hidden" id="id" name="id">
+                    <div class="layui-form-item">
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">状态名称：</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="type_name" name="type_name" lay-verify="required" placeholder="请输入状态名称"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">排序：</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="sort" name="sort" lay-verify="required" placeholder="请选择排序数字"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-input-block">
+                        <!--操作-->
+                        <div class="layui-footer" id="submit-form-menu-button" style="left: 0;">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--添加-->
+<div id="submit-form-add" hidden>
+    <!--shiro-event="jax:phone:phoneType:add"-->
+    <button class="layui-btn"  lay-submit lay-filter="submit-form-own">立即提交</button><!--添加-->
+    <!--shiro-event="jax:own:add-reset"-->
+    <button type="reset"  class="layui-btn layui-btn-primary">重置</button><!--添加-->
+</div>
+
+<div id="submit-form-update" hidden>
+    <button class="layui-btn" shiro-event="jax:journalismType:update" lay-submit lay-filter="submit-form-update">立即提交</button>
+</div>
+
+<script src="../../layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index', //主入口模块
+        treetable: '../treetable/treetable'
+    }).use(['index', 'table','formgs','form','security','treetable'], function () {
+        var $ = layui.jquery,
+            admin = layui.admin,
+            table = layui.table,
+            formgs = layui.formgs,
+            form = layui.form,
+            treetable = layui.treetable,
+            closeindex;//控制添加修改（同一个弹出层）关闭弹出层的索引
+        table.render({
+            elem: '#auth-table'
+            ,url: baseurl+'journalismType/list'
+            ,title: '新闻类型列表'
+            ,cols: [[
+                {field: 'type_name', title: '状态名称'},
+                {field: 'sort', title: '排序'},
+                , {fixed: 'right', title: '操作', toolbar: '#auth-state',width:160}
+            ]]
+            ,page: true
+        });
+
+        //打开修改，删除
+        table.on('tool(auth-table)', function (obj) {
+            if (obj.event == 'update') {
+                layui.use(['layer'], function () {
+                    var layer = layui.layer, $ = layui.$;
+                    layer.open({
+                        type: 1,//弹窗类型
+                        area: ['50%', '60%'],//定义宽和高
+                        title: ('【' + obj.data.type_name + '】修改'),//题目
+                        shadeClose: false,//点击遮罩层关闭
+                        content: $("#layui-role"),//打开的内容
+                        success: function (index, layero) {
+                            formgs.get("layui-form-role", obj.data);
+                            $("#submit-form-menu-button").html($("#submit-form-update").html());
+                            //form.render刷新form 如果是针对单一刷新括号里面加上标签名 例：select刷新form.render('select')
+                            form.render();
+                            closeindex = layero
+                        },
+                        end: function () {
+                            //getTableData();//结束之后请求表格数据的方法，新编辑的数据直接存库并展示在页面
+                        }
+                    });
+                })
+            } else if (obj.event == "remove") {
+                layer.confirm('确定要删除吗？', function (index) {
+                    admin.req({
+                        url:baseurl+'journalismType/delete?id='+obj.data.id,
+                    }).done(function (res) {
+                        layer.close(index);
+                        table.reload('auth-table');
+                        layer.msg(res.msg);
+                    })
+
+
+                });
+            }
+        })
+
+
+
+
+        //打开添加弹窗
+        $("#role-button-add").on("click", function () {
+            layui.use(['layer'], function () {
+                var layer = layui.layer, $ = layui.$;
+                layer.open({
+                    type: 1,
+                    area: ['50%', '55%'],
+                    title: ("添加菜单/按钮"),
+                    shadeClose: false,
+                    content: $("#layui-role"),
+                    success: function (index, layero) {
+                        formgs.reset('layui-role');
+                        $("#submit-form-menu-button").html($("#submit-form-add").html());
+                        form.render();
+                        closeindex = layero;
+                    },
+                });
+            })
+        })
+
+
+        //添加
+        // form.on('submit(submit-form-own)', function (data) {
+        //     var url = baseurl+'journalismType/' + "add?typeName="+data.field.typeName+'&sort'+data.field.sort;
+        //     admin.req({
+        //         url: url,
+        //         done: function (res) {
+        //             layer.close(closeindex);
+        //             table.reload("auth-table");
+        //             layer.msg(res.msg);
+        //         }
+        //     })
+        //     return false
+        // })
+        //添加
+        form.on('submit(submit-form-own)', function (data) {
+            var url = baseUrl+'journalismType/add';
+            var formdata = new FormData();
+            formdata.append("typeName",data.field.type_name);
+            formdata.append("sort",data.field.sort);
+            admin.req({
+                url: url,
+                data: formdata,
+                cache: false, //上传文件不需要缓存
+                processData: false, // 告诉jQuery不要去处理发送的数据
+                contentType: false, // 告诉jQuery不要去设置Content-Type请求头
+                done: function (res) {
+                    layer.close(closeindex);
+                    table.reload("auth-table");
+                    layer.msg(res.msg);
+                    form.render();
+                }
+            })
+            return false
+        })
+
+
+
+        // 修改
+        form.on('submit(submit-form-update)', function (data) {
+            var url = baseUrl+'journalismType/update';
+            var formdata = new FormData();
+            formdata.append("id",data.field.id);
+            formdata.append("typeName",data.field.type_name);
+            formdata.append("sort",data.field.sort);
+            admin.req({
+                url: url,
+                data: formdata,
+                cache: false, //上传文件不需要缓存
+                processData: false, // 告诉jQuery不要去处理发送的数据
+                contentType: false, // 告诉jQuery不要去设置Content-Type请求头
+                done: function (res) {
+                    layer.close(closeindex);
+                    table.reload("auth-table");
+                    layer.msg(res.msg);
+                    form.render();
+                }
+            })
+            return false
+        })
+
+
+
+        //查询
+        var $ = layui.$, active = {
+            reload: function(){
+                var demoReload = $('#test-table-demoReload');
+                //执行重载
+                table.reload('auth-table', {
+                    page: {curr: 1 }//重新从第 1 页开始
+                    ,where: {url: $('#test-table-demoReload').val()}
+                });
+            }
+        };
+
+        $('.test-table-reload-btn .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+        $('.test-table-reload-btn .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+</script>
+</body>
+</html>

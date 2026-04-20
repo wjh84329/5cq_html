@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="zh-CN">
+ <head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>5CQ-传奇广告查询站_传奇广告排行_传奇资源站_新开传奇新服排名站(5CQ.COM)</title>
+  <meta name="description" content="5CQ.Com传奇广告排行榜,传奇私服查询站,传奇资源站,好玩的传奇排名站,玩家最爱的新开传奇,GM最喜欢的传奇工具,传奇直播,传奇新开服,传奇相关尽在5CQ(玩传奇)">
+  <meta name="keywords" content="传奇广告查询站,传奇资源站,传奇广告排行,传奇SF广告统计(5CQ.COM)">   
+  <!--    <link rel="stylesheet" href="styles.css">--> 
+  <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .chat-container {
+            width: 400px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-box {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .message {
+            margin-bottom: 15px;
+        }
+
+        .message.user {
+            text-align: right;
+        }
+
+        .message.ai {
+            text-align: left;
+        }
+
+        .message.ai .content {
+            display: inline-block;
+            background-color: #e1f5fe;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 80%;
+        }
+
+        .message.user .content {
+            display: inline-block;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 80%;
+        }
+
+        .input-container {
+            display: flex;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+
+        .input-container input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        .input-container button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .input-container button:hover {
+            background-color: #0056b3;
+        }
+    </style> 
+ </head> 
+ <body> 
+  <div class="chat-container"> 
+   <div class="chat-box" id="chat-box"> 
+    <!-- 聊天内容将在这里显示 --> 
+   </div> 
+   <div class="input-container"> 
+    <input type="text" id="user-input" placeholder="输入你的问题..."> 
+    <button id="send-btn">发送</button> 
+   </div> 
+  </div> 
+  <script src="./statics/js/jquery-3.7.1.js"></script> 
+  <script>
+    var baseUrl ="http://jaxone.5cq.com/server/"
+    document.getElementById('send-btn').addEventListener('click', sendMessage);
+    document.getElementById('user-input').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    });
+
+    function sendMessage() {
+        const userInput = document.getElementById('user-input');
+        const chatBox = document.getElementById('chat-box');
+
+        if (userInput.value.trim() === '') return;
+
+        // 添加用户消息
+        const userMessage = document.createElement('div');
+        userMessage.classList.add('message', 'user');
+        userMessage.innerHTML = `<div class="content">${userInput.value}</div>`;
+        chatBox.appendChild(userMessage);
+
+        var message = userInput.value;
+
+        // 清空输入框
+        userInput.value = '';
+
+        // 滚动到底部
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        $.ajax({
+            //返回相同的session
+            url: baseUrl + 'ranking/chat',
+            type: 'POST',
+            data: {
+                'message': message,
+            },
+            ContentType: "application/json; charset=utf-8",
+            // timeout: 10000,    //超时时间
+            dataType: 'json',
+            success: function (data, textStatus, jqXHR) {
+                // hideLoading();
+                var message = data.choices[0].message.content;
+                // addMessage('bot', message.replace(/\n/g, '<br>'));
+                // 模拟 AI 回复
+                simulateAIResponse(message.replace(/\n/g, '<br>'));
+            },error: function (jqXHR, textStatus, errorThrown) {
+                simulateAIResponse("哎呀，出错了！"); // 添加机器人的回复到聊天窗口
+                console.log(jqXHR)
+                scrollToBottom(); // 每次添加消息后滚动到底部
+            }
+        });
+
+    }
+
+    function simulateAIResponse(responseText) {
+        const chatBox = document.getElementById('chat-box');
+
+        // 添加 AI 消息
+        const aiMessage = document.createElement('div');
+        aiMessage.classList.add('message', 'ai');
+        const content = document.createElement('div');
+        content.classList.add('content');
+        aiMessage.appendChild(content);
+        chatBox.appendChild(aiMessage);
+
+        // 模拟 AI 打字效果
+        // responseText = "这是 AI 的回复，一个字一个字地出现。";
+        let index = 0;
+        const interval = setInterval(() => {
+            if (index < responseText.length) {
+                content.textContent += responseText[index];
+                index++;
+                chatBox.scrollTop = chatBox.scrollHeight;
+            } else {
+                clearInterval(interval);
+            }
+        }, 100); // 每个字出现的时间间隔
+    }
+</script>  
+ </body>
+</html>

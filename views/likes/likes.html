@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>采集服</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+  <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+  <style>
+    .pre-text {
+      white-space: pre;
+    }
+  </style>
+</head>
+<body>
+
+<div class="layui-fluid">
+  <div class="layui-row layui-col-space15">
+    <div class="layui-col-md12">
+      <div class="layui-card">
+        <div class="layui-card-header">点赞设置</div>
+        <div class="layui-card-body">
+          <div class="test-table-reload-btn" style="margin-bottom: 10px;">
+            <div class="layui-inline">
+              <input class="layui-input" name="url" id="test-table-demoReload"
+                     autocomplete="off" placeholder="请输入URL">
+            </div>
+            <button class="layui-btn" data-type="reload">搜索</button>
+            <button id="role-button-add" shiro-event="jax:own:open-add" class="layui-btn"><i
+              class="layui-icon">&#xe654;</i>添加
+            </button>
+            <button id="gear-config-btn" class="layui-btn layui-btn-normal"><i
+              class="layui-icon">&#xe614;</i>挡位配置
+            </button>
+          </div>
+          <table class="layui-hide" id="auth-table" lay-filter="auth-table"></table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="auth-state" hidden>
+  <button lay-event="update" shiro-event="jax:legendUrl:open-update" class="layui-btn layui-btn-primary layui-btn-xs"><i
+    class="layui-icon">&#xe642;</i>修改
+  </button>
+  <button lay-event="remove" shiro-event="jax:legendUrl:open-remove" class="layui-btn layui-btn-primary layui-btn-xs"><i
+    class="layui-icon">&#xe640;</i>删除
+  </button>
+</div>
+
+
+
+
+
+
+<!--update add-->
+<div id="layui-role" hidden>
+  <div class="layui-fluid" >
+    <div class="layui-card">
+      <div class="layui-card-body" style="padding: 15px;">
+        <form class="layui-form" id="layui-form-role" lay-filter="component-form-group">
+          <input type="hidden" id="id" name="id">
+          <div class="layui-form-item">
+            <div class="layui-form-item layui-form-text">
+              <label class="layui-form-label">私服地址：</label>
+              <div class="layui-input-inline" style="width: 60%">
+                <input type="text"  id="url" name="url" lay-verify="required" placeholder="请输入URL"
+                       class="layui-input">
+              </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+              <label class="layui-form-label">开始时间：</label>
+              <div class="layui-input-inline" style="width: 60%">
+                <input type="text"  name="startTime" id="startTime" readonly lay-verify="required" placeholder="请输入开始时间"
+                       class="layui-input">
+              </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+              <label class="layui-form-label">结束时间：</label>
+              <div class="layui-input-inline" style="width: 60%">
+                <input type="text"  name="endTime" id="endTime" readonly lay-verify="required" placeholder="请输入结束时间"
+                       class="layui-input">
+              </div>
+          </div>
+          <div class="layui-form-item layui-form-text">
+              <label class="layui-form-label">点赞数量：</label>
+              <div class="layui-input-inline" style="width: 60%">
+                <input type="text"  id="likesCount" name="likesCount" lay-verify="required" placeholder="请输入点赞数量"
+                       class="layui-input">
+              </div>
+            </div>
+          </div>
+
+          <div class="layui-input-block">
+            <!--操作-->
+            <div class="layui-footer" id="submit-form-menu-button" style="left: 0;">
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--添加-->
+<div id="submit-form-add" hidden>
+  <button type="button" class="layui-btn" shiro-event="jax:legendUrl:add"  lay-submit="" lay-filter="submit-form-own">提交</button><!--添加-->
+</div>
+
+<div id="submit-form-update" hidden>
+  <button type="button" class="layui-btn" shiro-event="jax:legendUrl:update" lay-submit=""  lay-filter="submit-form-own">提交</button>
+</div>
+
+<!--挡位配置表单-->
+<div id="gear-config-form" hidden>
+  <div class="layui-fluid">
+    <div class="layui-card">
+      <div class="layui-card-body" style="padding: 15px;">
+        <form class="layui-form" id="layui-form-gear">
+          <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">挡位一：</label>
+            <div class="layui-input-inline">
+              <input type="text" id="gear1" name="gear1" placeholder="请输入挡位一" class="layui-input">
+            </div>
+          </div>
+          <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">挡位二：</label>
+            <div class="layui-input-inline">
+              <input type="text" id="gear2" name="gear2" placeholder="请输入挡位二" class="layui-input">
+            </div>
+          </div>
+          <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">挡位三：</label>
+            <div class="layui-input-inline">
+              <input type="text" id="gear3" name="gear3" placeholder="请输入挡位三" class="layui-input">
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="../../layuiadmin/layui/layui.js"></script>
+<script>
+  function getNowFormatDate() {
+    var date = new Date();
+    var seperator1 = "-";
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    var strDate = date.getDate();
+    if (month >= 1 && month <= 9) {
+      month = "0" + month;
+    }
+    if (strDate >= 0 && strDate <= 9) {
+      strDate = "0" + strDate;
+    }
+    return year + seperator1 + month + seperator1 + strDate;
+  }
+  layui.config({
+    base: '../../../layuiadmin/' //静态资源所在路径
+  }).extend({
+    index: 'lib/index', //主入口模块
+  }).use(['index', 'table', 'formgs', 'form', 'security', 'layer', 'laydate'], function () {
+    var $ = layui.jquery,
+            admin = layui.admin,
+            table = layui.table,
+            formgs = layui.formgs,
+            form = layui.form,//控制添加修改（同一个弹出层）关闭弹出层的索引
+            laydate = layui.laydate,
+            layer = layui.layer, closeindex;
+    table.render({
+      elem: '#auth-table'
+      ,url: layui.setter.url+'urlLikes/list'
+      ,title: '采集服'
+      ,cols: [[
+        {field: 'url', title: '私服域名URL', sort: true,align:'center'},
+        {field: 'startTime', title: '开始时间', sort: true,align:'center'},
+        {field: 'endTime', title: '结束时间', sort: true,align:'center'},
+        {fixed: 'right', title: '操作', toolbar: '#auth-state',width:150,align:'center'}
+      ]]
+      ,page: true
+    });
+    laydate.render({
+      format: 'yyyy-MM-dd HH:mm:ss',
+      elem: '#startTime',
+      type: 'datetime',
+    });
+
+    laydate.render({
+      format: 'yyyy-MM-dd HH:mm:ss',
+      value: getNowFormatDate()+' 23:59:59',
+      elem: '#endTime',
+      type: 'datetime',
+    });
+
+    //打开修改，删除
+    table.on('tool(auth-table)', function (obj) {
+      if (obj.event == 'update') {
+        layui.use(['layer'], function () {
+          var layer = layui.layer, $ = layui.$;
+          layer.open({
+            type: 1,//弹窗类型
+            area: ['30%', ''],//定义宽和高
+            title: ('修改'),//题目
+            shadeClose: false,//点击遮罩层关闭
+            content: $("#layui-role"),//打开的内容
+            success: function (index, layero) {
+              formgs.get("layui-form-role", obj.data);
+              $("#submit-form-menu-button").html($("#submit-form-update").html());
+              //form.render刷新form 如果是针对单一刷新括号里面加上标签名 例：select刷新form.render('select')
+              form.render();
+              closeindex = layero
+            },
+          });
+        })
+      } else if (obj.event == "remove") {
+        layer.confirm('确定要删除吗？', function (index) {
+          admin.req({
+            url:layui.setter.url+'urlLikes/delete?id='+obj.data.id,
+          }).done(function (res) {
+            layer.close(index);
+            table.reload('auth-table');
+            layer.msg(res.msg);
+            $.get({url:layui.setter.url + "ranking/test2"})
+          })
+        });
+      }
+    })
+
+
+
+
+    //打开添加弹窗
+    $("#role-button-add").on("click", function () {
+      layer.open({
+        type: 1,
+        area: ['30%', ''],
+        title: ("添加"),
+        shadeClose: false,
+        content: $("#layui-role"),
+        success: function (index, layero) {
+          formgs.reset('layui-role');
+          $("#submit-form-menu-button").html($("#submit-form-add").html());
+          form.render();
+          closeindex = layero;
+        },
+      });
+    })
+
+
+    //添加/修改提交
+    form.on('submit(submit-form-own)', function (data) {
+      var url = layui.setter.url + "urlLikes/" + ((data.field.id == null||data.field.id=='') ? "add" : "update");
+      admin.req({
+        url: url,
+        data: data.field,
+        done: function (res) {
+          layer.close(closeindex);
+          table.reload("auth-table");
+          layer.msg(res.msg);
+          $.get({url:layui.setter.url + "ranking/test2"})
+        }
+      })
+      return false
+    })
+
+
+
+    //挡位配置按钮点击事件
+    $('#gear-config-btn').on('click', function() {
+      //先加载配置信息
+      admin.req({
+        url: layui.setter.url + 'ranking/getLikesSettings',
+        method: 'get',
+        done: function(res) {
+          res = res.data;
+          console.log('挡位配置:', res)
+          //回填配置信息
+          $('#gear1').val(res.LIKES_1 || '');
+          $('#gear2').val(res.LIKES_2 || '');
+          $('#gear3').val(res.LIKES_3 || '');
+          
+          layer.open({
+            type: 1,
+            area: ['400px', '320px'],
+            title: '挡位配置',
+            shadeClose: false,
+            content: $('#gear-config-form'),
+            btn: ['确定', '取消'],
+            yes: function(index, layero) {
+              var gear1 = $('#gear1').val();
+              var gear2 = $('#gear2').val();
+              var gear3 = $('#gear3').val();
+              
+              //提交配置
+              admin.req({
+                url: layui.setter.url + 'ranking/updateLikesSettings',
+                method: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                  LIKES_1: parseInt(gear1) || 0,
+                  LIKES_2: parseInt(gear2) || 0,
+                  LIKES_3: parseInt(gear3) || 0
+                }),
+                done: function(res) {
+                  layer.msg('挡位配置已保存');
+                  layer.close(index);
+                }
+              });
+            },
+            success: function(index, layero) {
+              form.render();
+            }
+          });
+        }
+      });
+    });
+
+    //查询
+    var $ = layui.$, active = {
+      reload: function(){
+        var demoReload = $('#test-table-demoReload');
+        //执行重载
+        table.reload('auth-table', {
+          page: {curr: 1 }//重新从第 1 页开始
+          ,where: {url: $('#test-table-demoReload').val()}
+        });
+      }
+    };
+
+    $('.test-table-reload-btn .layui-btn').on('click', function(){
+      var type = $(this).data('type');
+      active[type] ? active[type].call(this) : '';
+    });
+
+    $('.test-table-reload-btn .layui-btn').on('click', function () {
+      var type = $(this).data('type');
+      active[type] ? active[type].call(this) : '';
+    });
+  });
+
+</script>
+</body>
+</html>

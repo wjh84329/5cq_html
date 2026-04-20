@@ -1,0 +1,758 @@
+<!doctype html>
+<html lang="zh-CN" :data-theme="currentTheme">
+ <head> 
+  <!-- 保持原有的head部分不变 --> 
+  <meta charset="UTF-8"> 
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+  <title>5CQ-传奇广告查询站_传奇广告排行_传奇资源站_新开传奇新服排名站(5CQ.COM)</title>
+  <meta name="description" content="5CQ.Com传奇广告排行榜,传奇私服查询站,传奇资源站,好玩的传奇排名站,玩家最爱的新开传奇,GM最喜欢的传奇工具,传奇直播,传奇新开服,传奇相关尽在5CQ(玩传奇)">
+  <meta name="keywords" content="传奇广告查询站,传奇资源站,传奇广告排行,传奇SF广告统计(5CQ.COM)">   
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+  <meta name="renderer" content="webkit"> 
+  <meta name="Referrer" content="origin"> 
+  <link rel="stylesheet" href="./statics/css/layer.css"> 
+  <link rel="stylesheet" href="./statics/css/tools.css"> 
+  <link rel="stylesheet" href="./statics/css/public.css"> 
+  <link rel="stylesheet" href="./statics/css/slide-unlock.css"> 
+  <link rel="stylesheet" href="./statics/layui/css/layui.css"> 
+  <script src="./statics/js/jquery-3.2.1.min.js"></script> 
+  <script src="./statics/js/jquery.cookie.js"></script> 
+  <script src="./statics/js/public.js"></script> 
+  <script src="./statics/adminconfig.js"></script> 
+  <script src="./statics/config.js"></script> 
+  <script src="./statics/js/jquery.slideunlock.js"></script> 
+  <script src="./statics/js/layer.js"></script> 
+  <script src="./statics/js/vue.global.min.js"></script> 
+  <script src="./statics/js/marked.min.js"></script> 
+  <!-- Tailwind CSS --> 
+  <link href="./statics/css/full.min.css" rel="stylesheet" type="text/css"> 
+  <script src="./statics/js/3.4.16.js"></script> 
+  <style>
+        /* 保持原有的样式不变 */
+        [data-theme='dark'] ::-webkit-scrollbar { /* ... */ }
+        .code-block { /* ... */ }
+        /* 新增会话历史样式 */
+        .session-history {
+            background: white;
+            border-radius: var(--rounded-box);
+            backdrop-filter: blur(8px);
+        }
+        .session-block {
+            background: white;
+            border: 1px solid hsl(var(--b2));
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+        }
+        .session-block:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        /* 新增样式 */
+        .mockup-window {
+            transition: max-height 0.3s ease-out, opacity 0.2s linear;
+            overflow: hidden;
+        }
+
+        /* 新内容提示动画 */
+        @keyframes new-content {
+            0% { background-color: hsl(var(--b3)); }
+            100% { background-color: transparent; }
+        }
+
+        .session-block:has(.has-new-reasoning) {
+            animation: new-content 1.5s ease-out;
+        }
+        /* 添加在原有style区块内 */
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            background: hsl(var(--b3));
+            color: hsl(var(--bc));
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid hsl(var(--b2));
+            font-size: 0.75rem;
+            opacity: 0.7;
+            /* 添加以下属性 */
+            z-index: 10;
+            backdrop-filter: blur(4px);
+            color: gainsboro;
+        }
+
+        .copy-btn:hover {
+            opacity: 1;
+            background: hsl(var(--p));
+            color: white;
+        }
+
+        pre {
+            position: relative;
+            padding-top: 2rem !important;
+        }
+        code, kbd, pre, samp {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-feature-settings: normal;
+            font-variation-settings: normal;
+            font-size: 1em;
+            border-radius: 10px;
+            padding: 15px;
+        }
+        @media (min-width: 640px)
+         .container {
+             max-width: 1300px !important;
+         }
+        @media (min-width: 1536px)
+        .container {
+            max-width: 1300px !important;
+        }
+        @media (min-width: 1280px)
+        .container {
+            max-width: 1300px !important;
+        }
+        @media (min-width: 768px)
+        .container {
+            max-width: 1300px !important;
+        }
+        @media (min-width: 1024px)
+        .container {
+            max-width: 1300px !important;
+        }
+        .containers {
+            width: 1300px;
+            /* width: initial; */
+            margin: 0 auto;
+            position: relative;
+            margin-top: 0px !important;
+            /* padding-left: 16%; */
+            /* padding-right: 16%; */
+        }
+        /* 加载动画样式 */
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* 过渡效果 */
+        .transition-opacity {
+            transition-property: opacity;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 300ms;
+        }
+
+        /* 提示容器样式 */
+        .loading-indicator {
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .loading-content {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: rgba(71, 145, 255, 0.1);
+            color: hsl(var(--p));
+            border-radius: 9999px;
+            padding: 0.5rem 1rem;
+        }
+
+        .loading-text {
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* 黑暗主题适配 */
+        [data-theme='dark'] .loading-content {
+            background-color: rgba(100, 130, 255, 0.15);
+            color: hsl(var(--pc));
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 640px) {
+            .loading-content {
+                padding: 0.4rem 0.8rem;
+            }
+
+            .loading-text {
+                font-size: 0.75rem;
+            }
+
+            .animate-spin {
+                width: 1rem;
+                height: 1rem;
+            }
+        }
+        .topinfo {
+            height: 37px;
+            background-color: rgb(211, 63, 63);
+            color: rgb(255, 255, 255);
+            display: flex;
+            justify-content: center;
+            font-size: 14px !important;
+            padding: 1px 10px;
+            margin: 0px auto;
+        }
+        .nav a.active p:nth-child(1) {
+            /* color: rgb(140,58,24); */
+            background: linear-gradient(to bottom, #682a20, #e36006);
+            background-image: linear-gradient(rgb(104, 42, 32), rgb(227, 96, 6));
+            background-position-x: initial;
+            background-position-y: initial;
+            background-size: initial;
+            background-repeat-x: initial;
+            background-repeat-y: initial;
+            background-attachment: initial;
+            background-origin: initial;
+            background-color: initial;
+            -webkit-background-clip: text;
+            color: #DD0000;
+            height: 21px !important;
+        }
+    </style> 
+ </head> 
+ <body> 
+  <div id="app"> 
+   <div class="topinfo"> 
+    <div class="wid" style="width: 100%;justify-content: space-around"> 
+     <div class="topinfo_l">
+       同步站:Www.Chacq.Com[查传奇] 
+     </div> 
+     <div class="topinfo_c">
+       通知：严厉打击带有赌博的游戏，欢迎监督举报(举报经查实现金红包奖励) 
+     </div> 
+     <div class="topinfo_r" style="width: 296.47px;"> 
+      <a href="/" style="color: white;margin-right: 19px">首页</a> 
+      <a href="./recruTran.html" style="color: white;margin-right: 19px" target="_blank">招聘交易发布</a> 
+      <a href="#" style="color: white;margin-right: 19px" onclick="shoucang()">收藏网址</a> 
+      <a href="5cq.com传奇站.url" download="5cq.com传奇站.url" style="color: white;">保存桌面</a> 
+     </div> 
+    </div> 
+   </div> 
+   <div id="head" style="height: 270px;"> 
+    <script>zhaoff.inithead("#head");</script> 
+   </div> 
+   <div class="navc" id="first_title"> 
+    <div class="nav clearfix" id="cdmenu"> 
+     <a href="/index.html" target="" onclick="openActive('首页','/index.html',1);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
+      <div> 
+       <p>首页</p> 
+       <p>HOME</p> 
+      </div> <em></em> </a> 
+     <a href="/code/ranking.html" target="" onclick="openActive('广告排行','/code/ranking.html',2);" class=" clearfix" style="cursor: pointer"> <img style="display:block;" src="/statics/images/hot.gif" class="icon"> 
+      <div> 
+       <p>广告排行</p> 
+       <p>AD RANKING</p> 
+      </div> <em></em> </a> 
+     <a href="/chat.html" target="" onclick="openActive('AI助手','/chat.html',3);" class=" clearfix" style="cursor: pointer"> <img style="display:block;" src="/statics/images/hot.gif" class="icon"> 
+      <div> 
+       <p>AI助手</p> 
+       <p>AI CHAT</p> 
+      </div> <em></em> </a> 
+     <a href="/code/dataAnalysis.html" target="" onclick="openActive('广告分析','/code/dataAnalysis.html',4);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
+      <div> 
+       <p>广告分析</p> 
+       <p>AD REQUEST</p> 
+      </div> <em></em> </a> 
+     <a href="/code/fastscreen.html" target="" onclick="openActive('广告筛选','/code/fastscreen.html',5);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
+      <div> 
+       <p>广告筛选</p> 
+       <p>AD SEARCH</p> 
+      </div> <em></em> </a> 
+     <a href="/code/report.html" target="" onclick="openActive('黑名单','/code/report.html',6);" class=" clearfix" style="cursor: pointer"> <img style="display:block;" src="/statics/images/hot.gif" class="icon"> 
+      <div> 
+       <p>黑名单</p> 
+       <p>BLACK LIST</p> 
+      </div> <em></em> </a> 
+     <a href="/code/recruTran.html" target="" onclick="openActive('招聘交易','/code/recruTran.html',7);" class=" clearfix" style="cursor: pointer"> <img style="display:block;" src="/statics/images/tj.gif" class="icon"> 
+      <div> 
+       <p>招聘交易</p> 
+       <p>RECRUIT·TRADE</p> 
+      </div> <em></em> </a> 
+     <a href="/code/journalism.html" target="" onclick="openActive('传奇攻略','/code/journalism.html',8);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
+      <div> 
+       <p>传奇攻略</p> 
+       <p>NEWS GUIDE</p> 
+      </div> <em></em> </a> 
+     <a href="/code/publishSites.html" target="" onclick="openActive('发布站点','/code/publishSites.html',9);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
+      <div> 
+       <p>发布站点</p> 
+       <p>PUBLISH SITES</p> 
+      </div> <em></em> </a> 
+     <a href="/code/resourceNavigation.html" target="" onclick="openActive('工具导航','/code/resourceNavigation.html',10);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
+      <div> 
+       <p>工具导航</p> 
+       <p>DATA DOWN</p> 
+      </div> <em></em> </a> 
+    </div> 
+   </div> 
+   <div class="containers"> 
+    <div class="flex flex-col gap-4" style="width: 1300px"> 
+     <!-- 顶部 --> 
+     <div class="navbar bg-base-100 shadow-lg px-4 flex-none h-16" style="height: 100px"> 
+      <div class="flex-1" style="display: flex;flex-direction: column;"> 
+       <div style="display: flex;justify-content: center;margin-bottom: 15px"> 
+        <img src="./statics/images/ailogo.png" width="60" height="60" style="margin-right: 20px"> 
+        <h1 style="text-align: center;font-size: 25px" class="text-xl">我是5CQAI助手，很高兴见到你</h1> 
+       </div> 
+       <div> 
+        <h2>我可以帮你写代码、写作各种创意内容，请把你的任务交给我吧~</h2> 
+       </div> 
+      </div> 
+      <!--<div class="flex-none gap-2">
+                    <div class="dropdown dropdown-end">
+                        <label class="swap swap-rotate btn btn-ghost btn-circle">
+                            <input type="checkbox"
+                                   :checked="currentTheme === 'dark'"
+                                   @change="toggleTheme"
+                                   class="theme-controller"/>
+                            &lt;!&ndash; sun icon &ndash;&gt;
+                            <svg class="swap-on fill-current w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z"/></svg>
+                            &lt;!&ndash; moon icon &ndash;&gt;
+                            <svg class="swap-off fill-current w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z"/></svg>
+                        </label>
+                    </div>
+                </div>--> 
+     </div> 
+     <!-- 输入区域 --> 
+     <div class="bg-base-100 dark:bg-base-200 rounded-box shadow-lg p-4"> 
+      <div class="flex gap-2" style="display: flex;align-items: center"> 
+       <textarea style="height: 100px" v-model="inputQuestion" @keyup.enter="startNewSession" placeholder="输入您的问题" class="input input-bordered flex-1 dark:bg-base-300"></textarea> 
+       <button @click="startNewSession" :disabled="isConnecting" class="btn btn-primary"> {{ isConnecting ? '发送中...' : '发送' }} </button> 
+       <!-- 修改清空按钮 --> 
+       <button @click="clearAll" class="btn btn-error" title="清空所有内容"> 清空 </button> 
+      </div> 
+     </div> 
+     <div class="loading-indicator" :style="{opacity: isConnecting ? 1 : 0, height: isConnecting ? 'auto' : '0'}"> 
+      <div class="loading-content"> 
+       <svg class="animate-spin" width="20" height="20" viewbox="0 0 24 24"> 
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" /> 
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" /> 
+       </svg> 
+       <span class="loading-text">正在努力思考中，请稍等片刻...</span> 
+      </div> 
+     </div> 
+     <!-- 会话历史区域 --> 
+     <div class="session-history p-4 rounded-box"> 
+      <template v-if="sessions.length > 0"> 
+       <div v-for="(session, index) in sessions" :key="session.id" class="session-block mb-6 p-4"> 
+        <!-- 问题标题 --> 
+        <div class="flex items-center gap-2 mb-4"> 
+         <div class="badge badge-primary">
+           #{{ index + 1 }} 
+         </div> 
+         <div class="font-bold text-lg">
+           {{ session.question }} 
+         </div> 
+         <div class="text-sm opacity-75 ml-2">
+           {{ formatTime(session.startTime) }} 
+         </div> 
+        </div> 
+        <!-- 内容区域 --> 
+        <div class="grid grid-cols-1 gap-4"> 
+         <!-- 推理过程（可折叠） --> 
+         <div> 
+          <h3 class="text-sm font-semibold mb-2 opacity-75 flex items-center cursor-pointer" @click="session.showReasoning = !session.showReasoning"> <span>推理过程</span> <span class="text-xs ml-2 opacity-50"> {{ session.showReasoning ? '点击折叠' : '点击展开' }} </span> 
+           <svg class="w-4 h-4 ml-1 transform transition-transform duration-200" :class="{ 'rotate-180': session.showReasoning }" fill="none" stroke="currentColor" viewbox="0 0 24 24"> 
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /> 
+           </svg> </h3> 
+          <div class="mockup-window bg-base-300 transition-all duration-300" :class="session.showReasoning ? 'max-h-[500px]' : 'max-h-[40px]'"> 
+           <div class="px-4 py-2 bg-base-200 overflow-y-auto text-sm" :class="{ 'opacity-50': !session.showReasoning }">
+             {{ getSessionReasoning(session) }} 
+            <!-- 滚动提示 --> 
+            <div v-if="session.showReasoning &amp;&amp; getSessionReasoning(session)" class="sticky bottom-0 text-xs text-right pr-2 bg-gradient-to-t from-base-200">
+              ↑ 向上滚动查看完整推理 ↑ 
+            </div> 
+           </div> 
+          </div> 
+          <div class="text-xs mt-1 opacity-50 text-right" v-if="!session.showReasoning &amp;&amp; getSessionReasoning(session)">
+            已折叠 {{ getSessionReasoning(session).length }} 字的推理过程 
+          </div> 
+         </div> 
+         <!-- 最终答案 --> 
+         <div v-if="session.reasoningComplete"> 
+          <h3 class="text-sm font-semibold mb-2 opacity-75">最终答案</h3> 
+          <div class="mockup-window bg-base-300 relative"> 
+           <!-- 添加relative类 --> 
+           <div class="px-4 py-2 bg-base-200 max-h-96 overflow-y-auto prose dark:prose-invert max-w-none text-sm" v-html="getSessionAnswer(session)" @domsubtreemodified="addCopyButtons"> 
+            <!-- 添加DOM变化监听 --> 
+           </div> 
+          </div> 
+         </div> 
+        </div> 
+       </div> 
+      </template> 
+      <!-- 空状态 --> 
+      <div v-else class="text-center py-12 opacity-50"> 
+       <svg class="w-12 h-12 mx-auto mb-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"> 
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /> 
+       </svg> 
+       <div>
+         还没有任何会话记录，输入问题开始对话 
+       </div> 
+      </div> 
+     </div> 
+    </div> 
+   </div> 
+   <div id="footer" style="width:100%;margin: 30px auto 0;box-sizing: border-box;background: #1f1f24;padding: 30px 0 20px"> 
+    <div class="clearfix" style="width: 100%;margin: 0 auto"> 
+     <div class="link clearfix" style="border-bottom: 1px solid #36363a;padding-bottom: 30px;text-align: center" id="wzlm"> 
+     </div> 
+     <p class="p1"> <span>开服广告在线查询站 &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span> <em>为 新开传奇网站，单职业传奇，复古传奇，传奇手游 提供一个传奇发布网交流平台 </em> <a rel="nofollow" href="/statics/sitemap.html" target="_blank" style="color: white;margin-left: 20px">网站地图<em></em></a> </p> 
+     <p class="p2"> <span><em class="icon-link"></em>友情链接：</span> <a rel="nofollow" href="https://www.5cq.com" target="_blank">传奇广告查询 <em>|</em></a> <a rel="nofollow" href="https://www.1sf.com/" target="_blank">1SF传奇资源站 <em>|</em></a> <a rel="nofollow" href="https://www.2sf.com/" target="_blank"> 2SF传奇资源站 <em>|</em></a> <a rel="nofollow" href="https://www.5cq.com/duty.html" target="_blank">免责申明 <em>|</em></a> </p> 
+    </div> 
+    <p class="textfoot">拒绝盗版游戏 注意自我保护 谨防受骗上当 适度游戏益脑 沉迷游戏伤身 合理安排时间 享受健康生活</p> 
+    <p class="textfoot">本站只收录官方授权游戏信息，非官方授权游戏请在办理业务之前告知.</p> 
+    <p class="textfoot">*注释：网站数据匀采集互联网，有不良信息举报联系我们，将会尽快核实处理，站长QQ：3067585</p> 
+    <p class="textfoot"> <a style="color: white;text-align: center;width: 100%" target="_blank" id="beian" href="https://beian.miit.gov.cn">Copyright 2019-2027 All Rights Reserved </a><a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank" style="color: #fff"> 信产部ICP备案号：黔ICP备2022005643号　| </a> <span style="color: #fff">营业执照注册证号：91522301MABP8XJ71N </span> <a id="_pingansec_bottomimagesmall_shiming" target="_blank" href="//si.trustutn.org/info?sn=840240419040948778244&amp;certType=1"><img src="//v.trustutn.org/images/cert/realname_small_img.png"></a><script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1281074630'%3E%3C/span%3E%3Cscript src='https://s4.cnzz.com/z.js%3Fid%3D1281074630%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script></p> 
+    <p></p> 
+   </div> 
+  </div> 
+  <div id="tcHtml"> 
+   <!--sxl用户信息操作，注册，登录，联系我们--> 
+   <script>$("#tcHtml").load("./statics/userinfo.html");</script> 
+  </div> 
+  <script>
+    const { createApp, ref, computed, watch, nextTick } = Vue;
+
+    createApp({
+        setup() {
+            // 基础状态
+            const inputQuestion = ref('');
+            const sessions = ref([]);
+            const currentSessionId = ref(null);
+            const isConnecting = ref(false);
+            const eventSource = ref(null);
+            const currentTheme = ref('light');
+
+            // 新增方法：处理复制功能
+            // 修改后的复制处理方法
+            const handleCopy = (text) => {
+                // 创建临时文本域
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = 0;
+
+                document.body.appendChild(textarea);
+                textarea.select();
+
+                try {
+                    // 尝试使用现代API
+                    if (navigator.clipboard) {
+                        navigator.clipboard.writeText(text).then(() => {
+                            showSuccess();
+                        }).catch(() => {
+                            fallbackCopy(textarea);
+                        });
+                    } else {
+                        // 旧浏览器回退方案
+                        fallbackCopy(textarea);
+                    }
+                } catch (e) {
+                    fallbackCopy(textarea);
+                } finally {
+                    document.body.removeChild(textarea);
+                }
+            };
+            // 兼容性复制方法
+            const fallbackCopy = (textarea) => {
+                try {
+                    const successful = document.execCommand('copy');
+                    if (successful) {
+                        showSuccess();
+                    } else {
+                        showError();
+                    }
+                } catch (e) {
+                    showError();
+                }
+            };
+            // 显示成功提示
+            const showSuccess = () => {
+                layer.msg('复制成功', { icon: 1, time: 1500 });
+            };
+            // 显示错误提示
+            const showError = () => {
+                layer.msg('复制失败，请手动选择内容', { icon: 2 });
+            };
+
+            // 新增方法：添加复制按钮
+            const addCopyButtons = () => {
+                nextTick(() => {
+                    document.querySelectorAll('.mockup-window pre').forEach(pre => {
+                        if (!pre.querySelector('.copy-btn')) {
+                            const btn = document.createElement('button');
+                            btn.className = 'copy-btn';
+                            btn.textContent = '复制';
+                            btn.onclick = () => handleCopy(pre.textContent);
+                            pre.appendChild(btn);
+                        }
+                    });
+                });
+            };
+
+            // 会话操作方法
+            const startNewSession = async () => {
+                if (!inputQuestion.value.trim() || isConnecting.value) return;
+
+                try {
+                    isConnecting.value = true;
+
+                    // 关闭现有连接
+                    if (eventSource.value) {
+                        eventSource.value.close();
+                    }
+
+                    // 会话对象新增状态
+                    const newSession = {
+                        id: Date.now(),
+                        question: inputQuestion.value.trim(),
+                        messages: [],
+                        startTime: new Date(),
+                        isActive: true,
+                        showReasoning: true,  // 默认展开
+                        hasNewReasoning: false, // 新内容提示
+                        collapseTimer: null
+                    };
+
+                    sessions.value = [newSession, ...sessions.value]; // 新会话置顶
+                    currentSessionId.value = newSession.id;
+                    inputQuestion.value = '';
+
+                    // 修改部分开始
+                    let ASSISTANT = '';
+                    let previousQuestion = '';
+                    if (sessions.value.length > 1) {
+                        const prevSession = sessions.value[1];
+                        previousQuestion = prevSession?.question || '';
+
+                        // 安全获取回答内容
+                        if (prevSession?.messages?.length > 0) {
+                            ASSISTANT = prevSession.messages
+                                .filter(m => m.parsed?.content) // 过滤空内容
+                                .map(m => m.parsed.content)
+                                .join('')
+                                .trim(); // 去除首尾空格
+                        }
+                    }
+                    // 默认值处理
+                    ASSISTANT = ASSISTANT || "您好，我是您的专属助手，请问您有什么需要我帮助的？";
+                    //将ASSISTANT转换成html链接的格式
+
+
+
+                    previousQuestion = previousQuestion || "";
+
+                    /*if(sessions.value[1] != undefined ){
+                        // console.log(sessions.value[1].messages[0].parsed.content);
+                        var ASSISTANT = sessions.value[1].messages[0].parsed.content;
+                        var question = sessions.value[1].question;
+                    }else {
+                        var ASSISTANT = "您好，我是您的专属助手，请问您有什么需要我帮助的？";
+                        var question = "";
+                    }*/
+                    // 构建安全URL
+                    const baseUrl = 'http://jaxone.5cq.com/server/';
+                    const queryParams = new URLSearchParams({
+                        // prompt: encodeURIComponent(newSession.question),
+                        // assistant: encodeURIComponent(ASSISTANT),
+                        // question: encodeURIComponent(previousQuestion)
+                        prompt:newSession.question,
+                        assistant:ASSISTANT,
+                        question:previousQuestion
+                    });
+                    eventSource.value = new EventSource(`${baseUrl}ai/chat3?${queryParams}`);
+
+                    // 消息处理
+                    eventSource.value.onmessage = (event) => {
+                        // console.log(event)
+                        const sessionIndex = sessions.value.findIndex(s => s.id === currentSessionId.value);
+                        if (sessionIndex === -1) return;
+
+                        const parsed = parseSSEData(event.data);
+                        processMessage(sessions.value[sessionIndex], parsed);
+                    };
+
+                    // 错误处理
+                    eventSource.value.onerror = (error) => {
+                        console.error('SSE Error:', error);
+                        sessions.value.find(s => s.id === currentSessionId.value).isActive = false;
+                        isConnecting.value = false; // 确保错误时隐藏提示
+                        if (eventSource.value) {
+                            eventSource.value.close();
+                        }
+                    };
+                } catch (error) {
+                    console.error('Connection Error:', error);
+                    isConnecting.value = false;
+                }
+            };
+
+            // 数据解析方法
+            // 修改后的数据解析方法
+            const parseSSEData = (data) => {
+                try {
+                    const parsed = JSON.parse(data);
+
+                    // 解析新的数据结构
+                    const choice = parsed.choices?.[0];
+                    if (!choice) return null;
+
+                    return {
+                        id: parsed.id,
+                        created: new Date(parsed.created * 1000),
+                        model: parsed.model,
+                        reasoning_content: choice.message?.reasoningContent || '',
+                        content: choice.message?.content || ''
+                    };
+                } catch (e) {
+                    console.error('解析JSON失败:', e);
+                    return null;
+                }
+            };
+            // 修改会话消息处理方法
+            const processMessage = (session, parsedData) => {
+                if (!parsedData) return;
+
+                const sessionIndex = sessions.value.findIndex(s => s.id === session.id);
+                if (sessionIndex === -1) return;
+
+                // 增加结束检测
+                const isFinal = parsedData.content && parsedData.content.includes("[DONE]");
+                if (isFinal) {
+                    isConnecting.value = false;
+                    if (eventSource.value) {
+                        eventSource.value.close();
+                    }
+                    session.isActive = false;
+                }
+
+                // 检测到答案内容时标记推理完成
+                if (parsedData.content && parsedData.content.length > 0) {
+                    session.reasoningComplete = true;
+                    session.showReasoning = false; // 自动折叠推理区域
+                }
+                // 自动展开推理区域
+                if (parsedData.reasoning_content) {
+                    session.showReasoning = true;
+                    session.hasNewReasoning = true;
+                }
+                // 合并消息内容
+                const lastMessage = session.messages[session.messages.length - 1];
+
+                if (lastMessage && lastMessage.parsed.id === parsedData.id) {
+                    // 追加内容
+                    lastMessage.parsed.reasoning_content += parsedData.reasoning_content;
+                    lastMessage.parsed.content += parsedData.content;
+                    lastMessage.data += JSON.stringify(parsedData);
+                } else {
+                    // 添加新消息
+                    session.messages.push({
+                        time: new Date().toLocaleTimeString(),
+                        data: JSON.stringify(parsedData),
+                        parsed: {
+                            id: parsedData.id,
+                            created: parsedData.created,
+                            model: parsedData.model,
+                            reasoning_content: parsedData.reasoning_content,
+                            content: parsedData.content
+                        }
+                    });
+                }
+                // 如果超过5秒没有新推理内容，自动折叠
+                clearTimeout(session.collapseTimer);
+                session.collapseTimer = setTimeout(() => {
+                    session.showReasoning = false;
+                    session.hasNewReasoning = false;
+                }, 5000);
+            };
+
+            // 会话内容获取
+            const getSessionReasoning = (session) => {
+                return session.messages
+                    .filter(m => m.parsed?.reasoning_content)
+                    .map(m => m.parsed.reasoning_content)
+                    .join('');
+            };
+
+            const getSessionAnswer = (session) => {
+                const rawContent = session.messages
+                    .filter(m => m.parsed?.content)
+                    .map(m => m.parsed.content)
+                    .join('');
+                return marked.parse(rawContent);
+            };
+
+            // 辅助方法
+            const formatTime = (date) => {
+                return new Date(date).toLocaleTimeString('zh-CN', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            };
+
+            // 修改后的清空方法
+            const clearAll = () => {
+                // 确认弹窗
+                layer.confirm('确定要清空所有会话内容吗？', {
+                    icon: 3,
+                    title: '警告',
+                    btn: ['确定', '取消']
+                }, () => {
+                    // 清空输入
+                    inputQuestion.value = '';
+                    // 清空会话历史
+                    sessions.value = [];
+                    // 重置当前会话
+                    currentSessionId.value = null;
+                    // 关闭连接
+                    if (eventSource.value) {
+                        eventSource.value.close();
+                        isConnecting.value = false;
+                    }
+                    layer.msg('已清空所有内容', { icon: 1 });
+                });
+            };
+
+            // 自动滚动到底部
+            watch(sessions, () => {
+                nextTick(() => {
+                    const container = document.querySelector('.session-history');
+                    if (container) {
+                        container.scrollTop = 0; // 新会话在顶部，滚动到顶部
+                    }
+                });
+            }, { deep: true });
+
+            // 监听sessions变化
+            watch(() => sessions.value, () => {
+                addCopyButtons();
+            }, { deep: true, immediate: true });
+
+            return {
+                inputQuestion,
+                sessions,
+                isConnecting,
+                currentTheme,
+                startNewSession,
+                getSessionReasoning,
+                getSessionAnswer,
+                formatTime,
+                clearAll // 修改方法名称
+            };
+        }
+    }).mount('#app');
+</script>  
+ </body>
+</html>

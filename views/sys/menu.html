@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>tree-table</title>
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/common.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+    <style>
+        input {
+            height: 33px;
+            line-height: 33px;
+            padding: 0 7px;
+            border: 1px solid #ccc;
+            border-radius: 2px;
+            margin-bottom: -2px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #009E94;
+        }
+    </style>
+</head>
+<body id="root">
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">菜单列表</div>
+                <div class="layui-card-body">
+                    <div class="layui-btn-group">
+                        <button id="menu-button-add" shiro-event="sys:menu:open-add" class="layui-btn">
+                            <i class="layui-icon">&#xe654;</i>添加
+                        </button>
+                        <button class="layui-btn" id="btn-expand">全部展开</button>
+                        <button class="layui-btn" id="btn-fold">全部折叠</button>
+                    </div>
+
+                    <input id="edt-search" type="text" placeholder="输入关键字"/>&nbsp;&nbsp;
+                    <button class="layui-btn" id="btn-search">&nbsp;&nbsp;搜索&nbsp;&nbsp;</button>
+                    <table id="auth-table" class="layui-hide" lay-filter="auth-table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--update add-->
+<div id="layui-menu" hidden>
+    <div class="layui-fluid" >
+        <div class="layui-card">
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form" id="layui-form-menu" lay-filter="component-form-group">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <input type="hidden" id="id" name="id">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">父级菜单</label>
+                                <div class="layui-input-inline">
+                                    <select id="parent_id" name="parent_id" lay-verify="required" lay-search="">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">名称</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" id="name" name="name" lay-verify="required" placeholder="请输入名称"
+                                           class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">简称</label>
+                                <div class="layui-input-inline" style="width: 150px;">
+                                    <input type="text" id="pinyin" name="pinyin" lay-verify="required" autocomplete="off"
+                                           placeholder="请输入英文简称" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline" id="targetdiv"  >
+                            <label class="layui-form-label" >跳转方式</label>
+                            <div class="layui-input-inline">
+                                <select id="target" name="target"  lay-verify="required" lay-search=""  lay-filter="target">
+                                    <option value="" >请选择跳转方式</option>
+                                    <option value="_self" >在站内打开</option>
+                                    <option value="_blank">在新窗口中打开</option>
+                                    <option value="_parent">在父框架打开</option>
+                                    <option value="_top">在整个窗口打开</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">图标</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="icon" name="icon" autocomplete="off" placeholder="请输入功能图标（可选）"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">权重</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="sort" name="sort" lay-verify="required" placeholder="请输入显示顺序"
+                                       autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">访问方法</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="method" name="method" placeholder="请输入访问方法：a/b（可选）" autocomplete="off"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">权限标识</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="permission" name="permission" placeholder="请输入权限标识：A:B:C（可选）"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">URL地址</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="href" name="href" placeholder="请输入URL地址（可选）" autocomplete="off"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">是否显示</label>
+                        <div class="layui-input-block">
+                            <input type="checkbox" id="is_show" value="0"  name="is_show" lay-skin="switch" lay-text="ON|OFF" checked>
+                        </div>
+                    </div>
+                    <!--<div class="layui-form-item">
+                        <label class="layui-form-label">加入权限</label>
+                        <div class="layui-input-block">
+                            <input type="checkbox" checked  id="is_show" value="1" name="is_show" lay-skin="switch" lay-filter="component-form-switchTest" lay-text="ON|OFF">
+                        </div>
+                    </div>-->
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">用途</label>
+                        <div class="layui-input-block" id="tstt">
+                            <input type="radio" name="is_menu" value="0" lay-filter="yt" title="菜单" checked>
+                            <input type="radio" name="is_menu" value="1" lay-filter="yt" title="按钮">
+                            <input type="radio" name="is_menu" value="2" lay-filter="yt" title="自定义" disabled>
+                        </div>
+                    </div>
+
+
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">备注</label>
+                        <div class="layui-input-block">
+                            <textarea name="remarks" placeholder="请输入备注" class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+
+
+                    <div class="layui-input-block">
+                        <!--添加-->
+                        <div class="layui-footer" id="submit-form-before" style="left: 0;">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 操作列 -->
+<div id="auth-state" hidden>
+    <button lay-event="update" shiro-event="sys:menu:open-update" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe642;</i>修改
+    </button>
+    <button lay-event="remove" shiro-event="sys:menu:open-remove" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe640;</i>删除
+    </button>
+</div>
+<!--添加-->
+<div id="submit-form-add" hidden>
+    <button class="layui-btn" shiro-event="sys:menu:add" lay-submit lay-filter="submit-form-menu">立即提交</button><!--添加-->
+    <button type="reset" shiro-event="sys:menu:add-reset" class="layui-btn layui-btn-primary">重置</button><!--添加-->
+</div>
+<!--修改-->
+<div id="submit-form-update" hidden>
+    <button class="layui-btn" shiro-event="sys:menu:update" lay-submit lay-filter="submit-form-menu">立即提交</button>
+    <!--修改-->
+    <button type="reset" shiro-event="sys:menu:update-reset" class="layui-btn layui-btn-primary">重置</button><!--修改-->
+</div>
+
+<script src="../../layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index', //主入口模块
+        treetable: 'treetable/treetable'
+    }).use(['table', 'treetable', 'index', 'upload', 'formgs', 'form', 'security'], function () {
+        var $ = layui.jquery;
+        var table = layui.table;
+        var treetable = layui.treetable;
+        var admin = layui.admin;
+        var element = layui.element;
+        var upload = layui.upload;
+        var formgs = layui.formgs;
+        var form = layui.form;
+        var selectMenus = [];
+        element.render();
+        var closeindex;//控制添加修改（同一个弹出层）关闭弹出层的索引
+
+        //渲染表格
+        var renderTable = function () {
+            admin.req({
+                url: layui.setter.url + 'menu/select' //实际使用请改成服务端真实接口
+                , done: function (res) {
+                    layer.load(2);
+                    treetable.render({
+                        treeColIndex: 1,
+                        treeSpid: 0,
+                        treeIdName: 'permission',
+                        treePidName: 'parent_id',
+                        elem: '#auth-table',
+                        data: res.data.menus,
+                        cols: [[
+                            {type: 'numbers'},
+                            {field: 'name', minWidth: 200, title: '权限名称'},
+                            {field: 'permission', title: '权限标识'},
+                            {field: 'href', title: '菜单url'},
+                            {field: 'sort', width: 80, align: 'center', title: '排序号'},
+                            {
+                                field: 'is_menu', width: 80, align: 'center', templet: function (d) {
+                                    if (d.is_menu == 0) return '<span class="l1ayui-badge-rim">菜单</span>';
+                                    if (d.is_menu == 1) return '<span class="layui-badge layui-bg-gray">按钮</span>';
+                                    /*if (d.is_menu == 2) return '<span class="layui-badge layui-bg-blue">目录</span>';*/
+                                }, title: '类型'
+                            },
+                            {fixed: 'right', width: 215, toolbar: '#auth-state', title: '操作'}
+                        ]],
+                        page: false,
+                        done: function (res, curr, count) {
+                            layer.closeAll('loading');
+                        }
+                    });
+
+                    selectMenus = res.data.selectMenus;
+                }
+            });
+
+        }
+        renderTable();
+
+
+        //打开修改，删除
+        table.on('tool(auth-table)', function (obj) {
+            if (obj.event == 'update') {
+                layui.use(['layer'], function () {
+                    var layer = layui.layer, $ = layui.$;
+                    layer.open({
+                        type: 1,//弹窗类型
+                        area: ['80%', '80%'],//定义宽和高
+                        title: ('【' + obj.data.name + '】详细信息'),//题目
+                        shadeClose: false,//点击遮罩层关闭
+                        content: $("#layui-menu"),//打开的内容
+                        success: function (index, layero) {
+
+
+                            //select赋值
+                            formgs.addselect("parent_id", selectMenus, '<option value="">请选择父级菜单</option><option value="0">最高级菜单</option>');
+                            formgs.get("layui-form-menu", obj.data);
+                            $("#submit-form-before").html($("#submit-form-update").html());
+                            //form.render刷新form 如果是针对单一刷新括号里面加上标签名 例：select刷新form.render('select')
+                            var is_menu = $("input[name='is_menu']:checked").val();
+                            if (is_menu == 0 ){
+                                $("#targetdiv").show("");
+                                $("#targetdiv").children("div").children("select").attr("lay-verify","required");
+                            }
+                            //按钮
+                            else if (is_menu == 1){
+                                $("#targetdiv").hide("");
+                                $("#targetdiv").children("div").children("select").attr("lay-verify","");
+                            }
+                            form.render();
+                            closeindex = layero
+                        },
+                        end: function () {
+                            //getTableData();//结束之后请求表格数据的方法，新编辑的数据直接存库并展示在页面
+                        }
+                    });
+                })
+            } else if (obj.event == "remove") {
+                layer.confirm('确定要删除吗？这会将下级菜单一起删除！', function (index) {
+                    admin.req({
+                        url:layui.setter.url+"menu/remove/"+obj.data.id+"/"+obj.data.parent_id
+                    }).done(function (res) {
+                        layer.close(index);
+                        renderTable();//由于treetable是自定义表格，所以需要封装调用。框架自带table功能可以直接使用重载功能，以达到刷新效果
+                        layer.msg(res.msg);
+                    })
+
+
+                });
+            }
+
+
+        })
+
+        //打开添加弹窗
+        $("#menu-button-add").on("click", function () {
+            layui.use(['layer'], function () {
+                var layer = layui.layer, $ = layui.$;
+
+                layer.open({
+                    type: 1,
+                    area: ['80%', '80%'],
+                    title: ("添加菜单/按钮"),
+                    shadeClose: false,
+                    content: $("#layui-menu"),
+                    success: function (index, layero) {
+                        formgs.addselect("parent_id", selectMenus, '<option value="">请选择父级菜单</option><option value="0">最高级菜单</option>');//select赋值
+                        formgs.reset('layui-menu');
+                        $("#submit-form-before").html($("#submit-form-add").html());
+                        form.render();
+                        closeindex = layero;
+                    },
+                });
+            })
+
+
+        });
+
+        //添加/修改提交
+        form.on('submit(submit-form-menu)', function (data) {
+            if (data.field.is_menu!=0)data.field.target = '';
+
+            var url = layui.setter.url + "menu/"+(data.field.id==''?"add":"update");
+            admin.req({
+                url: url,
+                data: data.field,
+                done: function (res) {
+                    layer.close(closeindex);
+                    renderTable();//由于treetable是自定义表格，所以需要封装调用。框架自带table功能可以直接使用重载功能，以达到刷新效果
+                    layer.msg(res.msg);
+                }
+            })
+            return false
+        })
+
+        //选择按钮、菜单监听事件
+        form.on('radio(yt)', function(data){
+            //菜单
+            if (data.value == 0 ){
+                $("#targetdiv").show("");
+                $("#targetdiv").children("div").children("select").attr("lay-verify","required");
+            }
+            //按钮
+            else if (data.value == 1){
+                $("#targetdiv").hide("");
+                $("#targetdiv").children("div").children("select").attr("lay-verify","");
+                form.render();
+            }
+        });
+
+
+        //全部展开，折叠，搜索功能
+        treetable.operation("#auth-table");
+    });
+
+
+</script>
+</body>
+</html>

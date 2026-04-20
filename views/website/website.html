@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>站点管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+
+
+</head>
+<body>
+<style>
+    .layadmin-homepage-pad-ver {
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+    .layadmin-homepage-pad-img {
+        box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+    }
+</style>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">站点管理</div>
+                <div class="layui-card-body">
+                    <div class="test-table-reload-btn" style="margin-bottom: 10px;">
+                        <div class="layui-inline">
+                            <input class="layui-input" name="polymerization" id="test-table-demoReload"
+                                   autocomplete="off" placeholder="请输入站点名称">
+                        </div>
+                        <button class="layui-btn" data-type="reload">搜索</button>
+                       <!-- <button id="website-button-add" shiro-event="sys:website:open-add" class="layui-btn"><i
+                                class="layui-icon">&#xe654;</i>添加
+                        </button>-->
+                    </div>
+                    <table class="layui-hide" id="auth-table" lay-filter="auth-table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="auth-state" hidden>
+    <button lay-event="update" shiro-event="sys:website:open-update" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe642;</i>修改
+    </button>
+<!--    <button lay-event="remove" shiro-event="sys:website:open-remove" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe640;</i>删除
+    </button>-->
+</div>
+
+<!--添加-->
+<div id="submit-form-add" hidden>
+    <button class="layui-btn" shiro-event="sys:website:add" lay-submit lay-filter="submit-form-website">立即提交</button>
+    <!--添加-->
+    <button type="reset" shiro-event="sys:website:add-reset" class="layui-btn layui-btn-primary">重置</button><!--添加-->
+</div>
+<!--修改-->
+<div id="submit-form-update" hidden>
+    <button class="layui-btn" shiro-event="sys:website:update" lay-submit lay-filter="submit-form-website">立即提交</button>
+    <button type="reset" shiro-event="sys:website:update-reset" class="layui-btn layui-btn-primary">重置</button>
+</div>
+<div id="layui-website" hidden>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form" id="layui-form-website" lay-filter="component-form-group">
+                    <div class="layui-form-item">
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">站点名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="sitename" name="sitename" lay-verify="required"
+                                       placeholder="站点名称"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label">同步站点</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="sharenames" name="sharenames" lay-verify="required"
+                                       placeholder="请填写同步站点" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">套黄</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="vipprice" name="vipprice" lay-verify="required|number" onkeyup="clearNoNum(this)"
+                                       placeholder="请输入套黄价格" class="layui-input">
+                            </div>
+                            <label class="layui-form-label">全天套黄</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="dayvipprice" name="dayvipprice" lay-verify="required|number" onkeyup="clearNoNum(this)"
+                                       placeholder="请输入全天套黄价格" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">全天置顶价格</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="daytopprice" name="daytopprice" lay-verify="required|number" onkeyup="clearNoNum(this)"
+                                       placeholder="请输入全天置顶价格"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label">改时价格</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="alterationprice" name="alterationprice" lay-verify="required|number" onkeyup="clearNoNum(this)"
+                                       placeholder="请填写改时价格" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">通宵推荐价格</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="nightvipprice" name="nightvipprice" lay-verify="required|number" onkeyup="clearNoNum(this)"
+                                       placeholder="请填写通宵推荐价格" class="layui-input">
+                            </div>
+                            <label class="layui-form-label">通宵固顶价格</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="nighttopprice" name="nighttopprice" lay-verify="required|number" onkeyup="clearNoNum(this)"
+                                       placeholder="请填写通宵固顶价格" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">采集地址</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="website" name="website" lay-verify="required" placeholder="请填写采集地址"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label">排序</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="sort" name="sort" lay-verify="required|number" placeholder="请填写排序"
+                                       autocomplete="off"  onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">跳转地址</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="showsite" name="showsite" lay-verify="required" placeholder="请填写跳转地址"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label">总价限制</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="moneyLimit" name="moneyLimit" lay-verify="required" placeholder="请填写总价限制"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <!--<div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">总价限制</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="moneyLimit" name="moneyLimit" lay-verify="required" placeholder="请填写总价限制"
+                                       class="layui-input">
+                            </div>
+                        </div>-->
+                        <!--<div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">展示地址</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="showsite" name="showsite" lay-verify="required" placeholder="请填写跳转地址"
+                                       class="layui-input">
+                            </div>
+                        </div>-->
+                    </div>
+
+                    <div class="layui-input-block">
+                        <!--操作-->
+                        <div class="layui-footer" id="submit-form-website-button" style="left: 0;">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="layui-website-update" hidden>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form" id="layui-form-website-update" lay-filter="component-form-group">
+                    <div class="layui-form-item">
+                        <input type="hidden" id="id" name="id">
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">站点名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text"  name="sitename" lay-verify="required"
+                                       placeholder="站点名称"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label">同步站点</label>
+                            <div class="layui-input-inline">
+                                <input type="text"  name="sharenames" lay-verify="required"
+                                       placeholder="请填写同步站点" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">套黄</label>
+                            <div class="layui-input-inline">
+                                <input type="text"  name="vipprice" onkeyup="clearNoNum(this)" lay-verify="required|number"
+                                       placeholder="请输入套黄价格" class="layui-input">
+                            </div>
+                            <label class="layui-form-label">全天套黄</label>
+                            <div class="layui-input-inline">
+                                <input type="text"  name="dayvipprice" onkeyup="clearNoNum(this)" lay-verify="required|number"
+                                       placeholder="请输入全天套黄价格" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">全天置顶</label>
+                            <div class="layui-input-inline">
+                                <input type="text"  name="daytopprice" onkeyup="clearNoNum(this)" lay-verify="required|number"
+                                       placeholder="请输入全天置顶价格"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label">改时价格</label>
+                            <div class="layui-input-inline">
+                                <input type="text"  name="alterationprice" onkeyup="clearNoNum(this)" lay-verify="required|number"
+                                       placeholder="请填写改时价格" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">通宵推荐</label>
+                            <div class="layui-input-inline">
+                                <input type="text"  name="nightvipprice" onkeyup="clearNoNum(this)" lay-verify="required|number"
+                                       placeholder="请填写通宵推荐价格" class="layui-input">
+                            </div>
+                            <label class="layui-form-label">通宵固顶</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="nighttopprice" onkeyup="clearNoNum(this)" lay-verify="required|number"
+                                       placeholder="请填写通宵固顶价格" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">文件地址</label>
+                            <div class="layui-input-inline">
+                                <input type="text"  name="website"  placeholder="请填写文件地址"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label">排序</label>
+                            <div class="layui-input-inline">
+                                <input type="text"  name="sort" lay-verify="required|number" placeholder="请填写排序"
+                                       autocomplete="off"  onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">跳转地址</label>
+                            <div class="layui-input-inline">
+                                <input type="text"  name="showsite" lay-verify="required" placeholder="请填写跳转地址"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label">总价限制</label>
+                            <div class="layui-input-inline">
+                                <input type="text"  name="moneyLimit" lay-verify="required" placeholder="请填写总价限制"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <!--<div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">总价限制</label>
+                            <div class="layui-input-inline">
+                                <input type="text"  name="moneyLimit" lay-verify="required" placeholder="请填写总价限制"
+                                       class="layui-input">
+                            </div>
+                        </div>-->
+                    </div>
+
+                    <div class="layui-input-block">
+                        <!--操作-->
+                        <div class="layui-footer" id="update-website-button" style="left: 0;">
+                        </div>
+                    </div>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+
+<script src="../../layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index', //主入口模块
+    }).use(['index', 'table', 'formgs', 'form', 'security', 'layer', 'upload'], function () {
+        var $ = layui.jquery,
+            admin = layui.admin,
+            table = layui.table,
+            formgs = layui.formgs,
+            form = layui.form,//控制添加修改（同一个弹出层）关闭弹出层的索引
+            upload = layui.upload,
+            layer = layui.layer, closeindex;
+        table.render({
+            elem: '#auth-table'
+            , url: layui.setter.url + 'hwebsite/select'
+            , title: '私服发布'
+            , cols: [[
+                /*{field:'id', title:'ID', width:80 , fixed: 'left', unresize: true, sort: true}*/
+                {field: 'sitename', title: '站点名称'}
+                , {field: 'sharenames', title: '同步站点', sort: true,}
+                , {field: 'vipprice', title: '套黄价格', sort: true,width:120 }
+                , {field: 'dayvipprice', title: '全天套黄价格', sort: true,width:120}
+                , {field: 'alterationprice', title: '改时价格',width:120}
+                , {field: 'nightvipprice', title: '通宵推荐价格',width:120}
+                , {field: 'nighttopprice', title: '通宵固顶价格',width:120}
+                ,{
+                    field: 'state', title: '是否屏蔽', width: 115,
+                    templet: function (obj) {
+                        var r =
+                            '<div class="layui-form" lay-filter="test1">' +
+                            '<input type="checkbox" name="state" data-id="' + obj.id + '" lay-skin="switch" value="' + obj.state + '" lay-text="已屏蔽|未屏蔽" lay-filter="state" ' + (obj.state == 0 ? "checked" : "") + ' >' +
+                            '</div>'
+                        return r;
+                    }
+                },
+                // , {field: 'website', title: '文件地址', }
+                // , {field: 'showsite', title: '跳转地址',}
+                , {field: 'sort', title: '排序', sort: true,width:90}
+                // , {field: 'create_by', title: '创建人', sort: true, width: 100}
+                // , {field: 'create_date', title: '创建时间', sort: true}
+                // , {field: 'update_by', title: '最新修改者', sort: true, width: 120}
+                // , {field: 'update_date', title: '最新修改时间', sort: true, width: 160}
+                , {fixed: 'right', title: '操作', toolbar: '#auth-state', width: 90}
+            ]]
+            , page: true
+        });
+        table.on('tool(auth-table)', function (obj) {
+            if (obj.event == 'update') {
+                layer.open({
+                    type: 1,//弹窗类型
+                    area: ['1', '60%'],//定义宽和高
+                    title: ('【' + obj.data.sitename + '】私服信息'),//题目
+                    shadeClose: false,//点击遮罩层关闭
+                    content: $("#layui-website-update"),//打开的内容
+                    success: function (index, layero) {
+                        closeindex = layero;
+                        formgs.get("layui-form-website-update", obj.data);
+                        $("#update-website-button").html($("#submit-form-update").html());
+                        //form.render刷新form 如果是针对单一刷新括号里面加上标签名 例：select刷新form.render('select')
+                        form.render();
+
+                    },
+                    end: function () {
+                        //getTableData();//结束之后请求表格数据的方法，新编辑的数据直接存库并展示在页面
+                    }
+                });
+            } else if (obj.event == "remove") {
+                layer.confirm('确定要删除【' + obj.data.name + '】这个站点吗？', function (index) {
+                    admin.req({
+                        url: layui.setter.url + "hwebsite/remove/" + obj.data.id
+                    }).done(function (res) {
+                        layer.close(index);
+                        table.reload('auth-table');
+                        layer.msg(res.msg);
+                    })
+                });
+            }
+        })
+        //查询
+        var $ = layui.$, active = {
+            reload: function () {
+                var demoReload = $('#test-table-demoReload');
+                //执行重载
+                table.reload('auth-table', {
+                    page: {curr: 1}//重新从第 1 页开始
+                    , where: {name: demoReload.val()}
+                });
+            },
+            rolequery: function () {
+                var query = $('#table-role-query');
+                //执行重载
+                table.reload('table-role', {
+                    page: {curr: 1}//重新从第 1 页开始
+                    , where: {likename: query.val()}
+                });
+            }
+        };
+        $("#website-button-add").on("click", function () {
+            layer.open({
+                type: 1,
+                area: ['50%', '60%'],
+                title: ("新增站点"),
+                shadeClose: false,
+                content: $("#layui-website"),
+                success: function (index, layero) {
+                    closeindex = layero;
+                    formgs.reset('layui-website');
+                    $("#submit-form-website-button").html($("#submit-form-add").html());
+                    form.render();
+                },
+            });
+        })
+
+        //添加/修改提交
+        form.on('submit(submit-form-website)', function (data) {
+            var url = layui.setter.url + "hwebsite/" + ((data.field.id == '' || data.field.id == null) ? "add" : "update");
+            admin.req({
+                url: url,
+                data: data.field,
+                done: function (res) {
+                    layer.close(closeindex);
+                    table.reload("auth-table");
+                    layer.msg(res.msg);
+                }
+            })
+            return false
+        })
+
+        $('.test-table-reload-btn .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+        //监听单元格编辑s-checkbox
+        form.on('switch(state)', function (data) {
+            var id = $(this).attr("data-id");
+            var state = data.elem.checked ? 0 : 1;
+            update(id, state);
+        });
+
+        //被调用的修改方法
+        function update(id, state) {
+            admin.req({
+                url: layui.setter.url + "hwebsite/update",
+                data: {id: id, state: state},
+                done: function (res) {
+                    layer.msg(res.msg);
+                    $.get({url:layui.setter.url + "ranking/test2"})
+                }
+            });
+        }
+
+    });
+
+    function clearNoNum(obj){
+        obj.value = obj.value.replace(/[^\d.]/g,"");//清除"数字"和"."以外的字符
+        obj.value = obj.value.replace(/^\./g,"");//验证第一个字符是数字而不是字符
+        obj.value = obj.value.replace(/\.{2,}/g,".");//只保留第一个.清除多余的
+        obj.value = obj.value.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
+        obj.value = obj.value.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3');//只能输入两个小数
+    }
+</script>
+</body>
+</html>

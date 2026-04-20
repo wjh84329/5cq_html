@@ -1,0 +1,109 @@
+<!doctype html>
+<html>
+ <head> 
+  <meta charset="utf-8"> 
+  <title>5CQ-传奇广告查询站_传奇广告排行_传奇资源站_新开传奇新服排名站(5CQ.COM)</title>
+  <meta name="description" content="5CQ.Com传奇广告排行榜,传奇私服查询站,传奇资源站,好玩的传奇排名站,玩家最爱的新开传奇,GM最喜欢的传奇工具,传奇直播,传奇新开服,传奇相关尽在5CQ(玩传奇)">
+  <meta name="keywords" content="传奇广告查询站,传奇资源站,传奇广告排行,传奇SF广告统计(5CQ.COM)">   
+  <meta name="renderer" content="webkit"> 
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1"> 
+  <!-- 注意：项目正式环境请勿引用该地址 --> 
+  <link href="../statics/layui/css/layui.css" rel="stylesheet"> 
+  <link href="../statics/css/public.css"> 
+  <style>
+        .layui-table td, .layui-table th {
+            position: relative;
+             padding: initial;
+            min-height: 20px;
+            line-height: 20px;
+            font-size: 9px;
+        }
+        /*.rank-icon {
+            width: 28px;
+            height: 28px;
+        }*/
+
+        .rank-label {
+            position: absolute; /* 绝对定位 */
+            top: 50%; /* 初始位置在图片顶部 */
+            left: 50%; /* 初始位置在图片水平中心 */
+            transform: translate(-50%, -50%); /* 向左和向上移动自身宽高的一半，实现居中 */
+            text-align: center; /* 确保文本在span中居中 */
+            line-height: 32px; /* 使文本垂直居中，这里假设图片高度是32px */
+            color: #fff; /* 文本颜色，根据需要调整 */
+            font-size: 16px; /* 文本大小，根据需要调整 */
+            /* 可能还需要设置背景色、边框等样式 */
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; } /* 初始和结束时文字完全不透明 */
+            50% { opacity: 0.6; } /* 中间时文字完全透明 */
+        }
+        .titlefont {
+            /* 其他样式，根据需要添加 */
+            font-size: 24px; /* 字体大小 */
+            color: #FEFACD; /* 文字颜色 */
+            /*animation: blink 1s step-start infinite; !* 应用blink动画，持续时间为1秒，动画开始时立即跳到动画的下一帧，无限次重复 *!*/
+            background: red;
+            text-align: center;
+        }
+        .truncate-text {
+            width: 25%; /* 直接在CSS中设置宽度 */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style> 
+ </head> 
+ <body> 
+  <div style="position: relative;overflow: hidden"> 
+   <img src="../statics/images/banner.png" style="width: 100%"> 
+   <!--    <img src="../statics/images/logo.png" style="width: 80%;position: absolute;top: 40%;left: 0">--> 
+   <div style="text-align: center;position: absolute;top: 20%;left: 10%;color: red;font-weight: 900;font-size: 20px"> 
+    <!--        2024-09-25
+        <br>
+        1PK汇总排行榜
+    </div>
+    <div class="titlefont">
+        全网广告排行榜 1PK最精准数据汇总
+    </div>--> 
+   </div> 
+   <div> 
+    <table class="layui-table" style="margin: initial"> 
+     <tbody id="list"> 
+     </tbody> 
+    </table> 
+   </div> 
+   <!-- 注意：项目正式环境请勿引用该地址 --> 
+   <script src="../statics/layui/layui.js"></script> 
+   <script>
+    layui.use(['layer', 'form'], function(){
+        var layer = layui.layer;
+        var form = layui.form;
+        var $ = layui.jquery;
+        $.ajax({
+            url: '../statics/rankings.json',
+            type: 'get',
+            success: function(res) {
+                // console.log(res);
+                var date = res.slice(0, 20)
+                console.log(date)
+                $('#list').html('')
+                var html = ''
+                $.each(date, function(index, item) {
+                    html += `<tr style="text-align: center">
+                                <td width="10%" id="showBox" style="position: relative"><img class="rank-icon"  src="../statics/images/rankBg${index<4?index+1:4}.png"><span class="rank-label">${index<3?'':index+1}</span></td>
+                                <td class="truncate-text">${item.name}</td>
+                                <td class="truncate-text">${item.ipname}</td>
+                                <td class="truncate-text">${item.line}</td>
+                                <td width="15%" >${item.money}</td>
+                            </tr>`
+                })
+                $('#list').html(html)
+            }
+        })
+    });
+</script> 
+  </div>  
+ </body>
+</html>

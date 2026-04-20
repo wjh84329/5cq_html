@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>订单列表</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+
+
+</head>
+<body>
+<style>
+    .merge-box .scrollbox .merge-list {
+        padding-bottom: 5px;
+    }
+
+    .layui-upload-img {
+        width: 92px;
+        height: 92px;
+        margin: 0 10px 10px 0;
+    }
+</style>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card layui-form">
+                <div class="layui-card-header">订单列表</div>
+                <div class="layui-card-body">
+                    <div class="layui-card layui-form" style="margin-bottom: 10px;">
+                        <div class="layui-inline" style="width: 120px">
+                            <select id="orderstate">
+                                <option value="">订单状态</option>
+                                <option value="1">未充值</option>
+                                <option value="2">已充值</option>
+                                <option value="3">异常</option>
+                                <option value="4">撤回</option>
+                            </select>
+                        </div>
+                        <div class="layui-inline" style="width: 120px">
+                            <input type="text" id="receive" readonly autocomplete="off"
+                                   lay-verify="required" placeholder="订单时间" class="layui-input">
+                        </div>
+                        <button class="layui-btn" data-type="reload" id="reload">搜索</button>
+                    </div>
+                    <table class="layui-hide" id="auth-table" lay-filter="auth-table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="auth-state" hidden>
+    <button lay-event="update" shiro-event="jax:order:open-update" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe642;</i>发放
+    </button>
+</div>
+
+<!--修改-->
+<div id="submit-form-update" hidden>
+    <button class="layui-btn" shiro-event="jax:order:update" id="submit-form-order" lay-submit
+            lay-filter="submit-form-order">立即提交
+    </button>
+</div>
+
+
+<div id="layui-order-update" hidden style="width:400px">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form" id="layui-form-order-update" lay-filter="component-form-group">
+                    <div class="layui-form-item" style="width:400px">
+                        <input type="hidden" id="id" name="id">
+                        <input type="hidden" id="welfare_id" name="welfare_id">
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">充值大区</label>
+                            <div class="layui-input-inline">
+                                <select name="selectregion" id="region" lay-filter="region">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">充值大区</label>
+                            <div class="layui-input-inline">
+                                <input type="text" style="width:212px" id="inputregion" name="region" autocomplete="off"
+                                       lay-verify="required" placeholder="请输入的游戏大区" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">状态</label>
+                            <div class="layui-input-inline">
+                                <select name="state" lay-filter="state" id="state">
+                                    <option value="2">通过</option>
+                                    <option value="3">异常</option>
+                                    <option value="4">撤回</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text" id="ly" hidden>
+                            <label class="layui-form-label">理由</label>
+                            <div class="layui-input-inline">
+                                    <input type="text" name="remarks" id="HandoverCompany" class="layui-input" style="position:absolute;z-index:2;width:80%;"   autocomplete="off">
+                                    <select type="text" id="hc_select" lay-filter="hc_select" autocomplete="off"  class="layui-select" lay-search>
+                                        <option value="账号重复领取">账号重复领取</option>
+                                        <option value="只限今日新区">只限今日新区</option>
+                                        <option value="区服填写有误">区服填写有误</option>
+                                    </select>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item layui-form-text" id="uploadDIV">
+                            <div class="layui-upload" style="margin-left: 28%">
+                                <button type="button" class="layui-btn" id="test-upload-normal">上传图片</button>
+                                <input class="layui-upload-file" type="file" id="file" accept="undefined" name="file">
+                                <div class="layui-upload-list">
+                                    <img class="layui-upload-img" id="test-upload-normal-img">
+                                    <p id="test-upload-demoText"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-input-block">
+                            <!--操作-->
+                            <div class="layui-footer" id="update-order-button" style="left: 0;">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../../layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index', //主入口模块
+    }).use(['index', 'table', 'formgs', 'form', 'security', 'layer', 'laydate', 'upload'], function () {
+        var $ = layui.jquery,
+            admin = layui.admin,
+            table = layui.table,
+            formgs = layui.formgs,
+            form = layui.form,//控制添加修改（同一个弹出层）关闭弹出层的索引
+            laydate = layui.laydate,
+            upload = layui.upload,
+            layer = layui.layer, closeindex;
+        form.on('select(hc_select)', function (data) {   //选择移交单位 赋值给input框
+            var select_text = data.elem[data.elem.selectedIndex].text;
+            $("#HandoverCompany").val(select_text );
+            $("#hc_select").next().find("dl").css({ "display": "none" });
+            form.render();
+        });
+        $('#HandoverCompany').bind('input propertychange', function () {
+            var value = $("#HandoverCompany").val();
+            $("#hc_select").val(value);
+            form.render();
+            $("#hc_select").next().find("dl").css({ "display": "block" });
+            var dl = $("#hc_select").next().find("dl").children();
+            var j = -1;
+            for (var i = 0; i < dl.length; i++) {
+                if (dl[i].innerHTML.indexOf(value) <= -1) {
+                    dl[i].style.display = "none";
+                    j++;
+                }
+                if (j == dl.length-1) {
+                    $("#hc_select").next().find("dl").css({ "display": "none" });
+                }
+            }
+        })
+
+
+        laydate.render({
+            format: 'yyyy-MM-dd',
+            elem: '#receive',
+            type: 'date',
+        });
+        var fileimg;
+        table.render({
+            elem: '#auth-table'
+            , url: layui.setter.url + 'order/select'
+            , title: '订单列表'
+            , cols: [[
+                {field: 'name', title: '私服名称', width: 120,}
+                , {
+                    field: 'state', title: '订单状态',
+                    templet: function (obj) {
+                        var v = '';
+                        switch (obj.state) {
+                            case 1:
+                                v = '未充值';
+                                break;
+                            case 2:
+                                v = '已充值';
+                                break;
+                            case 3:
+                                v = '异常';
+                                break;
+                            case 4:
+                                v = '已退回';
+                                break;
+                        }
+                        return v;
+                    }
+                }
+                , {
+                    field: 'region', title: '充值大区',
+
+                }
+                , {field: 'login', title: '充值账号',}
+                , {field: 'mony', title: '充值金额',}
+                , {field: 'receive_date', title: '下单时间', width: 180}
+                , {field: 'handle_date', title: '处理时间', width: 180}
+                , {field: 'create_wxid', title: '下单用户',}
+                , {
+                    field: 'imgurl', title: '充值截图',
+                    templet: function (obj) {
+                        if (obj.imgurl != '' && obj.imgurl != null) {
+                            var t = obj.imgurl;
+                            obj.imgurl = '<img style="height:28px" onclick="tc(\'' + t + '\')" onload="DrawImage(this,100,28)"  src="' + t + '"/>';
+                        } else {
+                            obj.imgurl = '暂无图片';
+                        }
+                        return obj.imgurl;
+                    }
+                }
+                , {field: 'remarks', title: '充值备注',}
+                , {fixed: 'right', title: '操作', toolbar: '#auth-state', width: 160}
+            ]]
+            , page: true
+        });
+        table.on('tool(auth-table)', function (obj) {
+            if (obj.event == 'update') {
+                $("#region").html('');
+                $("#inputregion").val('');
+                form.render();
+                layer.open({
+                    type: 1,//弹窗类型
+                    area: ['27%', '58%'],//定义宽和高
+                    title: ('【' + obj.data.name + '】私服信息'),//题目
+                    shadeClose: false,//点击遮罩层关闭
+                    content: $("#layui-order-update"),//打开的内容
+                    success: function (index, layero) {
+                        closeindex = layero;
+                        var html = '';
+                        admin.req({
+                            url: layui.setter.url + "order/selectAreaByWelfareid/" + obj.data.welfare_id,
+                            done: function (res) {
+                                var areaDate = res.data;
+                                if (areaDate.length > 0) {
+                                    var html = '';
+                                    for (var i in areaDate) {
+                                        html += '<option value="' + areaDate[i].areaname + '">' + areaDate[i].areaname + '</option>';
+                                    }
+                                    $("#region").html(html);
+                                    $("#region").val(obj.data.region);
+                                    form.render();
+                                }
+                            }
+                        });
+                        fileimg = null;
+                        $("file").val("");
+                        $("#inputregion").val(obj.data.region);
+                        $("#id").val(obj.data.id);
+                        $("#welfare_id").val(obj.data.welfare_id);
+                        $("#state").val(obj.data.state);
+                        var v = $("#state").val();
+                        if (v != 2) {
+                            $("#uploadDIV").hide();
+                            $("#ly").show();
+                            $("#test-upload-normal-img").attr("src", "./zanwu.jpg");
+                        } else {
+                            $("#uploadDIV").show();
+                            $("#ly").hide();
+                            $("#test-upload-normal-img").attr("src",obj.data.imgurl);
+                        }
+                        $("#update-order-button").html($("#submit-form-update").html());
+                        form.render();
+                    },
+                    end: function () {
+                        //getTableData();//结束之后请求表格数据的方法，新编辑的数据直接存库并展示在页面
+                    }
+                });
+            }
+            // else if (obj.event == "remove") {
+            //     if(obj.data.state!=1){
+            //         layer.confirm('确定要删除【' + obj.data.name + '】这个私服吗？', function (index) {
+            //             admin.req({
+            //                 url: layui.setter.url + "order/remove/"+obj.data.id,
+            //             }).done(function (res) {
+            //                 layer.close(index);
+            //                 table.reload('auth-table');
+            //                 layer.msg(res.msg);
+            //             })
+            //         });
+            //     }else{
+            //         layer.msg("正在发放中信息不可删除");
+            //     }
+            //
+            // }
+        })
+        //查询
+        var $ = layui.$, active = {
+            reload: function () {
+                var state = $("#orderstate").val();
+                var receive = $("#receive").val();
+                //执行重载
+                table.reload('auth-table', {
+                    page: {curr: 1}//重新从第 1 页开始
+                    , where: {state: state, receive: receive}
+                });
+            },
+        };
+        form.on('select(state)', function (data) {
+            var v = $("#state").val();
+            if (v != 2) {
+                $("#uploadDIV").hide();
+                $("#ly").show();
+            } else {
+                $("#uploadDIV").show();
+                $("#ly").hide();
+                $("#test-upload-normal-img").attr("src", "./zanwu.jpg");
+            }
+        });
+
+        form.on('select(region)', function (data) {
+            $("#inputregion").val(data.value);
+        });
+
+
+        var uploadInst = upload.render({
+            elem: '#test-upload-normal'
+            , auto: false
+            , bindAction: '#submit-form-order'
+            , choose: function (obj) {
+                //预读本地文件示例，不支持ie8
+                console.log(111);
+                obj.preview(function (index, file, result) {
+                    $('#test-upload-normal-img').attr('src', result); //图片链接（base64）
+                    fileimg = file;
+                });
+            }
+
+        });
+
+
+        //添加/修改提交
+        form.on('submit(submit-form-order)', function (data) {
+            var formData=new FormData();
+            formData.append("id",$("#id").val());
+            var region = $("#inputregion").val();
+            if (region == '' || region == null) {
+                layer.msg("游戏大区不能为空");
+                return false;
+            }
+            var state = $("#state").val();
+            if(state==null||state==''){
+                layer.msg("请选择状态");
+                return false;
+            }else if (state == 2) {
+                if (fileimg == null) {
+                    layer.msg("请上传的图片");
+                    return false;
+                } else {
+                    formData.append("file",fileimg);
+                }
+            } else if (state == 3 || state == 4) {
+                var remarks = $("#HandoverCompany").val();
+                if (remarks == null || remarks == '') {
+                    layer.msg("请输入备注信息");
+                    return false;
+                }else{
+                    formData.append("remarks",remarks);
+                }
+            }
+            formData.append("state",state);
+            formData.append("region",region);
+            formData.append("welfare_id",data.field.welfare_id);
+            formData.append("weburl",window.location.protocol+"//"+window.location.host);
+            var url = layui.setter.url + "order/update";
+            admin.req({
+                url: url,
+                data: formData,
+                processData:false,
+                contentType: false,
+                done: function (res) {
+                    layer.close(closeindex);
+                    table.reload("auth-table");
+                    layer.msg(res.msg);
+                }
+            });
+            return false;
+        })
+
+        $('#reload').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+    });
+
+    function DrawImage(ImgD, width_s, height_s) {
+        var image = new Image();
+        image.src = ImgD.src;
+        if (image.width > 0 && image.height > 0) {
+            flag = true;
+            if (image.width / image.height >= width_s / height_s) {
+                if (image.width > width_s) {
+                    ImgD.width = width_s;
+                    ImgD.height = (image.height * width_s) / image.width;
+                } else {
+                    ImgD.width = image.width;
+                    ImgD.height = image.height;
+                }
+            } else {
+                if (image.height > height_s) {
+                    ImgD.height = height_s;
+                    ImgD.width = (image.width * height_s) / image.height;
+                } else {
+                    ImgD.width = image.width;
+                    ImgD.height = image.height;
+                }
+            }
+        }
+    }
+
+    function tc(src) {
+        var html = ''
+        html += '<div id="tong" class="hide" style="width: 320px; height: 670px;display: table-cell;vertical-align: middle;  text-align: center; ">'
+        html += '<img src="' + src + '" style="max-height: 500px;max-width: 1000px">'
+        html += '</div>';
+        layer.open({
+            type: 1,
+            title: false,
+            closeBtn: 0,
+            area: ['auto'],
+            skin: 'layui-layer-nobg', //没有背景色
+            shadeClose: true,
+            content: html
+        });
+    }
+</script>
+</body>
+</html>

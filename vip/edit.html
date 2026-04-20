@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+ <head> 
+  <meta charset="UTF-8"> 
+  <title>5CQ-传奇广告查询站_传奇广告排行_传奇资源站_新开传奇新服排名站(5CQ.COM)</title>
+  <meta name="description" content="5CQ.Com传奇广告排行榜,传奇私服查询站,传奇资源站,好玩的传奇排名站,玩家最爱的新开传奇,GM最喜欢的传奇工具,传奇直播,传奇新开服,传奇相关尽在5CQ(玩传奇)">
+  <meta name="keywords" content="传奇广告查询站,传奇资源站,传奇广告排行,传奇SF广告统计(5CQ.COM)">   
+  <link type="text/css" rel="stylesheet" href="../statics/css/viphome.css"> 
+  <style>
+        html, body {
+            overflow: hidden !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+    </style> 
+ </head> 
+ <body> 
+  <div id="wrap"> 
+   <form class="layui-form" id="form1"> 
+    <table width="100%" class="form common list"> 
+     <tbody> 
+      <tr> 
+       <th colspan="2">修改资料</th> 
+      </tr> 
+      <tr> 
+       <th width="150">会员名称</th> 
+       <td><strong id="loginname">ceshi</strong></td> 
+      </tr> 
+      <tr> 
+       <th>真实姓名</th> 
+       <td><input name="name" type="text" id="name" value="" maxlength="18" class="text"><span class="tips"><span class="required">(必填)</span>会员的真实姓名。</span></td> 
+      </tr> 
+      <tr> 
+       <th>QQ号码</th> 
+       <td><input name="qq" type="text" id="qq" maxlength="18" value="" class="text"><span class="tips">请至少填写一项联系方式。</span></td> 
+      </tr> 
+      <tr> 
+       <th>联系电话</th> 
+       <td><input name="phone" type="text" id="phone" value="" maxlength="18" class="text"><span class="tips">请至少填写一项联系方式。</span></td> 
+      </tr> 
+      <tr> 
+       <th>电子邮箱</th> 
+       <td><input name="email" type="text" id="email" value="" maxlength="18" class="text"><span class="tips">请至少填写一项联系方式。</span></td> 
+      </tr> 
+      <tr> 
+       <th>&nbsp;</th> 
+       <td><input type="submit" value="保存修改" class="btn" maxlength="18" style="margin-left:3px;" lay-submit lay-filter="setmyinfo"></td> 
+      </tr> 
+      <tr> 
+       <th>&nbsp;</th> 
+       <th>&nbsp;</th> 
+      </tr> 
+     </tbody> 
+    </table> 
+   </form> 
+  </div> 
+  <script src="../layuiadmin/layui/layui.js"></script> 
+  <script src="../statics/js/jquery-3.2.1.min.js"></script> 
+  <script>
+    layui.config({
+        base: '../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index', //主入口模块
+    }).use(['index', 'table', 'formgs', 'form', 'security', 'layer', 'upload', 'laydate'], function(){
+        var $ = layui.jquery,
+            form = layui.form,
+            admin = layui.admin,
+            formgs = layui.formgs;
+        // layui.setter.url = 'http://localhost:8086/server/'
+        admin.req({
+            url: layui.setter.url + 'getUserInfogin' //实际使用请改成服务端真实接口
+            ,data:{token:localStorage.getItem('vipvtoken')}
+            , done: function (res) {
+                $('#loginname').text(res.data.login_name)
+                formgs.get("form1", res.data);
+            }
+        })
+
+        form.on('submit(setmyinfo)',function(data){
+            // console.log(data.field);
+            data.field.token = localStorage.getItem('vipvtoken');
+            var url =layui.setter.url + "updateUserInfogin";
+            admin.req({
+                url: url,
+                data: data.field,
+                done: function (res) {
+                    layer.msg(res.msg);
+                }
+            })
+            return false
+        })
+
+    })
+</script>  
+ </body>
+</html>

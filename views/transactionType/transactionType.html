@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>交易管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+
+
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">交易管理</div>
+                <div class="layui-card-body">
+                    <div class="test-table-reload-btn" style="margin-bottom: 10px;">
+                        <button id="transactiontype-button-add" shiro-event="jax:transactiontype:open-add" class="layui-btn"><i
+                                class="layui-icon">&#xe654;</i>添加
+                        </button>
+                    </div>
+                    <table id="auth-table" class="layui-hide" lay-filter="auth-table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="auth-state" hidden>
+    <button lay-event="update" shiro-event="jax:transactiontype:open-update" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe642;</i>修改
+    </button>
+    <button lay-event="remove" shiro-event="jax:transactiontype:open-remove" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe640;</i>删除
+    </button>
+</div>
+
+<!--添加-->
+<div id="submit-form-add" hidden>
+    <button class="layui-btn" shiro-event="jax:transactiontype:add" lay-submit lay-filter="submit-form-transactiontype">立即提交</button>
+    <!--添加-->
+    <button type="reset" shiro-event="jax:transactiontype:add-reset" class="layui-btn layui-btn-primary">重置</button><!--添加-->
+</div>
+<!--修改-->
+<div id="submit-form-update" hidden>
+    <button class="layui-btn" shiro-event="jax:transactiontype:update" lay-submit lay-filter="submit-form-transactiontype">立即提交</button>
+<!--    <button type="reset" shiro-event="jax:transactiontype:update-reset" class="layui-btn layui-btn-primary">重置</button>-->
+</div>
+<div id="layui-transactiontype" hidden>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form" id="layui-form-transactiontype" lay-filter="component-form-group">
+                    <div class="layui-form-item">
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">父类型</label>
+                            <div class="layui-input-block" style="width:57%">
+                                <select name="parent_id" id="parent_id" lay-verify="required" lay-filter="aihao">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">类型名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="name" name="name" lay-verify="required" placeholder="请输入类型名称" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">排序</label>
+                            <div class="layui-input-inline">
+                                <input type="text"  name="sort" lay-verify="required|number" placeholder="请输入排序" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">是否热门</label>
+                            <div class="layui-input-inline">
+                                <input type="checkbox" name="popupar" lay-filter="switch"  lay-skin="switch" lay-text="是|否" >
+                            </div>
+                        </div>
+                        <div class="layui-input-block">
+                            <!--操作-->
+                            <div class="layui-footer" id="submit-form-transactiontype-button" style="left: 0;">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="layui-transactiontype-update" hidden>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form" id="layui-form-transactiontype-update" lay-filter="component-form-group">
+                    <div class="layui-form-item">
+                        <input type="hidden" id="id" name="id">
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">父类型</label>
+                            <div class="layui-input-block" style="width:57%">
+                                <select name="parent_id" id="parent_id_" lay-verify="required" lay-filter="aihao">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">类型名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="name" lay-verify="required" placeholder="请输入类型名称" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">排序</label>
+                            <div class="layui-input-inline">
+                                <input type="text"  name="sort" lay-verify="required|number" placeholder="请输入排序" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">是否热门</label>
+                            <div class="layui-input-inline">
+                                <input type="checkbox" id="popupar_" name="popupar" lay-skin="switch" lay-text="是|否">
+                            </div>
+                        </div>
+                        <div class="layui-input-block">
+                            <!--操作-->
+                            <div class="layui-footer" id="update-transactiontype-button" style="left: 0;">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../../layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index', //主入口模块
+        treetable: '../treetable/treetable'
+    }).use(['index','treetable', 'table', 'formgs', 'form', 'security', 'layer', 'upload'], function () {
+        var $ = layui.jquery,
+            admin = layui.admin,
+            table = layui.table,
+            formgs = layui.formgs,
+            form = layui.form,//控制添加修改（同一个弹出层）关闭弹出层的索引
+            upload = layui.upload,
+            treetable = layui.treetable,
+            layer = layui.layer, closeindex;
+
+        var typePtype=[];
+        //渲染表格
+        var renderTable = function () {
+            admin.req({
+                url: layui.setter.url + 'transactiontype/select' //实际使用请改成服务端真实接口
+                , done: function (res) {
+                    layer.load(2);
+                    typePtype=res.data.typePtype;
+                    treetable.render({
+                        treeColIndex: 0,
+                        treeSpid: 0,
+                        treeIdName: 'id',
+                        treePidName: 'parent_id',
+                        elem: '#auth-table',
+                        data:res.data.typeList,
+                        treeDefaultClose: true,//是否默认折叠
+                        cols: [[
+                            {field: 'name', title: '类型名称'},
+                            {field: 'popupar', align: 'center', title: '是否热门',templet: function (d) {
+                                    var h = '';
+                                    if(d.popupar==0){
+                                        h = '非热门';
+                                    }
+                                    if(d.popupar==1){
+                                        h = '热门';
+                                    }
+                                    return h;
+                                }
+                            },
+                            {field: 'sort', title: '排序', align: 'center'},
+                            {field: 'create_date', align: 'center', title: '创建时间'},
+                            {field: 'update_date', align: 'center', title: '修改时间'},
+                            {fixed: 'right', width: 215, toolbar: '#auth-state', title: '操作'}
+                        ]],
+                        page: false,
+                        done: function (res, curr, count) {
+                            layer.closeAll('loading');
+                        }
+                    });
+                }
+            });
+        }
+        renderTable();
+
+        treetable.operation("#auth-table");
+
+
+        table.on('tool(auth-table)', function (obj) {
+            if (obj.event == 'update') {
+                layer.open({
+                    type: 1,//弹窗类型
+                    area: [12, '45%'],//定义宽和高
+                    title: ('【' + obj.data.name + '】'),//题目
+                    shadeClose: false,//点击遮罩层关闭
+                    content: $("#layui-transactiontype-update"),//打开的内容
+                    success: function (index, layero) {
+                        closeindex = layero;
+                        var html="";
+                        for(var i in typePtype){
+                            html+="<option value='"+typePtype[i].id+"'>"+typePtype[i].name+"</option>"
+                        }
+                        $("#parent_id_").html(html);
+
+
+                        if(obj.data.parent_id==0){
+                            $("#parent_id_").attr("disabled","disabled");
+                            $("#popupar_").attr("disabled","disabled");
+                        }
+
+                        formgs.get("layui-form-transactiontype-update", obj.data);
+
+                        if(obj.data.popupar == "1") {
+                            $("input[name='popupar']").prop("checked", true);
+                        } else {
+                            $("input[name='popupar']").prop("checked", false);
+                        }
+                        $("#update-transactiontype-button").html($("#submit-form-update").html());
+                        //form.render刷新form 如果是针对单一刷新括号里面加上标签名 例：select刷新form.render('select')
+                        form.render();
+
+                    },
+                    end: function () {
+                        //getTableData();//结束之后请求表格数据的方法，新编辑的数据直接存库并展示在页面
+                    }
+                });
+            } else if (obj.event == "remove") {
+                layer.confirm('确定要删除【' + obj.data.name + '】这个类型吗？', function (index) {
+                    admin.req({
+                        url: layui.setter.url + "transactiontype/remove/" + obj.data.id
+                    }).done(function (res) {
+                        layer.close(index);
+                        renderTable();
+                        layer.msg(res.msg);
+                    })
+                });
+            }
+        })
+
+        $("#transactiontype-button-add").on("click", function () {
+            layer.open({
+                type: 1,
+                area: ['12', '45%'],
+                title: ("新增类型"),
+                shadeClose: false,
+                content: $("#layui-transactiontype"),
+                success: function (index, layero) {
+                    closeindex = layero;
+                    formgs.reset('layui-transactiontype');
+                    var html="";
+                    for(var i in typePtype){
+                        html+="<option value='"+typePtype[i].id+"'>"+typePtype[i].name+"</option>"
+                    }
+                    $("#parent_id").html(html);
+                    $("#submit-form-transactiontype-button").html($("#submit-form-add").html());
+                    form.render();
+                },
+            });
+        })
+
+        //添加/修改提交
+        form.on('submit(submit-form-transactiontype)', function (data) {
+            var url = layui.setter.url + "transactiontype/" + ((data.field.id == null||data.field.id=='') ? "add" : "update");
+            if(data.field.popupar == "on"||data.field.popupar==1) {
+                data.field.popupar = "1";
+            } else {
+                data.field.popupar = "0";
+            }
+            admin.req({
+                url: url,
+                data: data.field,
+                done: function (res) {
+                    layer.close(closeindex);
+                    renderTable();
+                    layer.msg(res.msg);
+                }
+            })
+            return false
+        })
+
+    });
+</script>
+</body>
+</html>

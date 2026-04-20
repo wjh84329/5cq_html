@@ -1,0 +1,1543 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>私服发布</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+    <style>
+        .packet-settings-container,
+        .packet-settings-container-update {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">私服发布</div>
+                <div class="layui-card-body">
+                    <div class="test-table-reload-btn" style="margin-bottom: 10px;">
+                        <div class="layui-inline">
+                            <input class="layui-input" name="polymerization" id="test-table-demoReload"
+                                   autocomplete="off" placeholder="私服名称或url地址或备注">
+                        </div>
+                        <div class="layui-inline">
+                            <select class="layui-select" name="isInner" id="isInner" lay-filter="type" style="width: 120px;">
+                                <option value="">请选择类型</option>
+                                <option value="1">内服广告</option>
+                                <option value="0">普通广告</option>
+                            </select>
+                        </div>
+                        <button class="layui-btn" data-type="reload">搜索</button>
+                        <button id="publish-button-add" shiro-event="sys:publish:open-add" class="layui-btn"><i
+                                class="layui-icon">&#xe654;</i>添加
+                        </button>
+                        <button id="publish-button-del" shiro-event="sys:publish:open-removes" data-type="getid"
+                                class="layui-btn"><i
+                                class="layui-icon">&#xe654;</i>批量删除
+                        </button>
+                        <button id="publish-button-month-data" class="layui-btn">每日数据预览
+                        </button>
+                        <input id="ids" type="text" hidden>
+                    </div>
+                    <table class="layui-hide" id="auth-table" lay-filter="auth-table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="auth-state" hidden>
+    <button lay-event="update" shiro-event="sys:publish:open-update" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe642;</i>修改
+    </button>
+    <button lay-event="cx" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#x1006;</i>撤销
+    </button>
+    <button lay-event="zt" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe651;</i>{{d.state == '3' ? "开始" : "暂停"}}
+    </button>
+    <button lay-event="remove" shiro-event="sys:publish:open-remove" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe640;</i>删除
+    </button>
+</script>
+
+<!--添加-->
+<div id="submit-form-add" hidden>
+    <button class="layui-btn" shiro-event="sys:publish:add" lay-submit lay-filter="submit-form-publish">立即提交</button>
+    <!--添加-->
+    <button type="reset" shiro-event="sys:publish:add-reset" class="layui-btn layui-btn-primary">重置</button><!--添加-->
+</div>
+
+<div id="submit-form-update" hidden>
+    <button class="layui-btn" shiro-event="sys:publish:update" lay-submit lay-filter="submit-form-publish">立即提交</button>
+</div>
+
+
+<div id="layui-publish" hidden>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form" id="layui-form-publish" lay-filter="component-form-group">
+                    <div class="layui-form-item">
+                        <div class="layui-form-item layui-form-text"
+                             style="margin-top: -30px;margin-left: 70%;margin-bottom:0px">
+                            <label class="layui-form-label" style="font-weight: bold">快速发布</label>
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label" style="font-weight: bold;margin-top: 135px;">广告内容</label>
+                        <div class="layui-input-block" style="margin-left: 0px;float: left;width: 43%;">
+                            <textarea id="text" name="text" placeholder="请输入内容" class="layui-textarea"
+                                      style="resize: none;height: 300px;"></textarea>
+                        </div>
+
+                        <div class="layui-input-block" style="margin-left: 0px;float: right;width: 45%;">
+                            <textarea readonly id="text_p" name="text_p" class="layui-textarea" ondblclick="jqb(this)"
+                                      style="cursor:pointer;text-decoration:none;resize: none;height: 300px; border-style: none"></textarea>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="display: none">
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">选择类型</label>
+                            <div class="layui-input-inline" style="width: 182px;">
+                                <select name="type" lay-verify="required" lay-filter="update-type">
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">备注信息</label>
+                        <div class="layui-input-block">
+                            <textarea name="mark" placeholder="请输入备注信息" class="layui-textarea" style="resize: none;height: 100px;"></textarea>
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">开始时间</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="startdate" id="startdate" readonly autocomplete="off"
+                                   lay-verify="required" placeholder="开始时间" class="layui-input">
+                        </div>
+                        <label class="layui-form-label">广告天数</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="days" lay-verify="required" placeholder="广告天数"
+                                   onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                   onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">发布条数</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="nums" lay-verify="required" placeholder="条数"
+                                   onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                   onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                   class="layui-input">
+                        </div>
+                        <label class="layui-form-label">同服游戏</label>
+                        <div class="layui-input-inline">
+                            <input type="radio" name="show" value="1" title="展示">
+                            <input type="radio" name="show" value="2" title="不展示">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-form-text hbsz">
+                        <label class="layui-form-label">红标设置</label>
+                        <div class="layui-input-inline" style="width: auto;">
+                            <input type="checkbox" name="hb" lay-skin="switch" lay-text="是 | 否" value="1">
+                        </div>
+                        <label class="layui-form-label" style="width: auto; padding-right: 5px;">是否红包服</label>
+                        <div class="layui-input-inline" style="width: auto;">
+                            <input type="checkbox" name="redBagFlag" lay-skin="switch" lay-text="是 | 否" value="1">
+                        </div>
+                        <label class="layui-form-label" style="width: auto; padding-right: 5px;">是否内服</label>
+                        <div class="layui-input-inline" style="width: auto;">
+                            <input type="checkbox" name="isInner" lay-skin="switch" lay-text="是 | 否" value="1">
+                        </div>
+                        <label class="layui-form-label" style="width: auto; padding-right: 5px;">是否有礼包</label>
+                        <div class="layui-input-inline" style="width: auto;">
+                            <input type="checkbox" name="hasPacket" lay-skin="switch" lay-text="有 | 无" value="1" lay-filter="hasPacket-switch">
+                        </div>
+                        <input type="hidden" name="price" readonly lay-verify="required" placeholder="请输入价格"
+                               class="layui-input">
+                    </div>
+                    <input type="hidden" name="score" value="5">
+                    
+                    <!-- 礼包设置 -->
+                    <div class="layui-form-item layui-form-text packet-settings-container">
+                        <label class="layui-form-label" style="font-weight: bold;">礼包设置</label>
+                        <div class="layui-input-block">
+                            <!-- 礼包组容器 -->
+                            <div id="packetCodeList-container">
+                                <!-- 第一组礼包 -->
+                                <div class="packet-group" style="margin-bottom: 10px; display: flex; align-items: center;">
+                                    <div class="layui-input-inline" style="width: 150px;">
+                                        <input type="text" name="packetCode" placeholder="礼包码" class="layui-input">
+                                    </div>
+                                    <div class="layui-input-inline" style="width: 600px;">
+                                        <input type="text" name="packetContent" placeholder="礼包内容" class="layui-input">
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <!-- 添加礼包按钮 -->
+                            <button type="button" class="layui-btn layui-btn-normal add-packet" style="margin-top: 10px;">
+                                <i class="layui-icon layui-icon-add-circle"></i> 添加礼包
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="layui-input-block">
+                        <!--操作-->
+                        <div class="layui-footer" id="submit-form-publish-button" style="left: 0;">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="layui-publish-update" hidden>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form" id="layui-form-publish-update" lay-filter="component-form-group">
+                    <input type="hidden" name="id">
+                    <div class="layui-form-item">
+                        <div class="layui-form-item layui-form-text"
+                             style="margin-top: -30px;margin-left: 70%;margin-bottom:0px">
+                            <label class="layui-form-label" style="font-weight: bold">快速发布</label>
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label" style="font-weight: bold;margin-top: 135px;">广告内容</label>
+                        <div class="layui-input-block" style="margin-left: 0px;float: left;width: 43%;">
+                            <textarea name="text" placeholder="请输入内容" class="layui-textarea"
+                                      style="resize: none;height: 300px;"></textarea>
+                        </div>
+
+                        <div class="layui-input-block" style="margin-left: 0px;float: right;width: 45%;">
+                            <textarea readonly name="text_p" class="layui-textarea" ondblclick="jqb(this)"
+                                      style="cursor:pointer;text-decoration:none;resize: none;height: 300px; border-style: none"></textarea>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="display: none">
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">选择类型</label>
+                            <div class="layui-input-inline" style="width: 182px;">
+                                <select name="type" lay-verify="required" lay-filter="update-type">
+                                </select>
+                            </div>
+                            <!--<label class="layui-form-label">单价</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="price" readonly lay-verify="required" placeholder="请输入价格"
+                                       class="layui-input">
+                            </div>-->
+
+                        </div>
+
+                    </div>
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">开始时间</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="startdate" id="startdate_update" readonly autocomplete="off"
+                                   lay-verify="required" placeholder="开始时间" class="layui-input">
+                        </div>
+                        <label class="layui-form-label">结束时间</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="enddate" id="enddate_update" readonly autocomplete="off"
+                                   lay-verify="required" placeholder="结束时间" class="layui-input">
+                        </div>
+                        <label class="layui-form-label">广告天数</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="days" lay-verify="required" placeholder="广告天数"
+                                   onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                   onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">发布条数</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="nums" lay-verify="required" placeholder="条数"
+                                   onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                   onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                   class="layui-input">
+                        </div>
+                        <label class="layui-form-label">同服游戏</label>
+                        <div class="layui-input-inline">
+                            <input type="radio" name="show" value="1" title="展示">
+                            <input type="radio" name="show" value="2" title="不展示">
+                            <!--<input type="hidden" name="price" readonly lay-verify="required" placeholder="请输入价格"
+                                   class="layui-input">-->
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-form-text hbsz">
+                        <label class="layui-form-label">红标设置</label>
+                        <div class="layui-input-inline" style="width: auto;">
+                            <input type="checkbox" name="hb" lay-skin="switch" lay-text="是 | 否" value="1">
+                        </div>
+                        <label class="layui-form-label" style="width: auto; padding-right: 5px;">是否红包服</label>
+                        <div class="layui-input-inline" style="width: auto;">
+                            <input type="checkbox" name="redBagFlag" lay-skin="switch" lay-text="是 | 否" value="1">
+                        </div>
+                        <label class="layui-form-label" style="width: auto; padding-right: 5px;">是否内服</label>
+                        <div class="layui-input-inline" style="width: auto;">
+                            <input type="checkbox" name="isInner" lay-skin="switch" lay-text="是 | 否" value="1">
+                        </div>
+                        <label class="layui-form-label" style="width: auto; padding-right: 5px;">是否有礼包</label>
+                        <div class="layui-input-inline" style="width: auto;">
+                            <input type="checkbox" name="hasPacket" lay-skin="switch" lay-text="有 | 无" value="1" lay-filter="hasPacket-switch-update">
+                        </div>
+                        <input type="hidden" name="price" readonly lay-verify="required" placeholder="请输入价格" class="layui-input">
+                    </div>
+                    <!-- 礼包设置 -->
+                    <div class="layui-form-item layui-form-text packet-settings-container-update">
+                        <label class="layui-form-label" style="font-weight: bold;">礼包设置</label>
+                        <div class="layui-input-block">
+                            <!-- 礼包组容器 -->
+                            <div id="packetCodeList-container-update">
+                                <!-- 第一组礼包 -->
+                                <div class="packet-group" style="margin-bottom: 10px; display: flex; align-items: center;">
+                                    <div class="layui-input-inline" style="width: 150px;">
+                                        <input type="text" name="packetCode" placeholder="礼包码" class="layui-input">
+                                    </div>
+                                    <div class="layui-input-inline" style="width: 600px;">
+                                        <input type="text" name="packetContent" placeholder="礼包内容" class="layui-input">
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <!-- 添加礼包按钮 -->
+                            <button type="button" class="layui-btn layui-btn-normal add-packet" style="margin-top: 10px;">
+                                <i class="layui-icon layui-icon-add-circle"></i> 添加礼包
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="layui-input-block">
+                        <!--操作-->
+                        <div class="layui-footer" id="update-publish-button" style="left: 0;">
+                        </div>
+                    </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+</div>
+
+<!-- 每日数据预览弹窗 -->
+<div id="layui-month-data" hidden>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width: 80px;">选择月份</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="month" id="month-picker" readonly autocomplete="off"
+                                   placeholder="选择月份" class="layui-input">
+                        </div>
+                        <button type="button" id="month-data-query-btn" class="layui-btn">查询</button>
+                    </div>
+                </form>
+                <table class="layui-hide" id="month-data-table" lay-filter="month-data-table"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/html" id="timeTpl">
+    <input type="text" id="startdate_{{d.id}}" value="{{d.startdate}}" readonly="readonly"
+           class="layui-input layui-input-date" style="margin-top: -3px;text-align: center"/>
+</script>
+<script src="../../layuiadmin/layui/layui.js"></script>
+<!--<script src="../../statics/js/jquery-3.2.1.min.js"></script>-->
+<script>
+    var arr = [];
+    var price = '';
+    var user = JSON.parse(window.localStorage.getItem("user"));
+    console.log(user)
+    /*$(document).ready(function() {
+        $('textarea[name="text"]').on('input', function() {
+            // 获取textarea的当前值
+            var textareaValue = $(this).val();
+            console.log(textareaValue)
+        });
+    })*/
+    function getFormattedDate() {
+        var date = new Date();
+        var year = date.getFullYear();
+        var month = ("0" + (date.getMonth() + 1)).slice(-2); // Months are zero based, thus add leading 0 and slice last 2 digits
+        var day = ("0" + date.getDate()).slice(-2); // Add leading 0 and slice last 2 digits
+        return year + "-" + month + "-" + day;
+    }
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index', //主入口模块
+    }).use(['index', 'table', 'formgs', 'form', 'security', 'layer', 'upload', 'laydate'], function () {
+        var $ = layui.jquery,
+            admin = layui.admin,
+            table = layui.table,
+            formgs = layui.formgs,
+            form = layui.form,//控制添加修改（同一个弹出层）关闭弹出层的索引
+            laydate = layui.laydate,
+            upload = layui.upload,
+            layer = layui.layer, closeindex;
+        laydate.render({
+            elem: '#startdate',
+            type: 'datetime',
+            format: 'yyyy-MM-dd HH:mm:ss',
+            theme: 'grid',
+            trigger: 'click',
+            done: function(value, date, endDate){
+                var $textarea = $('#layui-form-publish textarea[name="text"]');
+                var content = $textarea.val();
+                var newContent = content.replace(/(开区时间[:：])\s*[\d\- :]+/g, '$1 ' + value);
+                $textarea.val(newContent);
+            }
+        });
+        laydate.render({
+            elem: '#startdate_update',
+            type: 'datetime',
+            format: 'yyyy-MM-dd HH:mm:ss',
+            theme: 'grid',
+            trigger: 'click',
+            done: function(value, date, endDate){
+                var $textarea = $('#layui-form-publish-update textarea[name="text"]');
+                var content = $textarea.val();
+                var newContent = content.replace(/(开区时间[:：])\s*[\d\- :]+/g, '$1 ' + value);
+                $textarea.val(newContent);
+            }
+        });
+        laydate.render({
+            elem: '#enddate_update',
+            type: 'datetime',
+            format: 'yyyy-MM-dd HH:mm:ss',
+            theme: 'grid',
+            trigger: 'click',
+            done: function(value, date, endDate){
+                var $textarea = $('#layui-form-publish-update textarea[name="text"]');
+                var content = $textarea.val();
+                var newContent = content.replace(/(结束时间[:：])\s*[\d\- :]+/g, '$1 ' + value);
+                $textarea.val(newContent);
+            }
+        });
+        
+        // 监听是否有礼包滑块事件 - 新增表单
+        form.on('switch(hasPacket-switch)', function(data){
+            if(data.elem.checked){
+                $('.packet-settings-container').show();
+            }else{
+                $('.packet-settings-container').hide();
+            }
+        });
+        
+        // 监听是否有礼包滑块事件 - 更新表单
+        form.on('switch(hasPacket-switch-update)', function(data){
+            if(data.elem.checked){
+                $('.packet-settings-container-update').show();
+            }else{
+                $('.packet-settings-container-update').hide();
+            }
+        });
+        initType();
+        initPrice();
+        if(user.role_id !== 1){
+            $('.hbsz').hide();
+        }
+        function initType(){
+            admin.req({
+                url: layui.setter.url + 'jax/publishType/selectAll',
+                processData: false,
+                traditonal: true,
+                contentType: "application/json",
+                done: function (res) {
+                    arr = res.data;
+                }
+            })
+        }
+
+        function initPrice(){
+            admin.req({
+                url: layui.setter.url + 'webSite/selectOne/56',
+                done: function (res) {
+                    price = res.data.daytopprice;
+                }
+            })
+        }
+        table.render({
+            elem: '#auth-table'
+            , url: layui.setter.url + 'publish/select'
+            , title: '私服发布'
+            , cols: [[
+                {type: 'checkbox'}
+                /*{
+                    field: 'type', title: '类型', sort: true, width: 130,
+                    templet: function (obj) {
+                        var name = '';
+                        for (var i = 0; i < arr.length; i++) {
+                            if (obj.type == arr[i].id) {
+                                name = arr[i].name;
+                                break;
+                            }
+                        }
+                        return name;
+                    }
+                }*/
+                // , {field: 'price', title: '单价', sort: true, width: 130,}
+                // , {field: 'money', title: '总价', sort: true, width: 130,}
+                , {field: 'name', title: '服务器名',}
+                // , {field: 'ipname', title: '私服IP', sort: true,}
+                // , {field: 'line', title: '线路',}
+                // , {field: 'versiondepict', title: '版本介绍', sort: true,}
+                // , {field: 'kfqq', title: '客服QQ', sort: true,}
+                , {field: 'url', title: '服务器地址', sort: false,}
+                , {field: 'startdate', title: '开始时间', sort: false, width: 180,}
+                , {field: 'enddate', title: '结束时间', sort: false, width: 180,}
+                , {field: 'create_date', title: '发布时间', sort: false, width: 180,}
+                , {field: 'mark', title: '备注', sort: false, width: 180,edit: 'text'}
+                , {title: '状态', width: 180, sort: false, templet: function (data) {
+                        if(data.state==0){
+                            if(new Date(data.enddate)<new Date()){
+                                return `<a style="color: red">已过期</a>`;
+                            }else{
+                                // 设定目标时间
+                                const targetDate = new Date(data.enddate); // 注意：日期字符串需要是ISO格式或者能被Date正确解析的格式
+                                // 获取当前时间
+                                const now = new Date();
+                                // 计算两个时间之间的差值（毫秒）
+                                const difference = targetDate - now;
+                                // 转换差值到天数、小时数和分钟数
+                                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                                return `<a style="color: green">${days}天${hours}小时${minutes}分钟后结束</a>`;
+                            }
+                        }else if(data.state==1){
+                            return `<a style="color: grey">广告不显示</a>`;
+                        }else if(data.state==2){
+                            return `<a style="color: deeppink">广告已撤销</a>`;
+                        }else if(data.state==3){
+                            return `<a style="color: blue">广告暂停中</a>`;
+                        }
+                    }
+                }
+                , {field: 'nums', title: '条数', sort: false, width: 80}
+                ,{ field: 'status', title: '显示',sort: false ,width: 80 ,templet: function (data) {
+                        if(data.state==0 && new Date(data.enddate)>new Date()){
+                            return `<a style="color: green">√</a>`;
+                        }else if(data.state==1){
+                            return `<a style="color: grey">X</a>`;
+                        }else if(data.state==2){
+                            return `<a style="color: deeppink">撤销</a>`;
+                        }else if(data.state==3){
+                            return `<a style="color: blue">暂停</a>`;
+                        }else {
+                            return `<a style="color: grey">X</a>`;
+                        }
+                    }
+                }
+                , {field: 'RedBagFlag', title: '红包服', sort: false, width: 80, templet: function (data) {
+                        return data.redBagFlag == '1' ? '是' : '否';
+                    }
+                }
+                , {field: 'customerName', title: '发布人', sort: false, width: 100, templet: function (data) {
+                        return data.customerName ? data.customerName : '管理员';
+                    }
+                }
+                , {fixed: 'right', title: '操作', toolbar: '#auth-state',width:300}
+            ]]
+            , page: true
+            , where: {userID: user.id,roleID: user.role_id}
+
+        });
+        table.on('edit(auth-table)', function (obj) {
+            var value = obj.value //得到修改后的值
+                , data = obj.data //得到所在行所有键值
+            let url = layui.setter.url + "publish/update";
+            var fromdate = new Array()
+            fromdate.push(data)
+            admin.req({
+                url: url,
+                data: JSON.stringify(fromdate),
+                contentType: "application/json",
+                done: function (res) {
+                    table.reload("auth-table");
+                    layer.msg(res.msg);
+                }
+            })
+        });
+
+
+
+        table.on('tool(auth-table)', function (obj) {
+            if (obj.event == "remove") {
+                layer.confirm('确定要删除【' + obj.data.name + '】这个私服吗？', function (index) {
+                    admin.req({
+                        url: layui.setter.url + "publish/remove/" + obj.data.id
+                    }).done(function (res) {
+                        layer.close(index);
+                        table.reload('auth-table');
+                        layer.msg(res.msg);
+                        $.get({url:layui.setter.url + "ranking/test1"})
+                        $.get({url:'https://hz.5cq.net/cq/yx/ttt'})
+                    })
+                });
+            }else if (obj.event == "update") {
+                console.log(obj.data)
+                layer.open({
+                    type: 1,//弹窗类型
+                    area: ['1200px', 'auto'],
+                    title: ("编辑私服"),
+                    shadeClose: false,
+                    content: $("#layui-publish-update"),
+                    success: function (index, layero) {
+                        $.ajax({
+                            url: layui.setter.url+'ranking/Urllist',
+                            method: 'get',
+                            dataType: 'json',
+                            data:{
+                                url:obj.data.url,
+                                page:1,
+                                limit:10
+                            },
+                            success: function (res) {
+                                closeindex = layero;
+                                formgs.reset('layui-form-publish-update');
+                                // var date = new Date(obj.data.startdate)
+                                // obj.data.startdate = date.getFullYear() + "-" + (date.getMonth() + 1).toString().padStart(2, '0') + "-" + date.getDate().toString().padStart(2, '0');
+                                formgs.get("layui-form-publish-update", obj.data);
+                                $("#layui-form-publish-update textarea[name='text_p']").val("" +
+                                    "服务器名:█至尊狂魔轻变█\n" +
+                                    "服务器IP:◤①区激情ｐｋ◢\n" +
+                                    "线路类型:▅装备全暴▅\n" +
+                                    "版本介绍:█升级快◆ＰＫ爽█秒杀所有轻变版本█\n" +
+                                    "客服QQ:╃活人爆满╄\n" +
+                                    "主页地址:http://www.111.com\n" +
+                                    "开区时间:"+getFormattedDate()+" 00:00:00\n" +
+                                    "投放站点:\n");
+                                var str='';
+                                str+='服务器名:'+checkAttribute(obj.data.name)+"\n";
+                                str+='服务器IP:'+checkAttribute(obj.data.ipname)+"\n";
+                                str+='线路类型:'+checkAttribute(obj.data.line)+"\n";
+                                str+='版本介绍:'+checkAttribute(obj.data.versiondepict)+"\n";
+                                str+='客服QQ:'+checkAttribute(obj.data.kfqq)+"\n";
+                                str+='主页地址:'+checkAttribute(obj.data.url)+"\n";
+                                str+='开区时间:'+checkAttribute(obj.data.datetime)+"\n";
+                                str+='投放站点:'+checkAttribute(obj.data.launch)+"\n";
+                                $("#layui-form-publish-update textarea[name='text']").val(str);
+                                
+                                // 回显礼包码信息
+                                var packetCodeList = obj.data.packetCodeList || [];
+                                var container = $('#packetCodeList-container-update');
+                                container.empty();
+                                
+                                if (packetCodeList.length > 0) {
+                                    packetCodeList.forEach(function(packet, index) {
+                                        var packetGroup = $(`<div class="packet-group" style="margin-bottom: 10px; display: flex; align-items: center;">
+                                            <div class="layui-input-inline" style="width: 150px;">
+                                                <input type="text" name="packetCode" value="${packet.packetCode}" placeholder="礼包码" class="layui-input">
+                                            </div>
+                                            <div class="layui-input-inline" style="width: 600px;">
+                                                <input type="text" name="packetContent" value="${packet.packetContent}" placeholder="礼包内容" class="layui-input">
+                                            </div>
+                                            ${index === 0 ? '' : `
+                                            <div class="layui-input-inline" style="width: 80px;">
+                                                <button type="button" class="layui-btn layui-btn-danger delete-packet">
+                                                    <i class="layui-icon layui-icon-delete"></i> 删除
+                                                </button>
+                                            </div>
+                                            `}
+                                        </div>`);
+                                        container.append(packetGroup);
+                                    });
+                                } else {
+                                    // 添加默认的礼包组
+                                    var packetGroup = $(`<div class="packet-group" style="margin-bottom: 10px; display: flex; align-items: center;">
+                                        <div class="layui-input-inline" style="width: 150px;">
+                                            <input type="text" name="packetCode" placeholder="礼包码" class="layui-input">
+                                        </div>
+                                        <div class="layui-input-inline" style="width: 600px;">
+                                            <input type="text" name="packetContent" placeholder="礼包内容" class="layui-input">
+                                        </div>
+                                    </div>`);
+                                    container.append(packetGroup);
+                                }
+                                
+                                var html = '';
+                                for (var i = 0; i < arr.length; i++) {
+                                    if(arr[i].id==obj.data.type){
+                                        html += '<option value="' + arr[i].id + '" selected="selected">' + arr[i].name + '</option>';
+                                    }else{
+                                        html += '<option value="' + arr[i].id + '">' + arr[i].name + '</option>';
+                                    }
+                                }
+                                console.log(res)
+
+                                if(obj.data.shows != '2'){
+                                    document.querySelector('#layui-form-publish-update input[name="show"][value="1"]').checked = true;
+                                }else {
+                                    document.querySelector('#layui-form-publish-update input[name="show"][value="2"]').checked = true;
+                                }
+                                
+                                // 设置滑块状态
+                                $('#layui-form-publish-update input[name="hb"]').prop('checked', res.count != 0);
+                                $('#layui-form-publish-update input[name="redBagFlag"]').prop('checked', obj.data.redBagFlag == '1');
+                                $('#layui-form-publish-update input[name="isInner"]').prop('checked', obj.data.isInner == '1');
+                                
+                                // 设置是否有礼包滑块状态
+                                var hasPacket = obj.data.packetCodeList && obj.data.packetCodeList.length > 0;
+                                $('#layui-form-publish-update input[name="hasPacket"]').prop('checked', hasPacket);
+                                
+                                // 根据是否有礼包设置礼包区域的显示/隐藏
+                                if(hasPacket){
+                                    $('.packet-settings-container-update').show();
+                                }else{
+                                    $('.packet-settings-container-update').hide();
+                                }
+                                
+                                // $("#layui-form-publish-update input[name='show']").val(obj.data.shows);
+                                $("#layui-form-publish-update input[name='price']").val(price);
+                                $("#layui-form-publish-update select[name='type']").html(html);
+                                $("#update-publish-button").html($("#submit-form-update").html());
+                                form.render();
+                            }
+                        })
+                    },
+                });
+            }else if(obj.event == 'cx'){
+                var startDate = new Date(obj.data.startdate.replace(/-/g, '/')); // 注意：某些浏览器可能不支持 'YYYY-MM-DD' 格式，因此使用 '/' 替换 '-'
+                // 获取当前时间
+                var currentTime = new Date();
+                // 比较两个日期
+                if (currentTime >= startDate) {
+                    layer.msg('该服广告已经开始，无法撤销！')
+                } else {
+                    layer.confirm('确定要撤销【' + obj.data.name + '】这个私服吗？', function (index) {
+                        var url = layui.setter.url + "publish/update";
+                        // layer.msg('正在完善')
+                        console.log(obj.data)
+                        var data = obj.data
+                        data.state = 2
+                        if(data.nums >= 6){
+                            data.hb = 1
+                        }else {
+                            data.hb = 2
+                        }
+                        var fromdate = new Array()
+                        fromdate.push(data)
+                        admin.req({
+                            url: url,
+                            data: JSON.stringify(fromdate),
+                            contentType: "application/json",
+                            done: function (res) {
+                                table.reload("auth-table");
+                                var param = new FormData();
+                                param.append("id", data.id);
+                                layer.msg(res.msg);
+                                $.get({url:layui.setter.url + "ranking/test1"})
+                            }
+                        })
+
+                    });
+                }
+            }else if(obj.event == 'zt'){
+                var startDate = new Date(obj.data.startdate.replace(/-/g, '/')); // 注意：某些浏览器可能不支持 'YYYY-MM-DD' 格式，因此使用 '/' 替换 '-'
+                var endDate = new Date(obj.data.enddate.replace(/-/g, '/'));
+                // 获取当前时间
+                var currentTime = new Date();
+                if (currentTime >= endDate && obj.data.state==0) {
+                    layer.msg('该服广告已过期，无法操作！')
+                    return;
+                }
+                // 比较两个日期
+                if (currentTime >= startDate) {
+                    layer.confirm('确定要'+(obj.data.state==3?'开启':'暂停')+'【' + obj.data.name + '】这个私服吗？', function (index) {
+                        var url = layui.setter.url + "publish/update";
+                        // layer.msg('正在完善')
+                        //计算enddate与updatedate的时间差
+                        var updateDate = new Date(obj.data.update_date.replace(/-/g, '/'));
+                        var timeDiff = endDate - updateDate;
+                        //将时间差加到enddata
+                        var newEndDate = new Date(endDate.getTime() + timeDiff);
+                        //格式化新的结束时间
+                        newEndDate = newEndDate.getFullYear() + "-" + (newEndDate.getMonth() + 1).toString().padStart(2, '0') + "-" + newEndDate.getDate().toString().padStart(2, '0') + " " + newEndDate.getHours().toString().padStart(2, '0') + ":" + newEndDate.getMinutes().toString().padStart(2, '0') + ":" + newEndDate.getSeconds().toString().padStart(2, '0');
+                        // console.log("新的结束时间：" + newEndDate)
+                        // return;
+                        // console.log(obj.data)
+                        var data = obj.data
+                        if(data.state==3){
+                            data.state = 0
+                        }else {
+                            data.state = 3
+                        }
+                        if(data.nums >= 5){
+                            data.hb = 1
+                        }else {
+                            data.hb = 2
+                        }
+                        var formdate = new Array()
+                        formdate.push(data)
+                        admin.req({
+                            url: url,
+                            data: JSON.stringify(formdate),
+                            contentType: "application/json",
+                            done: function (res) {
+                                table.reload("auth-table");
+                                layer.msg(res.msg);
+                                $.get({url:layui.setter.url + "ranking/test1"})
+                            }
+                        })
+
+                    });
+                } else {
+                    layer.msg('该服广告还未开始，无法操作！')
+                    return;
+                }
+            }
+        })
+
+        table.on('checkbox(table)', function (obj) {
+            var data = obj.data;
+        });
+
+        $("#publish-button-del").on("click", function () {
+            layer.confirm('确定删除吗?', {btn: ['确定删除', '取消']}, function (index) {
+                var a1 = $("#ids").val(); //取得已获取的ids
+                if(a1==""){
+                    layer.msg("尚未选择要删除的数据");
+                    return
+                }
+                admin.req({
+                    url: layui.setter.url + "publish/removes/" + a1
+                }).done(function (res) {
+                    layer.close(index);
+                    table.reload('auth-table');
+                    layer.msg(res.msg);
+                    $.get({url:layui.setter.url + "ranking/test1"})
+                    $.get({url:'https://hz.5cq.net/cq/yx/ttt'})
+                })
+            });
+        })
+
+        // 每日数据预览按钮事件
+        $("#publish-button-month-data").on("click", function () {
+            var currentMonth = getFormattedMonth();
+            
+            // 先请求数据
+            admin.req({
+                url: layui.setter.url + 'publish/month_data',
+                data: { date: currentMonth },
+                done: function (res) {
+                    if (res.code === 0 && res.data) {
+                        // 计算表格行数
+                        var dataRowCount = 0;
+                        for (var dayStr in res.data) {
+                            var dayData = res.data[dayStr];
+                            if (dayData.allCount > 0 || dayData.payCount > 0 || dayData.moneyTotal > 0) {
+                                dataRowCount++;
+                            }
+                        }
+                        // 总行数 = 数据行数 + 1 行合计
+                        var totalRows = dataRowCount + 1;
+                        // 动态计算高度：基础高度 200 + 每行 40px * 行数
+                        var dynamicHeight = 200 + totalRows * 40;
+                        
+                        // 数据请求成功后再打开弹窗
+                        layer.open({
+                            type: 1,
+                            area: ['1200px', dynamicHeight + 'px'],
+                            title: ("每日数据预览"),
+                            shadeClose: false,
+                            content: $("#layui-month-data"),
+                            success: function (index, layero) {
+                                // 初始化月份选择器，默认为当前月份
+                                $('#month-picker').val(currentMonth);
+                                
+                                // 初始化月份选择器
+                                laydate.render({
+                                    format: 'yyyy-MM',
+                                    theme: 'grid',
+                                    trigger: 'click',
+                                    elem: '#month-picker',
+                                    type: 'month',
+                                    value: currentMonth
+                                });
+                                
+                                // 渲染表格
+                                renderMonthDataTable(res.data, currentMonth);
+                            }
+                        });
+                    } else {
+                        layer.msg(res.msg || '获取数据失败');
+                    }
+                }
+            });
+        });
+
+        // 月份查询按钮事件
+        $("#month-data-query-btn").on("click", function () {
+            var month = $('#month-picker').val();
+            if (!month) {
+                layer.msg('请选择月份');
+                return;
+            }
+            
+            // 查询时先显示加载层
+            var loadingIndex = layer.load(2);
+            
+            admin.req({
+                url: layui.setter.url + 'publish/month_data',
+                data: { date: month },
+                done: function (res) {
+                    layer.close(loadingIndex);
+                    if (res.code === 0 && res.data) {
+                        renderMonthDataTable(res.data, month);
+                    } else {
+                        layer.msg(res.msg || '获取数据失败');
+                    }
+                }
+            });
+        });
+
+        // 渲染月份数据表格
+        function renderMonthDataTable(data, month) {
+            // 准备表格数据
+            var tableData = [];
+            var totals = {
+                moneyTotal: 0,
+                cancelMoneyTotal: 0,
+                innerCount: 0,
+                cancelCount: 0,
+                subMoneyTotal: 0,
+                payCount: 0,
+                givedCount: 0,
+                allCount: 0,
+                outerCount: 0
+            };
+            
+            // 只遍历有数据的日期
+            for (var dayStr in data) {
+                var dayData = data[dayStr];
+                
+                // 只添加有数据的行（allCount 或 payCount 大于 0）
+                if (dayData.allCount > 0 || dayData.payCount > 0 || dayData.moneyTotal > 0) {
+                    var row = {
+                        day: parseInt(dayStr) + '号',
+                        moneyTotal: dayData.moneyTotal || 0,
+                        cancelMoneyTotal: dayData.cancelMoneyTotal || 0,
+                        subMoneyTotal: dayData.subMoneyTotal || 0,
+                        payCount: dayData.payCount || 0,
+                        givedCount: dayData.givedCount || 0,
+                        innerCount: dayData.innerCount || 0,
+                        outerCount: dayData.outerCount || 0,
+                        cancelCount: dayData.cancelCount || 0
+                    };
+                    tableData.push(row);
+                    
+                    // 累加合计
+                    for (var key in totals) {
+                        totals[key] += (dayData[key] || 0);
+                    }
+                }
+            }
+            
+            // 按日期排序
+            tableData.sort(function(a, b) {
+                return parseInt(a.day) - parseInt(b.day);
+            });
+            
+            // 添加合计行
+            tableData.push({
+                day: '合计',
+                moneyTotal: totals.moneyTotal,
+                cancelMoneyTotal: totals.cancelMoneyTotal,
+                subMoneyTotal: totals.subMoneyTotal,
+                payCount: totals.payCount,
+                givedCount: totals.givedCount,
+                innerCount: totals.innerCount,
+                outerCount: totals.outerCount,
+                cancelCount: totals.cancelCount,
+                isTotal: true
+            });
+            
+            // 渲染表格
+            table.render({
+                elem: '#month-data-table',
+                data: tableData,
+                page: false,
+                cellMinWidth: 80,
+                cols: [[
+                    {field: 'day', title: '日期', width: 80},
+                    {field: 'moneyTotal', title: '发广告总金额', width: 130, templet: function(d) {
+                        return d.isTotal ? d.moneyTotal.toFixed(1) : (d.moneyTotal ? d.moneyTotal.toFixed(1) : '0.0');
+                    }},
+                    {field: 'cancelMoneyTotal', title: '撤销广告总额', width: 130, templet: function(d) {
+                        return d.isTotal ? d.cancelMoneyTotal.toFixed(1) : (d.cancelMoneyTotal ? d.cancelMoneyTotal.toFixed(1) : '0.0');
+                    }},
+                    {field: 'subMoneyTotal', title: '发广告净金额', width: 130, templet: function(d) {
+                        return d.isTotal ? d.subMoneyTotal.toFixed(1) : (d.subMoneyTotal ? d.subMoneyTotal.toFixed(1) : '0.0');
+                    }},
+                    {field: 'allCount', title: '广告总条数', width: 100, templet: function(d) {
+                        return parseInt(d.payCount) + parseInt(d.givedCount);
+                    }},
+                    {field: 'payCount', title: '收费广告条数', width: 130},
+                    {field: 'givedCount', title: '赠送条数', width: 130},
+                    {field: 'innerCount', title: '内服条数', width: 90},
+                    {field: 'outerCount', title: '非内服条数', width: 110},
+                    {field: 'cancelCount', title: '撤销条数', width: 90}
+                ]],
+                done: function(res, curr, count) {
+                    // 设置合计行背景色和样式
+                    $('.layui-table-body tr:last').css('background-color', '#f2f2f2').css('font-weight', 'bold');
+                }
+            });
+        }
+
+        // 获取格式化月份（yyyy-MM）
+        function getFormattedMonth() {
+            var date = new Date();
+            var year = date.getFullYear();
+            var month = ("0" + (date.getMonth() + 1)).slice(-2);
+            return year + "-" + month;
+        }
+
+        var $ = layui.$, active = {
+            getid: function () {
+                var arrx = [];
+                var checkStatus = table.checkStatus('auth-table')
+                    , data = checkStatus.data;
+                for (var i = 0; i < data.length; i++) {    //循环筛选出id
+                    arrx.push(data[i].id);
+                }
+                $("#ids").val(arrx);
+            },
+            reload: function () {
+                var demoReload = $('#test-table-demoReload');
+                //执行重载
+                table.reload('auth-table', {
+                    page: {curr: 1}//重新从第 1 页开始
+                    , where: {name: demoReload.val(), isInner: $('#isInner').val()}
+                });
+            },
+            rolequery: function () {
+                var query = $('#table-role-query');
+                //执行重载
+                table.reload('table-role', {
+                    page: {curr: 1}//重新从第 1 页开始
+                    , where: {likename: query.val(), isInner: $('#isInner').val()}
+                });
+            }
+        };
+        $("#publish-button-add").on("click", function () {
+            layer.open({
+                type: 1,
+                area: ['1200px', 'auto'],
+                title: ("新增发布私服"),
+                shadeClose: false,
+                content: $("#layui-publish"),
+                success: function (index, layero) {
+                    closeindex = layero;
+                    formgs.reset('layui-form-publish');
+
+                    $("#text_p").val("" +
+                        "服务器名:█至尊狂魔轻变█\n" +
+                        "服务器IP:◤①区激情ｐｋ◢\n" +
+                        "线路类型:▅装备全暴▅\n" +
+                        "版本介绍:█升级快◆ＰＫ爽█秒杀所有轻变版本█\n" +
+                        "客服QQ:╃活人爆满╄\n" +
+                        "主页地址:http://www.111.com\n" +
+                        "开区时间:"+getFormattedDate()+" 00:00:00\n" +
+                        "投放站点:\n");
+
+                    $('#layui-form-publish input[name="days"]').val('7');
+                    $('#layui-form-publish input[name="nums"]').val('1');
+                    
+                    // 设置滑块默认值（默认都是关闭状态）
+                    $('#layui-form-publish input[name="hb"]').prop('checked', false);
+                    $('#layui-form-publish input[name="redBagFlag"]').prop('checked', false);
+                    $('#layui-form-publish input[name="isInner"]').prop('checked', false);
+                    $('#layui-form-publish input[name="hasPacket"]').prop('checked', false);
+                    
+                    // 隐藏礼包设置
+                    $('.packet-settings-container').hide();
+
+                    var html = '';
+                    for (var i = 0; i < arr.length; i++) {
+                        if(i!=1){
+                            html += '<option value="' + arr[i].id + '">' + arr[i].name + '</option>';
+                        }else{
+                            html += '<option value="' + arr[i].id + '"  selected="selected">' + arr[i].name + '</option>';
+                        }
+                    }
+                    $("#layui-form-publish select[name='type']").html(html);
+                    $("#layui-form-publish input[name='price']").val(price);
+                    $('#layui-form-publish input[name="score"]').val('5');
+                    $("#submit-form-publish-button").html($("#submit-form-add").html());
+                    form.render();
+                },
+            });
+        })
+        $('textarea[name="text"]').on('input', function() {
+            var records = parsePublishText($(this).val());
+
+            if (!records.length) {
+                return;
+            }
+
+            var firstDate = records[0].datetime || '';
+            if (firstDate) {
+                $('input[name="startdate"]').val(firstDate);
+            }
+        });
+
+        //添加/修改提交
+        form.on('submit(submit-form-publish)', function (data) {
+            var text = "";
+            if (data.field.id == null || data.field.id === '') {
+                text = $("#layui-form-publish textarea[name='text']").val();
+            } else {
+                text = $("#layui-form-publish-update textarea[name='text']").val();
+            }
+
+            var parsedRecords = parsePublishText(text);
+            var dataArr = [];
+            var invalidCount = 0;
+            var containerId = data.field.id ? '#packetCodeList-container-update' : '#packetCodeList-container';
+            var packetCodeList = collectPacketCodeList(containerId);
+            
+            // 验证礼包设置：如果"是否有礼包"开关打开，则验证礼包码和礼包内容
+            if (data.field.hasPacket) {
+                if (!packetCodeList || packetCodeList.length === 0) {
+                    layer.msg("请输入礼包设置");
+                    return false;
+                }
+                
+                // 检查是否有空的礼包码或礼包内容
+                for (var i = 0; i < packetCodeList.length; i++) {
+                    var packet = packetCodeList[i];
+                    if (!packet.packetCode || !packet.packetContent) {
+                        layer.msg("请输入完整的礼包设置（礼包码和礼包内容不能为空）");
+                        return false;
+                    }
+                }
+            }
+
+            for (var i = 0; i < parsedRecords.length; i++) {
+                var record = parsedRecords[i];
+
+                if (!record.name || !record.url) {
+                    if (hasRecordContent(record)) {
+                        invalidCount++;
+                    }
+                    continue;
+                }
+
+                var obj = Object.create(null);
+                for (var key in record) {
+                    if (Object.prototype.hasOwnProperty.call(record, key)) {
+                        obj[key] = record[key];
+                    }
+                }
+
+                obj.startdate = record.datetime || data.field.startdate;
+                obj.type = data.field.type;
+                obj.days = data.field.days;
+                obj.nums = data.field.nums;
+                obj.price = data.field.price;
+                obj.score = data.field.score;
+                obj.shows = data.field.show;
+                obj.redBagFlag = data.field.redBagFlag ? '1' : '0';
+                obj.isInner = data.field.isInner ? '1' : '0';
+                obj.hb = data.field.hb ? '1' : '2';
+                obj.mark = data.field.mark;
+                // obj.packetCodeList = packetCodeList;
+                //判断是否有礼包的开关，如果没有礼包清空礼包设置
+                if($('input[name="hasPacket"]').prop('checked') == false){
+                    obj.packetCodeList = [];
+                }else{
+                    obj.packetCodeList = packetCodeList;
+                }
+
+                if (data.field.id != null && data.field.id !== '') {
+                    obj.id = data.field.id;
+                }
+
+                dataArr.push(obj);
+            }
+
+            if (invalidCount > 0) {
+                layer.msg("存在格式不完整的记录，请检查服务器名和主页地址");
+                return false;
+            }
+
+            if (dataArr.length === 0) {
+                layer.msg("输入内容有误,请更正");
+                return false;
+            }
+
+            var url1 = layui.setter.url + "publish/" + ((data.field.id == null || data.field.id == '') ? "add" : "update");
+            if (dataArr.length != 0) {
+                if (data.field.hb == '1') {
+                    console.log(1)
+                    var param1 = {}
+                    param1.url = dataArr[0].url
+                    param1.startDate = dataArr[0].startdate
+                    var date = new Date(param1.startDate);
+                    date.setDate(date.getDate() + 7);
+                    // 格式化为 yyyy-MM-dd HH:mm:ss
+                    function formatDateTime(dt) {
+                        return dt.getFullYear() + '-' +
+                            (dt.getMonth() + 1).toString().padStart(2, '0') + '-' +
+                            dt.getDate().toString().padStart(2, '0') + ' ' +
+                            dt.getHours().toString().padStart(2, '0') + ':' +
+                            dt.getMinutes().toString().padStart(2, '0') + ':' +
+                            dt.getSeconds().toString().padStart(2, '0');
+                    }
+                    param1.endDate = formatDateTime(date);
+                    param1.launch = '5cq'
+                    var url = layui.setter.url + "legendUrl/add"
+                    admin.req({
+                        url: url,
+                        data: param1,
+                        done: function (res) {
+                            layer.close(closeindex);
+                            table.reload("auth-table");
+                            layer.msg(res.msg);
+                            $.get({url:layui.setter.url + "ranking/test1"})
+                        }
+                    })
+                } else {
+                    var url = layui.setter.url + "legendUrl/deleteByUrl"
+                    admin.req({
+                        url: url,
+                        data: {url:dataArr[0].url},
+                        done: function (res) {
+                            layer.close(closeindex);
+                            table.reload("auth-table");
+                            layer.msg(res.msg);
+                            $.get({url:layui.setter.url + "ranking/test1"})
+                        }
+                    })
+                }
+
+                if(data.field.id != null && data.field.id !== ''){
+                    dataArr[0].endDate = $("#layui-form-publish-update input[name='enddate']").val();
+                }
+
+                admin.req({
+                    url: url1,
+                    processData: false,
+                    traditonal: true,
+                    contentType: "application/json",
+                    data: JSON.stringify(dataArr),
+                    done: function (res) {
+                        if(res.code==-1){
+                            layer.msg(res.msg);
+                        }else {
+                            table.reload("auth-table");
+                            layer.msg(res.msg);
+                            formgs.reset('layui-form-publish');
+                            initType();
+                            $("#text_p").val("" +
+                                "服务器名:█至尊狂魔轻变█\n" +
+                                "服务器IP:◤①区激情ｐｋ◢\n" +
+                                "线路类型:▅装备全暴▅\n" +
+                                "版本介绍:█升级快◆ＰＫ爽█秒杀所有轻变版本█\n" +
+                                "客服QQ:╃活人爆满╄\n" +
+                                "主页地址:http://www.111.com\n" +
+                                "开区时间:"+getFormattedDate()+" 00:00:00\n" +
+                                "投放站点:\n");
+                            if (data.field.id != null && data.field.id !== '') {
+                                layer.close(closeindex);
+                                $.get({url:'https://hz.5cq.net/cq/yx/ttt'})
+                            }
+                        }
+                        $.get({url:layui.setter.url + "ranking/test1"})
+                    }
+                })
+                return false;
+            } else {
+                layer.msg("输入内容有误,请更正")
+            }
+        });
+
+        
+
+        $('.test-table-reload-btn .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+        // 礼包设置相关功能
+        // 添加礼包按钮点击事件
+        $(document).on('click', '.add-packet', function() {
+            var container = $(this).prev('[id^="packetCodeList-container"]');
+            var packetGroup = $(`<div class="packet-group" style="margin-bottom: 10px; display: flex; align-items: center;">
+                <div class="layui-input-inline" style="width: 150px;">
+                    <input type="text" name="packetCode" placeholder="礼包码" class="layui-input">
+                </div>
+                <div class="layui-input-inline" style="width: 600px;">
+                    <input type="text" name="packetContent" placeholder="礼包内容" class="layui-input">
+                </div>
+                <div class="layui-input-inline" style="width: 80px;">
+                    <button type="button" class="layui-btn layui-btn-danger delete-packet">
+                        <i class="layui-icon layui-icon-delete"></i> 删除
+                    </button>
+                </div>
+            </div>`);
+            container.append(packetGroup);
+            // 重新渲染表单
+            form.render();
+        });
+        
+        // 删除礼包按钮点击事件
+        $(document).on('click', '.delete-packet', function() {
+            var packetGroup = $(this).closest('.packet-group');
+            var container = packetGroup.closest('[id^="packetCodeList-container"]');
+            var packetGroups = container.find('.packet-group');
+            if (packetGroups.length > 1) {
+                packetGroup.remove();
+            } else {
+                layer.msg('至少保留一组礼包');
+            }
+        });
+        
+        function normalizeFieldLabel(label) {
+            var text = (label || '')
+                .replace(/\s+/g, '')
+                .replace(/：/g, ':')
+                .toLowerCase();
+
+            if (text.indexOf('服务器') > -1 && text.indexOf('名') > -1) {
+                return 'name';
+            }
+            if (text.indexOf('服务器') > -1 && (text.indexOf('ip') > -1 || text.indexOf('IP') > -1)) {
+                return 'ipname';
+            }
+            if (text.indexOf('线路') > -1) {
+                return 'line';
+            }
+            if (text.indexOf('版本') > -1) {
+                return 'versiondepict';
+            }
+            if (text.indexOf('客服') > -1 || text.indexOf('qq') > -1 || text.indexOf('QQ') > -1) {
+                return 'kfqq';
+            }
+            if (text.indexOf('主页') > -1 || text.indexOf('地址') > -1 || text.indexOf('网址') > -1 || text === 'url') {
+                return 'url';
+            }
+            if (text.indexOf('开区') > -1 && text.indexOf('时间') > -1) {
+                return 'datetime';
+            }
+
+            return '';
+        }
+
+        function showHtml(url, datas) {
+
+            //判断是否为FormData
+            var result;
+            $.ajax({
+                //返回相同的session
+                xhrFields: {
+                    withCredentials: true
+                },
+                url: url,
+                type: 'POST',
+                async: false,    //或false,是否异步
+                data: datas,
+                cache: false,
+                processData: false,
+                contentType: false,
+                timeout: 10000,    //超时时间
+                dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+                beforeSend: function (xhr) {
+                },
+                success: function (data, textStatus, jqXHR) {
+                    result = data;
+                },
+                error: function (xhr, textStatus) {
+                    result = JSON.parse('{"flag":false,"message":"showHtml-ajax-请求连接异常"}');
+                }
+            });
+            return result;
+        }
+        function parsePublishText(text) {
+            var lines = (text || '').split(/\r?\n/);
+            var records = [];
+            var current = null;
+
+            for (var i = 0; i < lines.length; i++) {
+                var line = (lines[i] || '').trim();
+
+                if (!line || isSeparatorLine(line)) {
+                    continue;
+                }
+
+                var normalizedLine = line.replace(/：/g, ':');
+                var colonIndex = normalizedLine.indexOf(':');
+                if (colonIndex === -1) {
+                    continue;
+                }
+
+                var label = normalizedLine.substring(0, colonIndex).trim();
+                var value = normalizedLine.substring(colonIndex + 1).trim();
+                var key = normalizeFieldLabel(label);
+
+                if (!key) {
+                    continue;
+                }
+
+                value = normalizeFieldValue(key, value);
+                if (!value) {
+                    continue;
+                }
+
+                if (key === 'name') {
+                    if (current && hasRecordContent(current)) {
+                        records.push(current);
+                    }
+                    current = {};
+                }
+
+                if (!current) {
+                    current = {};
+                }
+
+                current[key] = value;
+            }
+
+            if (current && hasRecordContent(current)) {
+                records.push(current);
+            }
+
+            return records;
+        }
+        function hasRecordContent(record) {
+            if (!record) {
+                return false;
+            }
+
+            return !!(
+                record.name ||
+                record.ipname ||
+                record.line ||
+                record.versiondepict ||
+                record.kfqq ||
+                record.url ||
+                record.datetime ||
+                record.launch
+            );
+        }
+        function isSeparatorLine(line) {
+        var text = (line || '').replace(/\s+/g, '');
+        return /^[\-=]{3,}$/.test(text);
+    }
+
+        function collectPacketCodeList(containerId) {
+            var packetCodeList = [];
+            var packetGroups = $(containerId + ' .packet-group');
+
+            packetGroups.each(function() {
+                var packetCode = ($(this).find('input[name="packetCode"]').val() || '').trim();
+                var packetContent = ($(this).find('input[name="packetContent"]').val() || '').trim();
+
+                if (packetCode && packetContent) {
+                    packetCodeList.push({
+                        packetCode: packetCode,
+                        packetContent: packetContent
+                    });
+                }
+            });
+
+            return packetCodeList;
+        }
+
+        function normalizeFieldLabel(label) {
+            var text = (label || '')
+                .replace(/\s+/g, '')
+                .replace(/：/g, ':')
+                .toLowerCase();
+
+            if (text.indexOf('服务器') > -1 && text.indexOf('名') > -1) {
+                return 'name';
+            }
+            if (text.indexOf('服务器') > -1 && text.indexOf('ip') > -1) {
+                return 'ipname';
+            }
+            if (text.indexOf('线路') > -1) {
+                return 'line';
+            }
+            if (text.indexOf('版本') > -1) {
+                return 'versiondepict';
+            }
+            if (text.indexOf('客服') > -1 && text.indexOf('qq') > -1) {
+                return 'kfqq';
+            }
+            if (text.indexOf('主页') > -1 || text.indexOf('地址') > -1 || text.indexOf('网址') > -1 || text === 'url') {
+                return 'url';
+            }
+            if (text.indexOf('开区') > -1 && text.indexOf('时间') > -1) {
+                return 'datetime';
+            }
+            if (text.indexOf('投放') > -1 && text.indexOf('站点') > -1) {
+                return 'launch';
+            }
+
+            return '';
+        }
+    });
+    var jqb = function (v) {
+        v.select();
+        document.execCommand("copy");
+    }
+
+    function checkAttribute(data){
+        if(data==null){
+            data= "";
+        }
+        return data;
+    }
+    function normalizeFieldValue(key, value) {
+        var text = (value || '').trim();
+
+        if (key === 'url') {
+            text = text.replace(/\/+$/, '');
+        }
+
+        if (key === 'datetime') {
+            var match = text.match(/(\d{4})-(\d{1,2})-(\d{1,2})(?:\s+(\d{1,2}):(\d{1,2})(?::(\d{1,2}))?)?/);
+
+            if (match) {
+                var year = match[1];
+                var month = ('0' + match[2]).slice(-2);
+                var day = ('0' + match[3]).slice(-2);
+                var hours = match[4] != null ? ('0' + match[4]).slice(-2) : '00';
+                var minutes = match[5] != null ? ('0' + match[5]).slice(-2) : '00';
+                var seconds = match[6] != null ? ('0' + match[6]).slice(-2) : '00';
+
+                text = year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+            }
+        }
+
+        return text;
+    }
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=Content-Type content="text/html; charset=gb2312">
+<meta content="always" name="referrer" />
+<SCRIPT language=JavaScript> 
+<!--
+window.opener = null;
+function get_url()
+{
+	var src = window.location.href;
+	var I = src.substr(src.indexOf("?u=") + 3).length;
+	var T = src.indexOf("?u=");
+	if (0 >= T) return "";
+	if (I == src.length) return -1;
+	var url = src.substr(src.indexOf("?u=") + 3);
+	return url;
+}
+ 
+var url,c,d,e,f,g,h
+function   getQuery(name)   
+ {   
+  var reg = new RegExp("(^|&)"+name +"=([^&]*)(&|$)");   
+  var r =  window.location.search.substr(1).match(reg);   
+  if(r!=null) return unescape(r[2]);return "";
+ }
+ 
+url=getQuery("u");   
+c=getQuery("c");  
+d=getQuery("d");  
+e=getQuery("e");  
+f=getQuery("f");  
+g=getQuery("g");  
+h=getQuery("h");  
+ 
+window.location.href = url;
+-->
+</SCRIPT>
+<META content="MSHTML 6.00.2900.3354" name=GENERATOR></HEAD>
+<BODY></BODY></HTML>
+ 

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>站外举报</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+    <style>
+        .layui-table-cell {
+            height: auto !important;
+            padding: 0 0 !important;
+            white-space: normal !important;
+            line-height: normal !important;
+        }
+
+        .layui-table td {
+            padding: 0 0 !important;
+            border-width: 1px !important;
+            border-bottom: 1px solid #CCC;
+        }
+
+        .layui-table td {
+            padding: 10px 0 !important;
+        }
+
+        .layui-table tr:first-child td {
+            padding-top: 0 !important;
+        }
+
+        .layui-table-hover {
+            background-color: white !important;
+        }
+
+        .layui-table th {
+            padding: 0 0 !important;
+            border-style: none !important;
+            border-width: 0px !important;
+        }
+
+        .w-e-text-container {
+            border-bottom: none !important;
+        }
+
+        #div0 .w-e-text-container{
+            border-bottom: 1px solid #ccc!important;
+        }
+
+    </style>
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">站外举报</div>
+                <div class="layui-card-body">
+                    <div class="test-table-reload-btn" style="margin-bottom: 10px;">
+                        <div class="layui-inline">
+                            <input class="layui-input" id="test-table-demoReload" autocomplete="off" placeholder="请输入要搜索的内容">
+                        </div>
+                        <button class="layui-btn" data-type="reload">搜索</button>
+                        <button id="offsite-button-add" shiro-event="jax:offsite:open-add" class="layui-btn"><i
+                                class="layui-icon">&#xe654;</i>添加
+                        </button>
+                    </div>
+                    <table class="layui-hide" lay-skin="nob" id="auth-table" lay-filter="auth-table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="layui-offsite" hidden>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <form class="layui-form" id="layui-form-offsite" lay-filter="component-form-group">
+                    <div id="div0"></div>
+                    <div class="layui-footer" id="submit-form-offsite-button" style="left: 0;margin-top: 20px">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--添加-->
+<div id="submit-form-add" hidden>
+    <button class="layui-btn" shiro-event="jax:offsite:add" lay-submit lay-filter="submit-form-offsite">提交</button>
+</div>
+
+</div>
+<script type="text/html" id="auth-state">
+    <div class="editor-view" id="div{{d.id}}"></div>
+    <div style="margin-top: 10px">
+        <button lay-event="update" shiro-event="jax:offsite:update" class="layui-btn layui-btn-normal">
+            确定
+        </button>
+        <button lay-event="remove" shiro-event="jax:offsite:remove" class="layui-btn layui-btn-danger">
+            删除
+        </button>
+    </div>
+</script>
+
+<script src="../../layuiadmin/layui/layui.js"></script>
+<script src="../../statics/wangEditor-3.1.1/release/wangEditor.js"></script>
+<script>
+    var E = window.wangEditor;
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index', //主入口模块
+    }).use(['index', 'table', 'formgs', 'form', 'security', 'layer', 'layedit'], function () {
+        var $ = layui.jquery,
+            admin = layui.admin,
+            table = layui.table,
+            formgs = layui.formgs,
+            form = layui.form,//控制添加修改（同一个弹出层）关闭弹出层的索引
+            layedit = layui.layedit,//控制添加修改（同一个弹出层）关闭弹出层的索引
+            layer = layui.layer;
+        var E = window.wangEditor;
+        var editor = new E('#div0');
+        editor.customConfig.uploadImgMaxSize = 3 * 1024 * 1024;
+        editor.customConfig.uploadImgMaxLength = 20;
+        editor.customConfig.uploadImgTimeout = 3000;
+        editor.customConfig.uploadImgShowBase64 = true;
+        editor.customConfig.uploadImgHooks = {
+            fail: function (xhr, editor, result) {
+                //上传错误时触发
+                alert("上传图片失败");
+            }
+        };
+        editor.create();
+
+        var editorArr = [];
+        table.render({
+            cellMinWidth: 1300,
+            elem: '#auth-table'
+            , url: layui.setter.url + '/offsiteSearch/select'
+            , title: '外网举报'
+            , cols: [[
+                {
+                    fixed: '', title: '', toolbar: "#auth-state"
+                },
+            ]]
+            , page: true,
+            done: function (res, curr, count) {
+                var data = res.data;
+                editorArr=[];
+                for (var i in data) {
+                    var editor = createEdit(data[i].id);
+                    editorArr.push(editor);
+                    editor.txt.html(data[i].context);
+                }
+            }
+        });
+
+        $("#offsite-button-add").click(function(){
+            layer.open({
+                type: 1,
+                area: ['1300', '56%'],
+                shadeClose: false,
+                content: $("#layui-offsite"),
+                success: function (index, layero) {
+                    closeindex = layero;
+                    formgs.reset('layui-offsite');
+                    editor.txt.html("");
+                    $("#submit-form-offsite-button").html($("#submit-form-add").html());
+                    form.render();
+                },
+            });
+        });
+
+
+        table.on('tool(auth-table)', function (obj) {
+            if (obj.event == 'update') {
+                layer.confirm('确定要提交修改的内容么？', function (index) {
+                    var example = window.location.protocol+"//"+window.location.host;
+                    var context="";
+                    for(var i in editorArr){
+                        if(editorArr[i].id==obj.data.id){
+                            context=editorArr[i].txt.html();
+                            break;
+                        }
+                    }
+                    admin.req({
+                        url: layui.setter.url + "offsiteSearch/update",
+                        data: {id:obj.data.id,context:context,weburl:example},
+                    }).done(function (res) {
+                        layer.close(index);
+                        table.reload('auth-table');
+                        layer.msg(res.msg);
+                    })
+                });
+            } else if (obj.event == "remove") {
+                layer.confirm('确定要删除吗？', function (index) {
+                    var example = window.location.protocol+"//"+window.location.host;
+                    admin.req({
+                        url: layui.setter.url + "offsiteSearch/remove",
+                        data: {id:obj.data.id,weburl:example},
+                    }).done(function (res) {
+                        layer.close(index);
+                        table.reload('auth-table');
+                        layer.msg(res.msg);
+                    })
+                });
+            }
+        })
+
+        //添加/修改提交
+        form.on('submit(submit-form-offsite)', function (data) {
+            data.field.context=editor.txt.html();
+            layer.confirm('确定要提交吗？', function (index) {
+                data.field.weburl=window.location.protocol+"//"+window.location.host;
+                admin.req({
+                    url: layui.setter.url + "offsiteSearch/add",
+                    data: data.field,
+                }).done(function (res) {
+                    //layer.close(index);
+                    layer.closeAll();
+                    table.reload('auth-table');
+                    layer.msg(res.msg);
+                })
+            });
+            return false
+        });
+
+
+        $('.test-table-reload-btn .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+        //查询
+        var $ = layui.$, active = {
+            reload: function () {
+                console.log(1111);
+                var demoReload = $('#test-table-demoReload');
+                //执行重载
+                table.reload('auth-table', {
+                    page: {curr: 1}//重新从第 1 页开始
+                    , where: {param: demoReload.val()}
+                });
+            },
+        };
+    });
+
+    function createEdit(id) {
+        var editor = new E('#div' + id);
+        editor.customConfig.uploadImgMaxSize = 3 * 1024 * 1024;
+        editor.customConfig.uploadImgMaxLength = 20;
+        editor.customConfig.uploadImgTimeout = 3000;
+        editor.customConfig.uploadImgShowBase64 = true;
+        editor.customConfig.uploadImgHooks = {
+            fail: function (xhr, editor, result) {
+                //上传错误时触发
+                alert("上传图片失败");
+            }
+        };
+        editor.create();
+        editor.id=id;
+        return editor;
+    }
+</script>
+</body>
+</html>

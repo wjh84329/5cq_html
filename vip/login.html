@@ -1,0 +1,185 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head> 
+  <meta charset="utf-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"> 
+  <title>5CQ-传奇广告查询站_传奇广告排行_传奇资源站_新开传奇新服排名站(5CQ.COM)</title>
+  <meta name="description" content="5CQ.Com传奇广告排行榜,传奇私服查询站,传奇资源站,好玩的传奇排名站,玩家最爱的新开传奇,GM最喜欢的传奇工具,传奇直播,传奇新开服,传奇相关尽在5CQ(玩传奇)">
+  <meta name="keywords" content="传奇广告查询站,传奇资源站,传奇广告排行,传奇SF广告统计(5CQ.COM)">   
+  <link rel="stylesheet" href="../statics/layui/css/layui.css"> 
+  <style type="text/css">* {
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        background-color: #248AB3;
+    }
+
+    .box {
+        background-color: #4CB1D9;
+        padding: 20px 15px 30px 15px;
+        border-radius: 20px;
+        width: 700px;
+        margin: 100px auto 0 auto;
+    }
+
+    h1 {
+        color: #FFFFFF;
+        font-family: "宋体";
+    }
+
+    input.txt {
+        width: 215px;
+        height: 28px;
+        line-height: 28px;
+        padding: 3px 5px;
+        font-size: 13px;
+    }
+
+    input.button {
+        background-color: #FFEA55;
+        color: #3C3E43;
+        border: none;
+        width: 225px;
+        height: 35px;
+        line-height: 35px;
+    }
+
+    table.form {
+        border-collapse: collapse;
+    }
+
+    table.form td {
+        padding: 10px 0;
+        color: #FFFFFF;
+    }
+
+    table.codetable {
+        border-collapse: collapse;
+    }
+
+    table.codetable td {
+        padding: 0;
+    }</style> 
+ </head> 
+ <body> 
+  <div name="loginform"> 
+   <div class="box"> 
+    <table width="100%" border="0" class="form"> 
+     <tbody> 
+      <tr> 
+       <td style=" border-bottom:solid 1px #248AB3;"><h1>会员登录</h1></td> 
+      </tr> 
+      <tr> 
+       <td> 
+        <table width="100%" border="0" align="center"> 
+         <tbody> 
+          <tr> 
+           <th width="120" style="color: white">登录账号</th> 
+           <td width="250"><input name="username" type="text" size="20" class="txt" autocomplete="off"> </td> 
+           <td></td> 
+          </tr> 
+          <tr> 
+           <th style="color: white;">登录密码</th> 
+           <td><input type="password" name="password" id="password" size="20" class="txt" autocomplete="off"></td> 
+           <td></td> 
+          </tr> 
+          <tr> 
+           <th style="color: white">验证码</th> 
+           <td> 
+            <table width="100%" border="0" class="codetable"> 
+             <tbody> 
+              <tr> 
+               <td width="130"><input type="text" name="vcode" maxlength="4" class="txt" style="width:100px;" autocomplete="off"></td> 
+               <td align="left"><img id="LAY-user-get-vercode" src="https://www.oschina.net/action/user/captcha" height="35" border="0"></td> 
+              </tr> 
+             </tbody> 
+            </table> </td> 
+           <td></td> 
+          </tr> 
+          <tr> 
+           <td>&nbsp;</td> 
+           <td><input type="button" name="Submit" id="login" value="登录" class="button"></td> 
+           <td></td> 
+          </tr> 
+         </tbody> 
+        </table> </td> 
+      </tr> 
+     </tbody> 
+    </table> 
+   </div> 
+  </div> 
+  <script src="../statics/js/jquery-3.2.1.min.js"></script> 
+  <script src="../statics/layui/layui.js"></script> 
+  <script>
+    layui.use(['layer', 'laydate'], function(){
+        var $ = layui.$
+            ,admin = layui.admin
+            ,form = layui.form
+            ,layer = layui.layer;
+
+        // var url = 'http://localhost:8086/server/'
+        // var url = 'http://jaxone.5cq.com/server/'
+        var url = 'https://kkw.5cq.com/server/'
+
+        $.post(url+'common/vipcaptcha').done(function (res) {
+            $("#LAY-user-get-vercode").attr("src",res.data.vipcode);
+            window.localStorage.removeItem("vipvtoken");
+            window.localStorage.setItem("vipvtoken",res.data.viptoken)
+        })
+
+        /*admin.req({
+            url:layui.setter.url+'common/vipcaptcha'
+        }).done(function (res) {
+            $("#LAY-user-get-vercode").attr("src",res.data.vipcode);
+            window.localStorage.removeItem("vipvtoken");
+            window.localStorage.setItem("vipvtoken",res.data.viptoken)
+        })*/
+
+        $('#login').click(function () {
+            var username = $('input[name=username]').val();
+            var password = $('input[name=password]').val();
+            var vcode = $('input[name=vcode]').val();
+            var vtoken = window.localStorage.getItem("vipvtoken");
+            // console.log(vtoken)
+            if (username == '' || password == '' || vcode == '') {
+                layer.msg('请填写完整信息', {icon: 2});
+                return false;
+            }
+            $.post(
+                url+'viplogin',
+                {
+                    username:username,
+                    password:password,
+                    vercode:vcode,
+                    vtoken:vtoken
+                },
+                function (res) {
+                    if(res.code == 0) {
+                        window.localStorage.setItem("vipuser",JSON.stringify(res.data));
+                        layer.msg('登入成功', {
+                            offset: '15px'
+                            ,icon: 1
+                            ,time: 1000
+                        }, function() {
+                            location.href = './index.html'; //后台主页
+                        })
+                    }else {
+                        layer.msg(res.msg, {icon: 2});
+                        return false;
+                    }
+                }
+            )
+        })
+        //刷新验证码
+        $('#LAY-user-get-vercode').click(function () {
+            $.post(url+'common/vipcaptcha',function (res) {
+                $("#LAY-user-get-vercode").attr("src",res.data.vipcode);
+                window.localStorage.removeItem("vipvtoken");
+                window.localStorage.setItem("vipvtoken",res.data.viptoken)
+            })
+        })
+    });
+</script>  
+ </body>
+</html>

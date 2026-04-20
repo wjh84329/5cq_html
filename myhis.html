@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head> 
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+  <title>5CQ-传奇广告查询站_传奇广告排行_传奇资源站_新开传奇新服排名站(5CQ.COM)</title>
+  <meta name="description" content="5CQ.Com传奇广告排行榜,传奇私服查询站,传奇资源站,好玩的传奇排名站,玩家最爱的新开传奇,GM最喜欢的传奇工具,传奇直播,传奇新开服,传奇相关尽在5CQ(玩传奇)">
+  <meta name="keywords" content="传奇广告查询站,传奇资源站,传奇广告排行,传奇SF广告统计(5CQ.COM)">   
+  <!--    <script type="text/javascript" src="./statics/js/jquery-3.2.1.min.js"></script>
+    <script src="./statics/js/jquery.cookie.js"></script>
+    <script src="./statics/js/public.js"></script>
+    <script src="./statics/adminconfig.js"></script>
+    <script src="./statics/config.js"></script>--> 
+  <link rel="stylesheet" type="text/css" href="/statics/layui/css/layui.css"> 
+  <style type="text/css">
+        .layui-laypage .layui-laypage-curr .layui-laypage-em {
+            position: absolute;
+            left: -1px;
+            top: -1px;
+            padding: 1px;
+            width: 100%;
+            height: 100%;
+            background-color: red !important;
+        }
+        .layui-table-cell{
+            height: initial;
+        }
+    </style> 
+ </head> 
+ <body> 
+  <!--<div class="favobox">
+    &lt;!&ndash;<table width="100%" class="favolist">
+
+
+    </table>&ndash;&gt;
+
+</div>--> 
+  <table id="demo" lay-filter="test"></table> 
+  <div id="auth-state" hidden> 
+   <button lay-event="remove" class="layui-btn layui-btn-primary layui-btn-xs"> <i class="layui-icon"></i>删除 </button> 
+  </div> 
+  <div id="urlTpl" hidden> 
+   <a href="{{d.url}}" target="_blank">{{d.url}}</a> 
+  </div> 
+  <script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-danger layui-btn-sm" lay-event="getCheckData">删除选中数据</button>
+    </div>
+</script> 
+  <script src="./statics/js/jquery-3.7.1.js"></script> 
+  <script src="./statics/js/jquery.cookie.js"></script> 
+  <script src="./statics/adminconfig.js"></script> 
+  <script src="./statics/layui/layui.js"></script> 
+  <script type="text/javascript">
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index', //主入口模块
+    }).use(['index', 'table', 'formgs', 'form', 'security', 'layer', 'upload'], function () {
+        var $ = layui.jquery,
+            admin = layui.admin,
+            table = layui.table,
+            formgs = layui.formgs,
+            form = layui.form,//控制添加修改（同一个弹出层）关闭弹出层的索引
+            upload = layui.upload,
+            layer = layui.layer, closeindex;
+
+        var uuid=window.localStorage.getItem("uuid");
+        console.log($.cookie('user'))
+
+        var customer = ($.cookie('user')?JSON.parse($.cookie('user')):{name:uuid});
+        //第一个实例
+        var url = baseUrl+'hcategory/hisselect'
+        table.render({
+            elem: '#demo'
+            ,url: url //数据接口
+            ,toolbar: '#toolbarDemo'
+            ,page: true //开启分页
+            ,cols: [[ //表头
+                {type: 'checkbox'}
+                // ,{field: 'name', title: '用户名',width:100}
+                ,{field: 'gname', title: '游戏名',width:200}
+                ,{field: 'version', title: '游戏版本',width:200}
+                ,{field: 'url', title: '游戏链接',templet:'#urlTpl'}
+                ,{fixed: 'right', title: '操作', toolbar: '#auth-state',width:100}
+            ]],
+            where: {
+                uuid:customer.name
+            }
+        });
+        table.on('tool(test)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'remove') {
+                layer.confirm('真的删除该记录吗？', function (index) {
+                    $.ajax({
+                        url: baseUrl + 'hcategory/delete',
+                        type: 'post',
+                        dataType: 'json',
+                        data: {ids: data.id},
+                        success: function (res) {
+                            console.log(res);
+                            if (res.code==0) {
+                                layer.close(index);
+                                obj.del();
+                                table.reload('demo');
+                                layer.msg("删除成功")
+                            }
+                        }
+                    })
+                })
+            }
+        });
+        // 工具栏事件
+        table.on('toolbar(test)', function(obj){
+            var id = obj.config.id;
+            var checkStatus = table.checkStatus(id);
+            var othis = $(this);
+            switch(obj.event){
+                case 'getCheckData':
+                    var data = checkStatus.data;
+                    // layer.alert(layui.util.escape(JSON.stringify(data)));
+                    console.log(data)
+                    var selectedRecords = data.map(function (item) {
+                        return item.id
+                    })
+                    console.log("删除选中的记录：" + selectedRecords);
+                    $.ajax({
+                        url: baseUrl + 'hcategory/delete?ids='+selectedRecords,
+                        type: 'GET',
+                        processData: false,
+                        contentType: false,
+                        timeout: 10000,    // 超时时间
+                        dataType: 'json',  // 超时时间
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.code==0){
+                                alert("删除成功！")
+                                table.reload('demo');
+                            }else {
+                                alert("删除失败！")
+                            }
+                        }})
+                    break;
+
+            };
+        });
+
+    });
+</script>  
+ </body>
+</html>

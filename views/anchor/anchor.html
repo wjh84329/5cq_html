@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>玩家群主播</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+  <script src="../../statics/js/jquery-3.2.1.min.js"></script>
+  <script src="../../statics/js/jquery.cookie.js"></script>
+    <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+    <style>
+        .pre-text {
+            white-space: pre;
+        }
+        .layui-form-label {
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">玩家群主播</div>
+                <div class="layui-card-body">
+                    <div class="test-table-reload-btn" style="margin-bottom: 10px;">
+                        <div class="layui-inline">
+                            <input class="layui-input" name="name" id="test-table-demoReload"
+                                   autocomplete="off" placeholder="请输入主播名/群名">
+                        </div>
+                        <button class="layui-btn" data-type="reload">搜索</button>
+                        <button id="role-button-add" shiro-event="jax:own:open-add" class="layui-btn"><i
+                                class="layui-icon">&#xe654;</i>添加
+                        </button>
+                    </div>
+                    <table class="layui-hide" id="auth-table" lay-filter="auth-table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="auth-state" hidden>
+    <button lay-event="update"  class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe642;</i>修改
+    </button>
+    <button lay-event="remove"  class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe640;</i>删除
+    </button>
+</div>
+<div id="layui-file-update" hidden>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form" id="layui-form-file-update" lay-filter="component-form-group">
+                    <input type="text" id="filename" name="filename" hidden>
+                    <textarea class="pre-text" id="fileInfo" name="fileInfo" wrap="hard" style="width: 100%;resize: none;"></textarea>
+                    <div class="layui-footer" id="update-file-button" style="left: 0;">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="layui-role" hidden>
+    <div class="layui-fluid" >
+        <div class="layui-card">
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form" id="layui-form-role" lay-filter="component-form-group">
+                    <input type="hidden" id="id" name="id">
+                    <div class="layui-form-item">
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">主播/QQ群</label>
+                            <div class="layui-input-inline" style="width: 182px">
+                                <select name="type" lay-verify="required">
+                                    <option value="1">QQ群</option>
+                                    <option value="0">主播</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">主播名/群名：</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="name" name="name" lay-verify="required" placeholder="请输入主播名/群名"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">平台/版本：</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="platform" name="platform" lay-verify="required" placeholder="请输入平台/版本"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">粉丝/群人数：</label>
+                            <div class="layui-input-inline">
+                                <input type="number" id="quantity" name="quantity" lay-verify="required" placeholder="请输入粉丝/群人数"
+                                       onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                       onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">头像：</label>
+                            <div class="layui-upload-list">
+                                <div onclick="handleSelectLogo()" style="margin-bottom: 10px;"  class="layui-btn">上传图标</div>
+                                </br>
+                                <input type="file" onchange="getFileLogo(this)" id="test-upload-normal-LOGO" style="margin-right: 10px;display: none" /></br>
+                                <img class="layui-upload-img"  id="test-upload-normal-img-LOGO" style="margin-top: 10px;margin-left: 220px;max-width: 200px;max-height: 200px">
+                                <p id="test-upload-LOGO"></p>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">联系方式：</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="contact" name="contact" lay-verify="required" placeholder="请输入联系方式"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">点赞总数：</label>
+                            <div class="layui-input-inline">
+                                <input type="number" id="fabulous" name="fabulous" lay-verify="required" placeholder="请输入点赞总数"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">主播宣言/群宣言：</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="declaration" name="declaration" lay-verify="required" placeholder="请输入主播宣言/群宣言"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">直播地址/QQ群号：</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="address" name="address" lay-verify="required" placeholder="请输入直播地址/qq群号"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <div class="layui-form-item layui-form-text">
+                                <div class="layui-input-block">
+                                    <div id="div3"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-input-block">
+                        <!--操作-->
+                        <div class="layui-footer" id="submit-form-menu-button" style="left: 0;">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--添加-->
+<div id="submit-form-add" hidden>
+    <button class="layui-btn"shiro-event="jax:anchor:add"   lay-submit lay-filter="submit-form-own">立即提交</button><!--添加-->
+    <button type="reset"  class="layui-btn layui-btn-primary">重置</button><!--添加-->
+</div>
+
+<div id="submit-form-update" hidden>
+    <button class="layui-btn"  shiro-event="jax:anchor:update" lay-submit lay-filter="submit-form-update">立即提交</button><!--添加-->
+</div>
+<script src="../../layuiadmin/layui/layui.js"></script>
+<script src="../../statics/wangEditor-3.1.1/release/wangEditor.js"></script>
+<script>
+    function tc(src){
+        var html=''
+        html+='<div id="tong" class="hide" style="display: table-cell;vertical-align: middle;  text-align: center; ">'
+        html+='<img src="'+src+'" style="width: 500px; height: 500px;">'
+        html+='</div>';
+        layer.open({
+            type: 1,
+            title: false,
+            closeBtn: 0,
+            area: ['auto'],
+            skin: 'layui-layer-nobg', //没有背景色
+            shadeClose: true,
+            content: html
+        });
+    }
+
+    function DrawImage(ImgD,width_s,height_s){
+        var image=new Image();
+        image.src=ImgD.src;
+        if(image.width>0 && image.height>0){
+            flag=true;
+            if(image.width/image.height>=width_s/height_s){
+                if(image.width>width_s){
+                    ImgD.width=width_s;
+                    ImgD.height=(image.height*width_s)/image.width;
+                }else{
+                    ImgD.width=image.width;
+                    ImgD.height=image.height;
+                }
+            }
+            else{
+                if(image.height>height_s){
+                    ImgD.height=height_s;
+                    ImgD.width=(image.width*height_s)/image.height;
+                }else{
+                    ImgD.width=image.width;
+                    ImgD.height=image.height;
+                }
+            }
+        }
+    }
+  //获取文件
+  function getFileLogo(f){
+    upImg1();
+  }
+  function handleSelectLogo(){
+      $("#test-upload-normal-LOGO").click();
+  }
+  //图片上传
+  var fileImgLogo='';
+  function upImg1() {
+    var imgList=document.getElementById('test-upload-normal-LOGO').files;
+    var data = new FormData();//用ajax传递文件流必须用FormData，其他格式不可传递
+    data.append("files", imgList[0], imgList[0].name);
+    var example = location.protocol+"//"+window.location.host;
+    data.append("weburl",example);
+    data.append("type",'report');
+    $.ajax({
+      url: layui.setter.url + 'jax/uploadFile/upload',
+      type: 'post',
+      data: data,
+      contentType: false,
+      processData: false,
+      dataType: 'json',
+      async:false,
+      success: function (res, textStatus, jqXHR) {
+        fileImgLogo=res.data[0];
+        $("#test-upload-normal-img-LOGO").attr("src", res.data);
+      }
+    })
+  }
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index', //主入口模块
+        treetable: '../treetable/treetable'
+    }).use(['index', 'table','formgs','form','security','treetable'], function () {
+        var $ = layui.jquery,
+            admin = layui.admin,
+            table = layui.table,
+            formgs = layui.formgs,
+            form = layui.form,
+            treetable = layui.treetable,
+            closeindex;//控制添加修改（同一个弹出层）关闭弹出层的索引
+        var E = window.wangEditor;
+        var editor2 = new E('#div3');
+        editor2.customConfig.uploadImgMaxSize = 3 * 700 * 700;
+        editor2.customConfig.uploadImgMaxLength = 10;
+        editor2.customConfig.uploadImgTimeout = 0;
+        editor2.customConfig.uploadImgShowBase64 = true;
+        editor2.customConfig.uploadImgHooks = {
+            fail:function (xhr, editor, result) {
+                alert("上传图片失败");
+            }
+        };
+        editor2.create();
+        table.render({
+            elem: '#auth-table'
+            ,url: layui.setter.url+'anchor/list'
+            ,title: '玩家群主播',
+            parseData:function(res) {
+                var data = res.data.data
+                return {
+                    "code" : res.code,  // 注意返回正确的状态码是0
+                    "data": data,   // 格式： [{name:cocoli,age:21},{name:licy,age:60}]
+                  "count":res.data.tnum,
+                }
+            }
+            ,cols: [[
+                {
+                    field: 'headPortrait', align:'center', title: 'Logo',
+                    templet: function (obj) {
+                        if (obj.headPortrait != '' && obj.headPortrait != null) {
+                            var t = obj.headPortrait;
+                            obj.headPortrait = '<img  style="height:28px" onclick="tc(\'' + t + '\')" onload="DrawImage(this,100,28)"  src="' + t+ '"/>';
+                        }else{
+                            obj.headPortrait='暂无图片';
+                        }
+                        return obj.headPortrait;
+                    }
+                },
+                {field: 'name', title: '主播名/群名'},
+                {field: 'platform', title: '平台/版本'},
+                {field: 'state', title: '是否通过', width: 115,
+                    templet: function (obj) {
+                        var r =
+                            '<div class="layui-form">' +
+                            '<input type="checkbox" name="state" data-id="' + obj.id + '" lay-skin="switch" value="' + obj.state + '" lay-text="通过|驳回" lay-filter="state" ' + (obj.state == 1 ? "checked" : "") + ' >' +
+                            '</div>'
+                        return r;
+                    }
+                },
+                {field: 'quantity', title: '粉丝/群人数'},
+                {field: 'contact', title: '联系方式'},
+                {field: 'fabulous', title: '点赞总数'},
+                {field: 'declaration', title: '主播宣言/群宣言'},
+                {field: 'address', title: '直播地址/qq群号'},
+                {field: 'introduce', title: '介绍'},
+                , {fixed: 'right', title: '操作', toolbar: '#auth-state',width:150}
+            ]]
+            ,page: true
+        });
+
+
+        //打开修改，删除
+        table.on('tool(auth-table)', function (obj) {
+            if (obj.event == 'update') {
+                layer.open({
+                    type: 1,//弹窗类型
+                    area: ['50%', '60%'],//定义宽和高
+                    title: ('【' + obj.data.name + '】修改'),//题目
+                    shadeClose: false,//点击遮罩层关闭
+                    content: $("#layui-role"),//打开的内容
+                    success: function (index, layero) {
+                        formgs.get("layui-form-role", obj.data);
+                        fileImgLogo='';
+                        editor2.txt.html("");
+                        editor2.txt.html(obj.data.introduce)
+                        $("#test-upload-normal-img-LOGO").attr("src", obj.data.headPortrait);
+                        $("#submit-form-menu-button").html($("#submit-form-update").html());
+                        //form.render刷新form 如果是针对单一刷新括号里面加上标签名 例：select刷新form.render('select')
+                        if(obj.data.headPortrait==null||obj.data.headPortrait==''){
+                            $(".layui-upload-img").attr("src","");
+                        }else {
+                            $(".layui-upload-img").attr("src",obj.data.headPortrait);
+                        }
+                        form.render();
+                        closeindex = layero
+                    },
+                    end: function () {
+                        //getTableData();//结束之后请求表格数据的方法，新编辑的数据直接存库并展示在页面
+                    }
+                });
+            } else if (obj.event == "remove") {
+                layer.confirm('确定要删除吗？', function (index) {
+                    admin.req({
+                        url:layui.setter.url+'anchor/delete?id='+obj.data.id,
+                    }).done(function (res) {
+                        layer.close(index);
+                        table.reload('auth-table');
+                        layer.msg(res.msg);
+                    })
+                });
+            }
+        })
+
+
+
+        //打开添加弹窗
+        $("#role-button-add").on("click", function () {
+            $("#layui-upload-img").attr("src","");
+            layer.open({
+                type: 1,
+                area: ['50%', '55%'],
+                title: ("添加菜单/按钮"),
+                shadeClose: false,
+                content: $("#layui-role"),
+                success: function (index, layero) {
+                    formgs.reset('layui-role');
+                    editor2.txt.html("");
+                    $("#submit-form-menu-button").html($("#submit-form-add").html());
+                    $(".layui-upload-img").attr("src","");
+                    form.render();
+                    closeindex = layero;
+                },
+            });
+        })
+
+
+        // 修改
+        form.on('submit(submit-form-update)', function (data) {
+            data.field.introduce=editor2.txt.html();
+            var url = layui.setter.url+'anchor/update';
+            var formdata = new FormData();
+            formdata.append("id",data.field.id);
+            formdata.append("name",data.field.name);
+            formdata.append("platform",data.field.platform);
+            formdata.append("type",data.field.type);
+            formdata.append("quantity",data.field.quantity);
+            formdata.append("contact",data.field.contact);
+            formdata.append("fabulous",data.field.fabulous);
+            formdata.append("declaration",data.field.declaration);
+            formdata.append("address",data.field.address);
+            formdata.append("introduce",data.field.introduce);
+            if(fileImgLogo!=''){
+              formdata.append("headPortrait",fileImgLogo);
+            }
+            admin.req({
+                url: url,
+                data: formdata,
+                cache: false, //上传文件不需要缓存
+                processData: false, // 告诉jQuery不要去处理发送的数据
+                contentType: false, // 告诉jQuery不要去设置Content-Type请求头
+                done: function (res) {
+                    layer.close(closeindex);
+                    table.reload("auth-table");
+                    layer.msg(res.msg);
+                    form.render();
+                }
+            })
+            return false
+        })
+
+
+        //添加
+        form.on('submit(submit-form-own)', function (data) {
+            data.field.introduce=editor2.txt.html();
+            var url = layui.setter.url+'anchor/add';
+            var formdata = new FormData();
+            formdata.append("name",data.field.name);
+            formdata.append("platform",data.field.platform);
+            formdata.append("type",data.field.type);
+            formdata.append("quantity",data.field.quantity);
+            formdata.append("contact",data.field.contact);
+            formdata.append("fabulous",data.field.fabulous);
+            formdata.append("declaration",data.field.declaration);
+            formdata.append("address",data.field.address);
+            formdata.append("introduce",data.field.introduce);
+            formdata.append("headPortrait",fileImgLogo);
+            admin.req({
+                url: url,
+                data: formdata,
+                cache: false, //上传文件不需要缓存
+                processData: false, // 告诉jQuery不要去处理发送的数据
+                contentType: false, // 告诉jQuery不要去设置Content-Type请求头
+                done: function (res) {
+                    layer.close(closeindex);
+                    table.reload("auth-table");
+                    layer.msg(res.msg);
+                    form.render();
+                }
+            })
+            return false
+        })
+
+
+
+        //查询
+        var $ = layui.$, active = {
+            reload: function(){
+                var demoReload = $('#test-table-demoReload');
+                //执行重载
+                table.reload('auth-table', {
+                    page: {curr: 1 }//重新从第 1 页开始
+                    ,where: {name: $('#test-table-demoReload').val()}
+                });
+            }
+        };
+
+        $('.test-table-reload-btn .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+
+        $('.test-table-reload-btn .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+
+        form.on('switch(state)', function (data) {
+            var id = $(this).attr("data-id");
+            var state = data.elem.checked ? 1 : 0;
+            update(id, state);
+        });
+
+        //被调用的修改方法
+        function update(id, state) {
+            admin.req({
+                url: layui.setter.url + "anchor/updateState",
+                data: {id: id, state: state},
+            });
+        }
+    });
+</script>
+</body>
+</html>

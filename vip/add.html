@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="en">
+ <head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0,cache=no-cache"> 
+  <title>5CQ-传奇广告查询站_传奇广告排行_传奇资源站_新开传奇新服排名站(5CQ.COM)</title>
+  <meta name="description" content="5CQ.Com传奇广告排行榜,传奇私服查询站,传奇资源站,好玩的传奇排名站,玩家最爱的新开传奇,GM最喜欢的传奇工具,传奇直播,传奇新开服,传奇相关尽在5CQ(玩传奇)">
+  <meta name="keywords" content="传奇广告查询站,传奇资源站,传奇广告排行,传奇SF广告统计(5CQ.COM)">   
+  <link type="text/css" rel="stylesheet" href="../statics/css/viphome.css"> 
+  <link rel="stylesheet" href="../layuiadmin/layui/css/layui.css" media="all"> 
+  <script src="../statics/js/jquery-3.2.1.min.js"></script> 
+  <script src="../statics/config.js"></script> 
+  <script src="../statics/js/public.js"></script> 
+  <script src="../statics/js/jquery.cookie.js"></script> 
+  <!--    <link rel="stylesheet" href="../layuiadmin/style/admin.css" media="all">--> 
+  <style>
+        html, body {
+            overflow: hidden !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            min-height: 1200px !important;
+        }
+    </style> 
+ </head> 
+ <body> 
+  <div id="wrap"> 
+   <div class="tip">
+     提示1: 多条广告用一个空行隔开! 
+    <br>提示2: 每天 23点 到 00点这一个小时为结算时间, 暂停发布广告! 
+   </div> 
+   <form id="form1" class="layui-form" action=""> 
+    <table width="100%" class="common form list"> 
+     <tbody> 
+      <tr> 
+       <th colspan="3">快速发布</th> 
+      </tr> 
+      <tr> 
+       <th width="150">广告内容</th> 
+       <td valign="top" colspan="2"> <textarea name="content" cols="70" rows="20" class="ta" id="content"></textarea> </td> 
+      </tr> 
+      <tr> 
+       <th width="150">开始时间</th> 
+       <td width="170"><input name="startdate" id="start" placeholder="自动获取开区时间" value="" size="21" autocomplete="off" class="txtbox"></td> 
+       <td><input type="button" id="aaaaa" class="button" onclick="startTime()" value="点击设置为2025-02-22(明天)0点后显示"><span class="tips"><span class="tips">广告开始显示的时间。 </span></span></td> 
+      </tr> 
+      <tr style="display: none;"> 
+       <th width="150">结束时间</th> 
+       <td width="170"><input name="enddate" id="end" placeholder="自动计算" value="" size="21" autocomplete="off" class="txtbox" readonly></td> 
+       <td><span class="tips">根据开始时间和推荐天数自动计算。 </span></td> 
+      </tr> 
+      <tr> 
+       <th width="150">推荐天数</th> 
+       <td width="170"><input id="days" name="days" value="7" size="21" autocomplete="off" class="txtbox"></td> 
+       <td><span class="tips">请选择广告推荐的天数。 </span></td> 
+      </tr> 
+      <tr> 
+       <th>广告推荐</th> 
+       <td><select id="type" name="istop" size="0" class="short-droplist"> <option value="1">精品推荐</option> </select></td> 
+       <td><span class="tips">套黄全天即是全天自动套黄, 整点和半点都自动套黄, 广告随机排序。 </span></td> 
+      </tr> 
+      <tr> 
+       <th>发布条数</th> 
+       <td><select id="num" name="nums" class="short-droplist"> <option value="1">1 条</option> <option value="2">2 条</option> <option value="3">3 条</option> <option value="4">4 条</option> <option value="5">5 条 (5送1 = 6连体)</option> <option value="6">6 条 (送1 = 7连体)</option> <option value="7">7 条 (送1 = 8连体)</option> <option value="8">8 条 (送1 = 9连体)</option> <option value="9">9 条 (送1 = 10连体)</option> <option value="10">10 条 (10送2 = 12连体)</option> </select></td> 
+       <td>&nbsp;<span class="tips"><span class="required">(必填)</span> 多条信息将会连体显示, 多条随机连体。 </span></td> 
+      </tr> 
+      <tr> 
+       <th>&nbsp;</th> 
+       <td><input type="button" id="save" value="确认提交" class="btn" lay-submit lay-filter="formDemo"></td> 
+       <td>&nbsp;</td> 
+      </tr> 
+      <tr> 
+       <th colspan="3">&nbsp;</th> 
+      </tr> 
+     </tbody> 
+    </table> 
+   </form> 
+  </div> 
+  <script src="../layuiadmin/layui/layui.js"></script> 
+  <script src="../statics/layui/layui.js"></script> 
+  <script src="../statics/js/jquery-3.2.1.min.js"></script> 
+  <script src="../statics/config.js"></script> 
+  <script src="../statics/js/public.js"></script> 
+  <!-- <script src="../statics/js/jquery.cookie.js"></script>  --> 
+  <script>
+    console.log('LOCAL ADD HTML 20260404 000002');
+
+    function lastDate() {
+        var currentDate = new Date();
+        currentDate.setDate(currentDate.getDate() + 1);
+        return currentDate.getFullYear() + '-' +
+            ('0' + (currentDate.getMonth() + 1)).slice(-2) + '-' +
+            ('0' + currentDate.getDate()).slice(-2);
+    }
+
+    function currTime() {
+        var currentTime = new Date();
+        return currentTime.getFullYear() + '-' +
+            ('0' + (currentTime.getMonth() + 1)).slice(-2) + '-' +
+            ('0' + currentTime.getDate()).slice(-2) + ' ' +
+            ('0' + currentTime.getHours()).slice(-2) + ':' +
+            ('0' + currentTime.getMinutes()).slice(-2) + ':' +
+            ('0' + currentTime.getSeconds()).slice(-2);
+    }
+
+    function currDate() {
+        var currentDate = new Date();
+        return currentDate.getFullYear() + '-' +
+            ('0' + (currentDate.getMonth() + 1)).slice(-2) + '-' +
+            ('0' + currentDate.getDate()).slice(-2);
+    }
+
+    function startTime() {
+        $('#start').val(lastDate() + ' 00:00:00');
+    }
+
+    function roundMoney(value) {
+        var number = parseFloat(value);
+        if (isNaN(number)) {
+            return 0;
+        }
+        return Math.round(number * 100) / 100;
+    }
+
+    function normalizeFieldLabel(label) {
+        var text = (label || '')
+            .replace(/\s+/g, '')
+            .replace(/：/g, ':')
+            .toLowerCase();
+
+        if (text.indexOf('服务器') > -1 && text.indexOf('名') > -1) {
+            return 'name';
+        }
+        if (text.indexOf('服务器') > -1 && text.indexOf('ip') > -1) {
+            return 'ipname';
+        }
+        if (text.indexOf('线路') > -1) {
+            return 'line';
+        }
+        if (text.indexOf('版本') > -1) {
+            return 'versiondepict';
+        }
+        if (text.indexOf('客服') > -1 || text.indexOf('qq') > -1) {
+            return 'kfqq';
+        }
+        if (text.indexOf('主页') > -1 || text.indexOf('地址') > -1 || text.indexOf('网址') > -1 || text === 'url') {
+            return 'url';
+        }
+        if (text.indexOf('开区') > -1 && text.indexOf('时间') > -1) {
+            return 'datetime';
+        }
+        if (text.indexOf('投放') > -1 && text.indexOf('站点') > -1) {
+            return 'launch';
+        }
+
+        return '';
+    }
+
+    function normalizeFieldValue(key, value) {
+        var text = (value || '').trim();
+
+        if (key === 'url') {
+            text = text.replace(/\/+$/, '');
+        }
+
+        if (key === 'datetime') {
+            var match = text.match(/(\d{4})[-\/](\d{1,2})[-\/](\d{1,2})(?:\s+(\d{1,2}):(\d{1,2})(?::(\d{1,2}))?)?/);
+
+            if (match) {
+                var year = match[1];
+                var month = ('0' + match[2]).slice(-2);
+                var day = ('0' + match[3]).slice(-2);
+                var hours = match[4] != null ? ('0' + match[4]).slice(-2) : '00';
+                var minutes = match[5] != null ? ('0' + match[5]).slice(-2) : '00';
+                var seconds = match[6] != null ? ('0' + match[6]).slice(-2) : '00';
+
+                text = year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+            } else {
+                text = '';
+            }
+        }
+
+        return text;
+    }
+
+    function isSeparatorLine(line) {
+        var text = (line || '').replace(/\s+/g, '');
+        return /^[\-=]{3,}$/.test(text);
+    }
+
+    function hasRecordContent(record) {
+        if (!record) {
+            return false;
+        }
+
+        return !!(
+            record.name ||
+            record.ipname ||
+            record.line ||
+            record.versiondepict ||
+            record.kfqq ||
+            record.url ||
+            record.datetime ||
+            record.launch
+        );
+    }
+
+    function parseAdText(text) {
+        var result = {
+            ok: false,
+            data: [],
+            msg: ''
+        };
+
+        if (!text || !text.trim()) {
+            result.msg = '广告内容不能为空';
+            return result;
+        }
+
+        var lines = text.replace(/\r/g, '').split('\n');
+        var records = [];
+        var current = null;
+
+        for (var i = 0; i < lines.length; i++) {
+            var line = (lines[i] || '').trim();
+
+            if (!line || isSeparatorLine(line)) {
+                continue;
+            }
+
+            var normalizedLine = line.replace(/：/g, ':');
+            var colonIndex = normalizedLine.indexOf(':');
+
+            if (colonIndex === -1) {
+                continue;
+            }
+
+            var label = normalizedLine.substring(0, colonIndex).trim();
+            var value = normalizedLine.substring(colonIndex + 1).trim();
+            var key = normalizeFieldLabel(label);
+
+            if (!key) {
+                continue;
+            }
+
+            value = normalizeFieldValue(key, value);
+            if (!value) {
+                continue;
+            }
+
+            if (key === 'name') {
+                if (current && hasRecordContent(current)) {
+                    records.push(current);
+                }
+                current = {};
+            }
+
+            if (!current) {
+                current = {};
+            }
+
+            current[key] = value;
+        }
+
+        if (current && hasRecordContent(current)) {
+            records.push(current);
+        }
+
+        if (!records.length) {
+            result.msg = '没有识别到有效广告内容';
+            return result;
+        }
+
+        var invalidIndexes = [];
+        for (var j = 0; j < records.length; j++) {
+            if (!records[j].name || !records[j].url) {
+                invalidIndexes.push(j + 1);
+            }
+        }
+
+        if (invalidIndexes.length) {
+            result.msg = '第' + invalidIndexes.join('、') + '条记录缺少服务器名或主页地址';
+            return result;
+        }
+
+        result.ok = true;
+        result.data = records;
+        return result;
+    }
+
+    function getDiscountInfo() {
+        var value = parseInt($('#num').val(), 10) || 1;
+        var detail = '';
+        var nums = value;
+        if (value === 5) {
+            detail = '5送1';
+            nums = 5+1;
+        } else if (value >= 6 && value <= 9) {
+            detail = value + '送1';
+            nums = value + 1;
+        } else if (value === 10) {
+            detail = '10送2';
+            nums = value + 2
+        }
+
+        return {
+            nums: value,
+            detail: detail,
+            text: detail ? ' (优惠活动: ' + detail + ')' : ''
+        };
+    }
+
+    function buildMoneyMark(record, unitPrice, days, discountInfo) {
+        return [
+            record.name || '',
+            '精品推荐 ' + unitPrice,
+            '扣款条数 ' + discountInfo.nums + '条' + discountInfo.text,
+            '广告 '+discountInfo.nums+'条',
+            '展示 ' + days + '天'
+        ].join('\n');
+    }
+
+    layui.config({
+        base: '../../layuiadmin/',
+        version: new Date().getTime()
+    }).extend({
+        index: 'lib/index'
+    }).use(['index', 'table', 'formgs', 'form', 'security', 'layer', 'upload', 'laydate'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            admin = layui.admin,
+            formgs = layui.formgs,
+            layer = layui.layer,
+            laydate = layui.laydate;
+
+        // 初始化开始时间日期选择器
+        laydate.render({
+            elem: '#start',
+            type: 'datetime',
+            format: 'yyyy-MM-dd HH:mm:ss',
+            theme: 'grid',
+            trigger: 'click',
+            done: function(value, date, endDate) {
+                console.log('日期选择器返回值:', value);
+                $('#start').val(value);
+                calculateEndDate();
+            }
+        });
+
+        // 监听开始时间输入框变化
+        $('#start').on('change', function() {
+            calculateEndDate();
+        });
+
+        // 计算结束时间
+        function calculateEndDate() {
+            var startStr = $('#start').val();
+            var days = parseInt($('#days').val()) || 7;
+            
+            if (!startStr) {
+                $('#end').val('');
+                return;
+            }
+            
+            var startDate = new Date(startStr.replace(/-/g, '/'));
+            var endDate = new Date(startDate.getTime() + days * 24 * 60 * 60 * 1000);
+            
+            var endStr = endDate.getFullYear() + '-' +
+                ('0' + (endDate.getMonth() + 1)).slice(-2) + '-' +
+                ('0' + endDate.getDate()).slice(-2) + ' ' +
+                ('0' + endDate.getHours()).slice(-2) + ':' +
+                ('0' + endDate.getMinutes()).slice(-2) + ':' +
+                ('0' + endDate.getSeconds()).slice(-2);
+            
+            $('#end').val(endStr);
+        }
+
+        // 监听推荐天数变化
+        $('#days').on('change', function() {
+            calculateEndDate();
+        });
+
+        $('#start').val(currTime());
+        calculateEndDate();
+        $('#content').val(
+            '服务器名:\n' +
+            '服务器ip:\n' +
+            '开区时间: ' + currDate() + ' 全天套黄\n' +
+            '线路类型:\n' +
+            '版本介绍:\n' +
+            '客服qq号:\n' +
+            '主页地址: https://www.5cq.com\n' +
+            '投放站点:'
+        );
+
+        $('#aaaaa').val('点击设置为' + lastDate() + '(明天)0点后显示');
+
+        $('#content').on('input', function () {
+            var parsed = parseAdText($(this).val());
+
+            if (!parsed.ok || !parsed.data.length) {
+                return;
+            }
+
+            if (parsed.data[0].datetime) {
+                $('#start').val(parsed.data[0].datetime);
+                calculateEndDate();
+            }
+        });
+
+        form.on('submit(formDemo)', function (data) {
+            var nums = data.field.nums;
+            var days = data.field.days;
+            var startdate = data.field.startdate;
+            var type = data.field.istop;
+
+            admin.req({
+                url: layui.setter.url + 'getUserInfogin',
+                data: {
+                    token: localStorage.getItem('vipvtoken')
+                },
+                done: function (res) {
+                    var oldinfo = res.data;
+                    var hours = new Date().getHours();
+
+                    admin.req({
+                        url: layui.setter.url + 'ranking/syssettings',
+                        data: {
+                            id: 10
+                        },
+                        done: function (res) {
+                            var price = res.data;
+
+                            if (hours < 23) {
+                                var url1 = layui.setter.url + 'addAdogin?token=' + localStorage.getItem('vipvtoken');
+                                var text = $("#form1 textarea[name='content']").val();
+                                var parsed = parseAdText(text);
+
+                                if (!parsed.ok) {
+                                    layer.msg(parsed.msg);
+                                    return;
+                                }
+
+                                var dataArr = parsed.data;
+
+                                for (var i = 0; i < dataArr.length; i++) {
+                                    dataArr[i].startdate = startdate;
+                                    dataArr[i].type = type;
+                                    dataArr[i].days = days;
+                                    dataArr[i].nums = nums;
+                                    dataArr[i].price = price;
+                                    dataArr[i].shows = 1;
+                                    dataArr[i].launch = dataArr[i].launch || '5cq';
+                                }
+
+                                var submitData = {
+                                    publish: dataArr,
+                                    token: localStorage.getItem('vipvtoken')
+                                };
+
+                                $.ajax({
+                                    url: url1,
+                                    type: 'POST',
+                                    data: JSON.stringify(submitData),
+                                    contentType: 'application/json',
+                                    success: function (res) {
+                                        if (res.code != 0) {
+                                            layer.msg(res.msg);
+                                            return;
+                                        }
+
+                                        admin.req({
+                                            url: layui.setter.url + 'getUserInfogin',
+                                            data: {
+                                                token: localStorage.getItem('vipvtoken')
+                                            },
+                                            done: function (res) {
+                                                var newinfo = res.data;
+                                                var oldMoney = roundMoney(oldinfo.money);
+                                                var finalMoney = roundMoney(newinfo.money);
+                                                var totalDeduct = roundMoney(oldMoney - finalMoney);
+                                                var recordCount = dataArr.length;
+                                                var runningOldMoney = oldMoney;
+                                                var unitPrice = parseInt((parseFloat(price) || 0) / Math.max(parseInt(days, 10) || 1, 1), 10) || 0;
+                                                var discountInfo = getDiscountInfo();
+
+                                                if (recordCount <= 0) {
+                                                    layer.msg('没有可记录的消费数据');
+                                                    return;
+                                                }
+
+                                                function writeMoneyLogs(index) {
+                                                    if (index >= recordCount) {
+                                                        $.ajax({
+                                                            url: layui.setter.url + 'ranking/test1',
+                                                            type: 'GET',
+                                                            success: function (res) {
+                                                                console.log('ADD.HTML TEST1 RUNNING', res);
+                                                            },
+                                                            error: function (err) {
+                                                                console.log('TEST1_ERROR', err);
+                                                            }
+                                                        });
+
+                                                        layer.msg('发布成功', {
+                                                            icon: 1,
+                                                            time: 1000
+                                                        }, function () {
+                                                            location.href = './list.html';
+                                                        });
+                                                        return;
+                                                    }
+
+                                                    var currentRecord = dataArr[index];
+                                                    var currentDeduct;
+
+                                                    if (index === recordCount - 1) {
+                                                        currentDeduct = roundMoney(runningOldMoney - finalMoney);
+                                                    } else {
+                                                        currentDeduct = roundMoney(totalDeduct / recordCount);
+                                                    }
+
+                                                    var currentNewMoney = roundMoney(runningOldMoney - currentDeduct);
+                                                    var currentMoney = roundMoney(currentNewMoney - runningOldMoney);
+                                                    var mark = buildMoneyMark(currentRecord, unitPrice, days, discountInfo);
+                    
+                                                    $.ajax({
+                                                        url: layui.setter.url + 'ranking/addMoney',
+                                                        type: 'POST',
+                                                        data: {
+                                                            user_id: newinfo.id,
+                                                            oldmoney: runningOldMoney,
+                                                            newmoney: currentNewMoney,
+                                                            money: currentMoney,
+                                                            code: 2,
+                                                            mark: mark
+                                                        },
+                                                        success: function (logRes) {
+                                                            if (logRes && typeof logRes.code !== 'undefined' && logRes.code != 0) {
+                                                                layer.msg(logRes.msg || '消费记录写入失败');
+                                                                return;
+                                                            }
+
+                                                            runningOldMoney = currentNewMoney;
+                                                            writeMoneyLogs(index + 1);
+                                                            $.get({url:'https://hz.5cq.net/cq/yx/ttt'})
+                                                        },
+                                                        error: function () {
+                                                            layer.msg('消费记录写入失败');
+                                                        }
+                                                    });
+                                                }
+
+                                                writeMoneyLogs(0);
+                                            }
+                                        });
+                                    },
+                                    error: function () {
+                                        layer.msg('提交广告失败');
+                                    }
+                                });
+                            } else {
+                                layer.msg('该时间暂停发布广告');
+                            }
+                        }
+                    });
+                }
+            });
+
+            return false;
+        });
+    });
+</script>  
+ </body>
+</html>

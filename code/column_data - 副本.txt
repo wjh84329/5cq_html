@@ -1,0 +1,12 @@
+['广告查询','广告查询','/index.html',false,['index','']],
+['数据分析','数据分析','/code/dataAnalysis.html',false,['dataAnalysis']],
+['发布站点','发布站点','/code/publishSites.html',false,['publishSites']],
+['快速筛选','快速筛选','/code/fastscreen.html',false,['fastscreen']],
+['总价排行','总价排行','/code/ranking.html',false,['ranking']],
+['招聘交易','招聘交易','/code/recruTran.html',true,['recruTran','recruTran_edit']],
+['传奇论坛','传奇论坛','/code/forumFunction.html',true,['forumFunction','forumFunction_edit']],
+['传奇直播','传奇直播','/code/liveBroadcast.html',false,['liveBroadcast']],
+['资源导航','资源导航','/code/resourceNavigation.html',false,['resourceNavigation']],
+['网站备案','网站备案','/code/websfilQuery.html',false,['websfilQuery']],
+['传奇列表','传奇列表','http://www.zhaois.com',true,['跳转的'],'_blank'],
+['文章列表','文章列表','/code/articleList.html',false,['articleList','wz','article']]

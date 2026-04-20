@@ -1,0 +1,34 @@
+var zhaoff = {
+first_title:[@@]
+};
+
+var a = "##";
+var b = a.split("/");
+var c = b.slice(b.length - 1, b.length).toString(String).split(".");
+var htmlid = c.slice(0, 1)[0];
+
+ var titlehtml = '<div class="nav clearfix"  id="cdmenu">\n';
+    var titles = zhaoff.first_title;
+    for (var i in titles){
+
+        var active = false;
+        var arr = titles[i][4];
+        for (var ids in arr){
+            if (arr[ids] == htmlid){
+                active = true;
+            }
+        }
+
+        if (typeof titles[i][5] == 'undefined')titles[i][5]='';
+        titlehtml +=
+            '<a href="'+(titles[i][2]?titles[i][2]:"javascript:;")+'" target="'+titles[i][5]+'"   onclick="openActive(\''+titles[i][0]+'\',\''+titles[i][2]+'\','+i+');" class=" '+(active?"active ":"")+' clearfix" style="cursor: pointer">\n' +
+            '   <img style="display:'+(titles[i][3]?"block":"none" )+';"  src="/statics/images/hot.gif" class="icon">\n' +
+            '   <div>\n' +
+            '       <p>'+titles[i][0]+'</p>\n' +
+            '       <p>'+titles[i][1]+'</p>\n' +
+            '   </div>\n' +
+            '   <em></em>\n' +
+            '</a>\n';
+
+    }
+    titlehtml += '</div>\n';

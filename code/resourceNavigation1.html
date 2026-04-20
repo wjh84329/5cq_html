@@ -1,0 +1,1233 @@
+<!doctype html>
+<html lang="en">
+ <head> 
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+  <title>5CQ-传奇广告查询站_传奇广告排行_传奇资源站_新开传奇新服排名站(5CQ.COM)</title>
+  <meta name="description" content="5CQ.Com传奇广告排行榜,传奇私服查询站,传奇资源站,好玩的传奇排名站,玩家最爱的新开传奇,GM最喜欢的传奇工具,传奇直播,传奇新开服,传奇相关尽在5CQ(玩传奇)">
+  <meta name="keywords" content="传奇广告查询站,传奇资源站,传奇广告排行,传奇SF广告统计(5CQ.COM)">   
+  <!--  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">--> 
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+  <meta name="renderer" content="webkit"> 
+  <meta name="Referrer" content="origin"> 
+  <link rel="stylesheet" href="../statics/css/layer.css"> 
+  <link rel="stylesheet" href="../statics/css/tools.css"> 
+  <link rel="stylesheet" href="../statics/css/public.css"> 
+  <link rel="stylesheet" href="../statics/css/slide-unlock.css"> 
+  <link rel="stylesheet" href="../statics/layui/css/layui.css"> 
+  <script src="../statics/js/jquery-3.2.1.min.js"></script> 
+  <script src="../statics/js/jquery.cookie.js"></script> 
+  <script src="../statics/js/public.js"></script> 
+  <script src="../statics/adminconfig.js"></script> 
+  <script src="../statics/config.js"></script> 
+  <script src="../statics/js/jquery.slideunlock.js"></script> 
+  <script src="../statics/js/layer.js"></script> 
+  <style>
+        .main .content-box li .hotbtn {
+            display: inline-block;
+            height: 16px;
+            background: url(/statics/images/new/heart2.png) no-repeat;
+            padding-left: 20px;
+            line-height: 16px;
+        }
+
+        /*/ ÍøÕ¾µ¼º½ /*/
+        li {
+            list-style: none;
+        }
+
+        .witem {
+            height: 40px;
+            line-height: 40px;
+            list-style: none;
+            font-size: 15px;
+            font-weight: 800;
+            display: block;
+            border: solid 1px #1a73e8;
+            width: 120px;
+            text-align: center;
+            cursor: pointer;
+            margin-left: 10px;
+            background: #1a73e8;
+            color: #FFFFFF;
+        }
+
+        .webtxt {
+            overflow: hidden;
+            margin-bottom: 10px;
+            background: #FFF
+        }
+
+        ul.weblist {
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        ul.weblist li {
+            width: 240px;
+            height: 108px;
+            padding: 10px;
+            list-style: none;
+            /*float: left;*/
+            overflow: hidden;
+        }
+
+        ul.weblist li span {
+            color: #999999;
+            margin-left: 10px;
+        }
+
+        ul.weblist li a.title {
+            font-size: 15px;
+            text-decoration: none;
+            color: #333333;
+        }
+
+        ul.weblist li a:hover {
+            text-decoration: underline;
+            color: #FF0000;
+        }
+
+        .webinfo {
+            border: 1px solid #ddd;
+            padding: 7px 2px;
+            overflow: hidden;
+            background-color: #FFFFFF;
+            text-align: center;
+        }
+
+        .webinfo:hover {
+            border: solid 1px #DA0000;
+        }
+
+        .pagebox {
+            background: #f9f9f9;
+            overflow: hidden;
+        }
+
+        .commonContent {
+            background: #FFF
+        }
+
+        .pic {
+            margin-bottom: 20px
+        }
+
+        .save {
+            background: url(/static/21cq/icon_2.png) 0px -3px no-repeat;
+        }
+
+        .free {
+            background: url(/static/21cq/icon_2.png) 0px -73px no-repeat;
+        }
+
+        .bind {
+            background: url(/static/21cq/icon_2.png) 0px -144px no-repeat;
+        }
+
+        .save, .free, .bind {
+            float: left;
+            font-size: 13px;
+            color: #989898;
+            padding-left: 20px;
+            margin-right: 15px;
+        }
+
+        .infodesc li {
+            margin-bottom: 7px;
+        }
+
+        .infodesc span {
+            color: #989898;
+        }
+
+        .bigtitle {
+            border-bottom: 1px solid #eee; /* padding: 20px 0px 0px 0px; */
+            height: 53px;
+            position: relative;
+            margin: 30px 0 20px 0;
+        }
+
+        .bigtitle h4 {
+            max-width: 1200px;
+            font-size: 20px;
+            color: #202020;
+            font-weight: 500;
+            border-bottom: 3px solid #3c8de6;
+            padding-bottom: 12px;
+            position: absolute;
+            top: 10px;
+            left: 0px;
+            white-space: nowrap;
+        }
+
+        .download {
+            height: 40px
+        }
+
+        .download {
+            height: 34px;
+        }
+
+        .download a {
+            width: 150px;
+            height: 34px;
+            line-height: 34px;
+            text-align: center;
+            color: #fff;
+            font-size: 14px;
+            background: #f60;
+            display: block;
+            float: left;
+            margin: 18px 4px 0 10px;
+            border-radius: 4px;
+        }
+
+        .download a em {
+            display: block;
+            width: 36px;
+            height: 34px;
+            line-height: 34px;
+            border-right: 1px solid #f16202;
+            background: url(/static/21cq/xiazai-2.png) no-repeat 11px 0px;
+            float: left;
+        }
+
+        .art_content {
+            line-height: 180%;
+            font-size: 16px;
+        }
+
+        .gh_wenz {
+            padding: 10px;
+            margin-top: 40px;
+            font-size: 16px;
+            color: #303030;
+        }
+
+        .gh_wenz a:hover {
+            text-decoration: underline;
+            color: #da0000;
+        }
+
+        .bg11111 {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-radius: 5px;
+            border: 1px solid #e6e6e6;
+            height: 80px;
+            /*background-color: gainsboro;*/
+            background-color: white;
+            cursor: pointer;
+            padding: 0 3%;
+            margin: 0 3%;
+        }
+
+        .bg11111 > div:nth-child(1) {
+            padding: 15px;
+        }
+        .bg11111 > div:nth-child(2) {
+            width: 200px;
+        }
+
+        .bg22222 {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-radius: 5px;
+            border: 1px solid #e6e6e6;
+            height: 70px;
+            /*background-color: gainsboro;*/
+            background-color: white;
+            cursor: pointer;
+        }
+
+        .bg22222 > a .http {
+            color: dimgrey
+        }
+
+        .bg11111color {
+            font-size: 15px;
+            margin-bottom: 5px;
+            color: darksalmon
+        }
+
+/*        .bg11111:hover {
+            color: #f2f3f7;
+            background-color: hsla(0, 0%, 0%, .7);
+        }*/
+
+        .bg11111:hover > .bg-2 >div:nth-child(1) {
+            display: none;
+        }
+        .bg11111:hover > .bg-2 >div:nth-child(2) {
+            display: none !important;
+        }
+        .bg11111:hover > .bg-2 >div:nth-child(3) {
+            display: none !important;
+        }
+        .bg11111:hover > .bg-2 >div:nth-child(4) {
+            display: block !important;
+        }
+
+        .bg11111:hover .bg11111color {
+            color: darksalmon;
+        }
+
+        .bg22222:hover > a .http {
+            color: #f2f3f7;
+        }
+
+        .bg22222:hover {
+            color: #f2f3f7 !important;
+            background-color: hsla(0, 0%, 0%, .7);
+        }
+
+        /*.bg22222:hover .bg11111color {
+            color: red;
+        }*/
+
+        .background-container {
+            position: relative;
+            width: 400px;
+            height: 300px;
+            overflow: hidden; /* 确保背景不会溢出容器 */
+        }
+
+        .background-layers {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(to bottom right, rgba(255, 126, 95, 0.5), rgba(254, 180, 123, 0.5)),
+            linear-gradient(to bottom right, #ff7e5f, #feb47b);
+            /* 第一个渐变层是半透明的，作为“上层” */
+            /* 第二个渐变层是全色的，作为“下层” */
+            transform: skewY(-10deg); /* 倾斜背景 */
+            transform-origin: bottom left; /* 倾斜的起点 */
+        }
+
+        .text-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) skewY(10deg); /* 反向倾斜以抵消背景的倾斜 */
+            color: white;
+            text-align: center;
+            width: 100%; /* 或者设置为具体的宽度 */
+        }
+
+        .clearfix .link a {
+            color: #fff;
+            margin-right: 28px;
+        }
+
+        .clearfix .link a em {
+            display: inline-block;
+            width: 1px;
+            height: 14px;
+            background: #fff;
+            vertical-align: -2.5px;
+            margin-left: 28px;
+        }
+
+        .p1 {
+            text-align: center;
+            margin-top: 28px;
+        }
+
+        .p1 span {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .p1 em {
+            color: rgba(193, 193, 193, 0.8);
+        }
+
+        .p2 {
+            text-align: center;
+            margin: 18px 0;
+        }
+
+        .p2 > * {
+            display: inline-block;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .p2 .icon-link {
+            vertical-align: -2px;
+            margin-right: 6px;
+        }
+
+        .p2 > * a {
+            color: inherit;
+            margin-right: 10px;
+        }
+
+        .textfoot {
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .layui-field-title .layui-field-box {
+            padding: 10px 15px;
+        }
+
+        .layui-rate li i.layui-icon {
+            font-size: 12px;
+            color: #FFB800;
+            margin-right: 5px;
+            transition: all .3s;
+            -webkit-transition: all .3s;
+        }
+
+        .layui-inline {
+            *display: inline;
+            *zoom: 1;
+            line-height: 1px;
+        }
+        .icon-small1
+        {
+            display: inline-block;
+            background-image: url(../statics/images/icon/icon.png);
+            background-position: -30px 0px;
+            width: 34px;
+            height: 34px;
+            /*margin-bottom: 10px;*/
+            /*margin-top: -10px;*/
+        }
+        .icon-small2
+        {
+            display: inline-block;
+            background-image: url(../statics/images/icon/icon.png);
+            background-position: -63px 0px;
+            width: 34px;
+            height: 34px;
+            /*margin-bottom: 10px;*/
+            /*margin-top: -10px;*/
+        }
+        .icon-small3
+        {
+            display: inline-block;
+            background-image: url(../statics/images/icon/icon.png);
+            background-position: -98px 0px;
+            width: 34px;
+            height: 34px;
+            /*margin-bottom: 10px;*/
+            /*margin-top: -10px;*/
+        }
+        .icon-smallbg
+        {
+            display: inline-block;
+            background-image: url(../statics/images/icon/icon.png);
+            background-position: -10px -148px;
+            width: 90px;
+            height: 65px;
+            /*margin-bottom: 10px;*/
+            /*margin-top: -10px;*/
+        }
+        .icon-small12
+        {
+            display: inline-block;
+            background-image: url(../statics/images/icon/icon.png);
+            background-position: -30px -32px;
+            width: 34px;
+            height: 34px;
+            margin-bottom: 15px;
+            position: absolute;
+            top: 15%;
+            left: 30%;
+            /*margin-top: -10px;*/
+        }
+        .icon-small22
+        {
+            display: inline-block;
+            background-image: url(../statics/images/icon/icon.png);
+            background-position: -65px -32px;
+            width: 34px;
+            height: 34px;
+            margin-bottom: 15px;
+            position: absolute;
+            top: 15%;
+            left: 30%;
+            /*margin-top: -10px;*/
+        }
+        .icon-small32
+        {
+            display: inline-block;
+            background-image: url(../statics/images/icon/icon.png);
+            background-position: -102px -32px;
+            width: 34px;
+            height: 34px;
+            margin-bottom: 15px;
+            position: absolute;
+            top: 15%;
+            left: 30%;
+            /*margin-top: -10px;*/
+        }
+        .daohang1{
+            padding: 0 15px;
+        }
+        .daohang2{
+            padding: 0 15px;
+        }
+        .daohang3{
+            padding: 0 15px;
+        }
+        /*.daohang1 .active div p:nth-child(1) {
+            display: none;
+        }
+        .daohang1 .active div p:nth-child(2) {
+            display: block;
+        }
+        .daohang2 .active div p:nth-child(1) {
+            display: none;
+        }
+        .daohang2 .active div p:nth-child(2) {
+            display: block;
+        }
+        .daohang3 .active div p:nth-child(1) {
+            display: none;
+        }
+        .daohang3 .active div p:nth-child(2) {
+            display: block;
+        }*/
+        /*.icon-small
+        {   !*png图片左上角为原点,往右往下均为负值*!
+            background-position: 0px 0px;!*对应小图标的坐标*!
+        }*/
+        /*.xzbj {
+            background: rgb(107, 107, 107);
+        }*/
+
+        /*body .xzbj .layui-layer-title {
+            background: rgb(107, 107, 107);
+            color: white;
+            border-color: grey;
+            font-size: 16px;
+            height: 50px;
+            line-height: 50px;
+        }*/
+
+        /*body .xzbj .layui-layer-title{background:#c00; color:#fff; border: none;}
+        body .xzbj .layui-layer-btn{border-top:1px solid #E9E7E7}
+        body .xzbj .layui-layer-btn a{background:#333;}
+        body .xzbj .layui-layer-btn .layui-layer-btn1{background:#999;}*/
+    </style> 
+ </head> 
+ <body> 
+  <div class="topinfo"> 
+   <div class="wid" style="width: 100%;justify-content: space-around"> 
+    <div class="topinfo_l">
+      同步站:Www.Chacq.Com[查传奇] 
+    </div> 
+    <div class="topinfo_c">
+      通知：严厉打击带有赌博的游戏，欢迎监督举报(举报经查实现金红包奖励) 
+    </div> 
+    <div class="topinfo_r"> 
+     <a href="/" style="color: white;margin-right: 15px">首页</a> 
+     <a href="./recruTran.html" style="color: white;margin-right: 15px" target="_blank">招聘交易发布</a> 
+     <a href="#" style="color: white;margin-right: 15px" onclick="shoucang()">收藏网址</a> 
+     <a href="5cq.com传奇站.url" download="5cq.com传奇站.url" style="color: white;margin-right: 15px">保存桌面</a> 
+    </div> 
+   </div> 
+  </div> 
+  <div id="head" style="height: 270px;"> 
+   <script>zhaoff.inithead("#head");</script> 
+  </div> 
+  <!--<div class="navc" id="first_title" style="height: 79px"><script> zhaoff.initftitle("#first_title");</script></div>--> 
+  <!--<script src="../statics/js/cdmenu.js"></script>--> 
+  <div class="navc" id="first_title"> 
+   <div class="nav clearfix" id="cdmenu"> 
+    <a href="/index.html" target="" onclick="openActive('首页','/index.html',1);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
+     <div> 
+      <p>首页</p> 
+      <p>HOME</p> 
+     </div> <em></em> </a> 
+    <a href="/code/ranking.html" target="" onclick="openActive('广告排行','/code/ranking.html',2);" class=" clearfix" style="cursor: pointer"> <img style="display:block;" src="/statics/images/hot.gif" class="icon"> 
+     <div> 
+      <p>广告排行</p> 
+      <p>AD RANKING</p> 
+     </div> <em></em> </a> 
+    <a href="/chat.html" target="" onclick="openActive('AI助手','/chat.html',3);" class=" clearfix" style="cursor: pointer"> <img style="display:block;" src="/statics/images/hot.gif" class="icon"> 
+     <div> 
+      <p>AI助手</p> 
+      <p>AI CHAT</p> 
+     </div> <em></em> </a> 
+    <a href="/code/dataAnalysis.html" target="" onclick="openActive('广告分析','/code/dataAnalysis.html',4);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
+     <div> 
+      <p>广告分析</p> 
+      <p>AD REQUEST</p> 
+     </div> <em></em> </a> 
+    <a href="/code/fastscreen.html" target="" onclick="openActive('广告筛选','/code/fastscreen.html',5);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
+     <div> 
+      <p>广告筛选</p> 
+      <p>AD SEARCH</p> 
+     </div> <em></em> </a> 
+    <a href="/code/report.html" target="" onclick="openActive('黑名单','/code/report.html',6);" class=" clearfix" style="cursor: pointer"> <img style="display:block;" src="/statics/images/hot.gif" class="icon"> 
+     <div> 
+      <p>黑名单</p> 
+      <p>BLACK LIST</p> 
+     </div> <em></em> </a> 
+    <a href="/code/recruTran.html" target="" onclick="openActive('招聘交易','/code/recruTran.html',7);" class=" clearfix" style="cursor: pointer"> <img style="display:block;" src="/statics/images/tj.gif" class="icon"> 
+     <div> 
+      <p>招聘交易</p> 
+      <p>RECRUIT·TRADE</p> 
+     </div> <em></em> </a> 
+    <a href="/code/journalism.html" target="" onclick="openActive('传奇攻略','/code/journalism.html',8);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
+     <div> 
+      <p>传奇攻略</p> 
+      <p>NEWS GUIDE</p> 
+     </div> <em></em> </a> 
+    <a href="/code/publishSites.html" target="" onclick="openActive('发布站点','/code/publishSites.html',9);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
+     <div> 
+      <p>发布站点</p> 
+      <p>PUBLISH SITES</p> 
+     </div> <em></em> </a> 
+    <a href="/code/resourceNavigation.html" target="" onclick="openActive('工具导航','/code/resourceNavigation.html',10);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
+     <div> 
+      <p>工具导航</p> 
+      <p>DATA DOWN</p> 
+     </div> <em></em> </a> 
+   </div> 
+  </div> 
+  <div id="downlink" style="display: none;position: relative;height: 100%"> 
+   <div style="display: flex;flex-direction: column;padding-top: 5%;padding-left: 10%;max-height: calc(100% - 100px); overflow-y: auto;"> 
+    <div style="margin-top: 5%;display: flex"> 
+     <div class="" style="width: 70px;height: 70px;padding: 5px"> 
+      <img id="imgurl" style="width: 60px;height: 60px;border-radius: 5px" src="../../statics/upload/c8f9a720-9907-4c82-a6f1-1c914709cae8.jpg" alt="热血传奇2003客户端"> 
+     </div> 
+     <div> 
+      <h1 style="font-size: 25px" id="toolsName">热血传奇2003客户端</h1> 
+      <div style="font-size: 15px;margin-top: 1%"> 
+       <svg t="1719374719900" class="icon" viewbox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8286" width="15" height="15"> 
+        <path d="M934.4 147.85024h-41.1392s-96-2.73664-192-41.07264c-98.74688-41.06496-164.57216-87.61344-164.57216-87.61344L512 0l-24.68352 16.42752S421.48608 62.976 322.74432 104.04096c-96 41.07264-192 41.07264-192 41.07264H89.6v432.59648C89.6 794.0096 363.88608 1024 512 1024s422.4-229.9904 422.4-446.28992V147.85024z m-120.68352 191.65696L509.25824 646.15936c-8.22784 8.21504-19.2 10.95168-30.1696 10.95168-8.22784 0-19.2-2.73664-24.6912-8.21504L248.68864 484.608c-16.45568-13.68832-21.94176-41.07008-5.48608-57.4976 13.71392-16.42752 41.1392-21.9008 57.6-5.47584l178.28352 142.3744 279.77216-279.2576a39.81568 39.81568 0 0 1 57.6 0c16.45568 16.42752 13.71392 38.32832-2.74432 54.75584z m0 0" fill="#1296db" p-id="8287"></path> 
+       </svg> 
+       <span>安全</span> 
+       <svg t="1719374893911" class="icon" viewbox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10546" width="15" height="15"> 
+        <path d="M728.576 593.92v71.68H285.184v-69.12C116.224 630.784 0 703.488 0 786.944c0 117.76 229.376 212.992 512 212.992s512-95.232 512-212.992c0-85.504-120.832-158.72-295.424-193.024z" fill="#80D3A8" p-id="10547"></path> 
+        <path d="M819.2 685.568l-242.688 139.776c-40.96 23.552-88.064 23.552-129.024 0L204.8 685.568c-40.96-23.552-64.512-64-64.512-111.616V293.888c0-47.616 23.552-88.064 64.512-111.616L447.488 41.984c40.96-23.552 88.064-23.552 129.024 0L819.2 181.76c40.96 23.552 64.512 64 64.512 111.616V573.44c0 47.616-23.552 88.064-64.512 112.128z m-110.592-142.336c-2.048-15.872-10.24-23.552-23.552-23.552-13.824 0.512-21.504 8.192-23.552 23.552 0.512 10.24-1.024 18.944-3.072 26.112-2.56 7.168-8.192 10.752-16.896 11.264h-74.752c-8.704-1.024-13.312-5.632-13.824-13.824V502.784h88.576c16.384 0.512 24.576-7.68 24.064-24.064V371.712c0.512-16.384-7.68-24.064-24.064-24.064h-44.544c13.312-15.872 24.576-32.768 33.792-51.712 7.68-18.944 1.536-29.696-18.432-31.744H477.696c1.536-11.776-2.56-20.48-12.288-26.624-9.728-6.144-19.456-4.096-29.184 6.144-32.256 41.472-69.12 74.752-109.568 100.352-11.264 9.728-13.312 20.48-6.656 31.744s16.384 14.336 28.672 9.728c4.096-1.536 7.168-3.072 8.192-4.608v98.304c-1.024 16.896 7.168 25.088 24.064 24.064h80.384c-20.992 41.984-64 70.656-129.024 85.504-13.312 5.632-18.944 14.848-15.872 27.648 3.072 13.312 11.776 19.456 27.136 18.432 32.256-6.656 62.976-18.944 92.16-36.864 29.184-17.92 52.224-45.568 69.12-81.92v71.68c0.512 26.624 15.872 40.448 46.08 41.472H645.12c18.944 0.512 33.792-5.12 45.568-16.896 11.264-11.776 17.408-33.792 17.92-65.536v-3.584z m-185.344-130.56v-19.456h82.432c8.192-0.512 12.288 3.584 12.288 11.264v41.472c0 8.192-4.096 12.288-12.288 11.264h-84.992c1.536-10.752 2.56-25.6 2.56-44.544z m13.824-65.536H402.432c15.872-11.776 30.208-24.576 43.52-38.912h108.032c7.68-1.024 10.24 1.024 6.656 5.632-6.656 10.24-14.336 21.504-23.552 33.28z m-121.856 46.08h62.464v14.336c-0.512 20.992-1.536 37.376-4.096 49.664H415.232c-8.704 1.024-12.8-3.072-12.288-11.264V404.48c-0.512-7.68 3.584-11.264 12.288-11.264z" fill="#00A651" p-id="10548"></path> 
+       </svg> 
+       <span>免费</span> 
+       <svg t="1719377182662" class="icon" viewbox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="21466" width="15" height="15"> 
+        <path d="M654.010508 934.429144c-82.366095-19.881471-516.91825-153.371349-551.000772-624.846236 0 0-76.685674 284.021016 90.886726 548.160562 122.129037 193.134291 301.062277 184.613661 400.469633 139.170298 213.015762 19.881471 343.66543-62.484624 343.66543-62.484624-96.567146 34.082522-258.459125 5.68042-284.021017 0M176.855201 0C145.612889 142.010508 142.772679 261.299335 159.81394 360.706691c19.881471-79.525885 53.963993-116.448617 53.963993-116.448617-34.082522 93.726935-25.561891 195.974501-19.881471 232.897234 19.881471 51.123783 45.443363 96.567146 73.845464 136.330088 0-144.850718 53.963993-227.216813 53.963993-227.216814-28.402102 136.330088 8.52063 275.500386 19.881471 312.423118 36.922732 34.082522 73.845464 62.484624 110.768197 88.046516-36.922732-173.25282 11.360841-284.021016 11.36084-284.021017-5.68042 144.850718 53.963993 284.021016 76.685675 335.1448 90.886725 42.603152 159.051769 56.804203 159.051769 56.804203s113.608407-329.464379-195.974501-553.840982C273.422346 173.25282 176.855201 0 176.855201 0" fill="#1C9307" p-id="21467"></path> 
+       </svg> 
+       <span>无捆绑</span> 
+      </div> 
+     </div> 
+    </div> 
+    <div class="infodesc" style="margin-top: 5%;"> 
+     <li id="downloadCount"><span>下载次数：</span> 12</li> 
+     <li id="fileSize"><span>文件大小：</span> 297MB</li> 
+     <li id="createTime"><span>添加时间：</span> 2024-06-18 20:43:07</li> 
+     <li id="unzipPassword"><span>解压密码：</span> 1pk.com</li> 
+    </div> 
+    <div style="margin-top: 5%;padding-right: 40px;" id="description" class="art_content"> 
+    </div> 
+   </div> 
+   <div id="download" style="position: absolute;bottom: 0;padding: 10px;height: 40px;display: flex;justify-content: space-around;align-items: center;width: 95%;border-top: 1px solid gray"> 
+    <!--<a href="" class="layui-btn layui-btn-radius layui-btn-danger" style="width: 25%">百度云<i style="margin-left: 10%" class="layui-icon">&#xe681;</i></a>
+                <button class="layui-btn layui-btn-radius layui-btn-danger" style="width: 25%">华为云<i style="margin-left: 10%" class="layui-icon">&#xe681;</i></button>
+                <button class="layui-btn layui-btn-radius layui-btn-danger" style="width: 25%">阿里云<i style="margin-left: 10%" class="layui-icon">&#xe681;</i></button>--> 
+   </div> 
+  </div> 
+  <!--代码正文--> 
+  <div class="container" style="margin-top: 20px;"> 
+   <div> 
+    <div class="layui-form" style="display: flex;justify-content: space-between;align-items: center;background-color: white"> 
+     <div> 
+      <ul style="display: flex;align-items: flex-end;margin: 10px 0;"> 
+       <li class="daohang1"> <a href="javascript:void(0)" class="active" style="display: flex;flex-direction: column;justify-content: center;align-items: center"> 
+         <div style="display: none"> 
+          <div class="icon-small1"></div> 
+         </div> 
+         <div style="position: relative;display: block"> 
+          <span class="icon-smallbg"></span> 
+          <span class="icon-small12"></span> 
+         </div> 
+         <div> 
+          <em>服务器工具</em> 
+         </div> </a> </li> 
+       <li class="daohang2"> <a href="javascript:void(0)" class="" style="display: flex;flex-direction: column;justify-content: center;align-items: center"> 
+         <div style="display: block"> 
+          <div class="icon-small2"></div> 
+         </div> 
+         <div style="position: relative;display: none"> 
+          <span class="icon-smallbg"></span> 
+          <span class="icon-small22"></span> 
+         </div> 
+         <div> 
+          <em>网址导航</em> 
+         </div> </a> </li> 
+       <li class="daohang3"> <a href="javascript:void(0)" class="" style="display: flex;flex-direction: column;justify-content: center;align-items: center"> 
+         <div style="display: block"> 
+          <div class="icon-small3"></div> 
+         </div> 
+         <div style="position: relative;display: none"> 
+          <span class="icon-smallbg"></span> 
+          <span class="icon-small32"></span> 
+         </div> 
+         <div> 
+          <em>帮助文档</em> 
+         </div> </a> </li> 
+      </ul> 
+     </div> 
+     <div style="display: flex;margin-right: 10%"> 
+      <div class="layui-form-item"> 
+       <div class="layui-inline"> 
+        <div class="layui-input-inline" style="width: 500px"> 
+         <input type="text" name="ksid" placeholder="请输入关键字或全名搜索工具" autocomplete="off" class="layui-input"> 
+        </div> 
+       </div> 
+      </div> 
+      <div class="layui-form-item"> 
+       <div class="layui-inline"> 
+        <button type="button" class="layui-btn layui-btn-normal search"><i class="layui-icon"></i></button> 
+       </div> 
+      </div> 
+     </div> 
+    </div> 
+   </div> 
+   <div style="padding: 5px;background: #F2F3F7FF" id="info"> 
+    <fieldset class="layui-elem-field layui-field-title" style="margin: 5px;border: 1px solid gainsboro;"> 
+     <legend style="text-align: center">服务器工具</legend> 
+     <div class="layui-field-box"> 
+      <div class="layui-row gjxzlist"> 
+       <!--<div class="layui-col-md3" style="padding: 5px">
+                        <div class="bg11111" data-id="466" data-count="8" style="">
+                            <div class="bg-1">
+                                <img src="../statics/upload/2051677c-cb95-45f4-80fc-f8be435ac88a.png"
+                                     style="border-radius: 5px" width="40" height="40">
+                            </div>
+                            <div class="bg-2">
+                                <div class="bg11111color" style="">3389远程批量管理工具</div>
+                                <div style="display: flex;"><div id="test1"></div><div class="layui-btn layui-btn-sm layui-btn-warm" style="height: 20px;line-height: 20px">系统工具</div></div>
+                                <div style="font-size: 13px;margin-top: 5px">8次下载&#45;&#45;含易语言源码</div>
+                                <div style="font-size: 13px;margin-top: 5px;display: none;margin-left: 20%"><button type="button" class="layui-btn layui-btn-danger">立即下载</button></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md3" style="padding: 5px">
+                        <div class="bg11111" data-id="467" data-count="8" style="">
+                            <div class="bg-1">
+                                <img src="../statics/upload/2051677c-cb95-45f4-80fc-f8be435ac88a.png"
+                                     style="border-radius: 5px" width="40" height="40">
+                            </div>
+                            <div class="bg-2">
+                                <div class="bg11111color" style="">3389远程批量管理工具</div>
+                                <div style="display: flex;"><div id="test2"></div><div class="layui-btn layui-btn-sm layui-btn-warm" style="height: 20px;line-height: 20px">系统工具</div></div>
+                                <div style="font-size: 13px;margin-top: 5px">8次下载&#45;&#45;含易语言源码</div>
+                                <div style="font-size: 13px;margin-top: 5px;display: none;margin-left: 20%"><button type="button" class="layui-btn layui-btn-danger">立即下载</button></div>
+                            </div>
+                        </div>
+                    </div>--> 
+      </div> 
+     </div> 
+    </fieldset> 
+   </div> 
+  </div> 
+  <div id="footer" style="width:100%;margin: 30px auto 0;box-sizing: border-box;background: #1f1f24;padding: 30px 0 20px"> 
+   <div class="clearfix" style="width: 100%;margin: 0 auto"> 
+    <div class="link clearfix" style="border-bottom: 1px solid #36363a;padding-bottom: 30px;text-align: center" id="wzlm"> 
+    </div> 
+    <p class="p1"> <span>开服广告在线查询站 &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span> <em>为 新开传奇网站，单职业传奇，复古传奇，传奇手游 提供一个传奇发布网交流平台 </em> <a rel="nofollow" href="/statics/sitemap.html" target="_blank" style="color: white;margin-left: 20px">网站地图<em></em></a> </p> 
+    <p class="p2"> <span><em class="icon-link"></em>友情链接：</span> <a rel="nofollow" href="https://www.5cq.com" target="_blank">传奇广告查询 <em>|</em></a> <a rel="nofollow" href="https://www.1sf.com/" target="_blank">1SF传奇资源站 <em>|</em></a> <a rel="nofollow" href="https://www.2sf.com/" target="_blank"> 2SF传奇资源站 <em>|</em></a> <a rel="nofollow" href="https://www.5cq.com/duty.html" target="_blank">免责申明 <em>|</em></a> </p> 
+   </div> 
+   <p class="textfoot">拒绝盗版游戏 注意自我保护 谨防受骗上当 适度游戏益脑 沉迷游戏伤身 合理安排时间 享受健康生活</p> 
+   <p class="textfoot">本站只收录官方授权游戏信息，非官方授权游戏请在办理业务之前告知.</p> 
+   <p class="textfoot">*注释：网站数据匀采集互联网，有不良信息举报联系我们，将会尽快核实处理，站长QQ：3067585</p> 
+   <p class="textfoot"> <a style="color: white;text-align: center;width: 100%" target="_blank" id="beian" href="https://beian.miit.gov.cn">Copyright 2019-2027 All Rights Reserved </a><a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank" style="color: #fff"> 信产部ICP备案号：黔ICP备2022005643号　| </a> <span style="color: #fff">营业执照注册证号：91522301MABP8XJ71N </span> <a id="_pingansec_bottomimagesmall_shiming" target="_blank" href="//si.trustutn.org/info?sn=840240419040948778244&amp;certType=1"><img src="//v.trustutn.org/images/cert/realname_small_img.png"></a><script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1281074630'%3E%3C/span%3E%3Cscript src='https://s4.cnzz.com/z.js%3Fid%3D1281074630%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script></p> 
+   <p></p> 
+  </div> 
+  <div id="tcHtml"> 
+   <!--sxl用户信息操作，注册，登录，联系我们--> 
+   <script>$("#tcHtml").load("/statics/userinfo.html");</script> 
+  </div> 
+  <script src="../statics/layui/layui.js"></script> 
+  <script>
+    layui.use(['element', 'rate'], function () {
+        var element = layui.element;
+        var index = 1;
+        var $ = layui.jquery;
+        var form = layui.form;
+        var rate = layui.rate;
+        var tooldata = []
+        var searchtool = []
+        var linkdata = []
+        var searchlink = []
+        var helpdata = []
+        var searchhelp = []
+        $('.daohang1').click(function () {
+            index = 1
+            $('.daohang1 a div:nth-child(1)').css('display', 'none')
+            $('.daohang1 a div:nth-child(2)').css('display', 'block')
+            $('.daohang2 a div:nth-child(1)').css('display', 'block')
+            $('.daohang2 a div:nth-child(2)').css('display', 'none')
+            $('.daohang3 a div:nth-child(1)').css('display', 'block')
+            $('.daohang3 a div:nth-child(2)').css('display', 'none')
+            toolslist()
+        })
+        $('.daohang2').click(function () {
+            index = 2
+            /*$(this).find('a').addClass('active')
+            $('.daohang1').find('a').removeClass('active')
+            $('.daohang3').find('a').removeClass('active')*/
+            $('.daohang1 a div:nth-child(1)').css('display', 'block')
+            $('.daohang1 a div:nth-child(2)').css('display', 'none')
+            $('.daohang2 a div:nth-child(1)').css('display', 'none')
+            $('.daohang2 a div:nth-child(2)').css('display', 'block')
+            $('.daohang3 a div:nth-child(1)').css('display', 'block')
+            $('.daohang3 a div:nth-child(2)').css('display', 'none')
+            linklist()
+        })
+        $('.daohang3').click(function () {
+            index = 3
+            $('.daohang1 a div:nth-of-type(1)').css('display', 'block')
+            $('.daohang1 a div:nth-of-type(2)').css('display', 'none')
+            $('.daohang2 a div:nth-of-type(1)').css('display', 'block')
+            $('.daohang2 a div:nth-of-type(2)').css('display', 'none')
+            $('.daohang3 a div:nth-of-type(1)').css('display', 'none')
+            $('.daohang3 a div:nth-of-type(2)').css('display', 'block')
+            helplist()
+        })
+
+        $(document).ready(function () {
+            toolslist()
+        })
+
+        function toolslist() {
+            $.ajax({
+                //返回相同的session
+                url: baseUrl + 'hcategory/toolsSelect',
+                type: 'POST',
+                timeout: 10000,    //超时时间
+                dataType: 'json',
+                success: function (data, textStatus, jqXHR) {
+                    console.log(data)
+                    // var data = data.list
+                    tooldata = data.list
+                    tooldom(tooldata)
+                    searchtool = tooldata.reduce(function (pre, cur) {
+                        return pre.concat(cur.toolsList)
+                    }, [])
+                    return searchtool
+                },
+                error: function (xhr, textStatus) {
+                    result = JSON.parse('{"flag":false,"message":"showHtml-ajax-请求连接异常"}');
+                }
+            });
+        }
+
+        function tooldom(data) {
+            var html = ''
+            $('#info').html('')
+            $.each(data, function (index, item) {
+                html += `<fieldset class="layui-elem-field layui-field-title" style="margin: 5px;border: 1px solid gainsboro;">
+                                    <legend style="text-align: center">${item.name}</legend>
+                                    <div class="layui-field-box">
+                                        <div class="layui-row gjxzlist">`
+                $.each(item.toolsList, function (key, value) {
+                    html += `<div class="layui-col-md3" style="padding: 5px">
+                        <div class="bg11111" data-id="${value.id}" data-count="${value.download_count}" style="">
+                            <div class="bg-1">
+                                <img src="../statics/upload/${value.imgurl}"
+                                     style="border-radius: 5px" width="40" height="40">
+                            </div>
+                            <div class="bg-2">
+                                <div class="bg11111color" style="">${value.name}</div>
+                                <div style="display: flex;"><div id="test${value.id}"></div><div class="layui-btn layui-btn-sm layui-btn-warm" style="height: 20px;line-height: 20px">${item.name}</div></div>
+                                <div style="font-size: 13px;margin-top: 5px">${value.download_count}次下载--${value.introduction ? value.introduction : '无'}</div>
+                                <div style="font-size: 13px;margin-top: 5px;display: none;margin-left: 20%"><button type="button" class="layui-btn layui-btn-danger">立即下载</button></div>
+                            </div>
+                        </div>
+                    </div>`
+
+                })
+
+                html += `</div>
+                                    </div>
+                                </fieldset>`
+
+            })
+            $('#info').html(html)
+            $.each(data, function (index, item) {
+                $.each(item.toolsList, function (key, value) {
+                    rate.render({
+                        elem: '#test' + value.id,
+                        value: 5,
+                        readonly: true,
+                        text: false,
+                        half: true,
+                        choose: function (obj) {
+                            console.log(obj);
+                        }
+                    });
+                })
+            })
+            $(".bg11111").click(function () {
+                var id = $(this).data('id')
+                var count = $(this).data('count') + 1
+                $.ajax({
+                    //返回相同的session
+                    url: baseUrl + 'hcategory/selectToolsDetail?id=' + id,
+                    type: 'POST',
+                    timeout: 10000,    //超时时间
+                    dataType: 'json',
+                    success: function (data, textStatus, jqXHR) {
+                        console.log(data)
+                        let tools = data.data;
+                        $("#imgurl").attr("src", "../../statics/upload/" + tools.imgurl)
+                        $("#toolsName").text(tools.name + '-' + (tools.introduction ? tools.introduction : '无'))
+                        $("#downloadCount").html('<span>下载次数：</span> ' + tools.download_count)
+                        $("#fileSize").html('<span>文件大小：</span> ' + tools.file_size)
+                        $("#createTime").html('<span>添加时间：</span> ' + tools.create_date)
+                        $("#unzipPassword").html('<span>解压密码：</span> ' + tools.unzip_password)
+                        $(".art_content").html(tools.description)
+                        //<a rel="nofollow" target="_blank" href="https://pan.baidu.com/s/1M0wEQKUJnqCDupsrHJeOmQ?pwd=lj54"><em></em>百度网盘下载</a>
+                        let download = data.download
+                        if (download) {
+                            let html = ''
+                            download.forEach(item => {
+                                html += `<a href="${item.url}" target="_blank" onclick="downLoads(${data.data.id},${data.data.download_count})" class="layui-btn layui-btn-radius layui-btn-danger" style="width: 25%">${item.name}<i style="margin-left: 10%" class="layui-icon">&#xe681;</i></a>`
+                            })
+                            $("#download").html(html)
+                        }
+                        // 获取浏览器窗口的可见高度（不包括工具栏等）
+                        var winHeight = $(window).height();
+
+                        // 假设弹出层的标题栏和底部栏的总高度为 100px（这只是一个示例值）
+                        var extraHeight = 100;
+
+                        // 设置弹出层的高度为浏览器窗口高度减去额外高度
+                        var layerHeight = winHeight - extraHeight;
+
+                        // 使用 layer.open 方法打开弹出层，并设置其高度
+                        layer.open({
+                            type: 1, // 这里假设是页面层
+                            title: '工具下载',
+                            offset: 'rt',
+                            skin: 'xzbj',
+                            shadeClose: true,
+                            shade: 0.1,
+                            area: ['500px', winHeight + 'px'], // 宽度自动，高度为我们计算的值
+                            content: $("#downlink"),
+                            success: function (layero, index) {
+                                $('body').css('overflow', 'hidden')
+                                var photo = layer.photos({
+                                    photos: '#description p'
+                                    , anim: 0 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+                                });
+                            },
+                            end: function () {
+                                $('body').css('overflow', ''); // 或者设置为 'auto' 或 'scroll'，取决于你的需要
+                            }
+                        });
+                    },
+                    error: function (xhr, textStatus) {
+                        result = JSON.parse('{"flag":false,"message":"showHtml-ajax-请求连接异常"}');
+                    }
+                });
+            })
+        }
+
+        function linklist() {
+            $.ajax({
+                //返回相同的session
+                url: baseUrl + 'hcategory/select',
+                type: 'POST',
+                timeout: 10000,    //超时时间
+                dataType: 'json',
+                success: function (data, textStatus, jqXHR) {
+                    console.log(data)
+
+                    linkdata = data.list
+                    linkDom(linkdata)
+                    searchlink = linkdata.reduce(function (pre, cur) {
+                        return pre.concat(cur.resourcesList)
+                    }, [])
+                    return searchlink
+                },
+                error: function (xhr, textStatus) {
+                    result = JSON.parse('{"flag":false,"message":"showHtml-ajax-请求连接异常"}');
+                }
+            });
+        }
+
+        function linkDom(data) {
+            if (window.localStorage.getItem("totaltokenlink") != null) {
+                var totaltoken = window.localStorage.getItem("totaltokenlink").split(',');
+            } else {
+                var totaltoken = []
+            }
+            var html = ''
+            // var data = data.list
+            $('#info').html('')
+            $.each(data, function (index, item) {
+                html += `<fieldset class="layui-elem-field layui-field-title" style="margin: 5px;border: 1px solid gainsboro;">
+                                    <legend>${item.name}</legend>
+                                    <div class="layui-field-box">
+                                        <div class="layui-row gjxzlist">`
+                $.each(item.resourcesList, function (key, value) {
+                    html += `<div class="layui-col-md3" style="padding: 5px">
+                                            <div class="bg22222" style="">
+                                                <div style="padding: 8px;">
+                                                    <img src="../statics/upload/${value.imgurl}"
+                                                         style="border-radius: 5px" width="40" height="40">
+                                                </div>
+                                                <a href="./resourceNavigation_tz.html?url=${value.http.indexOf() < 0 ? 'http://' + value.http : value.http}&urlname=${value.name}" target="_blank" style="width: 70%;">
+                                                    <div class="bg11111color" style="">${value.name}</div>
+                                                    <div class="http" style="font-size: 13px;margin-top: 5px">${value.http}</div>
+                                                </a>
+                                                <div style="width: 15%">`
+                    if (totaltoken.indexOf(value.id.toString()) !== -1) {
+                        html += `<img id="${value.id}" class="dianzan" data-id="${value.id}" src="../../statics/images/heart1.png" alt=""><span style="margin-left: 5px">${value.total}</span>`
+                    } else {
+                        html += `<img id="${value.id}" class="dianzan" data-id="${value.id}" src="../../statics/images/heart2.png" alt=""><span style="margin-left: 5px">${value.total}</span>`
+                    }
+
+                    html += `</div>
+                                        </div>
+                                    </div>`
+                })
+                html += `</div>
+                                    </div>
+                                </fieldset>`
+            })
+            $('#info').html(html)
+            console.log(searchlink)
+            $(".dianzan").click(function () {
+                var id = $(this).data('id')
+                var totaltoken = window.localStorage.getItem("totaltokenlink");
+                var arr = new Array();
+                var code = 0;
+                //如果不存在，�第一次登陆站点
+                var total = $('#' + id).next('span').text();
+                console.log(total)
+                if (totaltoken != null && totaltoken != '') {
+                    var flag = true;
+                    arr = totaltoken.split(",");
+                    for (var v in arr) {
+                        if (arr[v] == id) {//判断是否点击过
+                            //点击过的---
+                            code = 1;
+                            total = Number(total) - 1;
+                            arr.splice(v, 1);
+                            $("#" + id).attr("src", "../../statics/images/heart2.png");
+                            flag = false;//说明点击过
+                            break;
+                        }
+                    }
+                    if (flag) {
+                        total = Number(total) + 1;
+                        arr.push(id);
+                        $("#" + id).attr("src", "../../statics/images/heart1.png");
+                    }
+                    window.localStorage.setItem("totaltokenlink", arr);
+                    window.localStorage.setItem("date", datetime());
+                    $('#' + id).next('span').text(total);
+                    //后台执行修改
+                } else {
+                    total = Number(total) + 1;
+                    arr.push(id);
+                    $("#" + id).attr("src", "../../statics/images/heart1.png");
+                    window.localStorage.setItem("totaltokenlink", id);
+                    window.localStorage.setItem("date", datetime());
+                }
+
+                $.ajax({
+                    //返回相同的session
+                    url: baseUrl + 'hcategory/update',
+                    type: 'POST',
+                    data: {
+                        'code': code,
+                        'id': id
+                    },
+                    timeout: 10000,    //超时时间
+                    dataType: 'json',
+                    success: function (data, textStatus, jqXHR) {
+                        $('#' + id).next('span').text(total);
+                    },
+                    error: function (xhr, textStatus) {
+                        result = JSON.parse('{"flag":false,"message":"showHtml-ajax-请求连接异常"}');
+                    }
+                });
+            })
+        }
+
+        function helplist() {
+            $.ajax({
+                //返回相同的session
+                url: baseUrl + 'hcategory/select1',
+                type: 'POST',
+                timeout: 10000,    //超时时间
+                dataType: 'json',
+                success: function (data, textStatus, jqXHR) {
+                    console.log(data)
+
+                    helpdata = data.list
+                    helpDom(helpdata)
+                    searchhelp = helpdata.reduce(function (pre, cur) {
+                        return pre.concat(cur.helpList)
+                    }, [])
+                    return searchhelp
+                },
+                error: function (xhr, textStatus) {
+                    result = JSON.parse('{"flag":false,"message":"showHtml-ajax-请求连接异常"}');
+                }
+            });
+        }
+
+        function helpDom(data) {
+            if (window.localStorage.getItem("totaltokenhelp") != null) {
+                var totaltoken = window.localStorage.getItem("totaltokenhelp").split(',');
+            } else {
+                var totaltoken = []
+            }
+            var html = ''
+            // var data = data.list
+            $('#info').html('')
+            $.each(data, function (index, item) {
+                html += `<fieldset class="layui-elem-field layui-field-title" style="margin: 5px;border: 1px solid gainsboro;">
+                                    <legend>${item.name}</legend>
+                                    <div class="layui-field-box">
+                                        <div class="layui-row gjxzlist">`
+                $.each(item.helpList, function (key, value) {
+                    html += `<div class="layui-col-md3" style="padding: 5px">
+                                            <div class="bg22222" style="">
+                                                <div style="padding: 8px;">
+                                                    <img src="../statics/upload/${value.imgurl}"
+                                                         style="border-radius: 5px" width="40" height="40">
+                                                </div>
+                                                <a href="./resourceNavigation_tz.html?url=${value.http.indexOf() < 0 ? 'http://' + value.http : value.http}&urlname=${value.name}" target="_blank" style="width: 70%;">
+                                                    <div class="bg11111color" style="">${value.name}</div>
+                                                    <div class="http" style="font-size: 13px;margin-top: 5px">${value.http}</div>
+                                                </a>
+                                                <div style="width: 15%">`
+                    if (totaltoken.indexOf(value.id.toString()) !== -1) {
+                        html += `<img id="${value.id}" class="dianzan" data-id="${value.id}" src="../../statics/images/heart1.png" alt=""><span style="margin-left: 5px">${value.total}</span>`
+                    } else {
+                        html += `<img id="${value.id}" class="dianzan" data-id="${value.id}" src="../../statics/images/heart2.png" alt=""><span style="margin-left: 5px">${value.total}</span>`
+                    }
+
+                    html += `</div>
+                                        </div>
+                                    </div>`
+                })
+                html += `</div>
+                                    </div>
+                                </fieldset>`
+            })
+            $('#info').html(html)
+            $(".dianzan").click(function () {
+                var id = $(this).data('id')
+                var totaltoken = window.localStorage.getItem("totaltokenhelp");
+                var arr = new Array();
+                var code = 0;
+                //如果不存在，说明第一次登陆站点
+                var total = $('#' + id).next('span').text();
+                console.log(total)
+                if (totaltoken != null && totaltoken != '') {
+                    var flag = true;
+                    arr = totaltoken.split(",");
+                    for (var v in arr) {
+                        if (arr[v] == id) {//判断是否点击过
+                            //点击过的---
+                            code = 1;
+                            total = Number(total) - 1;
+                            arr.splice(v, 1);
+                            $("#" + id).attr("src", "../../statics/images/heart2.png");
+                            flag = false;//说明点击过
+                            break;
+                        }
+                    }
+                    if (flag) {
+                        total = Number(total) + 1;
+                        arr.push(id);
+                        $("#" + id).attr("src", "../../statics/images/heart1.png");
+                    }
+                    window.localStorage.setItem("totaltokenhelp", arr);
+                    window.localStorage.setItem("date", datetime());
+                    $('#' + id).next('span').text(total);
+                    //后台执行修改
+                } else {
+                    total = Number(total) + 1;
+                    arr.push(id);
+                    $("#" + id).attr("src", "../../statics/images/heart1.png");
+                    window.localStorage.setItem("totaltokenhelp", id);
+                    window.localStorage.setItem("date", datetime());
+                }
+
+                $.ajax({
+                    //返回相同的session
+                    url: baseUrl + 'hcategory/update1',
+                    type: 'POST',
+                    data: {
+                        'code': code,
+                        'id': id
+                    },
+                    timeout: 10000,    //超时时间
+                    dataType: 'json',
+                    success: function (data, textStatus, jqXHR) {
+                        $('#' + id).next('span').text(total);
+                    },
+                    error: function (xhr, textStatus) {
+                        result = JSON.parse('{"flag":false,"message":tml-ajax-请求连接异常"}');
+                    }
+                });
+            })
+        }
+
+        function datetime() {
+            var now = new Date();
+            var year = now.getFullYear();       //年
+            var month = now.getMonth() + 1;     //月
+            var day = now.getDate();
+            console.log(year + "" + month + "" + day);
+            return year + "" + month + "" + day;
+
+        }
+
+        function fuzzySearch(arr, query) {
+            // 使用filter方法来过滤数组
+            return arr.filter(function (item) {
+                return item.name.toLowerCase().includes(query.toLowerCase());
+            });
+        }
+
+        $('.search').click(function () {
+            var text = $('input[name="ksid"]').val();
+            console.log(text)
+            /*console.log(searchtool)
+            console.log(searchlink)
+            console.log(searchhelp)*/
+            if (index == 1) {
+                // console.log(searchtool)
+                var result = fuzzySearch(searchtool, text);
+                var data = [
+                    {id: 1, name: '搜索结果', toolsList: result}
+                ]
+                // console.log(result)
+                tooldom(data)
+            } else if (index == 2) {
+                // console.log(searchlink)
+                var result = fuzzySearch(searchlink, text);
+                var data = [
+                    {id: 1, name: '搜索结果', resourcesList: result}
+                ]
+                // console.log(result)
+                linkDom(data)
+            } else if (index == 3) {
+                // console.log(searchhelp)
+                var result = fuzzySearch(searchhelp, text);
+                var data = [
+                    {id: 1, name: '搜索结果', helpList: result}
+                ]
+                helpDom(data)
+            }
+        });
+
+    })
+</script>  
+ </body>
+</html>

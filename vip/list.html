@@ -1,0 +1,1000 @@
+<!doctype html>
+<html>
+ <head> 
+  <meta charset="utf-8"> 
+  <title>传奇资源站_传奇私服_专业的新开传奇新服网站发布信息网-5CQ.COM</title>
+  <meta name="description" content="5cq.com传奇广告排行榜，传奇私服查询站,传奇广告,好玩的传奇手游,玩家最爱的新开传奇，GM最喜欢的传奇工具，传奇直播,传奇相关尽在5CQ">
+  <meta name="keywords" content="传奇广告查询站(5cq.com),传奇私服,传奇发布站,好玩的传奇游戏,新开传奇网">   
+  <meta name="renderer" content="webkit"> 
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0"> 
+  <link rel="stylesheet" href="../layuiadmin/layui/css/layui.css" media="all"> 
+  <link rel="stylesheet" href="../layuiadmin/style/admin.css" media="all"> 
+ </head> 
+ <body> 
+  <div class="layui-fluid"> 
+   <div class="layui-row layui-col-space15"> 
+    <div class="layui-col-md12"> 
+     <div class="layui-card"> 
+      <div class="layui-card-header">
+        广告管理 
+      </div> 
+      <div class="layui-card-body"> 
+       <div class="test-table-reload-btn" style="margin-bottom: 10px;"> 
+        <div class="layui-inline"> 
+         <input class="layui-input" name="polymerization" id="test-table-demoReload" autocomplete="off" placeholder="请输入私服名称"> 
+        </div> 
+        <button class="layui-btn" data-type="reload">搜索</button> 
+        <!--<button id="publish-button-add" shiro-event="sys:publish:open-add" class="layui-btn"><i
+                                class="layui-icon">&#xe654;</i>添加
+                        </button>
+                        <button id="publish-button-del" shiro-event="sys:publish:open-removes" data-type="getid"
+                                class="layui-btn"><i
+                                class="layui-icon">&#xe654;</i>批量删除
+                        </button>--> 
+        <input id="ids" type="text" hidden> 
+       </div> 
+       <table class="layui-hide" id="auth-table" lay-filter="auth-table"></table> 
+      </div> 
+     </div> 
+    </div> 
+   </div> 
+  </div> 
+  <script type="text/html" id="auth-state" hidden>
+    <button lay-event="cx" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#x1006;</i>撤销
+    </button>
+    <button lay-event="zt" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe651;</i>{{d.state == '3' ? "开始" : "暂停"}}
+    </button>
+</script> 
+  <!--添加--> 
+  <div id="submit-form-add" hidden> 
+   <button class="layui-btn" lay-submit lay-filter="submit-form-publish">立即提交</button> 
+   <!--添加--> 
+   <button type="reset" class="layui-btn layui-btn-primary">重置</button> 
+   <!--添加--> 
+  </div> 
+  <div id="submit-form-update" hidden> 
+   <button class="layui-btn" lay-submit lay-filter="submit-form-publish">立即提交</button> 
+  </div> 
+  <div id="layui-publish" hidden> 
+   <div class="layui-fluid"> 
+    <div class="layui-card"> 
+     <div class="layui-card-body" style="padding: 15px;"> 
+      <form class="layui-form" id="layui-form-publish" lay-filter="component-form-group"> 
+       <div class="layui-form-item"> 
+        <div class="layui-form-item layui-form-text" style="margin-top: -30px;margin-left: 70%;margin-bottom:0px"> 
+         <label class="layui-form-label" style="font-weight: bold">快速发布</label> 
+        </div> 
+       </div> 
+       <div class="layui-form-item layui-form-text"> 
+        <label class="layui-form-label" style="font-weight: bold;margin-top: 135px;">广告内容</label> 
+        <div class="layui-input-block" style="margin-left: 0px;float: left;width: 43%;"> 
+         <textarea id="text" name="text" placeholder="请输入内容" class="layui-textarea" style="resize: none;height: 300px;"></textarea> 
+        </div> 
+        <div class="layui-input-block" style="margin-left: 0px;float: right;width: 45%;"> 
+         <textarea readonly id="text_p" name="text_p" class="layui-textarea" ondblclick="jqb(this)" style="cursor:pointer;text-decoration:none;resize: none;height: 300px; border-style: none"></textarea> 
+        </div> 
+       </div> 
+       <div class="layui-form-item" style="display: none"> 
+        <div class="layui-form-item layui-form-text"> 
+         <label class="layui-form-label">选择类型</label> 
+         <div class="layui-input-inline" style="width: 182px;"> 
+          <select name="type" lay-verify="required" lay-filter="update-type"> </select> 
+         </div> 
+         <!--<label class="layui-form-label">单价</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="price" readonly lay-verify="required" placeholder="请输入价格"
+                                       class="layui-input">
+                            </div>--> 
+        </div> 
+       </div> 
+       <div class="layui-form-item layui-form-text"> 
+        <label class="layui-form-label">开始时间</label> 
+        <div class="layui-input-inline"> 
+         <input type="text" name="startdate" id="startdate" readonly autocomplete="off" lay-verify="required" placeholder="开始时间" class="layui-input"> 
+        </div> 
+        <label class="layui-form-label">广告天数</label> 
+        <div class="layui-input-inline"> 
+         <input type="text" name="days" lay-verify="required" placeholder="广告天数" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" class="layui-input"> 
+        </div> 
+       </div> 
+       <div class="layui-form-item layui-form-text"> 
+        <label class="layui-form-label">发布条数</label> 
+        <div class="layui-input-inline"> 
+         <input type="text" name="nums" lay-verify="required" placeholder="条数" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" class="layui-input"> 
+        </div> 
+        <label class="layui-form-label">同服游戏</label> 
+        <div class="layui-input-inline"> 
+         <input type="radio" name="show" value="1" title="展示"> 
+         <input type="radio" name="show" value="2" title="不展示"> 
+        </div> 
+       </div> 
+       <!--<div class="layui-form-item layui-form-text hbsz">
+                        <label class="layui-form-label">红标设置</label>
+                        <div class="layui-input-inline">
+                            <input type="radio" name="hb" value="1" title="是">
+                            <input type="radio" name="hb" value="2" title="否">
+                            <input type="hidden" name="price" readonly lay-verify="required" placeholder="请输入价格"
+                                   class="layui-input">
+                        </div>
+                    </div>--> 
+       <input type="hidden" name="score" value="5"> 
+       <div class="layui-input-block"> 
+        <!--操作--> 
+        <div class="layui-footer" id="submit-form-publish-button" style="left: 0;"> 
+        </div> 
+       </div> 
+      </form> 
+     </div> 
+    </div> 
+   </div> 
+  </div> 
+  <div id="layui-publish-update" hidden> 
+   <div class="layui-fluid"> 
+    <div class="layui-card"> 
+     <div class="layui-card-body" style="padding: 15px;"> 
+      <form class="layui-form" id="layui-form-publish-update" lay-filter="component-form-group"> 
+       <input type="hidden" name="id"> 
+       <div class="layui-form-item"> 
+        <div class="layui-form-item layui-form-text" style="margin-top: -30px;margin-left: 70%;margin-bottom:0px"> 
+         <label class="layui-form-label" style="font-weight: bold">快速发布</label> 
+        </div> 
+       </div> 
+       <div class="layui-form-item layui-form-text"> 
+        <label class="layui-form-label" style="font-weight: bold;margin-top: 135px;">广告内容</label> 
+        <div class="layui-input-block" style="margin-left: 0px;float: left;width: 43%;"> 
+         <textarea name="text" placeholder="请输入内容" class="layui-textarea" style="resize: none;height: 300px;"></textarea> 
+        </div> 
+        <div class="layui-input-block" style="margin-left: 0px;float: right;width: 45%;"> 
+         <textarea readonly name="text_p" class="layui-textarea" ondblclick="jqb(this)" style="cursor:pointer;text-decoration:none;resize: none;height: 300px; border-style: none"></textarea> 
+        </div> 
+       </div> 
+       <div class="layui-form-item" style="display: none"> 
+        <div class="layui-form-item layui-form-text"> 
+         <label class="layui-form-label">选择类型</label> 
+         <div class="layui-input-inline" style="width: 182px;"> 
+          <select name="type" lay-verify="required" lay-filter="update-type"> </select> 
+         </div> 
+         <!--<label class="layui-form-label">单价</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="price" readonly lay-verify="required" placeholder="请输入价格"
+                                       class="layui-input">
+                            </div>--> 
+        </div> 
+       </div> 
+       <div class="layui-form-item layui-form-text"> 
+        <label class="layui-form-label">开始时间</label> 
+        <div class="layui-input-inline"> 
+         <input type="text" name="startdate" id="startdate_update" readonly autocomplete="off" lay-verify="required" placeholder="开始时间" class="layui-input"> 
+        </div> 
+        <label class="layui-form-label">广告天数</label> 
+        <div class="layui-input-inline"> 
+         <input type="text" name="days" lay-verify="required" placeholder="广告天数" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" class="layui-input"> 
+        </div> 
+       </div> 
+       <div class="layui-form-item layui-form-text"> 
+        <label class="layui-form-label">发布条数</label> 
+        <div class="layui-input-inline"> 
+         <input type="text" name="nums" lay-verify="required" placeholder="条数" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" class="layui-input"> 
+        </div> 
+        <label class="layui-form-label">同服游戏</label> 
+        <div class="layui-input-inline"> 
+         <input type="radio" name="show" value="1" title="展示"> 
+         <input type="radio" name="show" value="2" title="不展示"> 
+         <!--<input type="hidden" name="price" readonly lay-verify="required" placeholder="请输入价格"
+                                   class="layui-input">--> 
+        </div> 
+       </div> 
+       <!--<div class="layui-form-item layui-form-text hbsz">
+                        <label class="layui-form-label">红标设置</label>
+                        <div class="layui-input-inline">
+                            <input type="radio" name="hb" value="1" title="是">
+                            <input type="radio" name="hb" value="2" title="否">
+                            <input type="hidden" name="price" readonly lay-verify="required" placeholder="请输入价格"
+                                   class="layui-input">
+                        </div>
+                    </div>--> 
+       <div class="layui-input-block"> 
+        <!--操作--> 
+        <div class="layui-footer" id="update-publish-button" style="left: 0;"> 
+        </div> 
+       </div> 
+      </form> 
+     </div> 
+    </div> 
+   </div> 
+  </div> 
+  <script type="text/html" id="timeTpl">
+    <input type="text" id="startdate_{{d.id}}" value="{{d.startdate}}" readonly="readonly"
+           class="layui-input layui-input-date" style="margin-top: -3px;text-align: center"/>
+</script> 
+  <script src="../layuiadmin/layui/layui.js"></script> 
+  <!--<script src="../../statics/js/jquery-3.2.1.min.js"></script>--> 
+  <script>
+    var arr = [];
+    var price = '';
+    var user = JSON.parse(window.localStorage.getItem("vipuser"));
+    // console.log(user)
+    /*$(document).ready(function() {
+        $('textarea[name="text"]').on('input', function() {
+            // 获取textarea的当前值
+            var textareaValue = $(this).val();
+            console.log(textareaValue)
+        });
+    })*/
+    function getFormattedDate() {
+        var date = new Date();
+        var year = date.getFullYear();
+        var month = ("0" + (date.getMonth() + 1)).slice(-2); // Months are zero based, thus add leading 0 and slice last 2 digits
+        var day = ("0" + date.getDate()).slice(-2); // Add leading 0 and slice last 2 digits
+        return year + "-" + month + "-" + day;
+    }
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index', //主入口模块
+    }).use(['index', 'table', 'formgs', 'form', 'security', 'layer', 'upload', 'laydate'], function () {
+        var $ = layui.jquery,
+            admin = layui.admin,
+            table = layui.table,
+            formgs = layui.formgs,
+            form = layui.form,//控制添加修改（同一个弹出层）关闭弹出层的索引
+            laydate = layui.laydate,
+            upload = layui.upload,
+            layer = layui.layer, closeindex;
+
+        // layui.setter.url = 'http://localhost:8086/server/'
+
+        laydate.render({
+            format: 'yyyy-MM-dd HH:mm:ss',
+            theme: 'grid',
+            trigger: 'click',
+            elem: '#startdate',
+            type: 'date',
+        });
+        laydate.render({
+            format: 'yyyy-MM-dd HH:mm:ss',
+            theme: 'grid',
+            trigger: 'click',
+            elem: '#startdate_update',
+            type: 'date',
+        });
+        // initType();
+        initPrice();
+        if(user.role_id !== 1){
+            $('.hbsz').hide();
+        }
+        function initType(){
+            admin.req({
+                url: layui.setter.url + 'jax/publishType/selectAll',
+                processData: false,
+                traditonal: true,
+                contentType: "application/json",
+                done: function (res) {
+                    arr = res.data;
+                }
+            })
+        }
+
+
+        function initPrice(){
+            admin.req({
+                url: layui.setter.url + 'getUserInfogin' //实际使用请改成服务端真实接口
+                ,data:{
+                    token: localStorage.getItem('vipvtoken')
+                },
+                done: function (res) {
+                    price = res.data;
+                }
+            })
+        }
+        table.render({
+            elem: '#auth-table'
+            , url: layui.setter.url + 'selectAdogin'
+            , title: '私服发布'
+            , cols: [[
+                {type: 'checkbox'}
+                /*{
+                    field: 'type', title: '类型', sort: true, width: 130,
+                    templet: function (obj) {
+                        var name = '';
+                        for (var i = 0; i < arr.length; i++) {
+                            if (obj.type == arr[i].id) {
+                                name = arr[i].name;
+                                break;
+                            }
+                        }
+                        return name;
+                    }
+                }*/
+                // , {field: 'price', title: '单价', sort: true, width: 130,}
+                // , {field: 'money', title: '总价', sort: true, width: 130,}
+                , {field: 'name', title: '服务器名',}
+                // , {field: 'ipname', title: '私服IP', sort: true,}
+                , {field: 'line', title: '线路',}
+                // , {field: 'versiondepict', title: '版本介绍', sort: true,}
+                // , {field: 'kfqq', title: '客服QQ', sort: true,}
+                , {field: 'url', title: '服务器地址', sort: false,}
+                , {field: 'startdate', title: '开始时间', sort: false, width: 180,}
+                , {field: 'enddate', title: '结束时间', sort: false, width: 180,}
+                , {field: 'mark', title: '备注', sort: false, width: 180,edit: 'text'}
+                , {title: '状态', width: 180, sort: false, templet: function (data) {
+                        if(data.state==0){
+                            if(new Date(data.enddate)<new Date()){
+                                return `<a style="color: red">已过期</a>`;
+                            }else{
+                                // 设定目标时间
+                                const targetDate = new Date(data.enddate); // 注意：日期字符串需要是ISO格式或者能被Date正确解析的格式
+                                // 获取当前时间
+                                const now = new Date();
+                                // 计算两个时间之间的差值（毫秒）
+                                const difference = targetDate - now;
+                                // 转换差值到天数、小时数和分钟数
+                                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                                return `<a style="color: green">${days}天${hours}小时${minutes}分钟后结束</a>`;
+                            }
+                        }else if(data.state==1){
+                            return `<a style="color: grey">广告不显示</a>`;
+                        }else if(data.state==2){
+                            return `<a style="color: deeppink">广告已撤销</a>`;
+                        }else if(data.state==3){
+                            return `<a style="color: blue">广告暂停中</a>`;
+                        }
+                    }
+                }
+                , {field: 'nums', title: '条数', sort: false, width: 80}
+                ,{ field: 'status', title: '显示',sort: false ,width: 80 ,templet: function (data) {
+                        if(data.state==0 && new Date(data.enddate)>new Date()){
+                            return `<a style="color: green">√</a>`;
+                        }else if(data.state==1){
+                            return `<a style="color: grey">X</a>`;
+                        }else if(data.state==2){
+                            return `<a style="color: deeppink">撤销</a>`;
+                        }else if(data.state==3){
+                            return `<a style="color: blue">暂停</a>`;
+                        }else {
+                            return `<a style="color: grey">X</a>`;
+                        }
+                    }
+                }
+                , {fixed: 'right', title: '操作', toolbar: '#auth-state',width:300}
+            ]]
+            , page: true
+            , where: {token: localStorage.getItem('vipvtoken')}
+
+        });
+        table.on('edit(auth-table)', function (obj) {
+            var value = obj.value //得到修改后的值
+                , data = obj.data //得到所在行所有键值
+            let url = layui.setter.url + "ranking/updates";
+            var fromdate = new Array()
+            fromdate.push(data)
+            admin.req({
+                url: url,
+                data: JSON.stringify(fromdate),
+                contentType: "application/json",
+                done: function (res) {
+                    table.reload("auth-table");
+                    layer.msg(res.msg);
+                }
+            })
+        });
+
+
+
+        table.on('tool(auth-table)', function (obj) {
+            if (obj.event == "remove") {
+                layer.confirm('确定要删除【' + obj.data.name + '】这个私服吗？', function (index) {
+                    admin.req({
+                        url: layui.setter.url + "ranking/remove/" + obj.data.id
+                    }).done(function (res) {
+                        layer.close(index);
+                        table.reload('auth-table');
+                        layer.msg(res.msg);
+                        $.get({url:layui.setter.url + "ranking/test1"})
+                        $.get({url:'https://hz.5cq.net/cq/yx/ttt'})
+                    })
+                });
+            }else if (obj.event == "update") {
+                console.log(obj.data)
+                layer.open({
+                    type: 1,//弹窗类型
+                    area: ['1200px', '660px'],
+                    offset: '100px',
+                    title: ("编辑私服"),
+                    shadeClose: false,
+                    content: $("#layui-publish-update"),
+                    success: function (index, layero) {
+                        $.ajax({
+                            url: layui.setter.url+'ranking/Urllist',
+                            method: 'get',
+                            dataType: 'json',
+                            data:{
+                                url:obj.data.url,
+                                page:1,
+                                limit:10
+                            },
+                            success: function (res) {
+                                closeindex = layero;
+                                formgs.reset('layui-form-publish-update');
+                                // var date = new Date(obj.data.startdate)
+                                // obj.data.startdate = date.getFullYear() + "-" + (date.getMonth() + 1).toString().padStart(2, '0') + "-" + date.getDate().toString().padStart(2, '0');
+                                formgs.get("layui-form-publish-update", obj.data);
+                                $("#layui-form-publish-update textarea[name='text_p']").val("" +
+                                    "服务器名:█至尊狂魔轻变█\n" +
+                                    "服务器IP:◤①区激情ｐｋ◢\n" +
+                                    "线路类型:▅装备全暴▅\n" +
+                                    "版本介绍:█升级快◆ＰＫ爽█秒杀所有轻变版本█\n" +
+                                    "客服QQ:╃活人爆满╄\n" +
+                                    "主页地址:http://www.111.com\n" +
+                                    "开区时间:"+getFormattedDate()+" 00:00\n" +
+                                    "投放站点:\n");
+                                var str='';
+                                str+='服务器名:'+checkAttribute(obj.data.name)+"\n";
+                                str+='服务器IP:'+checkAttribute(obj.data.ipname)+"\n";
+                                str+='线路类型:'+checkAttribute(obj.data.line)+"\n";
+                                str+='版本介绍:'+checkAttribute(obj.data.versiondepict)+"\n";
+                                str+='客服QQ:'+checkAttribute(obj.data.kfqq)+"\n";
+                                str+='主页地址:'+checkAttribute(obj.data.url)+"\n";
+                                str+='开区时间:'+checkAttribute(obj.data.datetime)+"\n";
+                                str+='投放站点:'+checkAttribute(obj.data.launch)+"\n";
+                                $("#layui-form-publish-update textarea[name='text']").val(str);
+                                var html = '';
+                                for (var i = 0; i < arr.length; i++) {
+                                    if(arr[i].id==obj.data.type){
+                                        html += '<option value="' + arr[i].id + '" selected="selected">' + arr[i].name + '</option>';
+                                    }else{
+                                        html += '<option value="' + arr[i].id + '">' + arr[i].name + '</option>';
+                                    }
+                                }
+                                console.log(res)
+                                // $("#layui-form-publish-update input[name='show']").val(obj.data.shows);
+                                $("#layui-form-publish-update input[name='price']").val(price);
+                                $("#layui-form-publish-update select[name='type']").html(html);
+                                $("#update-publish-button").html($("#submit-form-update").html());
+                                form.render();
+                            }
+                        })
+                        /*closeindex = layero;
+                        formgs.reset('layui-form-publish-update');
+                        var date = new Date(obj.data.startdate)
+                        obj.data.startdate = date.getFullYear() + "-" + (date.getMonth() + 1).toString().padStart(2, '0') + "-" + date.getDate().toString().padStart(2, '0');
+                        formgs.get("layui-form-publish-update", obj.data);
+                        $("#layui-form-publish-update textarea[name='text_p']").val("" +
+                            "服务器名:█至尊狂魔轻变█\n" +
+                            "服务器IP:◤①区激情ｐｋ◢\n" +
+                            "线路类型:▅装备全暴▅\n" +
+                            "版本介绍:█升级快◆ＰＫ爽█秒杀所有轻变版本█\n" +
+                            "客服QQ:╃活人爆满╄\n" +
+                            "主页地址:http://www.111.com\n" +
+                            "开区时间:"+getFormattedDate()+" 00:00\n" +
+                            "投放站点:\n");
+                        var str='';
+                        str+='服务器名:'+checkAttribute(obj.data.name)+"\n";
+                        str+='服务器IP:'+checkAttribute(obj.data.ipname)+"\n";
+                        str+='线路类型:'+checkAttribute(obj.data.line)+"\n";
+                        str+='版本介绍:'+checkAttribute(obj.data.versiondepict)+"\n";
+                        str+='客服QQ:'+checkAttribute(obj.data.kfqq)+"\n";
+                        str+='主页地址:'+checkAttribute(obj.data.url)+"\n";
+                        str+='开区时间:'+checkAttribute(obj.data.datetime)+"\n";
+                        str+='投放站点:'+checkAttribute(obj.data.launch)+"\n";
+                        $("#layui-form-publish-update textarea[name='text']").val(str);
+                        var html = '';
+                        for (var i = 0; i < arr.length; i++) {
+                            if(arr[i].id==obj.data.type){
+                                html += '<option value="' + arr[i].id + '" selected="selected">' + arr[i].name + '</option>';
+                            }else{
+                                html += '<option value="' + arr[i].id + '">' + arr[i].name + '</option>';
+                            }
+                        }
+                        $("#layui-form-publish-update input[name='price']").val(price);
+                        $("#layui-form-publish-update select[name='type']").html(html);
+                        $("#update-publish-button").html($("#submit-form-update").html());
+                        form.render();*/
+                    },
+                });
+                }else if(obj.event == 'cx'){
+                var startDate = new Date(obj.data.startdate.replace(/-/g, '/'));
+                var currentTime = new Date();
+
+                if (currentTime >= startDate) {
+                    layer.msg('该服广告已经开始，无法撤销！');
+                } else {
+                    layer.confirm('确定要撤销【' + obj.data.name + '】这个私服吗？', function (index) {
+                        var url = layui.setter.url + "ranking/updates";
+                        var data = obj.data;
+                        data.state = 2;
+
+                        if (user.role !== 1) {
+                            if (data.nums >= 6) {
+                                data.hb = 1;
+                            } else {
+                                data.hb = 2;
+                            }
+                        }
+
+                        var fromdate = [];
+                        fromdate.push(data);
+
+                        admin.req({
+                            url: url,
+                            data: JSON.stringify(fromdate),
+                            contentType: "application/json",
+                            done: function (res) {
+                                table.reload("auth-table");
+                                layer.msg(res.msg);
+                                $.get({url: layui.setter.url + "ranking/test1"});
+
+                                admin.req({
+                                    url: layui.setter.url + 'getUserInfogin',
+                                    data: {
+                                        token: localStorage.getItem('vipvtoken')
+                                    },
+                                    done: function (userRes) {
+                                        if (!userRes || !userRes.data) {
+                                            layer.msg('撤销成功，但获取会员信息失败');
+                                            return;
+                                        }
+
+                                        var userInfo = userRes.data;
+
+                                        function toMoney(val) {
+                                            var num = parseFloat(val);
+                                            return isNaN(num) ? 0 : num;
+                                        }
+
+                                        var refundMoney = toMoney(data.money);
+                                        if (refundMoney <= 0) {
+                                            refundMoney = toMoney(data.price) * parseInt(data.days || 0, 10);
+                                        }
+
+                                        if (refundMoney <= 0) {
+                                            layer.msg('撤销成功，但未识别到可回退金额');
+                                            return;
+                                        }
+
+                                        var oldmoney = toMoney(userInfo.money);
+                                        var userQuotaOld = toMoney(userInfo.quota);
+                                        var quotaAdd = 0;
+                                        // 如果用户当前余额为负数，优先用本次回退金额补齐到0，超过补齐部分不计入quota
+                                        if (oldmoney < 0) {
+                                            var needFill = Math.abs(oldmoney);
+                                            quotaAdd = Math.min(refundMoney, needFill);
+                                        }
+                                        var newmoney = oldmoney + refundMoney;
+                                        var newquota = userQuotaOld + quotaAdd;
+
+                                        // 按照 addMoney 的调用风格，先发起 updateUserMoney（传递流水相关字段），后记录流水
+                                        admin.req({
+                                            url: layui.setter.url + "ranking/updateUserMoney",
+                                            type: 'POST',
+                                            data: {
+                                                userId: userInfo.id,
+                                                money: newmoney,
+                                                quota: newquota
+                                            },
+                                            done: function (updateRes) {
+                                                $.ajax({
+                                                    url: layui.setter.url + 'ranking/addMoney',
+                                                    type: 'POST',
+                                                    data: {
+                                                        user_id: userInfo.id,
+                                                        oldmoney: oldmoney,
+                                                        newmoney: newmoney,
+                                                        money: refundMoney,
+                                                        code: 1,
+                                                        mark: '撤销广告退回余额：' + (data.name || '') + ' ' + (data.url || '')
+                                                    },
+                                                    success: function (moneyRes) {
+                                                        if (moneyRes && typeof moneyRes.code !== 'undefined' && moneyRes.code != 0) {
+                                                            layer.msg(moneyRes.msg || '余额已回退，但流水记录失败');
+                                                            return;
+                                                        }
+                                                        userInfo.money = newmoney;
+                                                        userInfo.quota = newquota;
+                                                        window.localStorage.setItem("vipuser", JSON.stringify(userInfo));
+                                                        $.get({url: layui.setter.url + "ranking/test2"});
+
+                                                        admin.req({
+                                                            url: layui.setter.url + 'getUserInfogin',
+                                                            data: {
+                                                                token: localStorage.getItem('vipvtoken')
+                                                            },
+                                                            done: function (latestRes) {
+                                                                if (latestRes && latestRes.data) {
+                                                                    price = latestRes.data;
+                                                                }
+                                                            }
+                                                        });
+                                                    },
+                                                    error: function () {
+                                                        layer.msg('余额已回退，但流水记录失败');
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    });
+                }
+            }else if(obj.event == 'zt'){
+                var startDate = new Date(obj.data.startdate.replace(/-/g, '/')); // 注意：某些浏览器可能不支持 'YYYY-MM-DD' 格式，因此使用 '/' 替换 '-'
+                var endDate = new Date(obj.data.enddate.replace(/-/g, '/'));
+                // 获取当前时间
+                var currentTime = new Date();
+                if (currentTime >= endDate) {
+                    layer.msg('该服广告已过期，无法操作！')
+                    return;
+                }
+                // 比较两个日期
+                if (currentTime >= startDate) {
+                    layer.confirm('确定要'+(obj.data.state==3?'开启':'暂停')+'【' + obj.data.name + '】这个私服吗？', function (index) {
+                        var url = layui.setter.url + "ranking/updates";
+                        // layer.msg('正在完善')
+                        // console.log(obj.data)
+                        var data = obj.data
+                        if(data.update_by == 1 && data.state == 0){
+                            layer.msg('该服广告已暂停过一次，无法暂停！')
+                            return;
+                        }
+                        if(data.state==3){
+                            data.state = 0
+                        }else {
+                            data.state = 3
+                        }
+                        var formdate = new Array()
+                        formdate.push(data)
+                        admin.req({
+                            url: url,
+                            data: JSON.stringify(formdate),
+                            contentType: "application/json",
+                            done: function (res) {
+                                table.reload("auth-table");
+                                layer.msg(res.msg);
+                                $.ajax({
+                                    url: layui.setter.url + 'ranking/test1',
+                                    type: 'GET',
+                                    success: function (res) {
+                                        console.log('ADD.HTML TEST1 RUNNING', res);
+                                    },
+                                    error: function (err) {
+                                        console.log('TEST1_ERROR', err);
+                                    }
+                                });
+                            }
+                        })
+
+                    });
+                } else {
+                    layer.msg('该服广告还未开始，无法操作！')
+                    return;
+                }
+            }
+        })
+
+        table.on('checkbox(table)', function (obj) {
+            var data = obj.data;
+        });
+
+        $("#publish-button-del").on("click", function () {
+            layer.confirm('确定删除吗?', {btn: ['确定删除', '取消']}, function (index) {
+                var a1 = $("#ids").val(); //取得已获取的ids
+                if(a1==""){
+                    layer.msg("尚未选择要删除的数据");
+                    return
+                }
+                admin.req({
+                    url: layui.setter.url + "rankimg/removes/" + a1
+                }).done(function (res) {
+                    layer.close(index);
+                    table.reload('auth-table');
+                    layer.msg(res.msg);
+                    $.ajax({
+                        url: layui.setter.url + 'ranking/test1',
+                        type: 'GET',
+                        success: function (res) {
+                            console.log('ADD.HTML TEST1 RUNNING', res);
+                        },
+                        error: function (err) {
+                            console.log('TEST1_ERROR', err);
+                        }
+                    });
+                    $.ajax({
+                        url: 'https://hz.5cq.net/cq/yx/ttt',
+                        type: 'GET',
+                        success: function (res) {
+                            console.log('ADD.HTML TEST1 RUNNING', res);
+                        },
+                        error: function (err) {
+                            console.log('TEST1_ERROR', err);
+                        }
+                    });
+                })
+            });
+        })
+
+
+        var $ = layui.$, active = {
+            getid: function () {
+                var arrx = [];
+                var checkStatus = table.checkStatus('auth-table')
+                    , data = checkStatus.data;
+                for (var i = 0; i < data.length; i++) {    //循环筛选出id
+                    arrx.push(data[i].id);
+                }
+                $("#ids").val(arrx);
+            },
+            reload: function () {
+                var demoReload = $('#test-table-demoReload');
+                //执行重载
+                table.reload('auth-table', {
+                    page: {curr: 1}//重新从第 1 页开始
+                    , where: {name: demoReload.val()}
+                });
+            },
+            rolequery: function () {
+                var query = $('#table-role-query');
+                //执行重载
+                table.reload('table-role', {
+                    page: {curr: 1}//重新从第 1 页开始
+                    , where: {likename: query.val()}
+                });
+            }
+        };
+        $("#publish-button-add").on("click", function () {
+            layer.open({
+                type: 1,
+                area: ['1200px', '660px'],
+                title: ("新增发布私服"),
+                shadeClose: false,
+                content: $("#layui-publish"),
+                success: function (index, layero) {
+                    closeindex = layero;
+                    formgs.reset('layui-publish');
+                    $("#text_p").val("" +
+                        "服务器名:█至尊狂魔轻变█\n" +
+                        "服务器IP:◤①区激情ｐｋ◢\n" +
+                        "线路类型:▅装备全暴▅\n" +
+                        "版本介绍:█升级快◆ＰＫ爽█秒杀所有轻变版本█\n" +
+                        "客服QQ:╃活人爆满╄\n" +
+                        "主页地址:http://www.111.com\n" +
+                        "开区时间:"+getFormattedDate()+" 00:00\n" +
+                        "投放站点:\n");
+                    // document.querySelector('#layui-form-publish input[name="hb"][value="2"]').checked = true;
+                    $('#layui-form-publish input[name="days"]').val('7')
+                    $('#layui-form-publish input[name="nums"]').val('1')
+                    var html = '';
+                    for (var i = 0; i < arr.length; i++) {
+                        if(i!=1){
+                            html += '<option value="' + arr[i].id + '">' + arr[i].name + '</option>';
+                        }else{
+                            html += '<option value="' + arr[i].id + '"  selected="selected">' + arr[i].name + '</option>';
+                        }
+                    }
+                    $("#layui-form-publish select[name='type']").html(html);
+                    $("#layui-form-publish input[name='price']").val(price);
+                    $('#layui-form-publish input[name="score"]').val('5')
+                    $("#submit-form-publish-button").html($("#submit-form-add").html());
+                    form.render();
+                },
+            });
+        })
+        $('textarea[name="text"]').on('input', function() {
+            // 获取textarea的当前值
+            var text = $(this).val();
+            var dataArr = new Array();
+            var objArr = text.trim().split('\n');
+            objArr = spArr(objArr, 8);
+            console.log(objArr[0])
+            var textArr = objArr[0]
+            for (var v in textArr) {
+                var vvv = textArr[v].replace("：", ":");
+                var val = vvv.substring(vvv.indexOf(':') + 1).trim();
+                var qz = vvv.substring(0, vvv.indexOf(':')).trim();
+                // console.log(qz)
+                // console.log(val)
+                if(qz.indexOf('开区时间') > -1){
+                    $('input[name="startdate"]').val(val)
+                }
+            }
+        });
+        //添加/修改提交
+        form.on('submit(submit-form-publish)', function (data) {
+            var text="";
+            if(data.field.id==null||data.field==''){
+                text=$("#layui-form-publish textarea[name='text']").val();
+            }else{
+                text=$("#layui-form-publish-update textarea[name='text']").val();
+            }
+            if(data.field.nums>=6){
+                data.field.hb = 1
+            }else{
+                data.field.hb = 2
+            }
+            var dataArr = new Array();
+            var objArr = text.trim().split('\n');
+            objArr = spArr(objArr, 8);
+            for (var i in objArr) {
+                var param = new Map();
+                var textArr = objArr[i];
+                for (var v in textArr) {
+                    var vvv = textArr[v].replace("：", ":");
+                    var val = vvv.substring(vvv.indexOf(':') + 1).trim();
+                    var qz = vvv.substring(0, vvv.indexOf(':')).trim();
+                    if(qz.indexOf('线路') > -1){
+                        qz = '线路类型'
+                    }
+                    var key = map.get(qz);
+                    if (val != '' && val != null && key != null && key != '') {
+                        param.set(key, val);
+                    }
+                }
+                if (param.get("name") != null && param.get("name") != '' && param.get("url") != null && param.get("url") != '') {
+                    param.set('startdate', data.field.startdate);
+                    param.set('type', data.field.type);
+                    param.set('days', data.field.days);
+                    param.set('nums', data.field.nums);
+                    param.set('price', data.field.price);
+                    param.set('score', data.field.score);
+                    param.set('shows',data.field.show)
+                    if(data.field.id != null||data.field.id!=''){
+                        param.set('id', data.field.id);
+                    }
+                    console.log(param)
+                    var obj = Object.create(null);
+                    for (let [k, v] of param) {
+                        obj[k] = v;
+                    }
+                    dataArr.push(obj);
+                }
+            }
+            /*console.log(data.field)
+            return false;*/
+            var url1 = layui.setter.url + "ranking/" + ((data.field.id == null||data.field.id=='') ? "add" : "update");
+            if (dataArr.length != 0) {
+                // var url = url;
+                if(data.field.hb == '1'){
+                    // console.log(1)
+                    var param1  = {}
+                    param1.url = dataArr[0].url
+                    param1.startDate = dataArr[0].startdate
+                    var date = new Date(param1.startDate)
+                    date.setDate(date.getDate() + 7)
+                    param1.endDate = date.toISOString().split('T')[0]
+                    var url = layui.setter.url + "legendUrl/add"
+                    admin.req({
+                        url: url,
+                        data: param1,
+                        done: function (res) {
+                            layer.close(closeindex);
+                            table.reload("auth-table");
+                            layer.msg(res.msg);
+                            $.get({url:layui.setter.url + "ranking/test2"})
+                        }
+                    })
+                }else {
+                    var url = layui.setter.url + "legendUrl/deleteByUrl"
+                    admin.req({
+                        url: url,
+                        data: {url:dataArr[0].url},
+                        done: function (res) {
+                            layer.close(closeindex);
+                            table.reload("auth-table");
+                            layer.msg(res.msg);
+                            $.get({url:layui.setter.url + "ranking/test2"})
+                        }
+                    })
+                }
+                // return false;
+                admin.req({
+                    url: url1,
+                    processData: false,
+                    traditonal: true,
+                    contentType: "application/json",
+                    data: JSON.stringify(dataArr),
+                    done: function (res) {
+                        if(res.code==-1){
+                            layer.msg(res.msg);
+                        }else {
+                            table.reload("auth-table");
+                            layer.msg(res.msg);
+                            formgs.reset('layui-publish');
+                            initType();
+                            $("#text_p").val("" +
+                                "服务器名:█至尊狂魔轻变█\n" +
+                                "服务器IP:◤①区激情ｐｋ◢\n" +
+                                "线路类型:▅装备全暴▅\n" +
+                                "版本介绍:█升级快◆ＰＫ爽█秒杀所有轻变版本█\n" +
+                                "客服QQ:╃活人爆满╄\n" +
+                                "主页地址:http://www.111.com\n" +
+                                "开区时间:"+getFormattedDate()+" 00:00\n" +
+                                "投放站点:\n");
+                            if(data.field.id != null||data.field.id!=''){
+                                layer.close(closeindex);
+                                $.get({url:'https://hz.5cq.net/cq/yx/ttt'})
+                            }
+                        }
+                        $.get({url:layui.setter.url + "ranking/test1"})
+                        $.get({url:layui.setter.url + "ranking/test2"})
+                    }
+                })
+                return false;
+            } else {
+                layer.msg("输入内容有误,请更正")
+            }
+
+        })
+
+        $('.test-table-reload-btn .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+        var map = new Map();
+        map.set("服务器名", 'name');
+        map.set("服务器IP", 'ipname');
+        map.set("线路类型", 'line');
+        map.set("版本介绍", 'versiondepict');
+        map.set("客服QQ", 'kfqq');
+        map.set("主页地址", 'url');
+        map.set("开区时间", 'datetime');
+        map.set("投放站点", 'launch');
+        function showHtml(url, datas) {
+
+            //判断是否为FormData
+            var result;
+            $.ajax({
+                //返回相同的session
+                xhrFields: {
+                    withCredentials: true
+                },
+                url: url,
+                type: 'POST',
+                async: false,    //或false,是否异步
+                data: datas,
+                cache: false,
+                processData: false,
+                contentType: false,
+                timeout: 10000,    //超时时间
+                dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+                beforeSend: function (xhr) {
+                },
+                success: function (data, textStatus, jqXHR) {
+                    result = data;
+                },
+                error: function (xhr, textStatus) {
+                    result = JSON.parse('{"flag":false,"message":"showHtml-ajax-请求连接异常"}');
+                }
+            });
+            return result;
+        }
+    });
+    var jqb = function (v) {
+        v.select();
+        document.execCommand("copy");
+    }
+
+    function spArr(arrv, num) { //arr是你要分割的数组，num是以几个为一组
+        let newArr = [] //首先创建一个新的空数组。用来存放分割好的数组
+        for (let i = 0; i < arrv.length;) { //注意：这里与for循环不太一样的是，没有i++
+            newArr.push(arrv.slice(i, i += num));
+        }
+        return newArr
+    }
+
+    function checkAttribute(data){
+        if(data==null){
+            data= "";
+        }
+        return data;
+    }
+
+</script>  
+ </body>
+</html>

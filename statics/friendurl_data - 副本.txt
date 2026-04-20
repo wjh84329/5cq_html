@@ -1,0 +1,18 @@
+<dl class="links-list">
+    <dt>友情链接：</dt>
+    <dd>
+        <ul class="links-list-ul">
+            <li><a href="https://www.zhaoff.com" target="_blank">传奇SF</a></li>
+            <li><a href="https://www.zhaoff.com"target="_blank">传奇私服</a></li>
+            <li><a href="https://www.zhaoff.com"target="_blank">新开传奇</a></li>
+            <li><a href="https://www.zhaoff.com"target="_blank">传奇辅助</a></li>
+            <li><a href="https://www.zhaoff.com"target="_blank">单机传奇</a></li>
+            <li><a href="https://www.zhaois.com" target="_blank" rel="nofollow>免费列表</a></li>
+            <li><a href="https://www.qusige.com" target="_blank" rel="nofollow>趣思论坛</a></li>
+            <li><a href="https://www.lousf.com" target="_blank" rel="nofollow>传奇一条龙</a></li>
+            <li><a href="https://www.zhaoff.com" target="_blank">传奇版本库</a></li>
+            <li><a href="https://www.230gm.com" target="_blank" rel="nofollow>爱上GM论坛</a></li>
+            <li><a href="https://www.zhaoff.com" target="_blank">传奇在线查广告</a></li>
+        </ul>
+    </dd>
+ </dl>

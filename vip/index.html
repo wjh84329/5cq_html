@@ -1,0 +1,297 @@
+<!doctype html>
+<html>
+ <head> 
+  <meta charset="utf-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"> 
+  <title>5CQ-传奇广告查询站_传奇广告排行_传奇资源站_新开传奇新服排名站(5CQ.COM)</title>
+  <meta name="description" content="5CQ.Com传奇广告排行榜,传奇私服查询站,传奇资源站,好玩的传奇排名站,玩家最爱的新开传奇,GM最喜欢的传奇工具,传奇直播,传奇新开服,传奇相关尽在5CQ(玩传奇)">
+  <meta name="keywords" content="传奇广告查询站,传奇资源站,传奇广告排行,传奇SF广告统计(5CQ.COM)">   
+  <link rel="stylesheet" href="../statics/layui/css/layui.css"> 
+  <style>
+        .layui-nav .layui-nav-item {
+            position: relative;
+            display: inline-block;
+            /* *display: inline; */
+            /* *zoom: 1; */
+            vertical-align: middle;
+            line-height: 70px;
+        }
+
+        .layui-layout-admin .layui-side {
+            top: 70px;
+            width: 200px;
+            overflow-x: hidden;
+        }
+
+        .layui-nav-tree {
+            width: 180px;
+            padding: 0;
+        }
+
+        .layui-layout-admin .layui-footer {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 44px;
+            line-height: 44px;
+            padding: 0 15px;
+            background-color: #eee;
+            z-index: 999999999999;
+        }
+        .layui-header ul li{
+            cursor: pointer;
+        }
+        .layui-footer{
+            background: #0099CC !important;
+        }
+        .layui-footer span{
+            font-size: 12px;
+            color: white;
+        }
+        .layui-side-scroll ul li dl{
+            cursor: pointer;
+        }
+        .layui-side-scroll ul li dl div:hover > span{
+            color: red !important;
+            text-decoration: underline;
+        }
+        .active > span{
+            color: red !important;
+        }
+    </style> 
+ </head> 
+ <body onload="adjustIframeHeight('frm1');"> 
+  <div style="height: 100vh;position: relative"> 
+   <div class="layui-layout layui-layout-admin"> 
+    <div class="layui-header" style="background: #0099CC;height: 70px !important;"> 
+     <div class="layui-logo layui-hide-xs layui-bg-black" style="color: white;background: #0099CC !important;font-size: 40px;font-weight: 900">
+       会员中心 
+     </div> 
+     <!-- 头部区域（可配合layui 已有的水平导航） --> 
+     <ul style="display: flex;justify-content: space-between;align-items: center;align-content: space-between;width: 75%;height: 70px;margin-left: 5%;
+" class="layui-nav layui-layout-left"> 
+      <!-- 移动端显示 --> 
+      <li style="display: flex;flex-direction: column;justify-content: center;align-items: center" class="header-active" lay-href="home.html"> 
+       <div> 
+        <i style="font-size: 40px" class="layui-icon layui-icon-home"></i> 
+       </div> 
+       <div style="text-decoration: none;color: #ffffff;font-weight: 400;">
+         管理首页 
+       </div> </li> 
+      <li style="display: flex;flex-direction: column;justify-content: center;align-items: center" class="header-active" lay-href="list.html"> 
+       <div> 
+        <i style="font-size: 40px" class="layui-icon layui-icon-read"></i> 
+       </div> 
+       <div style="text-decoration: none;color: #ffffff;font-weight: 400;">
+         广告管理 
+       </div> </li> 
+      <li style="display: flex;flex-direction: column;justify-content: center;align-items: center" class="header-active" lay-href="money.html"> 
+       <div> 
+        <i style="font-size: 40px" class="layui-icon layui-icon-dollar"></i> 
+       </div> 
+       <div style="text-decoration: none;color: #ffffff;font-weight: 400;">
+         财务信息 
+       </div> </li> 
+      <li style="display: flex;flex-direction: column;justify-content: center;align-items: center" class="header-active" lay-href="edit.html"> 
+       <div> 
+        <i style="font-size: 40px" class="layui-icon layui-icon-username"></i> 
+       </div> 
+       <div style="text-decoration: none;color: #ffffff;font-weight: 400;">
+         个人资料 
+       </div> </li> 
+      <li style="display: flex;flex-direction: column;justify-content: center;align-items: center" class="header-active" id="logout"> 
+       <div> 
+        <i style="font-size: 40px" class="layui-icon layui-icon-close-fill"></i> 
+       </div> 
+       <div style="text-decoration: none;color: #ffffff;font-weight: 400;">
+         注销登录 
+       </div> </li> 
+     </ul> 
+    </div> 
+    <div class="layui-side layui-bg-black" style="background: #0099CC !important;"> 
+     <div class="layui-side-scroll"> 
+      <!-- 左侧导航区域（可配合layui已有的垂直导航） --> 
+      <ul class="layui-nav layui-nav-tree" lay-filter="test" style="background: white"> 
+       <li> 
+        <dd style="background: #0099CC;color: white;padding-left: 10px;line-height: 38px">
+          广告信息 
+        </dd> 
+        <dl style="line-height: 31px;"> 
+         <div style="border: solid 1px #DEEFFB;" class="link-active" lay-href="add.html"> 
+          <img style="margin-left: 20px" src="../statics/images/6.gif"> 
+          <span style="color: black;margin-left: 10px">快速发布</span> 
+         </div> 
+         <div style="border: solid 1px #DEEFFB;" class="link-active" lay-href="list.html"> 
+          <img style="margin-left: 20px" src="../statics/images/8.gif"> 
+          <span style="color: black;margin-left: 10px">广告管理</span> 
+         </div> 
+         <!--<div style="border: solid 1px #DEEFFB;" class="link-active" lay-href="home.html">
+                                <img style="margin-left: 20px" src="../statics/images/3.gif"><span
+                                    style="color: black;margin-left: 10px">广告搜索</span>
+                            </div>--> 
+        </dl> </li> 
+       <li> 
+        <dd style="background: #0099CC;color: white;padding-left: 10px;line-height: 38px">
+          财务信息 
+        </dd> 
+        <dl style="line-height: 31px;"> 
+         <div style="border: solid 1px #DEEFFB;" class="link-active" lay-href="money.html"> 
+          <img style="margin-left: 20px" src="../statics/images/5.gif"> 
+          <span style="color: black;margin-left: 10px">账户余额</span> 
+         </div> 
+         <div style="border: solid 1px #DEEFFB;" class="link-active" lay-href="price.html"> 
+          <img style="margin-left: 20px" src="../statics/images/4.gif"> 
+          <span style="color: black;margin-left: 10px">广告价格</span> 
+         </div> 
+         <div style="border: solid 1px #DEEFFB;" class="link-active" lay-href="czxf.html"> 
+          <img style="margin-left: 20px" src="../statics/images/7.gif"> 
+          <span style="color: black;margin-left: 10px">充值/消费记录</span> 
+         </div> 
+        </dl> </li> 
+       <li> 
+        <dd style="background: #0099CC;color: white;padding-left: 10px;line-height: 38px">
+          会员中心 
+        </dd> 
+        <dl style="line-height: 31px;height: 600px;"> 
+         <div style="border: solid 1px #DEEFFB;" class="link-active" lay-href="password.html"> 
+          <img style="margin-left: 20px" src="../statics/images/1.gif"> 
+          <span style="color: black;margin-left: 10px">修改密码</span> 
+         </div> 
+         <div style="border: solid 1px #DEEFFB;" class="link-active" lay-href="edit.html"> 
+          <img style="margin-left: 20px" src="../statics/images/2.gif"> 
+          <span style="color: black;margin-left: 10px">修改资料</span> 
+         </div> 
+        </dl> </li> 
+      </ul> 
+     </div> 
+    </div> 
+    <div class="layui-body"> 
+     <!-- 内容主体区域 --> 
+     <!--        <div style="padding: 15px;">内容主体区域。记得修改 layui.css 和 js 的路径</div>--> 
+     <div class="layui-tab" lay-filter="tables" lay-allowclose="true"> 
+      <!--<ul class="layui-tab-title" hidden="hidden"></ul>--> 
+      <div class="layui-tab-content" style="overflow: hidden"> 
+       <iframe id="frm1" name="frm1" data-frameid="" scrolling="auto" frameborder="0" src="home.html" style="min-height: 1200px;width:100%;overflow: hidden !important;border: none"></iframe> 
+      </div> 
+     </div> 
+    </div> 
+    <div class="layui-footer"> 
+     <span style="margin-left: 10%"> 运营商：5CQ-传奇广告查询站_传奇广告排行_传奇资源站_新开传奇新服排名站(5CQ.com) @2025 版权所有 </span> 
+     <span style="margin-left: 10%"> 您好！Ceshi [ 
+      <p2 style="text-decoration: underline" id="editpwd" lay-href="password.html">
+        修改密码 
+      </p2> ] </span> 
+     <span style="float: right"> 2025/2/20 03:43:45 星期四 </span> 
+    </div> 
+   </div> 
+   <!--<div style="position: relative;top: 30%;left: 180px;z-index: 999;">
+        <svg id="left" style="display: block" t="1739993091570" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+             p-id="13916" width="20" height="128">
+            <path d="M738.9696 1012.0192l-514.7648-454.8096a62.4128 62.4128 0 0 1 0-90.4192L738.9696 11.9808A49.664 49.664 0 0 1 819.2 57.1904L819.2 966.8096A49.664 49.664 0 0 1 738.9696 1012.0192z"
+                  fill="#ffffff" p-id="13917"></path>
+        </svg>
+        <svg id="right" style="display: none" t="1739993109417" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+             p-id="14130" width="20" height="128">
+            <path d="M285.0304 11.9808l514.7648 454.8096a62.4128 62.4128 0 0 1 0 90.4192L285.0304 1012.0192A49.664 49.664 0 0 1 204.8 966.8096V57.1904A49.664 49.664 0 0 1 285.0304 11.9808z"
+                  fill="#ffffff" p-id="14131"></path>
+        </svg>
+    </div>--> 
+  </div> 
+  <script src="../statics/layui/layui.js"></script> 
+  <script>
+    function adjustIframeHeight(iframeId) {
+        var iframe = document.getElementById(iframeId);
+        if (iframe) {
+            try {
+                var iframeDoc = iframe.contentWindow || iframe.contentDocument;
+                if (iframeDoc.document) {
+                    iframeDoc = iframeDoc.document; // For IE
+                }
+                // 修改高度计算部分
+                var body = iframeDoc.body;
+                var html = iframeDoc.documentElement;
+                var height = Math.max(
+                    body.scrollHeight, body.offsetHeight,
+                    html.clientHeight, html.scrollHeight, html.offsetHeight
+                );
+                // 添加缓冲（例如10px）
+                // iframe.style.height = (height + 10) + 'px';
+                iframe.style.overflow = 'hidden';
+            } catch (ex) {
+                console.log("Error: " + ex.message);
+            }
+        }
+    }
+    //JS
+    layui.use(['element', 'layer', 'util'], function () {
+        var element = layui.element
+            , layer = layui.layer
+            , util = layui.util
+            , $ = layui.$;
+
+        // var url = 'http://localhost:8086/server/'
+        // var url = 'http://jaxone.5cq.com/server/'
+        var url = 'https://kkw.5cq.com/server/'
+
+        var user = JSON.parse(window.localStorage.getItem("vipuser"));
+        if(user == null){
+            window.top.location.href='./login.html'; //到登录页面
+            return;
+        }
+        $.post(url + 'getUserInfogin', {token: localStorage.getItem('vipvtoken')}, function (res) {
+            if(res.code != 0){
+                window.top.location.href='./login.html'; //到登录页面
+                return;
+            }
+        })
+
+        //左侧菜单点击事件
+        $('.link-active').on('click', function () {
+            $('.link-active').removeClass('active')
+            $(this).addClass('active')
+            var url = $(this).attr("lay-href")
+            var iframe = $('#frm1')[0]; // 获取iframe的DOM元素
+            iframe.onload = function() { // 设置onload事件
+                adjustIframeHeight('frm1'); // iframe加载完成后调整高度
+            };
+            $('#frm1').attr("src",url)
+            // adjustIframeHeight('frm1')
+
+        });
+        //顶部菜单栏事件
+        $('.header-active').on('click', function () {
+            var url = $(this).attr("lay-href")
+            var iframe = $('#frm1')[0]; // 获取iframe的DOM元素
+            iframe.onload = function() { // 设置onload事件
+                adjustIframeHeight('frm1'); // iframe加载完成后调整高度
+            };
+            $('#frm1').attr("src",url)
+            // adjustIframeHeight('frm1')
+
+        });
+
+        $('#left').click(function () {
+            $('#left').css('display','none')
+            $('#right').css('display','block')
+        })
+        $('#right').click(function () {
+            $('#right').css('display','none')
+            $('#left').css('display','block')
+        })
+        $('#editpwd').click(function () {
+            var url = $(this).attr("lay-href")
+            var iframe = $('#frm1')[0]; // 获取iframe的DOM元素
+            iframe.onload = function() { // 设置onload事件
+                adjustIframeHeight('frm1'); // iframe加载完成后调整高度
+            };
+            $('#frm1').attr("src",url)
+        })
+        $('#logout').click(function () {
+            window.localStorage.setItem("vipuser",null);
+            window.top.location.href='./login.html'; //到登录页面
+        })
+    });
+</script>  
+ </body>
+</html>

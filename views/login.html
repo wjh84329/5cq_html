@@ -1,0 +1,226 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>5CQ传奇资源站后台管理系统</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="../layuiadmin/layui/css/layui.css" media="all">
+  <link rel="stylesheet" href="../layuiadmin/style/admin.css" media="all">
+  <link rel="stylesheet" href="../layuiadmin/style/login.css" media="all">
+</head>
+<body>
+
+  <div class="layadmin-user-login layadmin-user-display-show" id="LAY-user-login" style="display: none;">
+
+    <div class="layadmin-user-login-main">
+      <div class="layadmin-user-login-box layadmin-user-login-header">
+        <h2>5CQ</h2>
+        <p>5CQ传奇资源站后台管理系统</p>
+      </div>
+      <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
+        <script type="text/html" template>
+          {{# if(layui.router().search.type === 'phoneLogin'){ }}
+              <div class="layui-form-item">
+                <label class="layadmin-user-login-icon layui-icon layui-icon-cellphone" for="LAY-user-login-cellphone"></label>
+                <input type="text" name="phone" id="LAY-user-login-cellphone" lay-verify="phone" placeholder="请输入手机号" class="layui-input">
+              </div>
+              <div class="layui-form-item">
+                <div class="layui-row">
+                  <div class="layui-col-xs7">
+                    <label class="layadmin-user-login-icon layui-icon layui-icon-vercode" for="LAY-user-login-smscode"></label>
+                    <input type="text" name="code" id="LAY-user-login-smscode" lay-verify="required" placeholder="短信验证码" class="layui-input">
+                  </div>
+                  <div class="layui-col-xs5">
+                    <div style="margin-left: 10px;">
+                      <button type="button"  class="layui-btn layui-btn-primary layui-btn-fluid" id="LAY-user-getsmscode">获取验证码</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="layui-form-item">
+                <div class="layui-col-xs5">
+                  <label style="cursor:pointer;" class="switch" >账号登录</label>
+                </div>
+              </div>
+
+          {{# } else if(layui.router().search.type === 'login' || typeof layui.router().search.type == 'undefined') { }}
+              <!--账号密码登录-->
+              <div class="layui-form-item">
+                <label class="layadmin-user-login-icon layui-icon layui-icon-username" for="LAY-user-login-username"></label>
+                <input type="text" name="username" id="LAY-user-login-username" lay-verify="required" placeholder="用户名" class="layui-input">
+              </div>
+              <div class="layui-form-item">
+                <label class="layadmin-user-login-icon layui-icon layui-icon-password" for="LAY-user-login-password"></label>
+                <input type="password" name="password" id="LAY-user-login-password" lay-verify="required" placeholder="密码" class="layui-input">
+              </div>
+              <div class="layui-form-item">
+                <div class="layui-row">
+                  <div class="layui-col-xs7">
+                    <label class="layadmin-user-login-icon layui-icon layui-icon-vercode" for="LAY-user-login-vercode"></label>
+                    <input type="text" name="vercode" id="LAY-user-login-vercode"  lay-verify="required" placeholder="验证码" class="layui-input">
+                  </div>
+                  <div class="layui-col-xs5">
+                    <div style="margin-left: 10px;">
+                      <img src="https://www.oschina.net/action/user/captcha" class="layadmin-user-login-codeimg" id="LAY-user-get-vercode">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!--<div class="layui-form-item">
+                <div class="layui-col-xs5">
+                  <label style="cursor:pointer;" class="switch" >手机登录</label>
+                </div>
+              </div>-->
+
+          {{# } }}
+        </script>
+
+        <div class="layui-form-item" style="margin-bottom: 20px;">
+          <input type="checkbox" id="rememberMe" name="rememberMe" value="1" lay-skin="primary" title="记住我">
+          <!--<a href="forget.html" class="layadmin-user-jump-change layadmin-link" style="margin-top: 7px;">忘记密码？</a>-->
+        </div>
+        <div class="layui-form-item">
+          <button class="layui-btn layui-btn-fluid" lay-submit id="LAY-user-login-submit" lay-filter="LAY-user-login-submit">登 入</button>
+        </div>
+
+        <!--<div class="layui-trans layui-form-item layadmin-user-login-other">
+          <label>社交账号登入</label>
+          <a href="javascript:;"><i class="layui-icon layui-icon-login-qq"></i></a>
+          <a href="javascript:;"><i class="layui-icon layui-icon-login-wechat"></i></a>
+          <a href="javascript:;"><i class="layui-icon layui-icon-login-weibo"></i></a>
+
+          <a href="reg.html" class="layadmin-user-jump-change layadmin-link">注册帐号</a>
+        </div>-->
+      </div>
+    </div>
+
+    <div class="layui-trans layadmin-user-login-footer">
+
+      <p>© 2019-2022 <a href="http://www.1PK.COM/" target="_blank">1PK.COM</a></p>
+      <!--<p>
+        <span><a href="http://www.layui.com/admin/#get" target="_blank">获取授权</a></span>
+        <span><a href="http://www.layui.com/admin/pro/" target="_blank">在线演示</a></span>
+        <span><a href="http://www.layui.com/admin/" target="_blank">前往官网</a></span>
+      </p>-->
+    </div>
+
+    <!--<div class="ladmin-user-login-theme">
+      <script type="text/html" template>
+        <ul>
+          <li data-theme=""><img src="{{ layui.setter.base }}style/res/bg-none.jpg"></li>
+          <li data-theme="#03152A" style="background-color: #03152A;"></li>
+          <li data-theme="#2E241B" style="background-color: #2E241B;"></li>
+          <li data-theme="#50314F" style="background-color: #50314F;"></li>
+          <li data-theme="#344058" style="background-color: #344058;"></li>
+          <li data-theme="#20222A" style="background-color: #20222A;"></li>
+        </ul>
+      </script>
+    </div>-->
+
+  </div>
+
+  <script src="../layuiadmin/layui/layui.js"></script>
+  <script>
+  layui.config({
+    base: '../../layuiadmin/' //静态资源所在路径
+  }).extend({
+    index: 'lib/index' //主入口模块
+  }).use(['index', 'user','formgs'], function(){
+    var $ = layui.$
+    ,setter = layui.setter
+    ,admin = layui.admin
+    ,form = layui.form
+    ,router = layui.router()
+    ,search = router.search
+    ,formgs = layui.formgs
+
+
+    //切换登录方式
+    $(".switch").on('click',function () {
+
+      if (location.hash == "#/type=login" || location.hash == ""){
+        location.hash = '/type=phoneLogin';
+      }else if (location.hash == "#/type=phoneLogin"){
+        location.hash = '/type=login';
+      }
+      location.reload();
+    });
+
+
+    //记住密码操作
+    formgs.get("LAY-user-login",JSON.parse(window.localStorage.getItem("rememberMe")));
+    form.render();
+
+    $('body').keydown(function () {
+      if (window.event.keyCode == '13') {
+        $("#LAY-user-login-submit").click();
+      }
+    });
+
+
+    //提交
+    form.on('submit(LAY-user-login-submit)', function(obj){
+      var url;
+      //1.账号登录初始化
+      if (location.hash == "#/type=login" || location.hash == ""){
+        // url = 'https://wx.1pk.com/server/'+'login'// layui.setter.url + 'login'
+        // url = 'http://jaxone.5cq.com/server/'+'login'
+        url = 'https://kkw.5cq.com/server/'+'login'// layui.setter.url + 'login'
+        // url = 'http://localhost:8086/server/'+'login'// layui.setter.url + 'login'
+        obj.field.vtoken = window.localStorage.getItem("uservtoken");
+      //2.手机登录初始化
+      }else if (location.hash == "#/type=phoneLogin"){
+        url = layui.setter.url + 'phoneLogin'
+        obj.field.codetoken = window.localStorage.getItem("codetoken");//待完善，设置codetoken过期时间定制器
+      }
+
+
+
+      if (typeof obj.field.rememberMe == 'undefined') obj.field.rememberMe = 0;
+      //请求登入接口
+      admin.req({
+        url: url
+        ,data: obj.field
+        ,done: function(res){
+          //请求成功后，写入 access_token
+          layui.data(setter.tableName, {key: setter.request.tokenName,value: res.data.token});
+          //请求成功后，写入记住我
+          layui.data(setter.tableName, {key: setter.request.rememberMe,value: res.data.rememberMe});
+          //存入用户基本信息
+          window.localStorage.setItem("userinfo",JSON.stringify(obj.field));
+          window.localStorage.setItem("user",JSON.stringify(res.data.user));
+          //登入成功的提示与跳转
+          layer.msg('登入成功', {
+            offset: '15px'
+            ,icon: 1
+            ,time: 1000
+          }, function(){
+            if(res.data.user.role_id == 44){
+              location.href = '../vip/index.html'; //后台主页
+            }else {
+              location.href = 'index.html'; //后台主页
+            }
+
+          });
+        }
+      });
+
+    });
+
+
+    //实际使用时记得删除该代码
+    /*layer.msg('为了方便演示，用户名密码可随意输入', {
+      offset: '15px'
+      ,icon: 1
+    });*/
+
+  });
+  </script>
+</body>
+</html>

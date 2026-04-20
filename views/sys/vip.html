@@ -1,0 +1,640 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>用户管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+
+
+</head>
+<body>
+<style>
+    .layadmin-homepage-pad-ver{ padding-top: 15px;padding-bottom: 15px;}
+    .layadmin-homepage-pad-img{box-shadow: 0 0 0 4px rgba(0,0,0,0.1);border-radius: 50%;}
+</style>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">会员中心</div>
+                <div class="layui-card-body">
+                    <div class="test-table-reload-btn" style="margin-bottom: 10px;">
+                        <div class="layui-inline">
+                            <input class="layui-input" name="polymerization" id="test-table-demoReload" style="width: 300px" autocomplete="off" placeholder="请输入账号、姓名、手机号、QQ">
+                        </div>
+                        <button class="layui-btn" data-type="reload">搜索</button>
+                        <button id="user-button-add" shiro-event="sys:user:open-add" class="layui-btn"><i
+                                class="layui-icon">&#xe654;</i>添加
+                        </button>
+                    </div>
+                    <table class="layui-hide" id="auth-table" lay-filter="auth-table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="auth-state" hidden>
+    <!--<button lay-event="powerrole" shiro-event="sys:user:selectRole" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe672;</i>授权
+    </button>-->
+    <button lay-event="update" shiro-event="sys:user:open-update" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe642;</i>修改
+    </button>
+    <!--<button lay-event="add" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe642;</i>加钱
+    </button>
+    <button lay-event="sub" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe642;</i>扣钱
+    </button>-->
+    <button lay-event="read" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe702;</i>查看发布
+    </button>
+    <button lay-event="remove" shiro-event="sys:user:open-remove" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe640;</i>删除
+    </button>
+</div>
+
+<!--添加-->
+<div id="submit-form-add" hidden>
+    <button class="layui-btn" shiro-event="sys:user:add" lay-submit lay-filter="submit-form-user">立即提交</button><!--添加-->
+    <button type="reset" shiro-event="sys:user:add-reset" class="layui-btn layui-btn-primary">重置</button><!--添加-->
+</div>
+<!--修改-->
+<div id="submit-form-update" hidden>
+    <button class="layui-btn" shiro-event="sys:user:update" lay-submit lay-filter="submit-form-user">立即提交</button>
+    <button type="reset" shiro-event="sys:user:update-reset" class="layui-btn layui-btn-primary">重置</button>
+</div>
+
+<div id="layui-user" hidden>
+    <div class="layui-fluid" >
+        <div class="layui-card">
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form" id="layui-form-user" lay-filter="component-form-group">
+                    <div class="layui-form-item">
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">登录账号</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="login_name" name="login_name" lay-verify="required" placeholder="请输入登录账号"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label">会员类型</label>
+                            <div class="layui-input-inline">
+                                <select name="type" lay-verify="">
+                                    <option value="普通会员">普通会员</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">登录密码</label>
+                            <div class="layui-input-inline">
+                                <input type="password" id="password" name="password" lay-verify="required" minlength="6" maxlength="12" placeholder="请输入6-12位密码"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label">确认密码</label>
+                            <div class="layui-input-inline">
+                                <input type="password" id="confirm-password" name="confirm-password" lay-verify="required"  minlength="6" maxlength="12" placeholder="请确认密码"
+                                       class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">真实姓名</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="name" name="name" lay-verify="required" placeholder="请输入姓名"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label">联系电话</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="phone" name="phone" lay-verify="required|phone"  placeholder="请输入手机号码"
+                                       class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">电子邮箱</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="email" name="email" lay-verify="required|email" placeholder="请输入电子邮箱"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label">QQ号码</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="qq" name="qq" lay-verify="required" minlength="5" maxlength="11" placeholder="请输入QQ号码"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">账户余额</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="money" name="money" lay-verify="required" placeholder="请输入账户余额"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label">信用额度</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="quota" name="quota" lay-verify="required" placeholder="请输入信用额度"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div class="layui-form-item" style="display: none">
+                        <label class="layui-form-label">允许登录</label>
+                        <div class="layui-input-inline">
+                            <input type="checkbox" id="login_flag" name="login_flag" lay-filter="switch" value="1" lay-skin="switch" lay-text="是|否" >
+                        </div>
+                        <label class="layui-form-label">系统数据</label>
+                        <div class="layui-input-inline">
+                            <input type="checkbox" id="is_sys" name="is_sys" lay-filter="switch" value="1" lay-skin="switch" lay-text="是|否" >
+                        </div>
+                    </div>-->
+                    <!--<div class="layui-form-item">
+                        <label class="layui-form-label">备注</label>
+                        <div class="layui-input-block" >
+                            <textarea name="remarks" placeholder="请输入备注" class="layui-textarea"></textarea>
+                        </div>
+                    </div>-->
+                    <div class="layui-input-block">
+                        <!--操作-->
+                        <div class="layui-footer" id="submit-form-user-button" style="left: 0;">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="layui-user-update" hidden>
+    <div class="layui-fluid" >
+        <div class="layui-card">
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form" id="layui-form-user-update" lay-filter="component-form-group">
+                    <div class="layui-form-item">
+                        <input type="hidden" id="id" name="id">
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">登录账号</label>
+                            <div class="layui-input-inline">
+                                <input type="text"  name="login_name" lay-verify="required" placeholder="请输入登录账号"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label">会员类型</label>
+                            <div class="layui-input-inline">
+                                <select name="type" lay-verify="">
+                                    <option value="普通会员">普通会员</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">真实姓名</label>
+                            <div class="layui-input-inline">
+                                <input type="text"  name="name" lay-verify="required" placeholder="请输入姓名"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label">联系电话</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="phone" lay-verify="required|phone"  placeholder="请输入手机号码"
+                                       class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">电子邮箱</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="email" lay-verify="required|email" placeholder="请输入电子邮箱"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label">QQ号码</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="qq" lay-verify="required" minlength="5" maxlength="11" placeholder="请输入QQ号码"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">账户余额</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="money" lay-verify="required" placeholder="请输入账户余额"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label">信用额度</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="quota" lay-verify="required" placeholder="请输入信用额度"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-input-block">
+                        <!--操作-->
+                        <div class="layui-footer" id="update-user-button" style="left: 0;">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="rolediv" hidden>
+    <div class="layui-fluid">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <div class="test-table-reload-btn" style="margin-bottom: 10px;">
+                            <div class="layui-inline">
+                                <input class="layui-input" name="polymerization" id="table-role-query" autocomplete="off" placeholder="请输入关键字">
+                            </div>
+                            <button class="layui-btn" data-type="rolequery">搜索</button>
+                            <button class="layui-btn" shiro-event="sys:role:addPowermenu" lay-submit lay-filter="submit-form-role">保存</button>
+                        </div>
+                        <table class="layui-hide" id="table-role" lay-filter="table-role"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="jiadom">
+    <div style="display: flex;justify-content: center;height: 100%"><input type="number" class="jia" style="width: 80px"><button type="button" style="height: 100%;margin-left: 5px;width: 28px" lay-event="jia" class="layui-btn layui-btn-xs layui-btn-warm">加</button></div>
+</script>
+<script type="text/html" id="jiandom">
+    <div style="display: flex;justify-content: center;height: 100%"><input type="number" class="jian" style="width: 80px"><button type="button" style="height: 100%;margin-left: 5px;width: 28px" lay-event="jian" class="layui-btn layui-btn-xs layui-btn-warm">减</button></div>
+</script>
+<script type="text/html" id="givedom">
+    <div style="display: flex;justify-content: center;height: 100%"><input type="number" class="give" style="width: 80px" value="{{d.giveMoney}}"><button type="button" style="height: 100%;margin-left: 5px;width: 128px" lay-event="give" class="layui-btn layui-btn-xs layui-btn-warm">返点给代理</button></div>
+</script>
+<script src="../../layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index', //主入口模块
+    }).use(['index', 'table','formgs','form','security','layer','upload'], function(){
+        var $ = layui.jquery,
+            admin = layui.admin,
+            table = layui.table,
+            formgs = layui.formgs,
+            form = layui.form,//控制添加修改（同一个弹出层）关闭弹出层的索引
+            upload = layui.upload,
+            layer=layui.layer,closeindex;
+        // layui.setter.url = 'http://localhost:8086/server/'
+        table.render({
+            elem: '#auth-table'
+            ,url: layui.setter.url + 'user/selectVip'
+            ,title: '用户数据表'
+            ,cols: [[
+                /*{field:'id', title:'ID', width:80 , fixed: 'left', unresize: true, sort: true}*/
+                {field:'name', title:'姓名/昵称',width: 150}
+                ,{field:'login_name', title:'用户名',width: 150}
+/*                ,{field:'login_flag', title:'状态', width:90 ,
+                    templet:function (obj) {
+                        if (obj.login_flag==0)return "启用"; else return "停用";
+                    }
+                }*/
+                /*,{field:'QQ', title:'QQ',width: 200}
+                ,{field:'phone', title:'手机',width:120}*/
+                ,{field:'type', title:'会员类型',width: 100}
+                ,{title: '加钱',templet:'#jiadom',width: 150}
+                ,{title: '减钱',templet:'#jiandom',width: 150}
+                ,{field: 'giveRate', title:'返点比例(%)',width: 150,edit: 'text'}
+                ,{title: '代理返点',templet:'#givedom',width: 250}
+/*                ,{field:'createname', title:'创建人', sort: true,width:100}
+                ,{field:'create_date', title:'创建时间', sort: true}
+                ,{field:'updatename', title:'最新修改者',sort: true,width:120}
+                ,{field:'update_date', title:'最新修改时间',sort: true,width:160}*/
+                ,{field:'money', title:'余额',width: 100}
+                ,{field:'quota', title:'信用额度',width: 100}
+                ,{fixed: 'right', title:'操作', toolbar: '#auth-state'}
+            ]]
+            ,page: true
+        });
+        table.on('edit(auth-table)', function(obj){
+            var value = obj.value //得到修改后的值
+                ,data = obj.data; //得到所在行所有键值
+            data.giveRate = value
+            admin.req({
+                url:layui.setter.url + "user/updatevip",
+                data:data,
+                done:function (res) {
+                    layer.msg(res.msg);
+                    table.reload("auth-table");
+                }
+            })
+        });
+        table.on('tool(auth-table)', function (obj) {
+            //打开授权
+            if (obj.event == 'powerrole'){
+                window.localStorage.removeItem("currentId");
+                window.localStorage.setItem("currentId",obj.data.id)
+                layer.open({
+                    type: 1,//弹窗类型
+                    area: ['60%', '80%'],//定义宽和高
+                    title: ('【' + obj.data.name + '】授权'),//题目
+                    shadeClose: true,//点击遮罩层关闭
+                    content: $("#rolediv"),//打开的内容
+                    success: function (index,layero) {
+                        closeindex = layero;
+                        table.render({
+                            elem: '#table-role'
+                            ,url: layui.setter.url + 'user/selectRole/'+obj.data.id
+                            ,height: 500
+                            ,cols: [[
+                                {type: 'checkbox'}
+                                ,{field:'name', title:'姓名'}
+                                ,{field:'enname', title:'简称'}
+                            ]]
+                            ,page: true
+                        });
+                    }
+                })
+            }
+            if (obj.event == 'update') {
+                layer.open({
+                    type: 1,//弹窗类型
+                    area: ['50%', '60%'],//定义宽和高
+                    title: ('【'+ obj.data.name +'】用户信息'),//题目
+                    shadeClose: false,//点击遮罩层关闭
+                    content: $("#layui-user-update"),//打开的内容
+                    success: function (index,layero) {
+                        closeindex = layero;
+                        formgs.get("layui-form-user-update", obj.data);
+                        $("#update-user-button").html($("#submit-form-update").html());
+                        //form.render刷新form 如果是针对单一刷新括号里面加上标签名 例：select刷新form.render('select')
+                        form.render();
+
+                    },
+                    end: function () {
+                        //getTableData();//结束之后请求表格数据的方法，新编辑的数据直接存库并展示在页面
+                    }
+                });
+            } else if (obj.event == "remove") {
+                layer.confirm('确定要删除【'+ obj.data.name +'】这个用户吗？', function (index) {
+                    admin.req({
+                        url:layui.setter.url+"user/removevip/"+obj.data.id
+                    }).done(function (res) {
+                        layer.close(index);
+                        table.reload('auth-table');
+                        layer.msg(res.msg);
+                    })
+                });
+            }else if(obj.event == 'jia'){
+                var data = obj.data
+                // console.log(data)
+                var num = parseFloat($(this).prev('input').val())
+                var userid = data.id
+                var money = num
+                var oldmoney = parseFloat(data.money)
+                var newmoney = num + oldmoney
+                var quotaAdd = 0
+                
+                // 如果旧money是负数，需要增加quota
+                if (oldmoney < 0) {
+                    // 需要补齐到0的金额
+                    var needFill = Math.abs(oldmoney)
+                    // quota只加补齐到0的部分
+                    quotaAdd = Math.min(num, needFill)
+                    // money = oldmoney + num
+                    newmoney = num + oldmoney
+                } else {
+                    // oldmoney >= 0，只加money，不加quota
+                    quotaAdd = 0
+                    newmoney = num + oldmoney
+                }
+                
+                var updateData = {
+                    id: data.id,
+                    money: newmoney,
+                    quota: parseFloat(data.quota || 0) + quotaAdd
+                }
+                
+                var url =layui.setter.url + "user/updatevip";
+                admin.req({
+                    url: url,
+                    data: updateData,
+                    done: function (res) {
+                        layer.close(closeindex);
+                        table.reload("auth-table");
+                        layer.msg(res.msg);
+                        $.get({url:layui.setter.url + "ranking/addMoney",data:{user_id:userid,oldmoney:oldmoney,newmoney:newmoney,money:money,code:1,mark:'系统充值'}})
+                    }
+                })
+
+            }else if(obj.event == 'jian'){
+                var data = obj.data
+                console.log(data)
+                var num = $(this).prev('input').val()
+                var userid = data.id
+                var money = num
+                var oldmoney = data.money
+                var newmoney = parseFloat(data.money)-parseFloat(num)
+                delete data.login_date
+                delete data.update_date
+                delete data.create_date
+                delete data.createname
+                delete data.updatename
+                data.money = parseFloat(data.money)-parseFloat(num)
+                if(data.money<0){
+                    layer.msg('输入数量大于当前余额，请重新输入')
+                    return false;
+                }
+                var url =layui.setter.url + "user/updatevip";
+                admin.req({
+                    url: url,
+                    data: data,
+                    done: function (res) {
+                        layer.close(closeindex);
+                        table.reload("auth-table");
+                        layer.msg(res.msg);
+                        $.get({url:layui.setter.url + "ranking/addMoney",data:{user_id:userid,oldmoney:oldmoney,newmoney:newmoney,money:money,code:2,mark:'系统扣除'}})
+                    }
+                })
+
+            }else if(obj.event == 'read'){
+                console.log(obj.data)
+                layer.open({
+                    type: 2,
+                    area: ['90%', '90%'],
+                    title: '<span>用户</span><span style="margin-left: 20px;margin-right: 20px;color: red">'+obj.data.name+"</span>发布的内容",
+                    shadeClose: false,
+                    content: './read.html?id='+obj.data.id
+                });
+            }
+            else if(obj.event == 'give'){
+                var data = obj.data;
+                var num = obj.tr.find('input.give').val();
+
+                if(num == 0 || num == '' || num == null || typeof num == 'undefined'){
+                    layer.msg('请输入正确的返点金额');
+                    return false;
+                }
+
+                var userid = data.id;
+                var money = num;
+                var oldmoney = parseFloat(data.money);
+                var newmoney = parseFloat(num) + parseFloat(data.money);
+                var quotaAdd = 0;
+                var currentGiveMoney = parseFloat(oldmoney || 0);
+
+                // 如果旧money是负数，需要增加quota
+                if (oldmoney < 0) {
+                    // 需要补齐到0的金额
+                    var needFill = Math.abs(oldmoney)
+                    // quota只加补齐到0的部分
+                    quotaAdd = Math.min(parseFloat(num), needFill)
+                    newmoney = parseFloat(num) + oldmoney
+                } else {
+                    // oldmoney >= 0，只加money，不加quota
+                    quotaAdd = 0
+                    newmoney = parseFloat(num) + oldmoney
+                }
+
+                delete data.login_date;
+                delete data.update_date;
+                delete data.create_date;
+                delete data.createname;
+                delete data.updatename;
+
+                data.giveMoney = parseFloat(num) + currentGiveMoney;
+                data.isGive = 1;
+                data.money = newmoney;
+                data.quota = parseFloat(data.quota || 0) + quotaAdd;
+
+                var url = layui.setter.url + "user/updatevip";
+                admin.req({
+                    url: url,
+                    data: data,
+                    done: function (res) {
+                        layer.close(closeindex);
+                        table.reload("auth-table");
+                        layer.msg(res.msg);
+                        $.get({
+                            url: layui.setter.url + "ranking/addMoney",
+                            data: {
+                                user_id: userid,
+                                oldmoney: oldmoney,
+                                newmoney: newmoney,
+                                money: money,
+                                code: 1,
+                                mark: '返点给代理'
+                            }
+                        });
+                    }
+                });
+            }
+        })
+        //查询
+        var $ = layui.$, active = {
+            reload: function(){
+                var demoReload = $('#test-table-demoReload');
+                //执行重载
+                table.reload('auth-table', {
+                    page: {curr: 1 }//重新从第 1 页开始
+                    ,where: {demoReload:demoReload.val()}
+                });
+            },
+            rolequery: function(){
+                var query = $('#table-role-query');
+                //执行重载
+                table.reload('table-role', {
+                    page: {curr: 1 }//重新从第 1 页开始
+                    ,where: {likename:query.val()}
+                });
+            }
+        };
+        $("#user-button-add").on("click", function () {
+            layer.open({
+                type: 1,
+                area: ['50%', '60%'],
+                title: ("新增用户"),
+                shadeClose: false,
+                content: $("#layui-user"),
+                success: function (index,layero) {
+                    closeindex = layero;
+                    formgs.reset('layui-user');
+                    $("#submit-form-user-button").html($("#submit-form-add").html());
+                    form.render();
+                },
+            });
+        })
+
+        //添加/修改提交
+        form.on('submit(submit-form-user)', function (data) {
+
+            if(typeof data.field.id=='undefined'){
+                var confirm_password=$("confirm-password").val();
+                var password =$("password").val();
+                if(password!=confirm_password){
+                    layer.msg("两次输入的密码不一致，请重新输入");
+                    $("confirm-password").val("");
+                    $("password").val("");
+                    return;
+                }
+            }
+
+            if(data.field.is_sys == "on") {
+                data.field.is_sys = "0";
+            } else {
+                data.field.is_sys = "1";
+            }
+
+            data.field.is_admin = "0";
+
+            if(typeof data.field.id == 'undefined'){
+                var url = layui.setter.url + 'addUserogin'
+            }else {
+                var url = layui.setter.url + "user/updatevip";
+            }
+            // var url =layui.setter.url + "user/"+(typeof data.field.id=='undefined'?"add":"update");
+            admin.req({
+                url: url,
+                data: data.field,
+                done: function (res) {
+                    layer.close(closeindex);
+                    table.reload("auth-table");
+                    layer.msg(res.msg);
+                }
+            })
+            return false
+        })
+
+        //授权
+        form.on('submit(submit-form-role)',function (data) {
+            //当前被授权的用户
+            data.field.currentId =window.localStorage.getItem("currentId");
+            var arrRole = null;
+            $("input[name='layTableCheckbox']:checked").each(function(i){
+                if ($(this).val()!='on'){
+                    if (arrRole==null) arrRole = $(this).val()
+                    else arrRole += ","+$(this).val();
+                }
+            });
+            //当前用户被授权的角色
+            if (arrRole != null && arrRole != ''){
+                data.field.arrRole = arrRole;
+            }
+            console.log(data.field.currentId);
+
+            admin.req({
+                url: layui.setter.url + "user/addRole",
+                data:data.field
+            }).done(function (res) {
+                layer.close(closeindex);
+                layer.msg(res.msg);
+            })
+
+        })
+
+
+        $('.test-table-reload-btn .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+    });
+</script>
+</body>
+</html>

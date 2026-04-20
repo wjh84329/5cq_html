@@ -1,0 +1,706 @@
+<!doctype html>
+<html lang="en">
+ <head> 
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+  <title>5CQ-传奇广告查询站_传奇广告排行_传奇资源站_新开传奇新服排名站(5CQ.COM)</title>
+  <meta name="description" content="5CQ.Com传奇广告排行榜,传奇私服查询站,传奇资源站,好玩的传奇排名站,玩家最爱的新开传奇,GM最喜欢的传奇工具,传奇直播,传奇新开服,传奇相关尽在5CQ(玩传奇)">
+  <meta name="keywords" content="传奇广告查询站,传奇资源站,传奇广告排行,传奇SF广告统计(5CQ.COM)">   
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+  <meta name="renderer" content="webkit"> 
+  <meta name="Referrer" content="origin"> 
+  <link rel="stylesheet" href="../statics/css/layer.css"> 
+  <link rel="stylesheet" href="../statics/css/public.css"> 
+  <link rel="stylesheet" href="../statics/DataTables/media/css/jquery.dataTables.min.css"> 
+  <link rel="stylesheet" href="../layuiadmin/layui/css/layui.css" media="all"> 
+  <script src="../statics/js/jquery-3.2.1.min.js"></script> 
+  <script src="../statics/js/jquery.cookie.js"></script> 
+  <script src="../statics/adminconfig.js"></script> 
+  <script src="../statics/js/public.js"></script> 
+  <script src="../statics/js/layer.js"></script> 
+  <script src="../statics/config.js"></script> 
+  <!--<script src="../statics/js/welfare.js"></script>--> 
+  <script src="../layuiadmin/layui/layui.js"></script> 
+  <script src="../statics/js/report.js"></script> 
+  <script src="../statics/js/jquery.slideunlock.js"></script> 
+  <script type="text/javascript" src="../statics/DataTables/media/js/jquery.dataTables.min.js"></script> 
+  <!--<script type="text/javascript" src="/statics/js/ad1.js"></script>--> 
+  <!--<script type="text/javascript" src="/statics/js/ad2.js"></script>--> 
+  <!--<script type="text/javascript" src="/statics/js/ad3.js"></script>--> 
+  <!--<script type="text/javascript" src="/statics/js/ad4.js"></script>--> 
+  <!--<script type="text/javascript" src="/statics/js/ad5.js"></script>--> 
+  <!--<script type="text/javascript" src="/statics/js/ad6.js"></script>--> 
+  <link rel="stylesheet" href="../statics/css/slide-unlock.css"> 
+  <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all"> 
+  <style>
+    table.dataTable thead th, table.dataTable thead td {
+      padding: 0px !important;
+      height: 40px;
+    }
+
+    table.dataTable tbody td {
+      padding: 0px !important;
+    }
+
+    table.dataTable thead .sorting_asc {
+
+    }
+
+    .yelTr {
+      background: yellow;
+    }
+
+    .witTr {
+      background: #fbffb9;
+    }
+
+    .whiteTr {
+      background: #FFFFFF;
+    }
+
+    .divdivds {
+      width: 24.5%;
+      text-align: center;
+      height: 35px;
+      line-height: 35px;
+      padding: 0;
+      background: #d33f3f;
+      margin: 3px;
+      display: inline-block;
+    }
+
+    .divdivds > span {
+      white-space: nowrap;
+      width: 270px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: inline-block;
+      color: #fff !important;
+    }
+
+    .circle {
+      width: 15px;
+      height: 15px;
+      -moz-border-radius: 50px;
+      -webkit-border-radius: 50px;
+      border-radius: 50px;
+      background-color: green;
+      display: inline-block;
+    }
+
+    .dropdown-select2 {
+      font-size: 16px;
+      width:200px;
+      padding:6px 8px 6px 10px;
+      height:44px;
+      line-height:44px;
+      color:#62717a;
+      text-shadow:0 1px #fff;
+      background:#fff;
+      border:0;
+      border-radius:5px;
+      box-shadow:0 0 3px #d33f3f;
+      /*border: 2px solid #f66a6a;*/
+      margin-right:5px;
+      text-align:center;
+      text-align-last:center;
+
+    }
+
+    .seach_input2 {
+      color:#62717a;
+      /*background:#f7f7f7;*/
+      border:2px solid #d33f3f;
+      margin-right: 5px;
+      /*border-right:none;*/
+      height:18px;
+      line-height:18px;
+      width:350px;
+      padding:11px 0 11px 10px;
+      outline:none;
+      font-size:16px;
+      font-family:'微软雅黑';
+      /*float:left*/
+    }
+    .seach_botton2 {
+      color:#fff;
+      font-size:18px;
+      font-family:'微软雅黑';
+      border:none;
+      width:108px;
+      height:44px;
+      background:#d33f3f;
+      cursor:pointer;
+      /*float:left*/
+    }
+    #showPic{
+      display: none;
+      width: 30px;
+      height: 30px;
+      position: absolute;
+      top: 4px;
+      left: 6px;
+      cursor: pointer;
+    }
+
+    #showBox:hover  #showPic{
+      display: block;
+    }
+    .contentPhone{
+      width: 1280px;
+      min-height: 240px;
+      height: 100%;
+      background: #ffffff;
+      border-radius: 4px;
+      padding: 10px;
+
+    }
+    .contentPhone-title{
+      height: 50px;
+      line-height: 50px;
+      font-size: 20px;
+      font-weight: normal;
+      position: relative;
+      border-bottom: 1px solid #ccc;
+      color: #333;
+      padding-left: 0px;
+      position: relative;
+    }
+    .contentPhone-title i{
+      height: 5px;
+      background: #680809;
+      background: linear-gradient(to right, rgb(186,91,74), rgb(186,66,74));
+      display: inline-block;
+      border-radius: 5px;
+      position: absolute;
+      left: 0;
+      bottom: -3px;
+      width: 80px;
+    }
+    .contentPhone-type{
+      display: flex;
+      justify-content: flex-start;
+      margin-left: 30px;
+      height: auto;
+    }
+    .contentPhone-type li{
+      width: 78px;
+      height: 32px;
+      line-height: 32px;
+      /* border: 1px solid #ece7e8; */
+      color: #666;
+      font-size: 14px;
+      display: inline-block;
+      text-align: center;
+      /* float: left; */
+      background: #f5f5f5;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 0 8px;
+    }
+
+    .contentPhone-type li:hover{
+      color: #fff;
+      background-color: #680809 !important;
+      box-shadow: 0px 2px 10px 0px rgb(255 98 56 / 50%);
+    }
+    .contentPhone-typeTitle{
+      text-align: left;
+      font-size: 14px;
+      line-height: 34px;
+      display: inline-block;
+    }
+    .activePhone{
+      color: #fff !important;
+      background-color: #680809 !important;
+      box-shadow: 0px 2px 10px 0px rgb(255 98 56 / 50%)!important;
+    }
+
+    .platform-type{
+      margin-top: 5px;
+      margin-bottom: 96px;
+    }
+
+    .platform-type li{
+      min-width: 78px;
+      width: auto;
+      height: 32px;
+      line-height: 32px;
+      /* border: 1px solid #ece7e8; */
+      color: #666;
+      font-size: 14px;
+      display: inline-block;
+      text-align: center;
+      /* float: left; */
+      background: #f5f5f5;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 0 8px;
+      float: left;
+      display: inline-block;
+      margin-bottom: 15px;
+    }
+
+    .platform-type li:hover{
+      color: #fff;
+      background-color: #680809 !important;
+      box-shadow: 0px 2px 10px 0px rgb(255 98 56 / 50%);
+    }
+
+    .infoGame-box{
+
+    }
+
+    .infoGanme{
+      width: 422px;
+      margin: 5px;
+      height: 150px;
+      background: #ffffff;
+      border-radius: 8px;
+      position: relative;
+      cursor: pointer;
+      top: 0px;
+      transition: all .2s;
+    }
+
+    .infoGanme:hover{
+      border-color: #fff;
+      box-shadow: 0px 2px 10px 0px rgb(145 145 145 / 52%);
+      position: relative;
+      top: -2px;
+    }
+
+    .info-introduce{
+      font-size: 14px;
+      color:#999999;
+      width: 250px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin-top: 7px;
+    }
+
+    .info-title{
+      width: 200px;
+      color: #5d5d5d;
+      font-size: 18px;
+      font-weight: 500;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .info-title:hover{
+      color: #ff6238;
+    }
+
+    .info-type{
+      color: #ff6238;
+      display: inline-block;
+      margin-top: 7px;
+    }
+
+    #info{
+      padding:16px 10px;
+      display: flex;
+      justify-content: flex-start;
+    }
+    .iosBtn{
+      background: #603522;
+      color: #fff;
+      text-align: center;
+      padding: 5px;
+      border-radius: 3px;
+      float: left;
+      margin: 11px 15px 11px 0;
+      cursor: pointer;
+    }
+
+    .iosBtn:hover{
+      background: #40260a
+    }
+
+    .anBtn{
+      background: #4e7b08;
+      color: #fff;
+      text-align: center;
+      padding: 5px;
+      border-radius: 3px;
+      float: left;
+      margin: 11px 15px 11px 0;
+      cursor: pointer;
+    }
+    .pcBtn{
+      background: #4e7b08;
+      color: #fff;
+      text-align: center;
+      padding: 5px;
+      border-radius: 3px;
+      float: left;
+      margin: 11px 0 11px;
+      cursor: pointer;
+    }
+
+    .anBtn:hover{
+      background: #11653a;
+    }
+    #infoGame-box-type{
+      position: relative;
+      height: auto;
+    }
+
+    #gameInfo{
+      width: 100%;
+      margin: 20px 0 40px;
+      min-height: 200px;
+    }
+
+    .pt{
+      display: none;
+    }
+
+    .an{
+      display: none;
+    }
+
+    .pg{
+      display: none;
+    }
+
+  </style> 
+ </head> 
+ <body> 
+  <div class="topinfo"> 
+   <div class="wid" style="width: 100%;justify-content: space-around"> 
+    <div class="topinfo_l">
+      同步站:Www.Chacq.Com[查传奇] 
+    </div> 
+    <div class="topinfo_c">
+      通知：严厉打击带有赌博的游戏，欢迎监督举报(举报经查实现金红包奖励) 
+    </div> 
+    <div class="topinfo_r"> 
+     <a href="/" style="color: white;margin-right: 15px">首页</a> 
+     <a href="./recruTran.html" style="color: white;margin-right: 15px" target="_blank">招聘交易发布</a> 
+     <a href="#" style="color: white;margin-right: 15px" onclick="shoucang()">收藏网址</a> 
+     <a href="5cq.com传奇站.url" download="5cq.com传奇站.url" style="color: white;margin-right: 15px">保存桌面</a> 
+    </div> 
+   </div> 
+  </div> 
+  <div id="head" style="height: 270px;"> 
+   <script>zhaoff.inithead("#head");</script> 
+  </div> 
+  <!--<div class="navc" id="first_title" style="height: 79px"><script> zhaoff.initftitle("#first_title");</script></div>--> 
+  <!--  <script src="../statics/js/cdmenu.js"></script> --> 
+  <div class="navc" id="first_title"> 
+   <div class="nav clearfix" id="cdmenu"> 
+    <a href="/index.html" target="" onclick="openActive('首页','/index.html',1);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
+     <div> 
+      <p>首页</p> 
+      <p>HOME</p> 
+     </div> <em></em> </a> 
+    <a href="/code/ranking.html" target="" onclick="openActive('广告排行','/code/ranking.html',2);" class=" clearfix" style="cursor: pointer"> <img style="display:block;" src="/statics/images/hot.gif" class="icon"> 
+     <div> 
+      <p>广告排行</p> 
+      <p>AD RANKING</p> 
+     </div> <em></em> </a> 
+    <a href="/chat.html" target="" onclick="openActive('AI助手','/chat.html',3);" class=" clearfix" style="cursor: pointer"> <img style="display:block;" src="/statics/images/hot.gif" class="icon"> 
+     <div> 
+      <p>AI助手</p> 
+      <p>AI CHAT</p> 
+     </div> <em></em> </a> 
+    <a href="/code/dataAnalysis.html" target="" onclick="openActive('广告分析','/code/dataAnalysis.html',4);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
+     <div> 
+      <p>广告分析</p> 
+      <p>AD REQUEST</p> 
+     </div> <em></em> </a> 
+    <a href="/code/fastscreen.html" target="" onclick="openActive('广告筛选','/code/fastscreen.html',5);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
+     <div> 
+      <p>广告筛选</p> 
+      <p>AD SEARCH</p> 
+     </div> <em></em> </a> 
+    <a href="/code/report.html" target="" onclick="openActive('黑名单','/code/report.html',6);" class=" clearfix" style="cursor: pointer"> <img style="display:block;" src="/statics/images/hot.gif" class="icon"> 
+     <div> 
+      <p>黑名单</p> 
+      <p>BLACK LIST</p> 
+     </div> <em></em> </a> 
+    <a href="/code/recruTran.html" target="" onclick="openActive('招聘交易','/code/recruTran.html',7);" class=" clearfix" style="cursor: pointer"> <img style="display:block;" src="/statics/images/tj.gif" class="icon"> 
+     <div> 
+      <p>招聘交易</p> 
+      <p>RECRUIT·TRADE</p> 
+     </div> <em></em> </a> 
+    <a href="/code/journalism.html" target="" onclick="openActive('传奇攻略','/code/journalism.html',8);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
+     <div> 
+      <p>传奇攻略</p> 
+      <p>NEWS GUIDE</p> 
+     </div> <em></em> </a> 
+    <a href="/code/publishSites.html" target="" onclick="openActive('发布站点','/code/publishSites.html',9);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
+     <div> 
+      <p>发布站点</p> 
+      <p>PUBLISH SITES</p> 
+     </div> <em></em> </a> 
+    <a href="/code/resourceNavigation.html" target="" onclick="openActive('工具导航','/code/resourceNavigation.html',10);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
+     <div> 
+      <p>工具导航</p> 
+      <p>DATA DOWN</p> 
+     </div> <em></em> </a> 
+   </div> 
+  </div> 
+  <!--代码正文--> 
+  <div class="container" style="margin-top: 20px"> 
+   <div class="contentPhone"> 
+    <div class="contentPhone-title"> 
+     <div style="font-style: normal;font-size: 20px;font-weight: normal;">
+       游戏列表 
+     </div> 
+     <i></i> 
+    </div> 
+    <!--平台分类--> 
+    <div style="display: flex;justify-content: flex-start;margin: 25px 0;"> 
+     <div class="contentPhone-typeTitle">
+       平台分类: 
+     </div> 
+     <ul class="contentPhone-type"> 
+      <li onclick="handleType(0)" class="platform activePhone">所有</li> 
+      <li onclick="handleType(1)" class="platform">Android</li> 
+      <li onclick="handleType(2)" class="platform">IOS</li> 
+      <li onclick="handleType(3)" class="platform">PC下载</li> 
+     </ul> 
+    </div> 
+    <!--游戏分类--> 
+    <div style="margin: 25px 0;"> 
+     <div class="contentPhone-typeTitle">
+       游戏分类: 
+     </div> 
+     <ul class="platform-type"></ul> 
+    </div> 
+   </div> 
+   <!--游戏详情--> 
+   <div id="gameInfo"> 
+    <!--<ul class="infoGame-box">--> 
+    <!--</ul>--> 
+   </div> 
+   <div id="page" style="text-align: center;color: black;letter-spacing: 1px;font-size: 16px;margin-bottom: 10px"></div> 
+  </div> 
+  <!--正文内容结束--> 
+  <div id="tcHtml"> 
+   <!--sxl用户信息操作，注册，登录，联系我们--> 
+   <script>$("#tcHtml").load("/statics/userinfo.html");</script> 
+  </div> 
+  <!--精彩文章--> 
+  <br> 
+  <script>
+  (function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script> 
+  <div id="footer" style="width:100%;margin: 30px auto 0;box-sizing: border-box;background: #1f1f24;padding: 30px 0 20px"> 
+   <div class="clearfix" style="width: 100%;margin: 0 auto"> 
+    <div class="link clearfix" style="border-bottom: 1px solid #36363a;padding-bottom: 30px;text-align: center" id="wzlm"> 
+    </div> 
+    <p class="p1"> <span>开服广告在线查询站 &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span> <em>为 新开传奇网站，单职业传奇，复古传奇，传奇手游 提供一个传奇发布网交流平台 </em> <a rel="nofollow" href="/statics/sitemap.html" target="_blank" style="color: white;margin-left: 20px">网站地图<em></em></a> </p> 
+    <p class="p2"> <span><em class="icon-link"></em>友情链接：</span> <a rel="nofollow" href="https://www.5cq.com" target="_blank">传奇广告查询 <em>|</em></a> <a rel="nofollow" href="https://www.1sf.com/" target="_blank">1SF传奇资源站 <em>|</em></a> <a rel="nofollow" href="https://www.2sf.com/" target="_blank"> 2SF传奇资源站 <em>|</em></a> <a rel="nofollow" href="https://www.5cq.com/duty.html" target="_blank">免责申明 <em>|</em></a> </p> 
+   </div> 
+   <p class="textfoot">拒绝盗版游戏 注意自我保护 谨防受骗上当 适度游戏益脑 沉迷游戏伤身 合理安排时间 享受健康生活</p> 
+   <p class="textfoot">本站只收录官方授权游戏信息，非官方授权游戏请在办理业务之前告知.</p> 
+   <p class="textfoot">*注释：网站数据匀采集互联网，有不良信息举报联系我们，将会尽快核实处理，站长QQ：3067585</p> 
+   <p class="textfoot"> <a style="color: white;text-align: center;width: 100%" target="_blank" id="beian" href="https://beian.miit.gov.cn">Copyright 2019-2027 All Rights Reserved </a><a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank" style="color: #fff"> 信产部ICP备案号：黔ICP备2022005643号　| </a> <span style="color: #fff">营业执照注册证号：91522301MABP8XJ71N </span> <a id="_pingansec_bottomimagesmall_shiming" target="_blank" href="//si.trustutn.org/info?sn=840240419040948778244&amp;certType=1"><img src="//v.trustutn.org/images/cert/realname_small_img.png"></a><script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1281074630'%3E%3C/span%3E%3Cscript src='https://s4.cnzz.com/z.js%3Fid%3D1281074630%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script></p> 
+   <p></p> 
+  </div> 
+  <img src="../statics/images/showPIC.png" style="display: none" id="show"> 
+  <script src="../../layuiadmin/layui/layui.js"></script> 
+  <script>
+  //入口函数，初始化加载
+  var platform=0;
+  var type='';
+  $(document).ready(function () {
+    var phoneData=[];
+    var info=[];
+    $.ajax({
+      url: baseUrl + 'jax/jaxBrandGameType/list',
+      type: 'get',
+      data:{page:1,limit:500},
+      dataType: 'json',
+      success: function (data, textStatus, jqXHR) {
+        phoneData=data.data;
+        phoneData.unshift({type_name:"全部",id:0});
+        console.log(phoneData);
+        //计算游戏详情父元素高度
+        //加载游戏分类
+
+        var type = '';
+        for (var v = 0; v < phoneData.length; v++) {
+          type += '<ul id="platform-type">';
+          if(phoneData[v].type_name=="全部"){
+            type += '<li class="activePhone gm"   onclick="handlegameType(' + stringify(phoneData[v].id) + ','+v+')">'+ phoneData[v].type_name + '</li>';
+          }else {
+            type += '<li class="gm"  onclick="handlegameType(' + stringify(phoneData[v].id) + ','+v+')">'+ phoneData[v].type_name + '</li>';
+          }
+          type += '</ul>';
+        }
+        $('.platform-type').html(type);
+      }
+    })
+
+    initData(platform,type);
+
+  })
+
+  //游戏详情
+  function handleInfo(info){
+    console.log(11111);
+    $(location).attr('href', './phoneRank-detailed.html?id='+info.id);
+  }
+
+  //手机类型
+  function  handleType(val) {
+    if(val==0){
+      platform=0;
+    }else if(val==1){
+      platform=1;
+    }else if(val==2){
+      platform=2;
+    }else if(val==3){
+      platform=3;
+    }
+    $(".platform").eq(val).addClass('activePhone').siblings().removeClass('activePhone');
+    initData(platform,type);
+  }
+
+  //游戏类型
+  function handlegameType(val,index) {
+    if(val=='全部'){
+      type=''
+    }else {
+      type=val;
+    }
+    $(".gm").eq(index).addClass('activePhone').parent().siblings().children().removeClass('activePhone');
+    initData(platform,type);
+  }
+
+
+  function initData(platform1,type1) {
+    $.ajax({
+      url: baseUrl + 'jax/jaxMobileGame/list',
+      type: 'get',
+      data:{page:1,limit:500,platform:platform1,type:type1},
+      dataType: 'json',
+      success: function (data) {
+        info=data.data;
+        var heightNum=Math.ceil(parseInt(info.length)/3)*parseInt(160);
+        $("#gameInfo").css("height",heightNum+"px");
+        if (info.length == 0){
+          $("#page").text("暂无数据");
+          $("#page").css("display","block");
+          $("#page").css("margin-top","20px");
+          $("#gameInfo").css("display","none");
+        }else{
+          $("#page").css("display","none");
+          $("#gameInfo").css("display","block");
+        }
+        //加载游戏详情
+
+        var list='';
+        for (var i = 0; i< info.length; i++) {
+          console.log(info[i])
+          if(info[i].platform==0){
+            list += '<div class="infoGanme" style="float: left" onclick="handleInfo(' + stringify(info[i])+ ')">' +
+                    '        <div id="info">\n' +
+                    '          <div style="border-radius: 7px">\n' +
+                    '            <img src="' + info[i].portrait +'" style="width: 120px;height: 120px;border-radius: 7px">\n' +
+                    '          </div>\n' +
+                    '          <div style="margin-left: 18px">\n' +
+                    '            <div class="info-title">'+info[i].name+'</div>\n' +
+                    '            <div class="info-type">类型：' + info[i].typeName + '<span style="margin-left: 28px;">排名：'+parseInt(i+1)+'</span></div>\n' +
+                    '            <div class="info-introduce">简介：' + info[i].introduce + '</div>\n' +
+                    '            <div>\n' +
+                    '            <a href="' + info[i].iphoneUrl + '" >\n' +
+                    '              <div class="iosBtn">IOS下载</div>\n' +
+                    '            </a>\n' +
+                    '            <a href="' + info[i].androidUrl + '" >\n' +
+                    '              <div class="anBtn">Android下载</div>\n' +
+                    '            </a>\n' +
+                    '            <a href="' + info[i].pcUrl + '" >\n' +
+                    '              <div class="pcBtn">PC下载</div>\n' +
+                    '            </a>\n' +
+                    '            </div>\n' +
+                    '          </div>\n' +
+                    '        </div>\n' +
+                    '\n' +
+                    '</div>';
+          }else if(info[i].platform==1){
+            list += '<div class="infoGanme" style="float: left" onclick="handleInfo(' + stringify(info[i])+ ')">' +
+                    '        <div id="info">\n' +
+                    '          <div style="border-radius: 7px">\n' +
+                    '            <img src="' + info[i].portrait +'" style="width: 120px;height: 120px;border-radius: 7px">\n' +
+                    '          </div>\n' +
+                    '          <div style="margin-left: 18px">\n' +
+                    '            <div class="info-title">'+info[i].name+'</div>\n' +
+                    '            <div class="info-type">类型：' + info[i].typeName + '<span style="margin-left: 28px;">排名：'+parseInt(i+1)+'</span></div>\n' +
+                    '            <div class="info-introduce">简介：' + info[i].introduce + '</div>\n' +
+                    '            <div>\n' +
+                    '            <a href="' + info[i].androidUrl + '" >\n' +
+                    '              <div class="anBtn">Android下载</div>\n' +
+                    '            </a>\n' +
+                    '            </div>\n' +
+                    '          </div>\n' +
+                    '        </div>\n' +
+                    '\n' +
+                    '</div>';
+          }else if(info[i].platform==2){
+            list += '<div class="infoGanme" style="float: left" onclick="handleInfo(' + stringify(info[i])+ ')">' +
+                    '        <div id="info">\n' +
+                    '          <div style="border-radius: 7px">\n' +
+                    '            <img src="' + info[i].portrait +'" style="width: 120px;height: 120px;border-radius: 7px">\n' +
+                    '          </div>\n' +
+                    '          <div style="margin-left: 18px">\n' +
+                    '            <div class="info-title">'+info[i].name+'</div>\n' +
+                    '            <div class="info-type">类型：' + info[i].typeName + '<span style="margin-left: 28px;">排名：'+parseInt(i+1)+'</span></div>\n' +
+                    '            <div class="info-introduce">简介：' + info[i].introduce + '</div>\n' +
+                    '            <div>\n' +
+                    '            <a href="' + info[i].iphoneUrl + '" >\n' +
+                    '              <div class="iosBtn">IOS下载</div>\n' +
+                    '            </a>\n' +
+                    '            </div>\n' +
+                    '          </div>\n' +
+                    '        </div>\n' +
+                    '\n' +
+                    '</div>';
+          }else if(info[i].platform==3){
+            list += '<div class="infoGanme" style="float: left" onclick="handleInfo(' + stringify(info[i])+ ')">' +
+                    '        <div id="info">\n' +
+                    '          <div style="border-radius: 7px">\n' +
+                    '            <img src="' + info[i].portrait +'" style="width: 120px;height: 120px;border-radius: 7px">\n' +
+                    '          </div>\n' +
+                    '          <div style="margin-left: 18px">\n' +
+                    '            <div class="info-title">'+info[i].name+'</div>\n' +
+                    '            <div class="info-type">类型：' + info[i].typeName + '<span style="margin-left: 28px;">排名：'+parseInt(i+1)+'</span></div>\n' +
+                    '            <div class="info-introduce">简介：' + info[i].introduce + '</div>\n' +
+                    '            <div>\n' +
+                    '            <a href="' + info[i].pcUrl + '" >\n' +
+                    '              <div class="pcBtn">PC下载</div>\n' +
+                    '            </a>\n' +
+                    '            </div>\n' +
+                    '          </div>\n' +
+                    '        </div>\n' +
+                    '\n' +
+                    '</div>';
+          }
+
+
+        }
+
+        $('#gameInfo').html(list);
+      }
+    })
+  }
+</script>  
+ </body>
+</html>

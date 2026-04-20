@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>浏览记录</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+
+
+</head>
+<body>
+<style>
+    .layadmin-homepage-pad-ver {
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+    .layadmin-homepage-pad-img {
+        box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+    }
+</style>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">访问记录</div>
+                <div class="layui-card-body">
+                    <div class="test-table-reload-btn" style="margin-bottom: 10px;">
+                        <div class="layui-inline">
+                            <input class="layui-input" name="polymerization" id="test-table-demoReload"
+                                   autocomplete="off" placeholder="游客名称">
+                        </div>
+                        <button class="layui-btn" data-type="reload">搜索</button>
+                       <!-- <button id="record-button-add" shiro-event="sys:record:open-add" class="layui-btn"><i
+                                class="layui-icon">&#xe654;</i>添加
+                        </button>-->
+                    </div>
+                    <table class="layui-hide" id="auth-table" lay-filter="auth-table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--<div id="auth-state" hidden>
+    <button lay-event="update" shiro-event="sys:record:open-update" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe642;</i>修改
+    </button>
+    <button lay-event="remove" shiro-event="sys:record:open-remove" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe640;</i>删除
+    </button>
+</div>-->
+
+<!--添加-->
+<!--<div id="submit-form-add" hidden>
+    <button class="layui-btn" shiro-event="sys:record:add" lay-submit lay-filter="submit-form-record">立即提交</button>
+    &lt;!&ndash;添加&ndash;&gt;
+    <button type="reset" shiro-event="sys:record:add-reset" class="layui-btn layui-btn-primary">重置</button>&lt;!&ndash;添加&ndash;&gt;
+</div>
+&lt;!&ndash;修改&ndash;&gt;
+<div id="submit-form-update" hidden>
+    <button class="layui-btn" shiro-event="sys:record:update" lay-submit lay-filter="submit-form-record">立即提交</button>
+    <button type="reset" shiro-event="sys:record:update-reset" class="layui-btn layui-btn-primary">重置</button>
+</div>-->
+<!--<div id="layui-record" hidden>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form" id="layui-form-record" lay-filter="component-form-group">
+                    <div class="layui-form-item">
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">请选择类型</label>
+                            <div class="layui-input-inline">
+                                <select name="type" lay-verify="required">
+                                    <option value="1">套黄</option>
+                                    <option value="2">全天套黄</option>
+                                    <option value="3">全天置顶</option>
+                                    <option value="4">通宵推荐</option>
+                                    <option value="5">通宵置顶</option>
+                                </select>
+                            </div>
+                            <label class="layui-form-label">私服名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="name" name="name" lay-verify="required" placeholder="请输入私服名称" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">IP</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="ipname" name="ipname" lay-verify="required" placeholder="请输入IP" class="layui-input">
+                            </div>
+                            <label class="layui-form-label">开服时间</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="datetime" name="datetime" lay-verify="required" placeholder="MM-dd HH:ss" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">线路</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="line" name="line" lay-verify="required" placeholder="请填写线路"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label">版本介绍</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="versiondepict" name="versiondepict" lay-verify="required" placeholder="请填写版本介绍" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">客服QQ</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="kfqq" name="kfqq" lay-verify="required" placeholder="请填写QQ"
+                                       autocomplete="off"  onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label">访问地址</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="url" name="url" lay-verify="required" placeholder="请填写访问地址"  class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-input-block">
+                        &lt;!&ndash;操作&ndash;&gt;
+                        <div class="layui-footer" id="submit-form-record-button" style="left: 0;">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>-->
+
+<!--
+
+<div id="layui-record-update" hidden>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form" id="layui-form-record-update" lay-filter="component-form-group">
+                    <div class="layui-form-item">
+                        <input type="hidden" id="id" name="id">
+                        <div class="layui-form-item layui-form-text">
+
+                            <label class="layui-form-label">类型</label>
+                            <div class="layui-input-inline">
+                                <select name="type" lay-verify="required">
+                                    <option value="1">套黄</option>
+                                    <option value="2">全天套黄</option>
+                                    <option value="3">全天置顶</option>
+                                    <option value="4">通宵推荐</option>
+                                    <option value="5">通宵置顶</option>
+                                </select>
+                            </div>
+                            <label class="layui-form-label">私服名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="name" lay-verify="required" placeholder="请填写私服名称"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">IP</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="ipname" lay-verify="required" placeholder="请填写私服IP"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label">开服时间</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="datetime" id="datetime1"  lay-verify="date" placeholder="MM-dd HH:ss" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">线路</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="line" lay-verify="required" placeholder="填写线路"  class="layui-input">
+                            </div>
+                            <label class="layui-form-label">版本介绍</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="versiondepict" placeholder="请填写版本介绍" lay-verify="required" class="layui-input"/>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">客服QQ</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="kfqq" placeholder="请填写客服QQ" lay-verify="required" autocomplete="off"  onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" class="layui-input"/>
+                            </div>
+                            <label class="layui-form-label">私服地址</label>
+                            <div class="layui-input-inline">
+                                <input  type="text" name="url" placeholder="请填写私服地址" lay-verify="required" class="layui-input"/>
+                            </div>
+                        </div>
+
+                        <div class="layui-input-block">
+                            &lt;!&ndash;操作&ndash;&gt;
+                            <div class="layui-footer" id="update-record-button" style="left: 0;">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+-->
+
+<script src="../../layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index', //主入口模块
+    }).use(['index', 'table', 'formgs', 'form', 'security', 'layer'], function () {
+        var $ = layui.jquery,
+            admin = layui.admin,
+            table = layui.table,
+            formgs = layui.formgs,
+            form = layui.form,//控制添加修改（同一个弹出层）关闭弹出层的索引
+            layer = layui.layer, closeindex;
+        table.render({
+            elem: '#auth-table'
+            , url: layui.setter.url + 'record/select'
+            , title: '访问记录'
+            , cols: [[
+                {field: 'name', title: '游客'}
+                , {field: 'gname', title: '私服名称', sort: true}
+                , {field: 'datetime', title: '开区时间', sort: true}
+                , {field: 'version', title: '版本', sort: true}
+                , {field: 'url', title: '私服地址'}
+                , {field: 'createtime', title: '访问时间'}
+            ]]
+            , page: true
+        });
+       /* table.on('tool(auth-table)', function (obj) {
+            if (obj.event == 'update') {
+                layer.open({
+                    type: 1,//弹窗类型
+                    area: ['50%', '60%'],//定义宽和高
+                    title: ('【' + obj.data.name + '】私服信息'),//题目
+                    shadeClose: false,//点击遮罩层关闭
+                    content: $("#layui-record-update"),//打开的内容
+                    success: function (index, layero) {
+                        closeindex = layero;
+                        formgs.get("layui-form-record-update", obj.data);
+                        $("#update-record-button").html($("#submit-form-update").html());
+                        //form.render刷新form 如果是针对单一刷新括号里面加上标签名 例：select刷新form.render('select')
+                        form.render();
+
+                    },
+                    end: function () {
+                        //getTableData();//结束之后请求表格数据的方法，新编辑的数据直接存库并展示在页面
+                    }
+                });
+            } else if (obj.event == "remove") {
+                layer.confirm('确定要删除【' + obj.data.name + '】这个私服吗？', function (index) {
+                    admin.req({
+                        url: layui.setter.url + "record/remove/" + obj.data.id
+                    }).done(function (res) {
+                        layer.close(index);
+                        table.reload('auth-table');
+                        layer.msg(res.msg);
+                    })
+                });
+            }
+        })*/
+        //查询
+        var $ = layui.$, active = {
+            reload: function () {
+                var demoReload = $('#test-table-demoReload');
+                //执行重载
+                table.reload('auth-table', {
+                    page: {curr: 1}//重新从第 1 页开始
+                    , where: {name: demoReload.val()}
+                });
+            },
+            rolequery: function () {
+                var query = $('#table-role-query');
+                //执行重载
+                table.reload('table-role', {
+                    page: {curr: 1}//重新从第 1 页开始
+                    , where: {likename: query.val()}
+                });
+            }
+        };
+        /*$("#record-button-add").on("click", function () {
+            layer.open({
+                type: 1,
+                area: ['50%', '60%'],
+                title: ("新增发布私服"),
+                shadeClose: false,
+                content: $("#layui-record"),
+                success: function (index, layero) {
+                    closeindex = layero;
+                    formgs.reset('layui-record');
+                    $("#submit-form-record-button").html($("#submit-form-add").html());
+                    form.render();
+                },
+            });
+        })
+
+        //添加/修改提交
+        form.on('submit(submit-form-record)', function (data) {
+            let url = layui.setter.url + "record/" + ((data.field.id == ''||data.field.id == null) ? "add" : "update");
+            admin.req({
+                url: url,
+                data: data.field,
+                done: function (res) {
+                    layer.close(closeindex);
+                    table.reload("auth-table");
+                    layer.msg(res.msg);
+                }
+            })
+            return false
+        })*/
+
+        $('.test-table-reload-btn .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+    });
+
+</script>
+</body>
+</html>

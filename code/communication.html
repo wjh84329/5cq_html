@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="en">
+ <head> 
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+  <title>5CQ-传奇广告查询站_传奇广告排行_传奇资源站_新开传奇新服排名站(5CQ.COM)</title>
+  <meta name="description" content="5CQ.Com传奇广告排行榜,传奇私服查询站,传奇资源站,好玩的传奇排名站,玩家最爱的新开传奇,GM最喜欢的传奇工具,传奇直播,传奇新开服,传奇相关尽在5CQ(玩传奇)">
+  <meta name="keywords" content="传奇广告查询站,传奇资源站,传奇广告排行,传奇SF广告统计(5CQ.COM)">   
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+  <meta name="renderer" content="webkit"> 
+  <meta name="Referrer" content="origin"> 
+  <link rel="stylesheet" href="../statics/css/public.css"> 
+  <link rel="stylesheet" href="../layuiadmin/layui/css/layui.css" media="all"> 
+  <link rel="stylesheet" href="./../statics/css/layer.css"> 
+  <link rel="stylesheet" href="../statics/css/paging.css"> 
+  <script src="../statics/js/jquery-3.2.1.min.js"></script> 
+  <script src="../statics/js/jquery.cookie.js"></script> 
+  <script src="../statics/adminconfig.js"></script> 
+  <script src="../statics/js/public.js"></script> 
+  <script src="../statics/config.js"></script> 
+  <script src="./../statics/js/layer.js"></script> 
+  <script src="./../layuiadmin/layui/layui.js"></script> 
+  <script src="../statics/wangEditor-3.1.1/release/wangEditor.js"></script> 
+  <style>
+    table.dataTable thead th, table.dataTable thead td {
+      padding: 0px !important;
+      height: 40px;
+    }
+
+    table.dataTable tbody td {
+      padding: 0px !important;
+    }
+
+    table.dataTable thead .sorting_asc {
+
+    }
+
+    .title{
+      border-top: 2px solid #d33f3f;
+      margin-top: 20px;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+      padding: 0 16px 30px;
+      background: #ffffff;
+      width: 100%;
+    }
+
+    .titvarext{
+      margin-left: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      height: 20px;
+      border-left: 5px solid #d33f3f;
+      padding: 0 17px;
+      margin-top: 20px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .infoBox{
+      display: flex;
+      justify-content: flex-start;
+      margin:30px 0px;
+      width: 100%;
+    }
+
+    .infoBox-text{
+      margin-left: 30px;
+    }
+
+    .inpStyle{
+      width: 340px;
+      height: 44px;
+      border: 1px solid #dddddd;
+      text-indent: 10px;
+      font-size: 16px;
+      color: #666;
+    }
+
+    .inpStyle:focus{
+      border: 1px solid #d33f3f;
+    }
+    .tipText{
+      font-size: 12px;
+      color: #d60203;
+    }
+    .textQ{
+      display: inline-block;
+      width: 75px;
+    }
+
+    .inpBox{
+      margin: 15px 0;
+    }
+
+    .layui-input-block{
+      margin-left: 0;
+    }
+
+    .submit{
+      background-image: url(../statics/images/sprite.png);
+      background-position: -363px -371px;
+      width: 198px;
+      height: 40px;
+      margin:30px  auto 0;
+      cursor: pointer;
+    }
+
+    .line{
+      width: 1100px;
+      height: 0;
+      border-top: 1px solid #dddddd;
+      margin: -60px auto 0;
+    }
+
+
+    #s-canvas {
+      height: 150px;
+      width: 150px;
+      margin-left: 15px;
+    }
+
+    #LAY-user-login-vercode:focus{
+      border: 1px solid #d33f3f !important;
+    }
+  </style> 
+ </head> 
+ <body> 
+  <div class="topinfo"> 
+   <div class="wid" style="width: 100%;justify-content: space-around"> 
+    <div class="topinfo_l">
+      同步站:Www.Chacq.Com[查传奇] 
+    </div> 
+    <div class="topinfo_c">
+      通知：严厉打击带有赌博的游戏，欢迎监督举报(举报经查实现金红包奖励) 
+    </div> 
+    <div class="topinfo_r"> 
+     <a href="/" style="color: white;margin-right: 15px">首页</a> 
+     <a href="./recruTran.html" style="color: white;margin-right: 15px" target="_blank">招聘交易发布</a> 
+     <a href="#" style="color: white;margin-right: 15px" onclick="shoucang()">收藏网址</a> 
+     <a href="5cq.com传奇站.url" download="5cq.com传奇站.url" style="color: white;margin-right: 15px">保存桌面</a> 
+    </div> 
+   </div> 
+  </div> 
+  <div id="head" style="height: 270px;"> 
+   <script>zhaoff.inithead("#head");</script> 
+  </div> 
+  <!--<div class="navc" id="first_title" style="height: 79px"><script> zhaoff.initftitle("#first_title");</script></div>--> 
+  <!--  <script src="../statics/js/cdmenu.js"></script> --> 
+  <div class="navc" id="first_title"> 
+   <div class="nav clearfix" id="cdmenu"> 
+    <a href="/index.html" target="" onclick="openActive('首页','/index.html',1);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
+     <div> 
+      <p>首页</p> 
+      <p>HOME</p> 
+     </div> <em></em> </a> 
+    <a href="/code/ranking.html" target="" onclick="openActive('广告排行','/code/ranking.html',2);" class=" clearfix" style="cursor: pointer"> <img style="display:block;" src="/statics/images/hot.gif" class="icon"> 
+     <div> 
+      <p>广告排行</p> 
+      <p>AD RANKING</p> 
+     </div> <em></em> </a> 
+    <a href="/chat.html" target="" onclick="openActive('AI助手','/chat.html',3);" class=" clearfix" style="cursor: pointer"> <img style="display:block;" src="/statics/images/hot.gif" class="icon"> 
+     <div> 
+      <p>AI助手</p> 
+      <p>AI CHAT</p> 
+     </div> <em></em> </a> 
+    <a href="/code/dataAnalysis.html" target="" onclick="openActive('广告分析','/code/dataAnalysis.html',4);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
+     <div> 
+      <p>广告分析</p> 
+      <p>AD REQUEST</p> 
+     </div> <em></em> </a> 
+    <a href="/code/fastscreen.html" target="" onclick="openActive('广告筛选','/code/fastscreen.html',5);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
+     <div> 
+      <p>广告筛选</p> 
+      <p>AD SEARCH</p> 
+     </div> <em></em> </a> 
+    <a href="/code/report.html" target="" onclick="openActive('黑名单','/code/report.html',6);" class=" clearfix" style="cursor: pointer"> <img style="display:block;" src="/statics/images/hot.gif" class="icon"> 
+     <div> 
+      <p>黑名单</p> 
+      <p>BLACK LIST</p> 
+     </div> <em></em> </a> 
+    <a href="/code/recruTran.html" target="" onclick="openActive('招聘交易','/code/recruTran.html',7);" class=" clearfix" style="cursor: pointer"> <img style="display:block;" src="/statics/images/tj.gif" class="icon"> 
+     <div> 
+      <p>招聘交易</p> 
+      <p>RECRUIT·TRADE</p> 
+     </div> <em></em> </a> 
+    <a href="/code/journalism.html" target="" onclick="openActive('传奇攻略','/code/journalism.html',8);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
+     <div> 
+      <p>传奇攻略</p> 
+      <p>NEWS GUIDE</p> 
+     </div> <em></em> </a> 
+    <a href="/code/publishSites.html" target="" onclick="openActive('发布站点','/code/publishSites.html',9);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
+     <div> 
+      <p>发布站点</p> 
+      <p>PUBLISH SITES</p> 
+     </div> <em></em> </a> 
+    <a href="/code/resourceNavigation.html" target="" onclick="openActive('工具导航','/code/resourceNavigation.html',10);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
+     <div> 
+      <p>工具导航</p> 
+      <p>DATA DOWN</p> 
+     </div> <em></em> </a> 
+   </div> 
+  </div> 
+  <!--代码正文--> 
+  <div class="container" style="margin-top: 20px"> 
+   <div class="title"> 
+    <div class="titvarext">
+      玩家打金Q群 &gt; 入驻 
+    </div> 
+    <div class="infoBox"> 
+     <div class="infoBox-text"> 
+      <div class="inpBox"> 
+       <span class="textQ">Q群名：</span> 
+       <input type="text" id="name" placeholder="请输入Q群名称，必须为活人群" maxlength="66" required class="inpStyle"> 
+      </div> 
+      <div class="inpBox"> 
+       <span class="textQ">群宣言：</span> 
+       <input type="text" id="declaration" placeholder="请输入群宣言" maxlength="30" required class="inpStyle"> 
+       <span class="tipText">(必填)30个字以内.</span> 
+      </div> 
+      <div class="inpBox"> 
+       <span class="textQ">群头像：</span> 
+       <img src="../statics/images/mrenCQQ.png" style="width: 100px;height: 100px" id="headImg"> 
+       <input type="file" accept=".jpg, .jpeg .png, .gif, .bmp" onchange="getFile(this)" id="test-upload-normal-LOGO"> 
+       <span class="tipText">* 头像大小推荐 120*120.</span> 
+      </div> 
+      <div class="inpBox"> 
+       <span class="textQ">Q群群号：</span> 
+       <input type="text" id="address" placeholder="请输入QQ群号码" maxlength="12" required class="inpStyle" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"> 
+       <span class="tipText">例如YY房间号, Q群号.</span> 
+      </div> 
+      <div class="inpBox"> 
+       <span class="textQ">主打版本：</span> 
+       <input type="text" id="platform" placeholder="请输入主打版本" maxlength="30" required class="inpStyle"> 
+       <span class="tipText">Q群主打版本, 例如: 复古, 合击, 单职业, 任何版本.</span> 
+      </div> 
+      <div class="inpBox"> 
+       <span class="textQ">Q群人数：</span> 
+       <input type="text" id="quantity" placeholder="请输入Q群人数" maxlength="9" class="inpStyle" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"> 
+       <span class="tipText">例如: 200, 500, 1000, 2000.</span> 
+      </div> 
+      <div class="inpBox"> 
+       <span class="textQ">联系方式：</span> 
+       <input type="text" id="contact" placeholder="请输入联系方式" maxlength="30" class="inpStyle"> 
+      </div> 
+      <div class="inpBox" style="display:flex;justify-content: flex-start"> 
+       <span class="textQ">Q群介绍：</span> 
+       <div class="layui-form-item layui-form-text"> 
+        <div class="layui-input-block"> 
+         <div id="div3"></div> 
+        </div> 
+       </div> 
+      </div> 
+      <div class="inpBox"> 
+       <span class="textQ" style="float: left;line-height: 48px">验证码：</span> 
+       <div class="layui-col-xs7" style="width: 120px;float: left"> 
+        <input type="text" name="vercode" id="LAY-user-login-vercode" lay-verify="required" placeholder="验证码" class="layui-input"> 
+       </div> 
+       <div class="layui-col-xs5" style="cursor: pointer"> 
+        <div class="s-canvas" style="overflow: hidden"> 
+         <canvas id="s-canvas"></canvas> 
+        </div> 
+       </div> 
+      </div> 
+     </div> 
+    </div> 
+    <div class="line"></div> 
+    <div class="submit"> 
+    </div> 
+   </div> 
+  </div> 
+  <br> 
+  <div id="footer" style="width:100%;margin: 30px auto 0;box-sizing: border-box;background: #1f1f24;padding: 30px 0 20px"> 
+   <div class="clearfix" style="width: 100%;margin: 0 auto"> 
+    <div class="link clearfix" style="border-bottom: 1px solid #36363a;padding-bottom: 30px;text-align: center" id="wzlm"> 
+    </div> 
+    <p class="p1"> <span>开服广告在线查询站 &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span> <em>为 新开传奇网站，单职业传奇，复古传奇，传奇手游 提供一个传奇发布网交流平台 </em> <a rel="nofollow" href="/statics/sitemap.html" target="_blank" style="color: white;margin-left: 20px">网站地图<em></em></a> </p> 
+    <p class="p2"> <span><em class="icon-link"></em>友情链接：</span> <a rel="nofollow" href="https://www.5cq.com" target="_blank">传奇广告查询 <em>|</em></a> <a rel="nofollow" href="https://www.1sf.com/" target="_blank">1SF传奇资源站 <em>|</em></a> <a rel="nofollow" href="https://www.2sf.com/" target="_blank"> 2SF传奇资源站 <em>|</em></a> <a rel="nofollow" href="https://www.5cq.com/duty.html" target="_blank">免责申明 <em>|</em></a> </p> 
+   </div> 
+   <p class="textfoot">拒绝盗版游戏 注意自我保护 谨防受骗上当 适度游戏益脑 沉迷游戏伤身 合理安排时间 享受健康生活</p> 
+   <p class="textfoot">本站只收录官方授权游戏信息，非官方授权游戏请在办理业务之前告知.</p> 
+   <p class="textfoot">*注释：网站数据匀采集互联网，有不良信息举报联系我们，将会尽快核实处理，站长QQ：3067585</p> 
+   <p class="textfoot"> <a style="color: white;text-align: center;width: 100%" target="_blank" id="beian" href="https://beian.miit.gov.cn">Copyright 2019-2027 All Rights Reserved </a><a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank" style="color: #fff"> 信产部ICP备案号：黔ICP备2022005643号　| </a> <span style="color: #fff">营业执照注册证号：91522301MABP8XJ71N </span> <a id="_pingansec_bottomimagesmall_shiming" target="_blank" href="//si.trustutn.org/info?sn=840240419040948778244&amp;certType=1"><img src="//v.trustutn.org/images/cert/realname_small_img.png"></a><script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1281074630'%3E%3C/span%3E%3Cscript src='https://s4.cnzz.com/z.js%3Fid%3D1281074630%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script></p> 
+   <p></p> 
+  </div> 
+  <div id="tcHtml"> 
+   <!--sxl用户信息操作，注册，登录，联系我们--> 
+   <script>$("#tcHtml").load("/statics/userinfo.html");</script> 
+  </div> 
+  <script>
+  var Uid = '';
+  var info = {};
+  var identifyCode='';
+  var fontSizeMin=40;
+  var fontSizeMax=40;
+  var backgroundColorMin=180;
+  var backgroundColorMax=200
+  var colorMin=0;
+  var colorMax=0;
+  var lineColorMin=0;
+  var lineColorMax=0;
+  var contentWidth=162;
+  var contentHeight=38;
+  var identifyCodes= ['0','1','2','3','4','5','6','7','8','9','a','b','c','d'];
+
+  var E = window.wangEditor;
+  var editor2 = new E('#div3');
+  editor2.customConfig.uploadImgMaxSize = 3 * 700 * 700;
+  editor2.customConfig.uploadImgMaxLength = 10;
+  editor2.customConfig.uploadImgTimeout = 0;
+  editor2.customConfig.uploadImgShowBase64 = true;
+  editor2.customConfig.uploadImgHooks = {
+    fail: function (xhr, editor, result) {
+      //上传错误时触发
+      layer.alert("上传图片失败");
+    }
+  };
+  editor2.create();
+
+
+  $(document).ready(function () {
+    refreshCode();
+    drawPic();
+  })
+
+  //提交报名
+  $(".submit").click(function () {
+    if(!$("#name").val()){
+      layer.alert('请输入Q群名称');
+      return;
+    }
+    if(!$("#declaration").val()){
+      layer.alert('请输入群宣言');
+      return;
+    }
+    if(!$("#address").val()){
+      layer.alert('请输入Q群群号');
+      return;
+    }
+    if(!$("#platform").val()){
+      layer.alert('请输入平台版本');
+      return;
+    }
+    if(!$("#quantity").val()){
+      layer.alert('请输入Q群人数');
+      return;
+    }
+    if($("#LAY-user-login-vercode").val()!=identifyCode){
+      layer.alert('请正确输入验证码');
+      return;
+    }
+    if(!fileImg){
+      layer.alert('请上传群头像');
+      return;
+    }
+    var formdata = new FormData();
+    formdata.append("headPortrait", fileImg);
+    formdata.append("name", $("#name").val());
+    formdata.append("platform", $("#platform").val());
+    formdata.append("type", 1);
+    formdata.append("quantity", $("#quantity").val() ? $("#quantity").val() :0 );
+    formdata.append("contact", $("#contact").val() ? $("#contact").val() :"" );
+    formdata.append("fabulous", 0);
+    formdata.append("declaration", $("#declaration").val());
+    formdata.append("address", $("#address").val() ?  $("#address").val() :"");
+    formdata.append("introduce", editor2.txt.html());
+    $.ajax({
+      url: baseUrl + 'jax/jaxAnchor/add',
+      type: 'post',
+      data: formdata,
+      dataType: 'json',
+      cache: false, //上传文件不需要缓存
+      processData: false, // 告诉jQuery不要去处理发送的数据
+      contentType: false,
+      success: function (res) {
+        fileImg='';
+        if(res.code==0){
+          layer.alert('发布成功', {
+            icon: 1,
+            skin: 'layer-ext-demo',
+            yes: function (index) {
+              window.location.href="./playerGroup.html"
+            }
+          })
+        }else {
+          layer.alert("发布失败");
+        }
+      }
+    })
+  })
+
+
+  //图片上传
+  var fileImg='';
+  function upImg() {
+    var imgList=document.getElementById('test-upload-normal-LOGO').files;
+    var data = new FormData();                         //用ajax传递文件流必须用FormData，其他格式不可传递
+    for(var i = 0;i < imgList.length;i ++) {
+      data.append("files", imgList[i], imgList[i].name);
+    }
+    var example = location.protocol+"//"+window.location.host;
+    data.append("weburl",example);
+    data.append("type",'report');
+
+    $.ajax({
+      url: baseUrl + 'jax/uploadFile/upload',
+      type: 'post',
+      data: data,
+      contentType: false,
+      processData: false,
+      dataType: 'json',
+      success: function (res, textStatus, jqXHR) {
+        fileImg=res.data.join();
+      }
+    })
+
+  }
+
+
+
+  //获取文件
+  function getFile(f){
+    var rd = new FileReader();//创建文件读取对象
+    var files = f.files[0];//获取file组件中的文件
+    if (files.type != "image/jpg" && files.type != "image/jpeg" && files.type != "image/png" && files.type != "image/gif" && files.type != "image/bmp"){
+      layer.alert("只能上传图片");
+      return;
+    }
+    rd.readAsDataURL(files);//文件读取装换为base64类型
+    rd.onloadend = function(e) {
+      //加载完毕之后获取结果赋值给img
+      document.getElementById("headImg").src = this.result;
+      upImg();
+    }
+  }
+
+
+  //跳回玩家主播
+  $(".titvarext").click(function () {
+    $(location).attr("href",'./playerGroup.html');
+  })
+
+
+  $(".s-canvas").click(function () {
+    refreshCode();
+  })
+
+  // 更新验证码
+  function  refreshCode() {
+    this.identifyCode = "";
+    this.makeCode(this.identifyCodes, 4);
+  }
+
+  // 随机生成验证码字符串
+  function makeCode(data, len) {
+    for (var i = 0; i < len; i++) {
+      this.identifyCode += this.identifyCodes[this.randomNum(0, this.identifyCodes.length-1)];
+      drawPic();
+    }
+  }
+
+  // 生成一个随机数
+  function randomNum(min, max) {
+    return Math.floor(Math.random() * (max - min) + min)
+  }
+
+  // 生成一个随机的颜色
+  function randomColor(min, max) {
+    var r = this.randomNum(min, max)
+    var g = this.randomNum(min, max)
+    var b = this.randomNum(min, max)
+    return 'rgb(' + r + ',' + g + ',' + b + ')'
+  }
+
+  function drawPic() {
+    var canvas = document.getElementById('s-canvas')
+    var ctx = canvas.getContext('2d')
+    ctx.textBaseline = 'bottom'
+    // 绘制背景
+    ctx.fillStyle = this.randomColor(this.backgroundColorMin, this.backgroundColorMax)
+    ctx.fillRect(0, 0, this.contentWidth, this.contentHeight)
+    // 绘制文字
+    for (var i = 0; i < this.identifyCode.length; i++) {
+      this.drawText(ctx, this.identifyCode[i], i)
+    }
+    // this.drawLine(ctx)
+    // this.drawDot(ctx)
+  }
+
+  function drawText(ctx, txt, i) {
+    ctx.fillStyle = this.randomColor(this.colorMin, this.colorMax)
+    ctx.font = this.randomNum(this.fontSizeMin, this.fontSizeMax) + 'px SimHei'
+    var x = (i + 1) * (this.contentWidth / (this.identifyCode.length + 1))
+    var y = this.randomNum(this.fontSizeMax, this.contentHeight - 5)
+    var deg = this.randomNum(-45, 45)
+    // 修改坐标原点和旋转角度
+    ctx.translate(x, y)
+    ctx.rotate(deg * Math.PI / 300)
+    ctx.fillText(txt, 0, 0)
+    // 恢复坐标原点和旋转角度
+    ctx.rotate(-deg * Math.PI / 300)
+    ctx.translate(-x, -y)
+  }
+
+</script>  
+ </body>
+</html>

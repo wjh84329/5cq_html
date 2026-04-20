@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /game.html
+Sitemap:https://www.5cq.com/sitemap.html

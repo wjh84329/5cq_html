@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>品牌大服</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+</head>
+<body>
+<style>
+    .layui-table-cell {
+        height: auto !important;
+        white-space: normal;
+    }
+
+    .layui-form-selected {
+        z-index: 999999999;
+    }
+
+    .layui-upload-img{
+        margin-top: -10px;
+        width: 250px;
+        height:150px;
+    }
+</style>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">品牌大服</div>
+                <div class="layui-card-body">
+                    <div class="test-table-reload-btn" style="margin-bottom: 10px;">
+                        <div class="layui-inline">
+                            <input class="layui-input" name="polymerization" id="test-table-demoReload"
+                                   autocomplete="off" placeholder="请输入标题">
+                        </div>
+                        <button class="layui-btn" data-type="reload">搜索</button>
+
+                        <button id="brand-button-add" shiro-event="jax:brand:open-add" class="layui-btn"><i
+                                class="layui-icon">&#xe654;</i>添加
+                        </button>
+
+                        <button id="brandtype-button-select" shiro-event="jax:brandtype:select" class="layui-btn"><i
+                                class="layui-icon">&#xe654;</i>品牌类型
+                        </button>
+
+                    </div>
+                    <table class="layui-hide" id="auth-table" lay-filter="auth-table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="auth-state" hidden>
+    <button lay-event="update" shiro-event="jax:brand:open-update" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe642;</i>修改
+    </button>
+    <button lay-event="remove" shiro-event="jax:brand:open-remove" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe640;</i>删除
+    </button>
+</div>
+
+
+<!-- 添加类别 -->
+<div id="submit-form-brandtype-add" hidden>
+    <button class="layui-btn" shiro-event="jax:brandtype:add" lay-submit lay-filter="submit-form-brandtype">立即提交
+    </button>
+    <!--添加-->
+    <button type="reset" shiro-event="jax:brandtype:add-reset" class="layui-btn layui-btn-primary">重置</button><!--添加-->
+</div>
+
+<!--添加-->
+<div id="submit-form-add" hidden>
+    <button class="layui-btn" shiro-event="jax:brand:add" lay-submit lay-filter="submit-form-brand">立即提交</button>
+    <!--添加-->
+</div>
+<!--修改-->
+<div id="submit-form-update" hidden>
+    <button class="layui-btn" shiro-event="jax:brand:update" lay-submit lay-filter="submit-form-brand">立即提交</button>
+</div>
+<div id="layui-brand" hidden>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form" id="layui-form-brand" lay-filter="component-form-group">
+                    <div class="layui-form-item">
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">品牌名称</label>
+                            <div class="layui-input-inline" style="width: 182px">
+                                <select name="brand_type_id" lay-verify="required">
+                                </select>
+                            </div>
+                            <label class="layui-form-label">标题</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="title" lay-verify="required" placeholder="请输入标题"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label">游戏名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="name" lay-verify="required" placeholder="请输入中文名称"
+                                       class="layui-input">
+                            </div>
+
+                        </div>
+
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">网站地址</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="url" lay-verify="required" placeholder="请输入网站"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label">热度</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="total" lay-verify="required" placeholder="请输入支持量"
+                                       onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                       onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label">浏览量</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="browse_count" lay-verify="required" placeholder="请输入浏览量"
+                                       onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                       onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                       class="layui-input">
+                            </div>
+
+                        </div>
+
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">登录器下载</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="upload_url" lay-verify="required" placeholder="请输入登录器下载地址"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label">发布日期</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="issue_date" id="issue_date" readonly autocomplete="off"
+                                       lay-verify="required" placeholder="请输入发行日期" class="layui-input">
+                            </div>
+                            <label class="layui-form-label">主要角色</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="role" lay-verify="required" placeholder="请输入主要角色"
+                                       class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">玩家人数</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="number" lay-verify="required" placeholder="请输入玩家人数"
+                                       onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                       onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label">运营方式</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="operate" lay-verify="required" placeholder="请输入运营方式"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label">游戏类型</label>
+                            <div class="layui-input-inline" style="width: 182px">
+                                <select name="type" lay-verify="required">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-card-body">
+                            <div class="layui-upload" style="display: flex">
+                                <button type="button" class="layui-btn" id="test-upload-normal" style="margin-right: 10px">上传封面</button>
+                                <div class="layui-upload-list">
+                                    <img class="layui-upload-img" id="test-upload-normal-img">
+                                    <p id="test-upload-demoText"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item layui-form-text">
+                            <div class="layui-form-item layui-form-text">
+                                <div class="layui-input-block">
+                                    <div id="div2"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-input-block">
+                            <!--操作-->
+                            <div class="layui-footer" id="submit-form-brand-button" style="left: 0;">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="layui-brand-update" hidden>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form" id="layui-form-brand-update" lay-filter="component-form-group">
+                    <div class="layui-form-item">
+                        <input type="hidden" id="id" name="id">
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">品牌名称</label>
+                            <div class="layui-input-inline" style="width: 182px">
+                                <select name="brand_type_id" lay-verify="required">
+                                </select>
+                            </div>
+                            <label class="layui-form-label">标题</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="title" lay-verify="required" placeholder="请输入标题"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label">游戏名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="name" lay-verify="required" placeholder="请输入中文名称"
+                                       class="layui-input">
+                            </div>
+
+                        </div>
+
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">网站地址</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="url" lay-verify="required" placeholder="请输入网站"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label">热度</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="total" lay-verify="required" placeholder="请输入热度"
+                                       onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                       onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label">浏览量</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="browse_count" lay-verify="required" placeholder="请输入浏览量"
+                                       onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                       onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                       class="layui-input">
+                            </div>
+
+                        </div>
+
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">登录器下载</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="upload_url" lay-verify="required" placeholder="请输入登录器下载地址"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label">发布日期</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="issue_date" id="issue_date_" readonly autocomplete="off"
+                                       lay-verify="required" placeholder="请输入发行日期" class="layui-input">
+                            </div>
+                            <label class="layui-form-label">主要角色</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="role" lay-verify="required" placeholder="请输入主要角色"
+                                       class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">玩家人数</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="number" lay-verify="required" placeholder="请输入玩家人数"
+                                       onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                       onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label">运营方式</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="operate" lay-verify="required" placeholder="请输入运营方式"
+                                       class="layui-input">
+                            </div>
+                            <label class="layui-form-label">游戏类型</label>
+                            <div class="layui-input-inline" style="width: 182px">
+                                <select name="type" lay-verify="required">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-card-body">
+                            <div class="layui-upload" style="display: flex">
+                                <button type="button" class="layui-btn" id="test-upload-normal_" style="margin-right: 10px">上传封面</button>
+                                <div class="layui-upload-list">
+                                    <img class="layui-upload-img" id="test-upload-normal-img_">
+                                    <p id="test-upload-demoText_"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <div class="layui-input-block">
+                                <div id="div3"></div>
+                            </div>
+                        </div>
+                        <div class="layui-input-block">
+                            <!--操作-->
+                            <div class="layui-footer" id="update-brand-button" style="left: 0;">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="layui-brandtype" hidden>
+    <div class="layui-fluid">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <div class="test-table-reload-btn" style="margin-bottom: 10px;">
+                            <button id="brandtype-button-add" shiro-event="jax:brandtype:open-add" class="layui-btn"><i
+                                    class="layui-icon">&#xe654;</i>添加
+                            </button>
+                        </div>
+                        <table class="layui-hide" id="brandtype-auth-table" lay-filter="brandtype-auth-table"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="layui-brandtype-add" hidden>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form" id="layui-form-brandtype" lay-filter="component-form-group">
+                    <div class="layui-form-item">
+<!--                        <input type="hidden" id="typeid" name="id">-->
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">类别名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="name" lay-verify="required" placeholder="请输入类别名称"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">排序</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="sort" lay-verify="required" placeholder="请输入序号"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-input-block">
+                            <!--操作-->
+                            <div class="layui-footer" id="submit-form-brandtype-button" style="left: 0;">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 类别管理的删除功能 -->
+<div id="auth-brandtype-state" hidden>
+    <button lay-event="remove" shiro-event="jax:brandtype:open-remove" class="layui-btn layui-btn-primary layui-btn-xs">
+        <i class="layui-icon">&#xe640;</i>删除
+    </button>
+</div>
+
+
+<!--sxl 生成内容-->
+<div id="generate" hidden >
+
+</div>
+
+
+<script src="../../layuiadmin/layui/layui.js"></script>
+<script src="../../statics/wangEditor-3.1.1/release/wangEditor.js"></script>
+<script>
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index', //主入口模块
+    }).use(['index', 'table', 'formgs', 'form', 'security', 'layer', 'layedit', 'upload', 'laydate'], function () {
+        var $ = layui.jquery,
+            admin = layui.admin,
+            table = layui.table,
+            formgs = layui.formgs,
+            form = layui.form,//控制添加修改（同一个弹出层）关闭弹出层的索引
+            layedit = layui.layedit,//控制添加修改（同一个弹出层）关闭弹出层的索引
+            laydate = layui.laydate,
+            upload = layui.upload,
+            layer = layui.layer, closeindex;
+        var E = window.wangEditor;
+        var typeList = null;
+        var legTypeList = null;
+        $.get('/code/baseplate/brand.html?'+Math.random(),function(data){
+            $("#generate").html($(data));
+
+        });
+        laydate.render({
+            format: 'yyyy-MM',
+            theme: 'grid',
+            trigger: 'click',
+            elem: '#issue_date_',
+            type: 'month',
+        });
+        laydate.render({
+            format: 'yyyy-MM',
+            theme: 'grid',
+            trigger: 'click',
+            elem: '#issue_date',
+            type: 'month',
+        });
+
+        function init() {
+            admin.req({
+                url: layui.setter.url + "brand/selectBrandType",
+                data: {},
+                done: function (res) {
+                    typeList = res.data.typeList;
+                    legTypeList = res.data.legTypeList;
+                }
+            })
+        }
+
+        init();
+        //加载底版
+
+
+        var editor2 = new E('#div2');
+        editor2.customConfig.uploadImgMaxSize = 3 * 1024 * 1024;
+        editor2.customConfig.uploadImgMaxLength = 20;
+        editor2.customConfig.uploadImgTimeout = 3000;
+        editor2.customConfig.uploadImgShowBase64 = true;
+
+        editor2.customConfig.uploadImgHooks = {
+            fail: function (xhr, editor, result) {
+                //上传错误时触发
+                alert("上传图片失败");
+            }
+        };
+
+
+        editor2.create();
+
+        var editor3 = new E('#div3');
+        editor3.customConfig.uploadImgMaxSize = 3 * 1024 * 1024;
+        editor3.customConfig.uploadImgMaxLength = 200;
+        editor3.customConfig.uploadImgTimeout = 3000;
+        //editor3.customConfig.uploadImgServer = layui.setter.url;
+        editor3.customConfig.uploadImgShowBase64 = true;
+        editor3.customConfig.uploadImgHooks = {
+            fail: function (xhr, editor, result) {
+                //上传错误时触发
+                alert("上传图片失败");
+            }
+        };
+        editor3.create();
+
+
+        table.render({
+            elem: '#auth-table'
+            , url: layui.setter.url + 'brand/select'
+            , title: '品牌'
+            , cols: [[
+                {field: 'title', title: '标题'},
+                {field: 'name', title: '名称'},
+                {field: 'brandName', title: '品牌类型'},
+                {field: 'total', title: '热度'},
+                {field: 'browse_count', title: '浏览量'},
+                {field: 'url', title: '网站'},
+                {
+                    field: 'img', title: '图片',
+                    templet: function (obj) {
+                        if (obj.img != '' && obj.img != null) {
+                            var t = "../../statics/upload/" + obj.img;
+                            obj.img = '<img style="height:58px;width: 120px" onclick="tc(\'' + t + '\')" onload="DrawImage(this,100,28)"  src="' + t + '"/>';
+                        } else {
+                            obj.img = '暂无图片';
+                        }
+                        return obj.img;
+                    }
+                },
+                {field: 'upload_url', title: '登录器下载地址'},
+                {fixed: 'right', title: '操作', toolbar: '#auth-state'}
+            ]]
+            , page: true
+        });
+
+        //普通图片上传
+        var fileUpload = "";
+        var uploadInst = upload.render({
+            elem: '#test-upload-normal'
+            , before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    fileUpload = file;
+                    $('#test-upload-normal-img').attr('src', result); //图片链接（base64）
+                });
+            }
+        });
+
+
+
+        //普通图片上传
+        var fileUpload2="";
+        var uploadInst2 = upload.render({
+            elem: '#test-upload-normal_'
+            ,before: function(obj){
+                //预读本地文件示例，不支持ie8
+                obj.preview(function(index, file, result){
+                    fileUpload2=file;
+                    $('#test-upload-normal-img_').attr('src', result); //图片链接（base64）
+                });
+            }
+        });
+
+
+
+
+        $("#brandtype-button-select").on("click", function () {
+            layer.open({
+                type: 1,
+                area: ['70%', '60%'],
+                title: ("品牌类别"),
+                shadeClose: false,
+                content: $("#layui-brandtype"),
+                success: function (index, layero) {
+                    table.render({
+                        elem: '#brandtype-auth-table'
+                        , url: layui.setter.url + 'brandtype/select'
+                        , title: '品牌类别'
+                        , cols: [[
+                            {field: 'name', title: '品牌名称', edit: 'text',},
+                            {field: 'sort', title: '排序', edit: 'text'},
+                            {fixed: 'right', title: '操作', toolbar: '#auth-brandtype-state'}
+                        ]]
+                        , page: true
+                    });
+                },
+            });
+        })
+
+        table.on('edit(brandtype-auth-table)', function (obj) {
+            var value = obj.value //得到修改后的值
+                , data = obj.data //得到所在行所有键值
+            let url = layui.setter.url + "brandtype/update";
+            admin.req({
+                url: url,
+                data: {id: data.id, name: data.name, name: data.name, sort: data.sort},
+                done: function (res) {
+                    init();
+                    table.reload("brandtype-auth-table");
+                    table.reload("auth-table");
+                    layer.msg(res.msg);
+                }
+            })
+        });
+        table.on('tool(brandtype-auth-table)', function (obj) {
+            if (obj.event == "remove") {
+                layer.confirm('确定要删除【' + obj.data.name + '】这个类别吗？', function (index) {
+                    admin.req({
+                        url: layui.setter.url + "brandtype/remove/" + obj.data.id
+                    }).done(function (res) {
+                        layer.close(index);
+                        init();
+                        table.reload('brandtype-auth-table');
+                        table.reload("auth-table");
+                        layer.msg(res.msg);
+                    })
+                });
+            }
+        })
+
+        $("#brandtype-button-add").on("click", function () {
+            layer.open({
+                type: 1,
+                area: ['20', '40%'],
+                title: ("品牌"),
+                shadeClose: false,
+                content: $("#layui-brandtype-add"),
+                success: function (index, layero) {
+                    closeindex = layero;
+                    formgs.reset('layui-form-brandtype');
+
+                    $("#submit-form-brandtype-button").html($("#submit-form-brandtype-add").html());
+                    form.render();
+                },
+            });
+        })
+
+        form.on('submit(submit-form-brandtype)', function (data) {
+            admin.req({
+                url: layui.setter.url + "brandtype/add",
+                data: data.field,
+                done: function (res) {
+                    layer.close(closeindex);
+                    init();
+                    table.reload("brandtype-auth-table");
+                    table.reload("auth-table");
+                    layer.msg(res.msg);
+                }
+            })
+            return false
+        })
+
+
+        table.on('tool(auth-table)', function (obj) {
+            if (obj.event == 'update') {
+                layer.open({
+                    type: 1,//弹窗类型
+                    area: ['1500', '92%'],
+                    title: ('【' + obj.data.title + '】'),//题目
+                    shadeClose: false,//点击遮罩层关闭
+                    content: $("#layui-brand-update"),//打开的内容
+                    success: function (index, layero) {
+                        closeindex = layero;
+                        editor3.txt.html("");
+                        var html = '';
+                        for (var c in typeList) {
+                            html += '<option value="' + typeList[c].id + '">' + typeList[c].name + '</option>';
+                        }
+                        // $("#layui-form-welfare-update  input[name='total']").attr("disabled", null);
+                        $("#layui-form-brand-update select[name='brand_type_id']").html(html);
+
+                        var html = '';
+                        for (var c in legTypeList) {
+                            html += '<option value="' + legTypeList[c].name + '">' + legTypeList[c].name + '</option>';
+                        }
+                        $("#layui-form-brand-update select[name='type']").html(html);
+                        formgs.get("layui-form-brand-update", obj.data);
+                        editor3.txt.html(obj.data.html);
+                       if(obj.data.img!=''&&obj.data.img!=null){
+                           $('#test-upload-normal-img_').attr("src","../../statics/upload/" + obj.data.img);
+                       }else{
+                           $('#test-upload-normal-img_').attr("src","");
+                       }
+                        $("#update-brand-button").html($("#submit-form-update").html());
+                        //form.render刷新form 如果是针对单一刷新括号里面加上标签名 例：select刷新form.render('select')
+                        form.render();
+
+                    },
+                    end: function () {
+                        //getTableData();//结束之后请求表格数据的方法，新编辑的数据直接存库并展示在页面
+                    }
+                });
+            } else if (obj.event == "remove") {
+                layer.confirm('确定要删除【' + obj.data.title + '】吗？', function (index) {
+                    admin.req({
+                        url: layui.setter.url + "brand/remove/"+obj.data.id,
+                    }).done(function (res) {
+                        layer.close(index);
+                        table.reload('auth-table');
+                        layer.msg(res.msg);
+                    })
+                });
+            }
+        })
+        //查询
+        var $ = layui.$, active = {
+            reload: function () {
+                var demoReload = $('#test-table-demoReload');
+                //执行重载
+                table.reload('auth-table', {
+                    page: {curr: 1}//重新从第 1 页开始
+                    , where: {title: demoReload.val()}
+                });
+            },
+            rolequery: function () {
+                var query = $('#table-role-query');
+                //执行重载
+                table.reload('table-role', {
+                    page: {curr: 1}//重新从第 1 页开始
+                    , where: {likename: query.val()}
+                });
+            }
+        };
+        $("#brand-button-add").on("click", function () {
+            layer.open({
+                type: 1,
+                area: ['1500', '92%'],
+                title: ("添加"),
+                shadeClose: false,
+                content: $("#layui-brand"),
+                success: function (index, layero) {
+                    closeindex = layero;
+                    editor2.txt.html("");
+                    formgs.reset('layui-brand');
+                    var html = '';
+                    for (var c in typeList) {
+                        html += '<option value="' + typeList[c].id + '">' + typeList[c].name + '</option>';
+                    }
+                    $("#layui-form-brand select[name='brand_type_id']").html(html);
+                    var html = '';
+                    for (var c in legTypeList) {
+                        html += '<option value="' + legTypeList[c].name + '">' + legTypeList[c].name + '</option>';
+                    }
+
+                    $("#layui-form-brand select[name='type']").html(html);
+                    $('#test-upload-normal-img').attr("src"," ");
+                    $("#submit-form-brand-button").html($("#submit-form-add").html());
+                    form.render();
+                },
+            });
+        })
+
+        //添加/修改提交
+        form.on('submit(submit-form-brand)', function (data) {
+
+            var f = "";
+            var file=null;
+            var formdata = new FormData();
+            if (data.field.id == null || data.field.id == '') {
+                f = "add";
+                data.field.html = editor2.txt.html();
+                file=fileUpload;
+            } else {
+                f = "update";
+                data.field.html = editor3.txt.html();
+                file=fileUpload2;
+                formdata.append("id",data.field.id);
+            }
+            var url = layui.setter.url + "brand/" + f;
+            if(data.field.url.indexOf('http')<0){
+                data.field.url="http://"+data.field.url;
+            }
+            if(data.field.upload_url.indexOf('http')<0){
+                data.field.upload_url="http://"+data.field.upload_url;
+            }
+            formdata.append("brand_type_id",data.field.brand_type_id);
+            formdata.append("title",data.field.title);
+            formdata.append("url",data.field.url);
+            formdata.append("total",data.field.total);
+            formdata.append("file",file);
+            formdata.append("upload_url",data.field.upload_url);
+            formdata.append("re_name",data.field.re_name);
+            formdata.append("issue_date",data.field.issue_date);
+            formdata.append("frame",data.field.frame);
+            formdata.append("role",data.field.role);
+            formdata.append("number",data.field.number);
+            formdata.append("platform",data.field.platform);
+            formdata.append("operate",data.field.operate);
+            formdata.append("version",data.field.version);
+            formdata.append("type",data.field.type);
+            formdata.append("html",data.field.html);
+            formdata.append("name",data.field.name);
+            formdata.append("browse_count",data.field.browse_count);
+
+            $("#param1").text(data.field.title);
+            $("#param2").text(data.field.title);
+
+            $("#param3").text(data.field.url);
+            $("#param3").attr("href",data.field.url);
+            $("#param3").attr("title",data.field.url);
+
+            $("#param4").text(data.field.name);
+            $("#param5").text(data.field.issue_date);
+            $("#param7").text(data.field.number);
+
+            $("#param9").text(data.field.upload_url);
+            $("#param9").attr("href",data.field.upload_url);
+            $("#param9").attr("title",data.field.upload_url);
+
+
+            $("#param12").text(data.field.role);
+            $("#param13").text(data.field.operate);
+            $("#param14").text(data.field.type);
+
+
+            $("#content").html(data.field.html);
+
+            var generate = $("#generate").html();
+            generate = '<!DOCTYPE html>\n' + '<html lang="en">\n' + '<head>'+generate;
+            generate = generate.replace(
+                "底版莫动ddd",
+                '<script src="/statics/js/jquery-3.2.1.min.js"><\/script>' +
+                '<script src="/statics/js/jquery.cookie.js"><\/script>' +
+                '<script>$("#tcHtml").load(\'/statics/userinfo.html\');<\/script>'+
+                '<script src="/statics/js/layer.js"><\/script>'
+            );
+            generate = generate.replace(
+                "底版莫动_headbody",
+                '    <script>\n' +
+                '       var hmbaidu = 1;\n' +
+                '       var _hmt = _hmt || [];\n' +
+                '       (function() {\n' +
+                '       var hm = document.createElement("script");\n' +
+                '       hm.src = "https://hm.baidu.com/hm.js?9556469f709dc7241468870606003272";\n' +
+                '       var s = document.getElementsByTagName("script")[0]; \n' +
+                '       s.parentNode.insertBefore(hm, s);\n' +
+                '       })();\n' +
+                '    <\/script>\n' +
+
+                '    <script>\n' +
+                '       (function(){\n' +
+                '        var bp = document.createElement("script");\n' +
+                '        var curProtocol = window.location.protocol.split(":")[0];\n' +
+                '        if (curProtocol === "https") {\n' +
+                '            bp.src = "https://zz.bdstatic.com/linksubmit/push.js";\n' +
+                '        }\n' +
+                '        else {\n' +
+                '         bp.src = "http://push.zhanzhang.baidu.com/push.js";\n' +
+                '        }\n' +
+                '       var s = document.getElementsByTagName("script")[0];\n' +
+                '        s.parentNode.insertBefore(bp, s);\n' +
+                '       })();\n' +
+                '     <\/script>\n' +
+
+                '</head>\n' +
+                '<body>'
+            );
+
+            generate = generate+'</body>\n</html>';
+            formdata.append("generate",generate);
+            admin.req({
+                url: url,
+                data: formdata,
+                cache: false, //上传文件不需要缓存
+                processData: false, // 告诉jQuery不要去处理发送的数据
+                contentType: false, // 告诉jQuery不要去设置Content-Type请求头
+                done: function (res) {
+                    layer.close(closeindex);
+                    table.reload("auth-table");
+                    layer.msg(res.msg);
+                }
+            })
+            return false
+        });
+
+        $('.test-table-reload-btn .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+        var formatDate = function (now) {
+            var year = now.getFullYear();
+            var month = now.getMonth() + 1;
+            var date = now.getDate();
+            var hour = now.getHours();
+            var minute = now.getMinutes();
+            var second = now.getSeconds();
+            if (month < 10) month = "0" + month;
+            if (date < 10) date = "0" + date;
+            if (hour < 10) hour = "0" + hour;
+            if (minute < 10) minute = "0" + minute;
+            if (second < 10) second = "0" + second;
+            return year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second;
+        }
+
+
+    });
+
+    function DrawImage(ImgD, width_s, height_s) {
+        var image = new Image();
+        image.src = ImgD.src;
+        if (image.width > 0 && image.height > 0) {
+            flag = true;
+            if (image.width / image.height >= width_s / height_s) {
+                if (image.width > width_s) {
+                    ImgD.width = width_s;
+                    ImgD.height = (image.height * width_s) / image.width;
+                } else {
+                    ImgD.width = image.width;
+                    ImgD.height = image.height;
+                }
+            } else {
+                if (image.height > height_s) {
+                    ImgD.height = height_s;
+                    ImgD.width = (image.width * height_s) / image.height;
+                } else {
+                    ImgD.width = image.width;
+                    ImgD.height = image.height;
+                }
+            }
+        }
+    }
+
+    function tc(src) {
+        var html = ''
+        html += '<div id="tong" class="hide" style="width: 670px; height: 320px;display: table-cell;vertical-align: middle;  text-align: center; ">'
+        html += '<img src="' + src + '" style="max-height: 500px;max-width: 1000px">'
+        html += '</div>';
+        layer.open({
+            type: 1,
+            title: false,
+            closeBtn: 0,
+            area: ['auto'],
+            skin: 'layui-layer-nobg', //没有背景色
+            shadeClose: true,
+            content: html
+        });
+    }
+</script>
+</body>
+</html>

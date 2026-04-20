@@ -1,0 +1,344 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>全端复杂组合</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+  <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+  <style >
+    .oneheader{
+      height: 100px;
+    }
+    .a{
+      width: 50px;
+
+      height: 50px;
+
+      border: 1px solid #088;
+
+      border-radius: 100px;
+
+
+      opacity: 0.5;
+    }
+    .greencircle {
+      position: absolute;
+      margin: 17px ;
+      width: 10px;
+      height: 10px;
+      background: #5fb878;
+      border-radius: 50%;
+    }
+    .yellowcircle{
+      position: absolute;
+      margin: 17px ;
+      width: 10px;
+      height: 10px;
+      background: #f1d510;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+<body>
+
+
+
+  <div class="layui-fluid" id="LAY-component-grid-all">
+    <div class="layui-row layui-col-space10">
+      <div class="layui-col-xs6 layui-col-sm7 layui-col-md3">
+        <!-- 填充内容 -->
+        <div class="layui-card oneheader" >
+          <div class="layui-card-header">服务器状态<span id="circle" class="greencircle" style="margin-left: 10px;" ></span></div>
+          <div class="layui-card-body">
+
+            <span id="serverstate">正常</span>
+            <button class="layui-btn layui-btn-primary layui-btn-sm" id="restartbutton" lay style="margin-left: 180px;" onclick="restart()">重启</button>
+          </div>
+        </div>
+      </div>
+      <div class="layui-col-xs6 layui-col-sm5 layui-col-md3">
+        <div class="layui-card oneheader">
+          <div class="layui-card-header"></div>
+          <div class="layui-card-body"></div>
+        </div>
+      </div>
+      <div class="layui-col-xs6 layui-col-sm5 layui-col-md3">
+        <div class="layui-card oneheader" >
+          <div class="layui-card-header"></div>
+          <div class="layui-card-body"></div>
+        </div>
+      </div>
+      <div class="layui-col-xs6 layui-col-sm7 layui-col-md3">
+        <div class="layui-card oneheader" >
+          <div class="layui-card-header"></div>
+          <div class="layui-card-body"></div>
+        </div>
+      </div>
+      <div class="layui-col-xs6 layui-col-sm7 layui-col-md6">
+        <div class="layui-card">
+          <div class="layui-card-header">
+            <span>拦截器</span>
+            <button class="layui-btn layui-btn-primary layui-btn-xs" id="filter-button-add" shiro-event="sys:settings:filters:open-add">添加</button>
+          </div>
+
+          <div class="layui-card-body">
+                  <table class="layui-hide" id="filters-table-cellEdit" lay-filter="filters-table-cellEdit"></table>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="layui-col-xs6 layui-col-sm5 layui-col-md6">
+        <div class="layui-card">
+          <div class="layui-card-header"></div>
+          <div class="layui-card-body"></div>
+        </div>
+      </div>
+      <div class="layui-col-xs6 layui-col-sm5 layui-col-md3">
+        <div class="layui-card">
+          <div class="layui-card-header"></div>
+          <div class="layui-card-body"></div>
+        </div>
+      </div>
+      <div class="layui-col-xs6 layui-col-sm7 layui-col-md9">
+        <div class="layui-card">
+          <div class="layui-card-header"></div>
+          <div class="layui-card-body"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <div id="addfilter" hidden >
+      <div class="layui-fluid" >
+        <div class="layui-card">
+          <div class="layui-card-body" style="padding: 15px;">
+            <form class="layui-form" id="layui-form-filters" lay-filter="component-form-group">
+              <div class="layui-form-item">
+                <label class="layui-form-label">名称</label>
+                <div class="layui-input-block">
+                  <input type="text" id="name" name="name" lay-verify="required"  placeholder="请输入名称" autocomplete="off"
+                         class="layui-input">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">url</label>
+                <div class="layui-input-block">
+                  <input type="text" id="url" name="url" lay-verify="required" placeholder="请输入url"
+                         autocomplete="off" class="layui-input">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">参数</label>
+                <div class="layui-input-block">
+                  <input type="text" id="param" name="param" placeholder="请输入参数" lay-verify="required" autocomplete="off"
+                         class="layui-input">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">状态</label>
+                <div class="layui-input-block">
+                  <input type="checkbox" id="is_flag" value="0"  name="is_flag" lay-skin="switch" lay-text="启用|停用" checked>
+                </div>
+              </div>
+
+
+              <div class="layui-input-block">
+                <!--添加-->
+                <div class="layui-footer" id="submit-form-before" style="left: 0;">
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <!--添加-->
+  <div id="submit-form-add" hidden>
+    <button class="layui-btn" shiro-event="sys:settings:filters:add" lay-submit lay-filter="submit-form-filters">立即提交</button><!--添加-->
+    <button type="reset" shiro-event="sys:settings:filters:add-reset" class="layui-btn layui-btn-primary">重置</button><!--添加-->
+  </div>
+
+
+  <script src="../../layuiadmin/layui/layui.js"></script>  
+  <script>
+  layui.config({
+    base: '../../layuiadmin/' //静态资源所在路径
+  }).extend({
+    index: 'lib/index' //主入口模块
+  }).use(['index','table','form','formgs','security'],function () {
+    var $ = layui.jquery;
+    var admin = layui.admin;
+    var table = layui.table;
+    var form  = layui.form;
+    var formgs = layui.formgs;
+    var filterstablecount;
+    var closeindex;//关闭弹窗的索引
+
+
+
+    admin.req({
+      url: layui.setter.url + 'settings/select',
+      done: function (res) {
+        table.render({
+          elem: '#filters-table-cellEdit'
+          ,data:res.data.filters
+          ,height: 277
+          ,cols: [[
+            {field:'name', title:'名称',edit: 'text'}
+            ,{field:'url', title:'url',  edit: 'text',}
+            ,{field:'param', title:'参数', edit: 'text', }
+            ,{field:'is_flag', title:'状态',width:130,
+              templet:function (obj) {
+
+                var r =
+                  '<div class="layui-form" lay-filter="test1">' +
+                    '<input type="checkbox" name="sex" lay-skin="switch" value="'+obj.LAY_TABLE_INDEX+'" lay-text="启用|停用" lay-filter="is_flag" '+(obj.is_flag==0?"checked":"")+' >'+
+                        '&nbsp;&nbsp;'+
+                    '<button lay-event="remove" class="layui-btn layui-btn-danger layui-btn-radius layui-btn-xs">&nbsp;删除&nbsp;</button>'+
+                  '</div>'
+              return r;
+            }
+            }
+          ]]
+          ,page: true
+          ,limit:5
+          ,done: function (res) {
+            filterstablecount = res.count;
+          }
+        });
+
+
+        //监听单元格编辑
+        table.on('edit(filters-table-cellEdit)', function(obj){
+          update();
+        });
+
+        //监听单元格编辑s-checkbox
+        form.on('switch(is_flag)', function(data){
+          res.data.filters[data.value].is_flag = (data.elem.checked?0:1);
+          update();
+        });
+
+        //被调用的修改方法
+        function update(){
+          admin.req({
+            url: layui.setter.url + "settings/update",
+            data:{id:1,context:JSON.stringify(res.data.filters)},
+          });
+        }
+      }
+    });
+
+    //重启服务器
+    window.restart = function(){
+      if($("#restartbutton").hasClass("layui-btn-disabled")){
+        return false;
+      }
+      layer.confirm('确定要重启当前服务器吗？', function (index) {
+        $("#restartbutton").addClass("layui-btn-disabled");
+        admin.req({
+          url:layui.setter.url+"refresh",
+        }).done(function (res) {
+          layer.close(index);
+          $("#circle").attr("class","yellowcircle")
+          $("#serverstate").html("重启中");
+          var restartstate = setInterval(function () {
+            admin.req({
+              url:layui.setter.url+"restartstate",
+              done:function (res) {
+                window.clearInterval(restartstate);
+                $("#circle").attr("class","greencircle")
+                $("#serverstate").html("正常");//
+                $("#restartbutton").removeClass("layui-btn-disabled");
+                layer.msg(res.msg);
+              }
+            })
+          },1000);
+
+        })
+      });
+
+    };
+
+
+    //open添加拦截器
+    $("#filter-button-add").on("click", function () {
+      layui.use(['layer'], function () {
+        var layer = layui.layer, $ = layui.$;
+
+        layer.open({
+          type: 1,
+          area: ['60%', '45%'],
+          title: ("添加拦截器"),
+          shadeClose: false,
+          content: $("#addfilter"),
+          success: function (index, layero) {
+            closeindex = layero;
+            $("#submit-form-before").html($("#submit-form-add").html());
+          },
+        });
+      })
+
+    });
+
+    //table 监听工具
+    table.on('tool(filters-table-cellEdit)', function (obj) {
+      //删除过滤器
+      if (obj.event == "remove"){
+        layer.confirm('确定要删除【'+ obj.data.name +'】拦截器吗？', function (index) {
+          admin.req({
+            url:layui.setter.url+"settings/remove/",
+            data:obj.data,
+          }).done(function (res) {
+            layer.close(index);
+            layer.msg(res.msg);
+            table.reload('filters-table-cellEdit',{
+              url: layui.setter.url + 'settings/select?id=1',
+              page: {
+                curr: 1 //重新从第 1 页开始
+              },
+            });
+          })
+        });
+      }
+    });
+
+    //添加拦截器提交
+    form.on('submit(submit-form-filters)', function (data) {
+      admin.req({
+        url: layui.setter.url + "settings/add",
+        data: data.field,
+        done: function (res) {
+          layer.close(closeindex);
+          formgs.reset("layui-form-filters");
+          //form.render();
+          layer.msg(res.msg);
+          table.reload('filters-table-cellEdit',{
+            url: layui.setter.url + 'settings/select?id=1',
+          });
+        }
+      })
+    })
+
+
+
+
+
+
+  });
+
+
+
+
+
+
+  </script>
+</body>
+</html>

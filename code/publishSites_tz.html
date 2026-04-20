@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+ <head> 
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+  <title>5CQ-传奇广告查询站_传奇广告排行_传奇资源站_新开传奇新服排名站(5CQ.COM)</title>
+  <meta name="description" content="5CQ.Com传奇广告排行榜,传奇私服查询站,传奇资源站,好玩的传奇排名站,玩家最爱的新开传奇,GM最喜欢的传奇工具,传奇直播,传奇新开服,传奇相关尽在5CQ(玩传奇)">
+  <meta name="keywords" content="传奇广告查询站,传奇资源站,传奇广告排行,传奇SF广告统计(5CQ.COM)">   
+  <script src="./../../statics/js/jquery-3.2.1.min.js"></script> 
+  <style>
+        * {
+            padding: 0;
+            margin: 0;
+            text-align: center
+        }
+
+        body {
+            font-family: "微软雅黑", "宋体", "黑体";
+            font-size: 36px;
+            font-weight: bold;
+            background: url(../../statics/images/new/bgnoise_lg.jpg) repeat;
+        }
+
+        .loding_box {
+            top: 45px;
+            /*margin-left: -30px;*/
+            background: url(../statics/images/CQQ1lod.png) no-repeat center;
+            background-size: 600px auto;
+        }
+
+        #context {
+            font-weight: bold;
+            font-size: 35px;
+            color: black;
+        }
+
+        .info {
+            position: relative;
+            height:100px;
+        }
+    </style> 
+ </head> 
+ <body> 
+  <!--<div class="topinfo">--> 
+  <!--<div class="wid">--> 
+  <!--<div class="topinfo_l">--> 
+  <!--主站域名:[WWW.1PK.COM]-备用域名WWW.4CQ.COM--> 
+  <!--</div>--> 
+  <!--<div class="topinfo_c">--> 
+  <!--涉及诈骗,赌博等违法行为请联系我们举报QQ:3067585【高价租站】联系QQ:3067585--> 
+  <!--</div>--> 
+  <!--<div class="topinfo_r">--> 
+  <!--<a href="https://hz.szjfxj.com/#/cooperation" target="_blank">--> 
+  <!--<img src="../statics/images/cksq.png" width="103" border="0">--> 
+  <!--</a>--> 
+  <!--</div>--> 
+  <!--</div>--> 
+  <!--</div>--> 
+  <div class="loding_box" id="loding_box"> 
+   <div class="info"> 
+    <div id="context"> 
+     <span>正在为您打开【<span id="urlname"></span>】官网</span> 
+    </div> 
+    <div class="loding_img" id="loding_img"> 
+     <img src="../statics/images/new/loding_1.gif"> 
+     <!--<img src="../statics/images/CQQ1lod.png">--> 
+    </div> 
+   </div> 
+  </div> 
+  <script>
+    if($(window).height()<600){
+        $("#loding_box").height(600);
+        $(".info").css('top',440+"px");
+    }else{
+        $("#loding_box").height($(window).height());
+        $(".info").css('top',$("#loding_box").height()*2/3+20+"px");
+    }
+    var name = decodeURI(getQueryString("urlname"));
+    $("#context").css('margin-left', Number($("#context").css('margin-left').split("px")[0]) - (name.length * 11) + "px")
+    $("#urlname").html(decodeURI(getQueryString("urlname")));
+
+    function getQueryString(name) {
+        var result = window.location.search.match(new RegExp("[\?\&]" + name + "=([^\&]+)", "i"));
+        if (result == null || result.length < 1) {
+            return "";
+        }
+        return result[1];
+    }
+
+    setTimeout(function () {
+        window.location.href=getQueryString("url");
+    },3000);
+
+
+</script>  
+ </body>
+</html>
