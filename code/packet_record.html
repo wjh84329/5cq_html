@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>礼包领取记录</title>
+	<script src="./../statics/js/jquery-3.2.1.min.js"></script> 
+	<script src="./../statics/js/jquery.cookie.js"></script> 
+	<script src="./../statics/js/public.js"></script> 
+	<script src="./../statics/adminconfig.js"></script> 
+	<script src="./../statics/config.js"></script> 
+	<script src="./../statics/js/layer.js"></script> 
+	<style>
+		body{font-family: "Microsoft YaHei", Arial, sans-serif;background:#f6f8fa;margin:0;padding:20px}
+		.container{max-width:1300px;margin:0 auto}
+		.banner{background:#ff6b6b;color:#fff;padding:12px 20px;border-radius:6px;text-align:center;font-weight:bold}
+		.card{background:#fff;border-radius:8px;padding:20px;margin-top:18px;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+		h1{margin:12px 0 6px;text-align:center;color:#2a6fdb}
+		.notice{color:#d9534f;text-align:center;margin-bottom:12px}
+		table{width:100%;border-collapse:collapse;margin-top:12px}
+		th,td{padding:10px 12px;border-bottom:1px solid #eef2f6;text-align:left;font-size:13px}
+		th{background:#fbfdff;color:#333;font-weight:600}
+		.status{display:inline-block;padding:6px 10px;border-radius:14px;font-size:12px;color:#fff}
+		.status.done{background:#28a745}
+		.status.pending{background:#ffc107;color:#333}
+		.status.failed{background:#6c757d}
+		.actions button{background:#f0f0f0;border:0;padding:6px 10px;border-radius:6px;cursor:pointer}
+		.summary{text-align:center;padding:16px 0;color:#666}
+		.state-box{text-align:center;padding:28px 12px;color:#666}
+		.state-box.error{color:#d9534f}
+		@media (max-width:720px){
+			th,td{padding:8px;font-size:12px}
+			.container{padding:0 8px}
+		}
+	</style>
+</head>
+<body>
+<div class="container">
+	<div class="banner">5CQ传奇盒子 天天开新服 免费领取充值 玩遍全网火爆版本</div>
+
+	<div class="card">
+		<h1>一梦三国◆专属</h1>
+		<div class="notice">如领取内购礼包无法到账，或者礼包价值与实际不符，请联系客服QQ：<span id="QQ"></span></div>
+
+		<div id="table-wrap">
+			<table id="record-table">
+				<thead>
+				<tr>
+					<th>游戏名称</th>
+					<th>领取区服</th>
+					<th>订单号</th>
+					<th>领取账号</th>
+					<th>领取金额</th>
+					<th>领取时间</th>
+					<th>状态</th>
+					<th>处理时间</th>
+					<!-- <th>操作</th> -->
+				</tr>
+				</thead>
+				<tbody>
+				<!-- JS 填充 -->
+				</tbody>
+			</table>
+		</div>
+
+		<div class="summary" id="summary">总计：0条记录，成功：0条</div>
+	</div>
+    
+</div>
+
+<script>
+	function getPublishId() {
+		var params = new URLSearchParams(window.location.search || '');
+		return params.get('publish_id') || params.get('publishId') || '';
+	}
+
+	function getApiBaseUrl() {
+		if (typeof baseUrl === 'string' && baseUrl) {
+			return baseUrl;
+		}
+		return window.location.origin + '/server/';
+	}
+
+	function setSummary(text) {
+		document.getElementById('summary').textContent = text;
+	}
+
+	function getCurrentOpenId() {
+		var user = $.cookie('user') || '';
+		if (!user) return '';
+		try {
+			var parsedUser = JSON.parse(user);
+			return parsedUser.openid || parsedUser.openId || '';
+		} catch (error) {
+			return '';
+		}
+	}
+
+	function renderState(message, isError) {
+		var tbody = document.querySelector('#record-table tbody');
+		tbody.innerHTML = '<tr><td colspan="8"><div class="state-box' + (isError ? ' error' : '') + '">' + escapeHtml(message) + '</div></td></tr>';
+	}
+
+	function renderTable(data){
+		var tbody = document.querySelector('#record-table tbody');
+		tbody.innerHTML = '';
+		if (!data || !data.length) {
+			renderState('暂无领取记录', false);
+			setSummary('总计：0条记录，成功：0条');
+			return;
+		}
+		var successCount = 0;
+		var currentOpenId = getCurrentOpenId();
+		data.forEach(function(r){
+			var displayAccount = r.openId && currentOpenId && r.openId === currentOpenId ? r.rawAccount : r.account;
+			var displayOrderNumber = r.openId && currentOpenId && r.openId === currentOpenId ? r.rawOrderNumber : r.orderNumber;
+			var tr = document.createElement('tr');
+			tr.innerHTML = '<td>'+escapeHtml(r.game)+'</td>'+
+				'<td>'+escapeHtml(r.server)+'</td>'+
+				'<td>'+escapeHtml(displayOrderNumber)+'</td>'+
+				'<td>'+escapeHtml(displayAccount)+'</td>'+
+				'<td>'+escapeHtml(r.amount)+'</td>'+
+				'<td>'+escapeHtml(r.time)+'</td>'+
+				'<td>'+(r.status === 'done'? '<span class="status done">已完成</span>' : (r.status === 'pending'? '<span class="status pending">充值中</span>':'<span class="status failed">失败</span>'))+'</td>'+
+				'<td>'+ (r.handled ? escapeHtml(r.handled) : '-') +'</td>';
+			tbody.appendChild(tr);
+			if(r.status === 'done') successCount++;
+		});
+		document.getElementById('summary').textContent = '总计：' + data.length + '条记录，成功：' + successCount + '条';
+	}
+
+	function maskAccount(account) {
+		var text = String(account || '');
+		if (text.length <= 2) return text;
+		if (text.length <= 4) return text.charAt(0) + '***';
+		return text.slice(0, 1) + '****' + text.slice(-1);
+	}
+
+	function maskOrderNumber(orderNumber) {
+		var text = String(orderNumber || '');
+		if (text.length <= 4) return text;
+		return text.slice(0, 4) + '****' + text.slice(-2);
+	}
+
+	function normalizeStatus(status, statusText) {
+		var statusNumber = Number(status);
+		if (!isNaN(statusNumber)) {
+			if (statusNumber === 1) return 'done';
+			if (statusNumber === 0) return 'pending';
+			if (statusNumber === 2) return 'failed';
+		}
+
+		var raw = String(statusText || status || '').toLowerCase();
+		if (raw.indexOf('成功') > -1 || raw.indexOf('完成') > -1 || raw === '1' || raw === 'done' || raw === 'success') {
+			return 'done';
+		}
+		if (raw.indexOf('充值中') > -1 || raw.indexOf('待') > -1 || raw.indexOf('处理中') > -1 || raw === '0' || raw === 'pending') {
+			return 'pending';
+		}
+		return 'failed';
+	}
+
+	function pickRecordList(response) {
+		if (!response) return [];
+		return Array.isArray(response.claimRecords) ? response.claimRecords : [];
+	}
+
+	function mapRecord(item) {
+		var gameName = item.publishName || item.gameName || item.game || item.name || item.publish_title || '';
+		var orderNumber = item.orderNumber || item.orderNo || item.transactionId || item.tradeNo || '';
+		var areaName = item.areaName || item.partitionName || item.partition || item.server || item.serverName || item.area || item.zoneName || '-';
+		var account = item.playerAccount || item.gameAccount || item.account || item.roleAccount || item.userAccount || item.openId || '';
+		var amountValue = item.payAmount || item.amount || item.money || item.reissueAmount || item.rechargeAmount || item.price || 0;
+		var claimTime = item.createTime || item.claimTime || item.time || item.addTime || item.create_date || '';
+		var handleTime = item.updateTime || item.handleTime || item.handled || item.reissueTime || item.finishTime || item.completeTime || '';
+		var statusText = item.statusDesc || item.statusName || item.resultMsg || item.msg || item.reissueStatus || '';
+		var status = normalizeStatus(item.status, statusText);
+
+		return {
+			game: gameName,
+			orderNumber: maskOrderNumber(orderNumber),
+			rawOrderNumber: orderNumber || '-',
+			server: areaName,
+			account: maskAccount(account),
+			amount: amountValue ? String(amountValue) + '元' : '-',
+			time: claimTime || '-',
+			status: status,
+			handled: handleTime || '-',
+			openId: item.openId || item.openid || '',
+			rawAccount: account || '-',
+			statusText: statusText || (status === 'done' ? '已完成' : status === 'pending' ? '充值中' : '失败')
+		};
+	}
+
+	function updateTitle(records) {
+		if (records && records.length && records[0].game) {
+			document.querySelector('h1').textContent = records[0].game;
+		}
+	}
+
+	function handleRecordsResult(result) {
+		if (!result || result.result !== true) {
+			throw new Error(result && result.msg ? result.msg : '获取领取记录失败');
+		}
+
+		var sourceList = pickRecordList(result);
+		var mappedList = sourceList.map(mapRecord);
+		$('#QQ').text(result.customerQQq || '878831218');
+		updateTitle(mappedList);
+		renderTable(mappedList);
+	}
+
+	function handleRecordsError(message) {
+		renderState(message || '加载领取记录失败', true);
+		setSummary('总计：0条记录，成功：0条');
+	}
+
+	function requestRecordsWithFetch(publishId) {
+		fetch(getApiBaseUrl() + 'report/getReissueRecords?publishId=' + encodeURIComponent(publishId), {
+			method: 'GET',
+			credentials: 'include'
+		})
+			.then(function(response) {
+				if (!response.ok) {
+					throw new Error('请求失败：' + response.status);
+				}
+				return response.json();
+			})
+			.then(handleRecordsResult)
+			.catch(function(error) {
+				handleRecordsError(error.message || '加载领取记录失败');
+			});
+	}
+
+	function requestRecordsWithAdmin(publishId) {
+		layui.use(['admin'], function() {
+			var admin = layui.admin;
+			if (!admin || typeof admin.req !== 'function') {
+				requestRecordsWithFetch(publishId);
+				return;
+			}
+
+			admin.req({
+				url: getApiBaseUrl() + 'report/getReissueRecords',
+				method: 'GET',
+				data: {
+					publishId: publishId
+				},
+				done: function(result) {
+					try {
+						handleRecordsResult(result);
+					} catch (error) {
+						handleRecordsError(error.message || '加载领取记录失败');
+					}
+				}
+			});
+		});
+	}
+
+	function loadRecords() {
+		var publishId = getPublishId();
+		if (!publishId) {
+			renderState('缺少 publish_id 参数', true);
+			setSummary('总计：0条记录，成功：0条');
+			return;
+		}
+
+		renderState('记录加载中...', false);
+		setSummary('正在加载领取记录...');
+
+		if (window.layui && typeof layui.use === 'function') {
+			requestRecordsWithAdmin(publishId);
+			return;
+		}
+
+		requestRecordsWithFetch(publishId);
+	}
+
+	function viewDetail(btn){
+		var tr = btn.closest('tr');
+		var cells = tr.querySelectorAll('td');
+		var info = '游戏：' + cells[0].textContent + '\n区服：' + cells[1].textContent + '\n账号：' + cells[2].textContent + '\n金额：' + cells[3].textContent + '\n领取时间：' + cells[4].textContent + '\n状态：' + cells[5].textContent + '\n处理时间：' + cells[6].textContent;
+		alert(info);
+	}
+
+	function escapeHtml(str){
+		if(!str) return '';
+		return (''+str).replace(/[&<>\"']/g, function(s){
+			return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[s];
+		});
+	}
+
+	loadRecords();
+</script>
+</body>
+</html>
+

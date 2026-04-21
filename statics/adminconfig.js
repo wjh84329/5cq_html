@@ -10,7 +10,7 @@ document.write("<script language=javascript src='/statics/admin.js'></script>");
 // var baseUrl ="http://39.106.145.49:8086/server/"
 // var baseUrl ="https://wx.1pk.com/server/"
 // var baseUrl ="http://jaxone.5cq.com/server/"
-var baseUrl ="https://kkw.5cq.com/server/"
+var baseUrl ="http://localhost:8086/server/"
 // var baseUrl ="http://localhost:8086/server/"
 //全局参数配置
 var jaxui = {

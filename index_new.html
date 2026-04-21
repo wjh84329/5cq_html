@@ -644,6 +644,7 @@
         .seach_result{
             font-size: 13px !important;
         }
+        
     </style> 
  </head> 
  <body> 
@@ -811,12 +812,12 @@
        <th style="" name="pm" width="9%">排名</th> 
        <th style="" name="name" width="10%"> 服务器名</th> 
        <th style="" name="ipname" width="10%"> 服务器IP</th> 
-       <th style="" name="line" width="8%">线路</th> 
-       <th style="" name="versiondepict" width="23%">介绍</th> 
+       <th style="" name="line" width="9%">线路</th> 
+       <th style="" name="versiondepict" width="21%">介绍</th> 
        <th style="" name="kfqq" width="9%">客服</th> 
        <th style="" name="url" width="8%"> 投放站数</th> 
        <th style="" name="ip" width="6%"> 同服务器</th> 
-       <th style="" name="url" width="6%"> 游戏主页</th> 
+       <th style="" name="url" width="7%"> 游戏主页</th> 
        <th style="" name="money" width="7%"> 广告总价</th> 
        <!--       <th style="background: none !important;color: black !important;" name="score" width="5%">评分</th> --> 
        <th style="" name="report" width="3%">点赞</th> 
@@ -1514,8 +1515,8 @@
         var formdata = new FormData();
         formdata.append('page', 1);
         formdata.append('limit', 10);
-        var result = showHtml(baseUrl + 'jax/shield/selectShields', formdata);
-        var HMDlist = result.data;
+        var result = showHtml(baseUrl + 'jax/shield/selectZX', formdata);
+        var HMDlist = result.data.data || [];
         var html = '';
         var htmlHMD = '';
         for (var v = 0; v < HMDlist.length; v++) {
@@ -1856,68 +1857,9 @@
     });
 
     function popPacketInfo2(id){
-        var open_id = hzUserObj && hzUserObj.open_id ? hzUserObj.open_id : '';
-        if (!open_id) {
-            layer.msg('用户信息缺失');
-            return;
-        }
-        
-        $.ajax({
-            url: 'http://localhost:8086/server/jax/publish/claim_packet_list',
-            type: 'GET',
-            data: {
-                open_id: open_id,
-                publish_id: id
-            },
-            dataType: 'json',
-            success: function(res) {
-                if (res.code === 0 && res.data && res.data.length > 0) {
-                    var html = '<div style="padding: 20px;">';
-                    html += '<table style="width: 100%; border-collapse: collapse;">';
-                    html += `<thead><tr style="background-color: #f5f5f5;">
-                        <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">游戏名称</th>
-                        <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">游戏分区</th>
-                        <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">游戏账号</th>
-                        <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">QQ</th>
-                        <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">电话</th>
-                        <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">金额</th>
-                        <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">使用状态</th>
-                        <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">创建时间</th>
-                        </tr></thead>`;
-                    html += '<tbody>';
-                    
-                    res.data.forEach(function(item) {
-                        html += '<tr>';
-                        html += '<td style="border: 1px solid #ddd; padding: 8px;">' + item.name + '</td>';
-                        html += '<td style="border: 1px solid #ddd; padding: 8px;">' + item.areaName || '-' + '</td>';
-                        html += '<td style="border: 1px solid #ddd; padding: 8px;">' + (item.gameAccount || '-') + '</td>';
-                        html += '<td style="border: 1px solid #ddd; padding: 8px;">' + (item.qq || '-') + '</td>';
-                        html += '<td style="border: 1px solid #ddd; padding: 8px;">' + (item.tel || '-') + '</td>';
-                        html += '<td style="border: 1px solid #ddd; padding: 8px;">' + item.money + '</td>';
-                        html += '<td style="border: 1px solid #ddd; padding: 8px;">' + (item.useState === 0 ? '未使用' : '已使用') + '</td>';
-                         html += '<td style="border: 1px solid #ddd; padding: 8px;">' + item.createTime + '</td>';
-                        html += '</tr>';
-                    });
-                    
-                    html += '</tbody>';
-                    html += '</table>';
-                    html += '</div>';
-                    
-                    layer.open({
-                        type: 1,
-                        title: '礼包领取记录',
-                        content: html,
-                        area: ['800px', '500px'],
-                        scrollbar: true
-                    });
-                } else {
-                    layer.msg('没有礼包领取记录');
-                }
-            },
-            error: function() {
-                layer.msg('请求失败，请稍后重试');
-            }
-        });
+        //在新标签页打开链接
+        var url = './code/packet_record.html?publish_id=' + id;
+        window.open(url, '_blank');
     }
 
     function popPacketInfo_bak(packetInfo) {
@@ -1949,171 +1891,214 @@
         });
     }
 
+    function escapePacketHtml(value) {
+        return String(value == null ? '' : value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    var packetInfoCache = {};
+    var packetClaimCache = {};
+
+    function showPacketClaimSuccess(packetInfo, claimData) {
+        var amount = claimData.amount || packetInfo.recordAmount;
+        var title = packetInfo.name || packetInfo.title || '';
+        var areaName = claimData.areaName || '未选择分区';
+        var gameAccount = claimData.gameAccount || '';
+        var claimTime = claimData.claimTime || new Date().toLocaleString('zh-CN', { hour12: false });
+        var targetUrl = packetInfo.url || 'javascript:void(0);';
+        var openTarget = packetInfo.url ? ' target="_blank"' : '';
+
+        var html = '<div style="padding:18px 18px 20px;background:#fff;">';
+        html += '<div style="text-align:center;line-height:1.3;">';
+        html += '<div style="font-size:26px;color:#222;">￥' + escapePacketHtml(amount) + '元</div>';
+        html += '<div style="font-size:14px;color:#2c6ed5;margin-top:8px;">' + escapePacketHtml(title) + '</div>';
+        html += '<div style="font-size:14px;color:#2c6ed5;margin-top:2px;">';
+        if (packetInfo.url) {
+            html += '<a href="' + escapePacketHtml(targetUrl) + '"' + openTarget + ' style="color:#2c6ed5;text-decoration:none;">进入网站</a>';
+        }
+        html += '</div>';
+        html += '</div>';
+        html += '<div style="margin:16px 0 14px;text-align:center;color:#ff4d4f;font-size:14px;">领取流程：下载游戏 → 进入游戏 → 点击充值NPC → 领取充值</div>';
+        html += '<div style="position:relative;border:1px solid #e7e7e7;border-radius:8px;padding:16px 18px 14px;margin-bottom:16px;">';
+        html += '<div style="position:absolute;right:14px;top:14px;color:#ff7875;border:3px solid #ff9c9c;border-radius:50%;width:86px;height:86px;transform:rotate(-18deg);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;opacity:0.75;">成功</div>';
+        html += '<div style="padding-right:98px;line-height:1.9;font-size:14px;color:#333;">';
+        html += '<div><span style="display:inline-block;width:74px;font-weight:700;">游戏账号</span>' + escapePacketHtml(gameAccount) + '</div>';
+        html += '<div><span style="display:inline-block;width:74px;font-weight:700;">游戏区服</span>' + escapePacketHtml(areaName) + '</div>';
+        html += '<div><span style="display:inline-block;width:74px;font-weight:700;">礼包金额</span>' + escapePacketHtml(amount) + '元真实充值</div>';
+        html += '<div><span style="display:inline-block;width:74px;font-weight:700;">领取状态</span><span style="color:#17a000;">已发放，请进入游戏找充值NPC领取</span></div>';
+        html += '<div><span style="display:inline-block;width:74px;font-weight:700;">领取时间</span>' + escapePacketHtml(claimTime) + '</div>';
+        html += '</div>';
+        html += '</div>';
+        html += '<a href="' + escapePacketHtml(targetUrl) + '"' + openTarget + ' style="display:block;width:100%;box-sizing:border-box;background:#1677ff;color:#fff;text-align:center;border-radius:6px;padding:13px 12px;font-size:16px;font-weight:700;text-decoration:none;">下载游戏</a>';
+        html += '</div>';
+
+        layer.open({
+            type: 1,
+            shadeClose: true,
+            title: false,
+            closeBtn: 1,
+            area: ['480px', 'auto'],
+            content: html
+        });
+    }
+
+    function showClaimedPacketInfoById(publishId) {
+        var packetInfo = packetInfoCache[publishId];
+        var customer = getUser(1);
+        if (!customer || !customer.openid) {
+            layer.msg('请先登录');
+            return;
+        }
+        if (!packetInfo) {
+            layer.msg('未找到礼包信息');
+            return;
+        }
+
+        var claimData = packetClaimCache[publishId] || null;
+        if (!claimData && packetInfo.claimRecords && packetInfo.claimRecords.length) {
+            var matchedRecord = packetInfo.claimRecords.find(function(record) {
+                return record.openId === customer.openid;
+            });
+            if (matchedRecord) {
+                claimData = {
+                    amount: matchedRecord.payAmount || matchedRecord.amount || packetInfo.price || packetInfo.money || 50,
+                    areaName: matchedRecord.areaName || matchedRecord.partitionName || matchedRecord.partition || '未选择分区',
+                    gameAccount: matchedRecord.playerAccount || matchedRecord.gameAccount || matchedRecord.account || '',
+                    claimTime: matchedRecord.createTime || matchedRecord.claimTime || matchedRecord.time || new Date().toLocaleString('zh-CN', { hour12: false })
+                };
+            }
+        }
+
+        if (!claimData) {
+            layer.msg('未找到当前账号的领取记录');
+            return;
+        }
+
+        showPacketClaimSuccess(packetInfo, claimData);
+    }
+
+    function markPacketClaimed(packetInfo, claimData) {
+        var publishId = packetInfo && packetInfo.id;
+        var $claimButton = $('.layui-badge-znts-lqlb[data-publish-id="' + publishId + '"]');
+        if (!$claimButton.length) {
+            return;
+        }
+
+        packetInfoCache[publishId] = packetInfo;
+        packetClaimCache[publishId] = claimData;
+
+        $claimButton
+            .removeClass('layui-badge-znts-lqlb')
+            .addClass('layui-badge-znts-ylq')
+            .attr('onclick', 'showClaimedPacketInfoById(' + publishId + ')')
+            .text('已领取');
+    }
+
     function popPacketInfo(packetInfo) {
-        if (!packetInfo || packetInfo.length === 0) {
+        var customer = getUser(1);
+        if (!customer || !customer.openid) {
+            layer.msg('请先登录');
+            return;
+        }
+        if (!packetInfo || !packetInfo.id) {
             layer.msg('没有礼包信息');
             return;
         }
-        
-        // 提取packetIdList
-        var packetIdList = [];
-        packetInfo.forEach(function(item) {
-            if (item && item.id) {
-                packetIdList.push(item.id);
-            }
-        });
-        var publishId = packetInfo[0].publishId;
-        
-        // 请求后台接口获取游戏分区数据
-        $.ajax({
-            url: 'http://localhost:8086/server/jax/publish/area_info',
-            type: 'POST',
-            data: JSON.stringify(packetIdList),
-            contentType: 'application/json',
-            dataType: 'json',
-            headers: {
-                token: $.cookie('token'),
-            },
-            success: function(res) {
-                if (res.code !== 0) {
-                    layer.msg(res.msg || '获取游戏分区失败');
-                    return;
-                }
-                
-                // 构建表单HTML
-                var html = '<div style="padding: 20px;">';
-                html += '<form class="layui-form" action="">';
-                html += '<div class="layui-form-item">';
-                html += '<label class="layui-form-label"><span style="color: red;">*</span> 游戏账户</label>';
-                html += '<div class="layui-input-block">';
-                html += '<input type="text" name="gameAccount" required lay-verify="required" placeholder="请输入游戏账户" autocomplete="off" class="layui-input">';
-                html += '</div>';
-                html += '</div>';
-                
-                html += '<div class="layui-form-item">';
-                html += '<label class="layui-form-label"><span style="color: red;">*</span> 确认账号</label>';
-                html += '<div class="layui-input-block">';
-                html += '<input type="text" name="confirmAccount" required lay-verify="required" placeholder="请再次输入游戏账户" autocomplete="off" class="layui-input">';
-                html += '</div>';
-                html += '</div>';
-                
-                html += '<div class="layui-form-item">';
-                html += '<label class="layui-form-label"><span style="color: red;">*</span> 游戏分区</label>';
-                html += '<div class="layui-input-block">';
-                html += '<select name="gameArea" required lay-verify="required" style="display: block; height: 35px; width: 100%;">';
-                
-                // 渲染游戏分区下拉选项
-                var areaData = res.data;
-                console.log('areaData:', areaData);
-                packetInfo.forEach(function(packet) {
-                    var areaName = areaData[packet.id];
-                    if (areaName) {
-                        html += '<option value="' + packet.id + '">' + areaName + '</option>';
-                    }
-                });
-                
-                html += '</select>';
-                html += '</div>';
-                html += '</div>';
-                
-                html += '<div class="layui-form-item">';
-                html += '<label class="layui-form-label">QQ号</label>';
-                html += '<div class="layui-input-block">';
-                html += '<input type="text" name="qq" placeholder="请输入QQ号" autocomplete="off" class="layui-input">';
-                html += '</div>';
-                html += '</div>';
-                
-                html += '<div class="layui-form-item">';
-                html += '<label class="layui-form-label">手机号</label>';
-                html += '<div class="layui-input-block">';
-                html += '<input type="text" name="phone" placeholder="请输入手机号" autocomplete="off" class="layui-input">';
-                html += '</div>';
-                html += '</div>';
-                
-                html += '<div class="layui-form-item">';
-                html += '<div class="layui-input-block">';
-                html += '<button class="layui-btn layui-btn-danger" lay-submit lay-filter="packetSubmit">确认领取</button>';
-                html += '</div>';
-                html += '</div>';
-                html += '</form>';
-                html += '</div>';
-                
-                // 打开弹框
-                layer.open({
-                    type: 1,
-                    title: '领取礼包',
-                    area: ['500px', 'auto'],
-                    content: html,
-                    success: function(layero, index) {
-                        // 初始化layui表单
-                        layui.use('form', function() {
-                            var form = layui.form;
-                            
-                            // 监听表单提交
-                            form.on('submit(packetSubmit)', function(data) {
-                                // 验证游戏账户和确认账号是否一致
-                                if (data.field.gameAccount !== data.field.confirmAccount) {
-                                    layer.msg('两次输入的游戏账户不一致');
-                                    return false;
-                                }
-                                
-                                // 获取选择的游戏分区对应的礼包id
-                                var packetCodeId = data.field.gameArea;
-                                
-                                if (!packetCodeId) {
-                                    layer.msg('请选择游戏分区');
-                                    return false;
-                                }
-                                
-                                // 获取用户的open_id
-                                var openId = '';
-                                if (window.hzUserObj && window.hzUserObj.open_id) {
-                                    openId = window.hzUserObj.open_id;
-                                } else {
-                                    layer.msg('请先登录');
-                                    return false;
-                                }
-                                
-                                // 构建请求参数
-                                var requestData = {
-                                    publishId: publishId,
-                                    areaName: areaData[packetCodeId],
-                                    packetCodeId: packetCodeId,
-                                    openId: openId,
-                                    gameAccount: data.field.gameAccount,
-                                    qq: data.field.qq,
-                                    tel: data.field.phone
-                                };
 
-                                // 调用后台接口
-                                $.ajax({
-                                    url: 'http://localhost:8086/server/jax/publish/claim_packet',
-                                    type: 'POST',
-                                    data: JSON.stringify(requestData),
-                                    contentType: 'application/json',
-                                    dataType: 'json',
-                                    success: function(res) {
-                                        if (res.code !== 0) {
-                                            layer.msg(res.msg || '领取礼包失败');
-                                            return;
-                                        }
-                                        
-                                        layer.msg('领取礼包成功');
-                                        layer.close(index);
-                                    },
-                                    error: function() {
-                                        layer.msg('网络错误，领取礼包失败');
-                                    }
-                                });
-                                
-                                return false;
-                            });
-                        });
+        $.ajax({
+            url: baseUrl + 'report/getPartitionsByGroupId',
+            type: 'GET',
+            data: {publishId: packetInfo.id},
+            dataType: 'json',
+            success: function(res) {
+                var partitionOptions = '';
+                if (res && res.result && res.platformResponse && res.platformResponse.length) {
+                    partitionOptions = res.platformResponse.map(function(p) {
+                        return '<option value="' + p.id + '">' + p.name + '</option>';
+                    }).join('');
+                }
+
+                var amount = packetInfo.recordAmount || 50; // 默认金额
+                var title = packetInfo.name || packetInfo.title || '';
+
+                var html = '<div style="padding:20px;">';
+                html += '<div style="text-align:center;margin-bottom:10px;"><div style="font-size:28px;color:#e53935;font-weight:700;">' + (amount ? amount + '元' : '') + '</div>';
+                html += '<div style="font-size:14px;color:#1E88E5;margin-top:8px;">' + title + '</div></div>';
+                html += '<p style="color:#d32f2f;text-align:center;margin:10px 0;">领取流程：下载游戏 → 进入游戏 → 找到充值NPC → 领取充值</p>';
+
+                html += '<div style="margin:10px 0;"><label>游戏账号</label><input id="packet_gameAccount" style="width:100%;padding:8px;margin-top:6px;border:1px solid #e0e0e0;border-radius:4px;" placeholder="请输入6位以上的游戏账号"></div>';
+                html += '<div style="margin:10px 0;"><label>确认账号</label><input id="packet_confirmAccount" style="width:100%;padding:8px;margin-top:6px;border:1px solid #e0e0e0;border-radius:4px;" placeholder="请再次输入游戏账号"></div>';
+                html += '<div style="margin:10px 0;"><label>游戏分区</label><select id="partitionSelect" style="width:100%;padding:8px;margin-top:6px;border:1px solid #e0e0e0;border-radius:4px;">' + partitionOptions + '</select></div>';
+                html += '<button id="claimPacketBtn" style="width:100%;padding:10px;background-color:#1E9FFF;color:#fff;border:none;border-radius:4px;margin-top:10px;">确定领取</button>';
+                html += '<div style="font-size:12px;color:#999;text-align:center;margin-top:12px;line-height:1.4;">平台不参与游戏运营，游戏问题请联系游戏内GM。礼包仅在充值最新区，请务必核对区服与账号信息。</div>';
+                html += '</div>';
+
+                var claimLayerIndex = layer.open({
+                    type: 1,
+                    shadeClose: true,
+                    title: '领取礼包',
+                    area: ['520px', 'auto'],
+                    content: html
+                });
+
+                $('#claimPacketBtn').click(function() {
+                    var gameAcc = $('#packet_gameAccount').val() ? $('#packet_gameAccount').val().trim() : '';
+                    var confirmAcc = $('#packet_confirmAccount').val() ? $('#packet_confirmAccount').val().trim() : '';
+                    var partitionId = $('#partitionSelect').val();
+                    var areaName = $('#partitionSelect option:selected').text() || '';
+
+                    if (!gameAcc || gameAcc.length < 4) {
+                        layer.msg('请输入有效游戏账号（至少4位）');
+                        return;
                     }
+                    if (gameAcc !== confirmAcc) {
+                        layer.msg('两次输入的账号不一致');
+                        return;
+                    }
+
+                    $.ajax({
+                        url: baseUrl + 'report/manualRecharge',
+                        type: 'POST',
+                        data: {
+                            openId: customer.openid,
+                            publishId: packetInfo.id,
+                            partitionId: partitionId,
+                            playerAccount: gameAcc,
+                            payAmount: amount,
+                            areaName: areaName
+                        },
+                        dataType: 'json',
+                        success: function(claimRes) {
+                            if (claimRes && claimRes.result) {
+                                markPacketClaimed(packetInfo, {
+                                    amount: amount,
+                                    areaName: areaName,
+                                    gameAccount: gameAcc,
+                                    claimTime: new Date().toLocaleString('zh-CN', { hour12: false })
+                                });
+                                layer.close(claimLayerIndex);
+                                showPacketClaimSuccess(packetInfo, {
+                                    amount: amount,
+                                    areaName: areaName,
+                                    gameAccount: gameAcc,
+                                    claimTime: new Date().toLocaleString('zh-CN', { hour12: false })
+                                });
+                            } else {
+                                layer.msg((claimRes && claimRes.msg) || '礼包领取失败');
+                            }
+                        },
+                        error: function() {
+                            layer.msg('网络错误，礼包领取失败');
+                        }
+                    });
                 });
             },
             error: function() {
-                layer.msg('网络错误，获取游戏分区失败');
+                layer.msg('网络错误，获取分区信息失败');
             }
         });
     }
@@ -2157,11 +2142,11 @@
     }
 
     function initData() {
-        
         var zfRes = selectAllByVersion("").pubList;
         var html = '';
         var htmlZF = '';
         for (var v = 0; v < zfRes.length; v++) {
+            packetInfoCache[zfRes[v].id] = zfRes[v];
             var likes = zfRes[v].likesCount || 0;
             var images = '/statics/images/likes.png';
             if(likes >= likesConfig.LIKES_1){
@@ -2173,37 +2158,46 @@
             }else{
                 images = '/statics/images/likes.png';
             }
+            var claimRecords = zfRes[v].claimRecords || [];
+            var recordNums = zfRes[v].recordNums || 0;
+            //判断claimRecords中是否有当前登录用户对应open_id的领取记录
+            var hasClaimed = false;
+            if(($.cookie("hzusertoken") != null && $.cookie("hzusertoken") != undefined && $.cookie("hzusertoken") != "") && claimRecords.some(record => record.openId === getUser(1).openid)){
+                hasClaimed = true;
+            }
             htmlZF += '<tr>';
             htmlZF += '<td><img  src="../statics/images/vip1.gif"/> </td>';
             htmlZF += '<td><a class="cja" href="' + zfRes[v].url + '"  onclick="addRecord(' + stringify(zfRes[v]) + ')"  " target="_blank">' + zfRes[v].name + '</a></td>';
             htmlZF += '<td><a href="' + zfRes[v].url + '"  onclick="addRecord(' + stringify(zfRes[v]) + ')"  " target="_blank">' + zfRes[v].ipname + '</a></td>';
             htmlZF += '<td>' + (zfRes[v].line == null ? '' : zfRes[v].line) + '</td>';
-            htmlZF += '<td>' + (zfRes[v].versiondepict == null ? '' : zfRes[v].versiondepict) + '</td>';
+            htmlZF += '<td>' + '<span style="margin-right: 8px;">领取<span style="color: red;">50</span>元游戏充值</span><span style="color: red;margin-right: 8px;">' + claimRecords.length + '/'+zfRes[v].recordNums+'</span>--礼包精品服--<img style="position: relative;top: -2px;" src="./statics/images/tj.gif"/>' + '</td>';
             htmlZF += '<td>' + (zfRes[v].kfqq == null ? '' : zfRes[v].kfqq) + '</td>';
-            if (zfRes[v].packetCodeList != null && zfRes[v].packetCodeList.length > 0) {
-                htmlZF += '<td><span class="layui-badge-znts" onclick="popPacketInfo(' + stringify(zfRes[v].packetCodeList) + ')">领取礼包</span></td>';
-                htmlZF += '<td><span class="layui-badge-znts" onclick="popPacketInfo2(' + zfRes[v].id + ')">领取记录</span></td>';
+            if (zfRes[v].merchantId != null) {
+                if(zfRes[v].recordNums == 0){
+                    //读取granttime时间，granttime格式为08:30，如果小于一分钟，秒倒计时，如果小于1小时，分钟倒计时，否则小时倒计时，显示剩余xx分钟
+                    var grantTime = zfRes[v].granttime || '';
+                    var grantAmount = zfRes[v].recordAmount || zfRes[v].price || zfRes[v].money || 50;
+
+                    htmlZF += '<td><span class="layui-badge-znts-djs granttime-countdown" data-publish-id="' + zfRes[v].id + '" data-granttime="' + grantTime + '" data-amount="' + grantAmount + '" title="' + getGrantCountdownTitle(grantTime, grantAmount) + '">' + getGrantCountdownText(grantTime) + '</span></td>';
+                }
+                else if(hasClaimed){
+                    htmlZF += '<td><span class="layui-badge-znts-ylq" data-publish-id="' + zfRes[v].id + '" onclick="showClaimedPacketInfoById(' + zfRes[v].id + ')">已领取</span></td>';
+                }else{
+                    htmlZF += '<td><span class="layui-badge-znts-lqlb" data-publish-id="' + zfRes[v].id + '" onclick="popPacketInfo(' + stringify(zfRes[v]) + ')">领取礼包</span></td>';
+                }
+                htmlZF += '<td><span class="layui-badge-znts-lqjl" onclick="popPacketInfo2(' + zfRes[v].id + ')">领取记录</span></td>';
             } else {
                 htmlZF += '<td><span class="layui-badge-znts" style="background: initial;color: #030000">智能推送</span></td>';
                 htmlZF += '<td><span class="layui-badge-znts" style="background: initial;color: #030000">智能推送</span></td>';
             }
-            // htmlZF += '<td><span class="layui-badge-znts">智能推送</span></td>';
-            // htmlZF += '<td><span class="layui-badge-znts">智能推送</span></td>';
             htmlZF += '<td>' + (zfRes[v].url == null ? '' : '<a  onclick="addRecord(' + stringify(zfRes[v]) + ')" href="' + zfRes[v].url + '" class="zdjck" target="_blank"><span class="click-look">点击查看</span></a>') + '</td>';
             htmlZF += '<td><img  src="../statics/images/tui1.gif"/></td>';
             htmlZF += '<td width="3%"><span class="likes"  data-likes="'+likes+'" onclick="doLikes('+zfRes[v].id+')"><img src="'+images+'" ></span></td>';
             
-            // if (zfRes[v].packetCodeList != null && zfRes[v].packetCodeList.length > 0) {
-            //     var paramStr = stringify(zfRes[v].packetCodeList);
-            //     htmlZF += "<td><span class=\"report\" onclick='popPacketInfo("+ paramStr +")'><img src=\"/statics/images/packet.png\"></span></td>\n";
-            // } else {
-            //     htmlZF += '<td><span ><img src="/statics/images/packet2.png"></span></td>';
-            // }
-
-            // htmlZF += '<td><span class="report" onclick="pingfen(' + stringify(zfRes[v].id) + ',' + stringify(zfRes[v].name) + ',' + stringify(parseFloat(zfRes[v].score).toFixed(1)) + ')"><img src="/statics/images/pingfen.png" style="width: 20px;height: 20px"><span style="margin-left: 10px">' + zfRes[v].score + '</span></span></td>';
             htmlZF += '</tr>';
         }
         $("#rankingtableZF").html(htmlZF);
+        initGrantCountdowns();
         //添加点赞tips
         /*
         $('.likess').hover(function() {
@@ -2212,6 +2206,7 @@
             var idMatch = onclick.match(/doLikes\((\d+)\)/);
             var id = idMatch ? idMatch[1] : '';
             
+
             var updateTips = function() {
                 if (id) {
                     admin.req({
@@ -2250,6 +2245,156 @@
             layer.closeAll('tips');
         });
         */
+
+    var grantCountdownTimer = null;
+
+    function initGrantCountdowns() {
+        updateGrantCountdowns();
+
+        if (grantCountdownTimer) {
+            clearInterval(grantCountdownTimer);
+        }
+
+        grantCountdownTimer = setInterval(updateGrantCountdowns, 1000);
+    }
+
+    function updateGrantCountdowns() {
+        $('.granttime-countdown').each(function () {
+            var $current = $(this);
+            var grantTime = $current.attr('data-granttime') || '';
+            var publishId = $current.attr('data-publish-id') || '';
+            var grantAmount = $current.attr('data-amount') || 50;
+            var countdownText = getGrantCountdownText(grantTime);
+
+            if (countdownText === '已开抢') {
+                switchGrantCountdownToClaim($current, publishId);
+                return;
+            }
+
+            $current
+                .text(countdownText)
+                .attr('title', getGrantCountdownTitle(grantTime, grantAmount));
+        });
+    }
+
+    function switchGrantCountdownToClaim($current, publishId) {
+        if (!$current || !$current.length || !publishId || !packetInfoCache[publishId]) {
+            return;
+        }
+
+        var packetInfo = packetInfoCache[publishId];
+        var amount = packetInfo.recordAmount || packetInfo.price || packetInfo.money || 50;
+
+        $current
+            .removeClass('granttime-countdown layui-badge-znts-djs')
+            .addClass('layui-badge-znts-lqlb')
+            .attr('onclick', 'popPacketInfo(packetInfoCache[' + publishId + '])')
+            .removeAttr('data-granttime')
+            .attr('title', '可以领取' + amount + '元现金充值')
+            .text('领取礼包');
+    }
+
+    function getGrantCountdownTitle(grantTime, amount) {
+        var countdownText = getGrantCountdownText(grantTime);
+        var giftAmount = amount || 50;
+
+        if (countdownText === '已开抢') {
+            return '可以领取' + giftAmount + '元现金充值';
+        }
+
+        return '还有' + countdownText.replace(/^剩余/, '') + '可以领取' + giftAmount + '元现金充值';
+    }
+
+    function getGrantCountdownText(grantTime) {
+        var targetDate = resolveNextGrantDate(grantTime);
+
+        if (!targetDate) {
+            return grantTime || '待开抢';
+        }
+
+        var diff = targetDate.getTime() - Date.now();
+
+        if (diff <= 0) {
+            return '已开抢';
+        }
+
+        var totalSeconds = Math.floor(diff / 1000);
+        if (totalSeconds < 60) {
+            return '剩余' + totalSeconds + '秒';
+        }
+
+        var totalMinutes = Math.floor(totalSeconds / 60);
+        if (totalMinutes < 60) {
+            return '剩余' + totalMinutes + '分钟';
+        }
+
+        var totalHours = Math.floor(totalMinutes / 60);
+        return '剩余' + totalHours + '小时';
+    }
+
+    function resolveNextGrantDate(grantTime) {
+        var text = (grantTime || '').trim();
+        if (!text) {
+            return null;
+        }
+
+        var now = new Date();
+        var candidates = text.split(/[,，]/);
+        var nearestFutureDate = null;
+        var latestPastDate = null;
+
+        for (var i = 0; i < candidates.length; i++) {
+            var item = (candidates[i] || '').trim();
+            if (!item) {
+                continue;
+            }
+
+            var targetDate = parseGrantDate(item, now);
+            if (!targetDate) {
+                continue;
+            }
+
+            if (targetDate.getTime() > now.getTime()) {
+                if (!nearestFutureDate || targetDate.getTime() < nearestFutureDate.getTime()) {
+                    nearestFutureDate = targetDate;
+                }
+            } else if (!latestPastDate || targetDate.getTime() > latestPastDate.getTime()) {
+                latestPastDate = targetDate;
+            }
+        }
+
+        return nearestFutureDate || latestPastDate;
+    }
+
+    function parseGrantDate(text, baseDate) {
+        var fullDateMatch = text.match(/^(\d{4})-(\d{1,2})-(\d{1,2})(?:\s+(\d{1,2}):(\d{1,2})(?::(\d{1,2}))?)?$/);
+        if (fullDateMatch) {
+            return new Date(
+                parseInt(fullDateMatch[1], 10),
+                parseInt(fullDateMatch[2], 10) - 1,
+                parseInt(fullDateMatch[3], 10),
+                parseInt(fullDateMatch[4] || '0', 10),
+                parseInt(fullDateMatch[5] || '0', 10),
+                parseInt(fullDateMatch[6] || '0', 10)
+            );
+        }
+
+        var timeMatch = text.match(/^(\d{1,2}):(\d{1,2})(?::(\d{1,2}))?$/);
+        if (!timeMatch) {
+            return null;
+        }
+
+        var targetDate = new Date(
+            baseDate.getFullYear(),
+            baseDate.getMonth(),
+            baseDate.getDate(),
+            parseInt(timeMatch[1], 10),
+            parseInt(timeMatch[2], 10),
+            parseInt(timeMatch[3] || '0', 10)
+        );
+
+        return targetDate;
+    }
     }
 
     function handleShow(val, pm) {
@@ -5501,21 +5646,28 @@
   <script>
     var adleft = document.getElementById("adleft");
     var adright = document.getElementById("adright");
-    var adtop = adleft.offsetTop;
+    var adtop = adleft ? adleft.offsetTop : 0;
 
-    window.onscroll = function () {
-        adleft.style.top = adtop + (document.documentElement.scrollTop || document.body.scrollTop) + "px";
-        adright.style.top = adtop + (document.documentElement.scrollTop || document.body.scrollTop) + "px";
+    if (adleft || adright) {
+        window.onscroll = function () {
+            var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            if (adleft && adleft.style) adleft.style.top = adtop + scrollTop + "px";
+            if (adright && adright.style) adright.style.top = adtop + scrollTop + "px";
+        }
     }
 
-    var close = document.getElementsByClassName("ows-close")
+    var close = document.getElementsByClassName("ows-close");
 
-    if(close.length>0){
-        close[0].onclick = function () {
-            adleft.style.display = "none";
+    if (close.length > 0) {
+        if (close[0]) {
+            close[0].onclick = function () {
+                if (adleft) adleft.style.display = "none";
+            }
         }
-        close[1].onclick = function () {
-            adright.style.display = "none";
+        if (close.length > 1 && close[1]) {
+            close[1].onclick = function () {
+                if (adright) adright.style.display = "none";
+            }
         }
     }
 

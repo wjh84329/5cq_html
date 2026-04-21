@@ -96,12 +96,12 @@
                         <label class="layui-form-label" style="font-weight: bold;margin-top: 135px;">广告内容</label>
                         <div class="layui-input-block" style="margin-left: 0px;float: left;width: 43%;">
                             <textarea id="text" name="text" placeholder="请输入内容" class="layui-textarea"
-                                      style="resize: none;height: 300px;"></textarea>
+                                      style="resize: none;height: 320px;"></textarea>
                         </div>
 
                         <div class="layui-input-block" style="margin-left: 0px;float: right;width: 45%;">
                             <textarea readonly id="text_p" name="text_p" class="layui-textarea" ondblclick="jqb(this)"
-                                      style="cursor:pointer;text-decoration:none;resize: none;height: 300px; border-style: none"></textarea>
+                                      style="cursor:pointer;text-decoration:none;resize: none;height: 320px; border-style: none"></textarea>
                         </div>
                     </div>
                     <div class="layui-form-item" style="display: none">
@@ -117,7 +117,7 @@
                     <div class="layui-form-item layui-form-text">
                         <label class="layui-form-label">备注信息</label>
                         <div class="layui-input-block">
-                            <textarea name="mark" placeholder="请输入备注信息" class="layui-textarea" style="resize: none;height: 100px;"></textarea>
+                            <textarea name="mark" placeholder="请输入备注信息" rows="1" class="layui-textarea"></textarea>
                         </div>
                     </div>
                     <div class="layui-form-item layui-form-text">
@@ -133,11 +133,25 @@
                                    onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
                                    class="layui-input">
                         </div>
-                    </div>
-                    <div class="layui-form-item layui-form-text">
                         <label class="layui-form-label">发布条数</label>
                         <div class="layui-input-inline">
                             <input type="text" name="nums" lay-verify="required" placeholder="条数"
+                                   onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                   onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">礼包个数</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="recordNums" lay-verify="required" placeholder="礼包个数"
+                                   onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                   onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                   class="layui-input">
+                        </div>
+                        <label class="layui-form-label">礼包金额</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="recordAmount" lay-verify="required" placeholder="礼包金额"
                                    onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
                                    onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
                                    class="layui-input">
@@ -153,46 +167,21 @@
                         <div class="layui-input-inline" style="width: auto;">
                             <input type="checkbox" name="hb" lay-skin="switch" lay-text="是 | 否" value="1">
                         </div>
-                        <label class="layui-form-label" style="width: auto; padding-right: 5px;display: none;">是否红包服</label>
-                        <div class="layui-input-inline" style="width: auto;display: none;">
+                        <label class="layui-form-label" style="width: auto; padding-right: 5px;">是否红包服</label>
+                        <div class="layui-input-inline" style="width: auto;">
                             <input type="checkbox" name="redBagFlag" lay-skin="switch" lay-text="是 | 否" value="1">
                         </div>
                         <label class="layui-form-label" style="width: auto; padding-right: 5px;">是否内服</label>
                         <div class="layui-input-inline" style="width: auto;">
                             <input type="checkbox" name="isInner" lay-skin="switch" lay-text="是 | 否" value="1">
                         </div>
-                        <label class="layui-form-label" style="width: auto; padding-right: 5px;display: none;">是否有礼包</label>
-                        <div class="layui-input-inline" style="width: auto;display: none;">
-                            <input type="checkbox" name="hasPacket" lay-skin="switch" lay-text="有 | 无" value="1" lay-filter="hasPacket-switch">
-                        </div>
+                        
                         <input type="hidden" name="price" readonly lay-verify="required" placeholder="请输入价格"
                                class="layui-input">
                     </div>
                     <input type="hidden" name="score" value="5">
                     
-                    <!-- 礼包设置 -->
-                    <div class="layui-form-item layui-form-text packet-settings-container">
-                        <label class="layui-form-label" style="font-weight: bold;">礼包设置</label>
-                        <div class="layui-input-block">
-                            <!-- 礼包组容器 -->
-                            <div id="packetCodeList-container">
-                                <!-- 第一组礼包 -->
-                                <div class="packet-group" style="margin-bottom: 10px; display: flex; align-items: center;">
-                                    <div class="layui-input-inline" style="width: 150px;">
-                                        <input type="text" name="packetCode" placeholder="礼包码" class="layui-input">
-                                    </div>
-                                    <div class="layui-input-inline" style="width: 600px;">
-                                        <input type="text" name="packetContent" placeholder="礼包内容" class="layui-input">
-                                    </div>
-                                    
-                                </div>
-                            </div>
-                            <!-- 添加礼包按钮 -->
-                            <button type="button" class="layui-btn layui-btn-normal add-packet" style="margin-top: 10px;">
-                                <i class="layui-icon layui-icon-add-circle"></i> 添加礼包
-                            </button>
-                        </div>
-                    </div>
+                    
                     
                     <div class="layui-input-block">
                         <!--操作-->
@@ -222,12 +211,12 @@
                         <label class="layui-form-label" style="font-weight: bold;margin-top: 135px;">广告内容</label>
                         <div class="layui-input-block" style="margin-left: 0px;float: left;width: 43%;">
                             <textarea name="text" placeholder="请输入内容" class="layui-textarea"
-                                      style="resize: none;height: 300px;"></textarea>
+                                      style="resize: none;height: 320px;"></textarea>
                         </div>
 
                         <div class="layui-input-block" style="margin-left: 0px;float: right;width: 45%;">
                             <textarea readonly name="text_p" class="layui-textarea" ondblclick="jqb(this)"
-                                      style="cursor:pointer;text-decoration:none;resize: none;height: 300px; border-style: none"></textarea>
+                                      style="cursor:pointer;text-decoration:none;resize: none;height: 320px; border-style: none"></textarea>
                         </div>
                     </div>
                     <div class="layui-form-item" style="display: none">
@@ -264,14 +253,28 @@
                                    onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
                                    class="layui-input">
                         </div>
-                    </div>
-                    <div class="layui-form-item layui-form-text">
                         <label class="layui-form-label">发布条数</label>
                         <div class="layui-input-inline">
                             <input type="text" name="nums" lay-verify="required" placeholder="条数"
                                    onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
                                    onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
                                    class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">礼包个数</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="recordNums" lay-verify="required" placeholder="礼包个数"
+                                   onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                   onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                   class="layui-input">
+                        </div>
+                        <label class="layui-form-label">礼包金额</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="recordAmount" lay-verify="required" placeholder="礼包金额"
+                                   onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                   onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                      class="layui-input">
                         </div>
                         <label class="layui-form-label">同服游戏</label>
                         <div class="layui-input-inline">
@@ -286,43 +289,18 @@
                         <div class="layui-input-inline" style="width: auto;">
                             <input type="checkbox" name="hb" lay-skin="switch" lay-text="是 | 否" value="1">
                         </div>
-                        <label class="layui-form-label" style="width: auto; padding-right: 5px;display: none;">是否红包服</label>
-                        <div class="layui-input-inline" style="width: auto;display: none;">
+                        <label class="layui-form-label" style="width: auto; padding-right: 5px;">是否红包服</label>
+                        <div class="layui-input-inline" style="width: auto;">
                             <input type="checkbox" name="redBagFlag" lay-skin="switch" lay-text="是 | 否" value="1">
                         </div>
                         <label class="layui-form-label" style="width: auto; padding-right: 5px;">是否内服</label>
                         <div class="layui-input-inline" style="width: auto;">
                             <input type="checkbox" name="isInner" lay-skin="switch" lay-text="是 | 否" value="1">
                         </div>
-                        <label class="layui-form-label" style="width: auto; padding-right: 5px;display: none;">是否有礼包</label>
-                        <div class="layui-input-inline" style="width: auto;display: none;">
-                            <input type="checkbox" name="hasPacket" lay-skin="switch" lay-text="有 | 无" value="1" lay-filter="hasPacket-switch-update">
-                        </div>
+                        
                         <input type="hidden" name="price" readonly lay-verify="required" placeholder="请输入价格" class="layui-input">
                     </div>
-                    <!-- 礼包设置 -->
-                    <div class="layui-form-item layui-form-text packet-settings-container-update">
-                        <label class="layui-form-label" style="font-weight: bold;">礼包设置</label>
-                        <div class="layui-input-block">
-                            <!-- 礼包组容器 -->
-                            <div id="packetCodeList-container-update">
-                                <!-- 第一组礼包 -->
-                                <div class="packet-group" style="margin-bottom: 10px; display: flex; align-items: center;">
-                                    <div class="layui-input-inline" style="width: 150px;">
-                                        <input type="text" name="packetCode" placeholder="礼包码" class="layui-input">
-                                    </div>
-                                    <div class="layui-input-inline" style="width: 600px;">
-                                        <input type="text" name="packetContent" placeholder="礼包内容" class="layui-input">
-                                    </div>
-                                    
-                                </div>
-                            </div>
-                            <!-- 添加礼包按钮 -->
-                            <button type="button" class="layui-btn layui-btn-normal add-packet" style="margin-top: 10px;">
-                                <i class="layui-icon layui-icon-add-circle"></i> 添加礼包
-                            </button>
-                        </div>
-                    </div>
+                    
                     
                     <div class="layui-input-block">
                         <!--操作-->
@@ -436,23 +414,7 @@
             }
         });
         
-        // 监听是否有礼包滑块事件 - 新增表单
-        form.on('switch(hasPacket-switch)', function(data){
-            if(data.elem.checked){
-                $('.packet-settings-container').show();
-            }else{
-                $('.packet-settings-container').hide();
-            }
-        });
         
-        // 监听是否有礼包滑块事件 - 更新表单
-        form.on('switch(hasPacket-switch-update)', function(data){
-            if(data.elem.checked){
-                $('.packet-settings-container-update').show();
-            }else{
-                $('.packet-settings-container-update').hide();
-            }
-        });
         initType();
         initPrice();
         if(user.role_id !== 1){
@@ -480,7 +442,7 @@
         }
         table.render({
             elem: '#auth-table'
-            , url: layui.setter.url + 'publish/select1'
+            , url: layui.setter.url + 'publish/select2'
             , title: '私服发布'
             , cols: [[
                 {type: 'checkbox'}
@@ -518,17 +480,6 @@
                                 const targetDate = new Date(data.enddate); // 注意：日期字符串需要是ISO格式或者能被Date正确解析的格式
                                 // 获取当前时间
                                 const now = new Date();
-                                //开始时间
-                                const startDate = new Date(data.startdate);
-                                if(new Date() < startDate){
-                                    //计算两个时间之间的差值（毫秒）
-                                    const difference = startDate - new Date();
-                                    //转换差值到天数、小时数和分钟数
-                                    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-                                    const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                                    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-                                    return `<a style="color: black">${days}天${hours}小时${minutes}分钟后开始</a>`;
-                                }
                                 // 计算两个时间之间的差值（毫秒）
                                 const difference = targetDate - now;
                                 // 转换差值到天数、小时数和分钟数
@@ -604,7 +555,7 @@
                         table.reload('auth-table');
                         layer.msg(res.msg);
                         $.get({url:layui.setter.url + "ranking/test1"})
-                        $.get({url:'https://hz.5cq.net/cq/yx/ttt'})
+                        // $.get({url:'https://hz.5cq.net/cq/yx/ttt'})
                     })
                 });
             }else if (obj.event == "update") {
@@ -635,58 +586,34 @@
                                     "服务器名:█至尊狂魔轻变█\n" +
                                     "服务器IP:◤①区激情ｐｋ◢\n" +
                                     "线路类型:▅装备全暴▅\n" +
-                                    "版本介绍:█升级快◆ＰＫ爽█秒杀所有轻变版本█\n" +
+                                    // "版本介绍:█升级快◆ＰＫ爽█秒杀所有轻变版本█\n" +
                                     "客服QQ:╃活人爆满╄\n" +
                                     "主页地址:http://www.111.com\n" +
                                     "开区时间:"+getFormattedDate()+" 00:00:00\n" +
-                                    "投放站点:\n");
+                                    "投放站点:\n" +
+                                    "开抢时间:12:00,20:00\n" +
+                                    "商户ID:\n" +
+                                    "分组ID:\n" +
+                                    "APIKEY:\n" +
+                                    "客户QQ:\n");
                                 var str='';
                                 str+='服务器名:'+checkAttribute(obj.data.name)+"\n";
                                 str+='服务器IP:'+checkAttribute(obj.data.ipname)+"\n";
                                 str+='线路类型:'+checkAttribute(obj.data.line)+"\n";
-                                str+='版本介绍:'+checkAttribute(obj.data.versiondepict)+"\n";
+                                // str+='版本介绍:'+checkAttribute(obj.data.versiondepict)+"\n";
                                 str+='客服QQ:'+checkAttribute(obj.data.kfqq)+"\n";
                                 str+='主页地址:'+checkAttribute(obj.data.url)+"\n";
                                 str+='开区时间:'+checkAttribute(obj.data.datetime)+"\n";
+                                // str+='礼包金额:'+checkAttribute(obj.data.recordAmount)+"\n";
+                                str+='开抢时间:'+checkAttribute(obj.data.granttime)+"\n";
                                 str+='投放站点:'+checkAttribute(obj.data.launch)+"\n";
+                                str+='商户ID:'+checkAttribute(obj.data.merchantId)+"\n";
+                                str+='分组ID:'+checkAttribute(obj.data.groupId)+"\n";
+                                str+='APIKEY:'+checkAttribute(obj.data.apiKey)+"\n";
+                                str+='客户QQ:'+checkAttribute(obj.data.customerQq)+"\n";
                                 $("#layui-form-publish-update textarea[name='text']").val(str);
                                 
-                                // 回显礼包码信息
-                                var packetCodeList = obj.data.packetCodeList || [];
-                                var container = $('#packetCodeList-container-update');
-                                container.empty();
-                                
-                                if (packetCodeList.length > 0) {
-                                    packetCodeList.forEach(function(packet, index) {
-                                        var packetGroup = $(`<div class="packet-group" style="margin-bottom: 10px; display: flex; align-items: center;">
-                                            <div class="layui-input-inline" style="width: 150px;">
-                                                <input type="text" name="packetCode" value="${packet.packetCode}" placeholder="礼包码" class="layui-input">
-                                            </div>
-                                            <div class="layui-input-inline" style="width: 600px;">
-                                                <input type="text" name="packetContent" value="${packet.packetContent}" placeholder="礼包内容" class="layui-input">
-                                            </div>
-                                            ${index === 0 ? '' : `
-                                            <div class="layui-input-inline" style="width: 80px;">
-                                                <button type="button" class="layui-btn layui-btn-danger delete-packet">
-                                                    <i class="layui-icon layui-icon-delete"></i> 删除
-                                                </button>
-                                            </div>
-                                            `}
-                                        </div>`);
-                                        container.append(packetGroup);
-                                    });
-                                } else {
-                                    // 添加默认的礼包组
-                                    var packetGroup = $(`<div class="packet-group" style="margin-bottom: 10px; display: flex; align-items: center;">
-                                        <div class="layui-input-inline" style="width: 150px;">
-                                            <input type="text" name="packetCode" placeholder="礼包码" class="layui-input">
-                                        </div>
-                                        <div class="layui-input-inline" style="width: 600px;">
-                                            <input type="text" name="packetContent" placeholder="礼包内容" class="layui-input">
-                                        </div>
-                                    </div>`);
-                                    container.append(packetGroup);
-                                }
+                                // 礼包功能已移除，忽略回显礼包信息
                                 
                                 var html = '';
                                 for (var i = 0; i < arr.length; i++) {
@@ -708,6 +635,8 @@
                                 $('#layui-form-publish-update input[name="hb"]').prop('checked', res.count != 0);
                                 $('#layui-form-publish-update input[name="redBagFlag"]').prop('checked', obj.data.redBagFlag == '1');
                                 $('#layui-form-publish-update input[name="isInner"]').prop('checked', obj.data.isInner == '1');
+                                                                $('#layui-form-publish-update input[name="recordAmount"]').val(obj.data.recordAmount || '');
+                                                                $('#layui-form-publish-update input[name="granttime"]').val(obj.data.granttime || '');
                                 
                                 // 设置是否有礼包滑块状态
                                 var hasPacket = obj.data.packetCodeList && obj.data.packetCodeList.length > 0;
@@ -839,7 +768,7 @@
                     table.reload('auth-table');
                     layer.msg(res.msg);
                     $.get({url:layui.setter.url + "ranking/test1"})
-                    $.get({url:'https://hz.5cq.net/cq/yx/ttt'})
+                    // $.get({url:'https://hz.5cq.net/cq/yx/ttt'})
                 })
             });
         })
@@ -1068,15 +997,22 @@
                         "服务器名:█至尊狂魔轻变█\n" +
                         "服务器IP:◤①区激情ｐｋ◢\n" +
                         "线路类型:▅装备全暴▅\n" +
-                        "版本介绍:█升级快◆ＰＫ爽█秒杀所有轻变版本█\n" +
+                        // "版本介绍:█升级快◆ＰＫ爽█秒杀所有轻变版本█\n" +
                         "客服QQ:╃活人爆满╄\n" +
                         "主页地址:http://www.111.com\n" +
                         "开区时间:"+getFormattedDate()+" 00:00:00\n" +
-                        "投放站点:\n");
+                        "投放站点:\n" +
+                        "开抢时间:12:00,20:00\n" +
+                        "商户ID:\n" +
+                        "分组ID:\n" +
+                        "APIKEY:\n" +
+                        "客户QQ:\n");
 
                     $('#layui-form-publish input[name="days"]').val('7');
                     $('#layui-form-publish input[name="nums"]').val('1');
-                    
+                    $('#layui-form-publish input[name="recordNums"]').val('200');
+                    $('#layui-form-publish input[name="recordAmount"]').val('50');
+                    $('#layui-form-publish input[name="granttime"]').val(getFormattedDate() + ' 12:00:00,' + getFormattedDate() + ' 20:00:00');
                     // 设置滑块默认值（默认都是关闭状态）
                     $('#layui-form-publish input[name="hb"]').prop('checked', false);
                     $('#layui-form-publish input[name="redBagFlag"]').prop('checked', false);
@@ -1127,25 +1063,6 @@
             var parsedRecords = parsePublishText(text);
             var dataArr = [];
             var invalidCount = 0;
-            var containerId = data.field.id ? '#packetCodeList-container-update' : '#packetCodeList-container';
-            var packetCodeList = collectPacketCodeList(containerId);
-            
-            // 验证礼包设置：如果"是否有礼包"开关打开，则验证礼包码和礼包内容
-            if (data.field.hasPacket) {
-                if (!packetCodeList || packetCodeList.length === 0) {
-                    layer.msg("请输入礼包设置");
-                    return false;
-                }
-                
-                // 检查是否有空的礼包码或礼包内容
-                for (var i = 0; i < packetCodeList.length; i++) {
-                    var packet = packetCodeList[i];
-                    if (!packet.packetCode || !packet.packetContent) {
-                        layer.msg("请输入完整的礼包设置（礼包码和礼包内容不能为空）");
-                        return false;
-                    }
-                }
-            }
 
             for (var i = 0; i < parsedRecords.length; i++) {
                 var record = parsedRecords[i];
@@ -1175,13 +1092,13 @@
                 obj.isInner = data.field.isInner ? '1' : '0';
                 obj.hb = data.field.hb ? '1' : '2';
                 obj.mark = data.field.mark;
+                obj.recordNums = data.field.recordNums;
+                obj.recordAmount = data.field.recordAmount;
+                // obj.granttime = record.granttime || data.field.granttime;
+                obj.versiondepict = '';
                 // obj.packetCodeList = packetCodeList;
-                //判断是否有礼包的开关，如果没有礼包清空礼包设置
-                if($('input[name="hasPacket"]').prop('checked') == false){
-                    obj.packetCodeList = [];
-                }else{
-                    obj.packetCodeList = packetCodeList;
-                }
+                // 礼包功能已移除，一律清空礼包设置
+                obj.packetCodeList = [];
 
                 if (data.field.id != null && data.field.id !== '') {
                     obj.id = data.field.id;
@@ -1199,7 +1116,8 @@
                 layer.msg("输入内容有误,请更正");
                 return false;
             }
-
+            // console.log(dataArr)
+            // return false;
             var url1 = layui.setter.url + "publish/" + ((data.field.id == null || data.field.id == '') ? "add" : "update");
             if (dataArr.length != 0) {
                 if (data.field.hb == '1') {
@@ -1267,14 +1185,19 @@
                                 "服务器名:█至尊狂魔轻变█\n" +
                                 "服务器IP:◤①区激情ｐｋ◢\n" +
                                 "线路类型:▅装备全暴▅\n" +
-                                "版本介绍:█升级快◆ＰＫ爽█秒杀所有轻变版本█\n" +
+                                // "版本介绍:█升级快◆ＰＫ爽█秒杀所有轻变版本█\n" +
                                 "客服QQ:╃活人爆满╄\n" +
                                 "主页地址:http://www.111.com\n" +
                                 "开区时间:"+getFormattedDate()+" 00:00:00\n" +
-                                "投放站点:\n");
+                                "投放站点:\n" +
+                                "开抢时间:12:00:,20:00\n" +
+                                "商户ID:\n" +
+                                "分组ID:\n" +
+                                "APIKEY:\n" +
+                                "客户QQ:\n");
                             if (data.field.id != null && data.field.id !== '') {
                                 layer.close(closeindex);
-                                $.get({url:'https://hz.5cq.net/cq/yx/ttt'})
+                                // $.get({url:'https://hz.5cq.net/cq/yx/ttt'})
                             }
                         }
                         $.get({url:layui.setter.url + "ranking/test1"})
@@ -1293,39 +1216,6 @@
             active[type] ? active[type].call(this) : '';
         });
 
-        // 礼包设置相关功能
-        // 添加礼包按钮点击事件
-        $(document).on('click', '.add-packet', function() {
-            var container = $(this).prev('[id^="packetCodeList-container"]');
-            var packetGroup = $(`<div class="packet-group" style="margin-bottom: 10px; display: flex; align-items: center;">
-                <div class="layui-input-inline" style="width: 150px;">
-                    <input type="text" name="packetCode" placeholder="礼包码" class="layui-input">
-                </div>
-                <div class="layui-input-inline" style="width: 600px;">
-                    <input type="text" name="packetContent" placeholder="礼包内容" class="layui-input">
-                </div>
-                <div class="layui-input-inline" style="width: 80px;">
-                    <button type="button" class="layui-btn layui-btn-danger delete-packet">
-                        <i class="layui-icon layui-icon-delete"></i> 删除
-                    </button>
-                </div>
-            </div>`);
-            container.append(packetGroup);
-            // 重新渲染表单
-            form.render();
-        });
-        
-        // 删除礼包按钮点击事件
-        $(document).on('click', '.delete-packet', function() {
-            var packetGroup = $(this).closest('.packet-group');
-            var container = packetGroup.closest('[id^="packetCodeList-container"]');
-            var packetGroups = container.find('.packet-group');
-            if (packetGroups.length > 1) {
-                packetGroup.remove();
-            } else {
-                layer.msg('至少保留一组礼包');
-            }
-        });
         
         function normalizeFieldLabel(label) {
             var text = (label || '')
@@ -1345,7 +1235,7 @@
             if (text.indexOf('版本') > -1) {
                 return 'versiondepict';
             }
-            if (text.indexOf('客服') > -1 || text.indexOf('qq') > -1 || text.indexOf('QQ') > -1) {
+            if (text.indexOf('客服') > -1 && (text.indexOf('qq') > -1 || text.indexOf('QQ') > -1)) {
                 return 'kfqq';
             }
             if (text.indexOf('主页') > -1 || text.indexOf('地址') > -1 || text.indexOf('网址') > -1 || text === 'url') {
@@ -1353,6 +1243,42 @@
             }
             if (text.indexOf('开区') > -1 && text.indexOf('时间') > -1) {
                 return 'datetime';
+            }
+            if ((text.indexOf('开抢') > -1 || text.indexOf('开枪') > -1) && text.indexOf('时间') > -1) {
+                return 'granttime';
+            }
+
+            // 投放站点
+            if (text.indexOf('投放') > -1 && text.indexOf('站点') > -1) {
+                return 'launch';
+            }
+
+            // 商户ID, 分组ID, APIKEY, 客户QQ
+            if (text.indexOf('商户') > -1 && (text.indexOf('id') > -1 || text.indexOf('id') > -1)) {
+                return 'merchantId';
+            }
+            if (text.indexOf('分组') > -1 && (text.indexOf('id') > -1 || text.indexOf('id') > -1)) {
+                return 'groupId';
+            }
+            if (text.indexOf('apikey') > -1 || text.indexOf('apikey') > -1 || text.indexOf('api') > -1) {
+                return 'apiKey';
+            }
+            if (text.indexOf('客服') > -1 && (text.indexOf('qq') > -1 || text.indexOf('QQ') > -1)) {
+                return 'customerQq';
+            }
+
+            // 商户ID, 分组ID, APIKEY, 客户QQ
+            if (text.indexOf('商户') > -1 && (text.indexOf('id') > -1 || text.indexOf('id') > -1)) {
+                return 'merchantId';
+            }
+            if (text.indexOf('分组') > -1 && (text.indexOf('id') > -1 || text.indexOf('id') > -1)) {
+                return 'groupId';
+            }
+            if (text.indexOf('apikey') > -1 || text.indexOf('apikey') > -1 || text.indexOf('api') > -1) {
+                return 'apiKey';
+            }
+            if (text.indexOf('客户') > -1 && (text.indexOf('qq') > -1 || text.indexOf('QQ') > -1)) {
+                return 'customerQq';
             }
 
             return '';
@@ -1451,66 +1377,19 @@
                 record.kfqq ||
                 record.url ||
                 record.datetime ||
-                record.launch
+                record.granttime ||
+                record.launch ||
+                record.merchantId ||
+                record.groupId ||
+                record.apiKey ||
+                record.customerQq
             );
         }
         function isSeparatorLine(line) {
         var text = (line || '').replace(/\s+/g, '');
         return /^[\-=]{3,}$/.test(text);
     }
-
-        function collectPacketCodeList(containerId) {
-            var packetCodeList = [];
-            var packetGroups = $(containerId + ' .packet-group');
-
-            packetGroups.each(function() {
-                var packetCode = ($(this).find('input[name="packetCode"]').val() || '').trim();
-                var packetContent = ($(this).find('input[name="packetContent"]').val() || '').trim();
-
-                if (packetCode && packetContent) {
-                    packetCodeList.push({
-                        packetCode: packetCode,
-                        packetContent: packetContent
-                    });
-                }
-            });
-
-            return packetCodeList;
-        }
-
-        function normalizeFieldLabel(label) {
-            var text = (label || '')
-                .replace(/\s+/g, '')
-                .replace(/：/g, ':')
-                .toLowerCase();
-
-            if (text.indexOf('服务器') > -1 && text.indexOf('名') > -1) {
-                return 'name';
-            }
-            if (text.indexOf('服务器') > -1 && text.indexOf('ip') > -1) {
-                return 'ipname';
-            }
-            if (text.indexOf('线路') > -1) {
-                return 'line';
-            }
-            if (text.indexOf('版本') > -1) {
-                return 'versiondepict';
-            }
-            if (text.indexOf('客服') > -1 && text.indexOf('qq') > -1) {
-                return 'kfqq';
-            }
-            if (text.indexOf('主页') > -1 || text.indexOf('地址') > -1 || text.indexOf('网址') > -1 || text === 'url') {
-                return 'url';
-            }
-            if (text.indexOf('开区') > -1 && text.indexOf('时间') > -1) {
-                return 'datetime';
-            }
-            if (text.indexOf('投放') > -1 && text.indexOf('站点') > -1) {
-                return 'launch';
-            }
-
-            return '';
-        }
+    
     });
     var jqb = function (v) {
         v.select();

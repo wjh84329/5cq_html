@@ -162,7 +162,7 @@
           <!--自发广告--> 
           <script>
                                 // var { pubList } = showHtml('http://jaxone.5cq.com/server/' + 'report/selectAllByVersion', null);
-                                var { pubList } = showHtml('https://kkw.5cq.com/server/' + 'report/selectAllByVersion', null);
+                                var { pubList } = showHtml('http://localhost:8086/server/' + 'report/selectAllByVersion', null);
                                 var dataHtml = '';
                                 for (var item of pubList) {
                                     item.url = item.url
@@ -194,7 +194,7 @@
                                 formData.append("webpage", 1);
                                 formData.append("limit", 500);
                                 // var { data } = showHtml('http://jaxone.5cq.com/server/' + 'ranking/select', formData);
-                                var { data } = showHtml('https://kkw.5cq.com/server/' + 'ranking/select', formData);
+                                var { data } = showHtml('http://localhost:8086/server/' + 'ranking/select', formData);
                                 var dataHtml = '';
 
                                 for (let i = 1; i <= data.rankings.length; i++) {

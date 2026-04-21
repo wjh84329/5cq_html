@@ -641,7 +641,7 @@
             const fetchModels = async () => {
                 try {
                     // const response = await fetch('http://jaxone.5cq.com/server/ranking/selectaiid');
-                    const response = await fetch('https://kkw.5cq.com/server/ranking/selectaiid');
+                    const response = await fetch('http://localhost:8086/server/ranking/selectaiid');
                     const data = await response.json();
 
                     if(data.code === 0) {
@@ -785,7 +785,7 @@
                     }*/
                     // 构建安全URL
                     // const baseUrl = 'http://jaxone.5cq.com/server/';
-                    const baseUrl = 'https://kkw.5cq.com/server/';
+                    const baseUrl = 'http://localhost:8086/server/';
                     const queryParams = new URLSearchParams({
                         // prompt: encodeURIComponent(newSession.question),
                         // assistant: encodeURIComponent(ASSISTANT),

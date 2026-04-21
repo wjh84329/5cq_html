@@ -36,9 +36,16 @@
       <div class="layui-card-body"> 
        <div class="test-table-reload-btn" style="margin-bottom: 10px;"> 
         <div class="layui-inline"> 
-         <input class="layui-input" style="width: 260px !important;" name="polymerization" id="test-table-demoReload" autocomplete="off" placeholder="请输入私服名称"> 
+         <input class="layui-input" name="polymerization" id="test-table-demoReload" autocomplete="off" placeholder="请输入私服名称"> 
         </div> 
-        <button class="layui-btn" data-type="reload" style="background: #099cc0;">搜索</button> 
+        <button class="layui-btn" data-type="reload">搜索</button> 
+        <!--<button id="publish-button-add" shiro-event="sys:publish:open-add" class="layui-btn"><i
+                                class="layui-icon">&#xe654;</i>添加
+                        </button>
+                        <button id="publish-button-del" shiro-event="sys:publish:open-removes" data-type="getid"
+                                class="layui-btn"><i
+                                class="layui-icon">&#xe654;</i>批量删除
+                        </button>--> 
         <input id="ids" type="text" hidden> 
        </div> 
        <table class="layui-hide" id="auth-table" lay-filter="auth-table"></table> 
@@ -303,27 +310,38 @@
             , title: '私服发布'
             , cols: [[
                 {type: 'checkbox'}
+                /*{
+                    field: 'type', title: '类型', sort: true, width: 130,
+                    templet: function (obj) {
+                        var name = '';
+                        for (var i = 0; i < arr.length; i++) {
+                            if (obj.type == arr[i].id) {
+                                name = arr[i].name;
+                                break;
+                            }
+                        }
+                        return name;
+                    }
+                }*/
+                // , {field: 'price', title: '单价', sort: true, width: 130,}
+                // , {field: 'money', title: '总价', sort: true, width: 130,}
                 , {field: 'name', title: '服务器名',}
-                , {field: 'startdate', title: '开始时间', sort: false, width: 200,}
-                , {field: 'enddate', title: '结束时间', sort: false, width: 200,}
-                , {title: '时间状态', width: 220, sort: false, templet: function (data) {
+                // , {field: 'ipname', title: '私服IP', sort: true,}
+                // , {field: 'line', title: '线路',}
+                // , {field: 'versiondepict', title: '版本介绍', sort: true,}
+                // , {field: 'kfqq', title: '客服QQ', sort: true,}
+                // , {field: 'url', title: '服务器地址', sort: false,}
+                , {field: 'startdate', title: '开始时间', sort: false, width: 180,}
+                , {field: 'enddate', title: '结束时间', sort: false, width: 180,}
+                , {field: 'createdate', title: '结束时间', sort: false, width: 180,}
+                // , {field: 'mark', title: '备注', sort: false, width: 180,edit: 'text'}
+                , {title: '状态', width: 180, sort: false, templet: function (data) {
                         if(data.state==0){
                             if(new Date(data.enddate)<new Date()){
                                 return `<a style="color: red">已过期</a>`;
                             }else{
                                 // 设定目标时间
                                 const targetDate = new Date(data.enddate); // 注意：日期字符串需要是ISO格式或者能被Date正确解析的格式
-                                //开始时间
-                                const startDate = new Date(data.startdate);
-                                if(new Date() < startDate){
-                                    //计算两个时间之间的差值（毫秒）
-                                    const difference = startDate - new Date();
-                                    //转换差值到天数、小时数和分钟数
-                                    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-                                    const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                                    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-                                    return `<a style="color: black">${days}天${hours}小时${minutes}分钟后开始</a>`;
-                                }
                                 // 获取当前时间
                                 const now = new Date();
                                 // 计算两个时间之间的差值（毫秒）
@@ -343,11 +361,8 @@
                         }
                     }
                 }
-                , {title: '精品', sort: false, width: 120,templet: function (data) {
-                        return "<span style='color: green'>推荐</span>";
-                }}
                 , {field: 'nums', title: '条数', sort: false, width: 80}
-                ,{ field: 'status', title: '状态',sort: false ,width: 80 ,templet: function (data) {
+                ,{ field: 'status', title: '显示',sort: false ,width: 80 ,templet: function (data) {
                         if(data.state==0 && new Date(data.enddate)>new Date()){
                             return `<a style="color: green">√</a>`;
                         }else if(data.state==1){
@@ -361,8 +376,7 @@
                         }
                     }
                 }
-                , {field: 'create_date', title: '发布时间', sort: false, width: 200,}
-                , {fixed: 'right', title: '操作', toolbar: '#auth-state',width:180}
+                , {fixed: 'right', title: '操作', toolbar: '#auth-state',width:300}
             ]]
             , page: true
             , where: {token: localStorage.getItem('vipvtoken')}
