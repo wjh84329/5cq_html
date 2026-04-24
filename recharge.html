@@ -1,0 +1,968 @@
+<!doctype html>
+<html lang="zh-CN">
+ <head>
+  <meta charset="utf-8">  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>5CQ-传奇广告查询站_传奇广告排行_传奇资源站_新开传奇新服排名站(5CQ.COM)</title>
+  <meta name="description" content="5CQ.Com传奇广告排行榜,传奇私服查询站,传奇资源站,好玩的传奇排名站,玩家最爱的新开传奇,GM最喜欢的传奇工具,传奇直播,传奇新开服,传奇相关尽在5CQ(玩传奇)">
+  <meta name="keywords" content="传奇广告查询站,传奇资源站,传奇广告排行,传奇SF广告统计(5CQ.COM)">   
+  <script src="./statics/js/jquery-3.2.1.min.js"></script> 
+  <script src="./statics/js/jquery.cookie.js"></script> 
+  <script src="./statics/js/public.js"></script> 
+  <script src="./statics/adminconfig.js"></script> 
+  <script src="./statics/config.js"></script> 
+  <script src="./statics/js/layer.js"></script> 
+  <script src="./layuiadmin/layui/layui.js"></script> 
+  <script src="./statics/js/report.js"></script> 
+  <!--    <script type="text/javascript" src="./statics/js/ad1.js"></script>--> 
+  <script type="text/javascript" src="./statics/js/ad5.js"></script> 
+  <link rel="stylesheet" href="./statics/css/slide-unlock.css"> 
+  <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "SimSun", sans-serif;
+            background-color: #f5f5f5;
+            font-size: 14px;
+        }
+
+        /* 顶部蓝色条 */
+        .top-bar {
+            background: linear-gradient(90deg, #00a8e8, #00c4ff);
+            color: #fff;
+            text-align: center;
+            padding: 8px 0;
+            font-size: 14px;
+        }
+
+        /* 头部区域 */
+        .header {
+            background-color: #fff;
+            padding: 15px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .header-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            background-image: url('statics/5cq/lloo.png');
+            background-size: 100% 100%;
+            width: 220px;
+            height: 40px;
+        }
+
+        .faq-link {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .faq-link:hover {
+            color: #00a8e8;
+        }
+
+        /* 主内容区 */
+        .main-content {
+            max-width: 1000px;
+            margin: 10px auto;
+            padding: 0 20px;
+        }
+
+        /* 黄色横幅 */
+        .banner {
+            background: linear-gradient(90deg, #fff9c4, #fff59d);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .banner-text {
+            font-size: 28px;
+            color: #e65100;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 表单区域 */
+        .form-section {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 30px 30px 10px 30px;
+            margin-bottom: 10px;
+        }
+
+        .form-title {
+            color: #e53935;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #ddd;
+        }
+
+        .form-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            width: 120px;
+            text-align: right;
+            padding-right: 15px;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .form-input {
+            flex: 1;
+            max-width: 300px;
+        }
+
+        .form-input input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .form-input input:focus {
+            border-color: #00a8e8;
+        }
+
+        /* 协议区域 */
+        .agreement {
+            margin: 20px 0;
+            padding-left: 135px;
+        }
+
+        .agreement label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .agreement input[type="checkbox"] {
+            margin-right: 8px;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .agreement a {
+            color: #00a8e8;
+            text-decoration: none;
+        }
+
+        .agreement a:hover {
+            text-decoration: underline;
+        }
+
+        /* 提示文字 */
+        .notice {
+            background-color: #fff3e0;
+            border: 1px solid #ffcc80;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .notice p {
+            color: #e65100;
+            margin-bottom: 8px;
+        }
+
+        .notice p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* 付款区域 */
+        .payment-section {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 10px;
+        }
+
+        .payment-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .payment-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .payment-tab {
+            padding: 10px 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .payment-tab.active {
+            border-color: #00a8e8;
+            background-color: #e3f2fd;
+        }
+
+        .payment-tab img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .payment-options {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .payment-option {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            display: flex;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .payment-option:hover {
+            border-color: #00a8e8;
+            background-color: #f5f5f5;
+        }
+
+        .payment-option.selected {
+            border-color: #00a8e8;
+            background-color: #e3f2fd;
+        }
+
+        .payment-option img {
+            width: 40px;
+            height: 40px;
+            /* margin-bottom: 8px; */
+        }
+
+        .payment-option .name {
+            font-size: 13px;
+            color: #333;
+        }
+
+        .payment-option .desc {
+            font-size: 12px;
+            color: #e53935;
+            margin-top: 4px;
+        }
+
+        /* 底部 */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+            font-size: 12px;
+            border-top: 1px solid #e0e0e0;
+            background-color: #fff;
+        }
+
+        .footer p {
+            margin-bottom: 5px;
+        }
+    </style> 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script> 
+  <script type="text/javascript" src="./statics/js/jquery1.js"></script> 
+  <script type="text/javascript" src="./statics/layer/layer.js"></script> 
+  <script type="text/javascript" src="./statics/js/comm1.js?1130"></script> 
+  <script type="text/javascript" src="./statics/js/act.js?1130"></script> 
+ </head> 
+ <body> 
+  <!-- 顶部蓝色条 --> 
+  <div class="top-bar">
+    打造优质可靠的在线服务 
+  </div> 
+  <!-- 头部 --> 
+  <div class="header"> 
+   <div class="header-content"> 
+    <div class="logo"> 
+    </div> 
+    <!-- <a href="#" class="faq-link">常见问题</a> --> 
+   </div> 
+  </div> 
+  <!-- 主内容 --> 
+  <div class="main-content" id="oldStyle"> 
+   <!-- 黄色横幅 --> 
+   <div class="banner"> 
+    <div class="banner-text" id="bannerText">
+      999PK传奇补贴，充值立马可得5~10元微信补贴 
+    </div> 
+   </div> 
+   <!-- 表单区域 --> 
+   <div class="form-section"> 
+    <div class="form-title">
+      充值信息 
+    </div> 
+    <div id="subsidyBubbleContainer" style="position: absolute;margin-left: 430px;"> 
+     <div id="subsidyBubble" style="background-image: url('statics/5cq/qipao.png');background-size: 100% 100%;width: 400px;height: 150px;font-size: 13px;padding-left: 60px;"> 
+      <div id="bubbleText" style="width: 260px;position: absolute;margin-top: 50px;">
+        当前可得 
+       <span id="wxHongbaoSpan">微信红包<span id="subsidyBubbleAmount" style="color: #e53935;font-size: 24px;font-weight: bold;">0</span>元+</span>福利金 
+       <span id="subsidyWelfareAmount" style="color: #e53935;font-size: 24px;font-weight: bold;">0</span>元， 
+       <span id="randomText">又赚了一笔</span> 
+      </div> 
+     </div> 
+     <img src="statics/5cq/biao.png" style="width: 200px;height: 200px;margin-left: 220px;margin-top: -30px;" alt=""> 
+    </div> 
+    <div class="form-row"> 
+     <div class="form-label">
+       游戏区服： 
+     </div> 
+     <div class="form-input"> 
+      <input type="text" id="gameServer" placeholder="请输入游戏区服"> 
+     </div> 
+    </div> 
+    <div class="form-row"> 
+     <div class="form-label">
+       游戏帐号： 
+     </div> 
+     <div class="form-input"> 
+      <input type="text" id="playerAccount" placeholder="请输入游戏账号"> 
+     </div> 
+    </div> 
+    <div class="form-row"> 
+     <div class="form-label">
+       确认游戏帐号： 
+     </div> 
+     <div class="form-input"> 
+      <input type="text" id="confirmAccount" placeholder="请再次输入游戏账号"> 
+     </div> 
+    </div> 
+    <div class="form-row"> 
+     <div class="form-label">
+       您的手机号： 
+     </div> 
+     <div class="form-input"> 
+      <input type="text" id="phone" placeholder="请输入手机号"> 
+     </div> 
+    </div> 
+    <div class="form-row"> 
+     <div class="form-label">
+       充值金额： 
+     </div> 
+     <div class="form-input"> 
+      <input type="text" id="amount" placeholder="请输入充值金额(最低充值20元)"> 
+     </div> 
+    </div> 
+    <script>
+                // 金额输入框失去焦点时，如果payMerchant等于0，调用claimSubsidy接口
+                $(document).on('blur', '#amount', function () {
+                    var amount = $(this).val().trim();
+                    var presetDiscountAmount = getUrlParam('discountAmount');
+                    // 如果金额输入框没值，隐藏整个容器
+                    if (!amount) {
+                        document.getElementById('subsidyBubbleContainer').style.display = 'none';
+                        return;
+                    }
+                    if(amount < 20){
+                        layer.msg('最低充值金额为20元');
+                        document.getElementById('subsidyBubbleContainer').style.display = 'none';
+                        return;
+                    }
+                    // 有值时显示整个容器
+                    document.getElementById('subsidyBubbleContainer').style.display = 'block';
+
+                    if (presetDiscountAmount !== null && presetDiscountAmount !== '') {
+                        updateDiscountDisplay(presetDiscountAmount, 0);
+                        return;
+                    }else{
+                        //根据输入金额生成，如果100以下4元，100以上10元
+                        var subsidyAmount = 0;
+                        if (amount < 100) {
+                            subsidyAmount = 4;
+                        } else {
+                            subsidyAmount = 10;
+                        }
+                        updateDiscountDisplay(subsidyAmount, 0);
+                        return;
+                    }
+
+                    onTokenRequest({
+                        url: '/api/globalGameSubsidy/claimSubsidy',
+                        type: 'POST',
+                        data: {
+                            recharge_amount: amount,
+                            subsidy_id: getUrlParam('subsidy_id')
+                        },
+                        toast: false
+                    }, function (res) {
+                        if (res.code == 200 && res.data) {
+                            console.log('claimSubsidy接口调用成功', res.data);
+                            var subsidyAmount = res.data.subsidy_amount || 0;
+                            var subsidyWelfareAmount = res.data.subsidy_welfare_amount || 0;
+                            updateDiscountDisplay(subsidyAmount, subsidyWelfareAmount);
+                        } else {
+                            console.log('claimSubsidy接口调用失败', res.msg);
+                            document.getElementById('subsidyAmount').value = '';
+                        }
+                    });
+                });
+            </script> 
+    <div class="form-row" id="subsidyAmountRow" style="display: none;"> 
+     <div class="form-label" style="color: red;">
+       减免金额： 
+     </div> 
+     <div class="form-input"> 
+      <input type="text" id="subsidyAmount" readonly placeholder="填写充值金额计算"> 
+     </div> 
+    </div> 
+    <script>
+                // 根据pay_merchant参数控制减免金额显示/隐藏
+                $(document).ready(function () {
+                    var payMerchant = getUrlParam('mer_id');
+                    if (payMerchant) {
+                        document.getElementById('subsidyAmountRow').style.display = 'none';
+                    } else {
+                        document.getElementById('subsidyAmountRow').style.display = 'flex';
+                    }
+                    // 根据mer_id是否有值修改气泡提示内容
+                    var merId = getUrlParam('mer_id');
+                    var subsidyBubble = document.getElementById('subsidyBubble');
+                    var subsidyBubbleAmount = document.getElementById('subsidyBubbleAmount');
+                    if (!merId) {
+                        // mer_id没值，随机显示文案
+                        var texts = ['轻松省一笔', '稳稳入账', '又小赚一波', '早餐加蛋，真香', '又白捡一笔', '越用越划算', '含泪血赚', '蚊子再小也是肉', '省一笔给媳妇花'];
+                        var randomText = texts[Math.floor(Math.random() * texts.length)];
+                        subsidyBubble.innerHTML = '<div style="width: 260px;position: absolute;margin-top: 50px;">当前订单<span id="wxHongbaoSpan">已补贴<span id="subsidyBubbleAmount" style="color: #e53935;font-size: 24px;font-weight: bold;">0</span>元+</span>福利金<span id="subsidyWelfareAmount" style="color: #e53935;font-size: 24px;font-weight: bold;">0</span>元，' + randomText + '</div>'
+                    }
+                    // 页面加载时设置随机文案
+                    var texts = ['轻松省一笔', '稳稳入账', '又小赚一波', '早餐加蛋，真香', '又白捡一笔', '越用越划算', '含泪血赚', '蚊子再小也是肉', '省一笔给媳妇花'];
+                    var randomText = texts[Math.floor(Math.random() * texts.length)];
+                    var randomTextEl = document.getElementById('randomText');
+                    if (randomTextEl) {
+                        randomTextEl.textContent = randomText;
+                    }
+                    // 页面加载时检查金额输入框是否有值
+                    var amount = $('#amount').val().trim();
+                    if (!amount) {
+                        document.getElementById('subsidyBubbleContainer').style.display = 'none';
+                    } else {
+                        document.getElementById('subsidyBubbleContainer').style.display = 'block';
+                    }
+                });
+            </script> 
+    <!-- 协议 --> 
+    <div class="agreement"> 
+     <label> <input type="checkbox" id="agreement" checked> <span>我已分辨游戏，本人自愿理性消费，同意并认真阅读<a href="./brandZone.html?tab=rechargeAgreement">《游戏充值服务协议》</a></span> </label> 
+    </div> 
+    <!-- 提示文字 --> 
+    <div class="notice"> 
+     <p>重要提示：如微信显示限额异常，请重新选择微信1 提交或更换支付宝！</p> 
+     <p>充值服务声明：玩家充值行为基于完全自愿原则。请注意，您通过充值所获得的游戏内虚拟货币、道具、服务等，在成功发放至游戏账户并被您领取或消耗后，即视为交易完成。</p> 
+     <p>对于已领取或消耗的虚拟物品，我们无法提供退款或恢复服务，请务必在操作前确认需求。点击确认即已知晓声明。</p> 
+    </div> 
+   </div> 
+   <!-- 付款区域 --> 
+   <div class="payment-section"> 
+    <div class="payment-title">
+      付款 
+    </div> 
+    <div class="payment-options" id="paymentOptions"> 
+     <div class="payment-option" style="justify-content:center;align-items:center;cursor:default;"> 
+      <div class="name">
+        支付方式加载中... 
+      </div> 
+     </div> 
+    </div> 
+   </div> 
+  </div> 
+  <!-- 新样式 --> 
+  <div class="new-style" id="newStyle" style="display: none;max-width: 1000px;
+            margin: 10px auto;
+            padding: 0 20px;"> 
+   <div style="background-color: #f6ffea; padding: 5px; margin-bottom: 10px;border: 1px dashed #c4e39d;"> 
+    <div style="padding: 10px; font-size: 14px; line-height: 1.5;"> 
+     <p style="color: red;">注：所有充值业务全及时生效(网络高峰5-10分钟等待)，充值完成以后，请您在指定NPC处领取,无需向管理员索取。</p> 
+    </div> 
+   </div> 
+   <div style="background-color: #fff;border-top: 3px solid #666;border-left: 1px solid #ddd;border-right: 1px solid #ddd;"> 
+    <div style="background-color: #f5f5f5; padding: 10px; font-weight: bold;">
+      选择分区 
+    </div> 
+    <table style="width: 100%; border-collapse: collapse;"> 
+     <thead> 
+      <tr style="background-color: #f0f4f6;"> 
+       <th style="padding: 10px; border: 1px solid #ddd; text-align: center;border-left: 0;">充值分区</th> 
+       <th style="padding: 10px; border: 1px solid #ddd; text-align: center;border-left: 0;border-right: 0;"> 充值</th> 
+      </tr> 
+     </thead> 
+     <tbody id="serverList"> 
+      <!-- 服务器列表将通过JavaScript动态生成 --> 
+     </tbody> 
+    </table> 
+   </div> 
+   <div style="background-color: #fff; padding: 5px; margin-bottom: 20px;border: 1px solid #ddd;border-top: 0;"> 
+    <div style="padding: 10px; font-size: 14px; line-height: 1.5;"> 
+     <p style="color: #1565c0;">注意：请玩家在确认成功充值后，假如还没有出现获得相关物品，请再等几分钟，然后再用您充值的游戏帐号登陆，进行查看！谢谢</p> 
+    </div> 
+   </div> 
+  </div> 
+  <!-- 底部 --> 
+  <div class="footer"> 
+   <p>Copyright © 2020 All Rights Reserved.</p> 
+   <p>仅限于盛大网络官方授权传奇游戏使用</p> 
+  </div> 
+  <script src="./statics/js/jquery.js"></script> 
+  <script>
+        // 从URL获取参数
+        function getUrlParam(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return decodeURIComponent(r[2]);
+            return null;
+        }
+
+        function updateDiscountDisplay(discountAmount, welfareAmount) {
+            var subsidyValue = parseFloat(discountAmount || 0);
+            var welfareValue = parseFloat(welfareAmount || 0);
+
+            if (isNaN(subsidyValue)) {
+                subsidyValue = 0;
+            }
+            if (isNaN(welfareValue)) {
+                welfareValue = 0;
+            }
+
+            document.getElementById('subsidyAmount').value = subsidyValue;
+            document.getElementById('subsidyBubbleAmount').textContent = subsidyValue.toFixed(2);
+            document.getElementById('subsidyWelfareAmount').textContent = welfareValue.toFixed(2);
+
+            if (subsidyValue === 0) {
+                document.getElementById('wxHongbaoSpan').style.display = 'none';
+            } else {
+                document.getElementById('wxHongbaoSpan').style.display = 'inline';
+            }
+        }
+
+        var defaultCashierProducts = [
+            { id: 33, rate: 0, productName: null, productId: 0, name: '微信支付①', typeMark: 'wechat', description: 'wechat1' },
+            { id: 42, rate: 0, productName: null, productId: 0, name: '微信②线[推荐]', typeMark: 'wechat', description: 'wechat2' },
+            { id: 43, rate: 0, productName: null, productId: 0, name: '微信③线[大额]', typeMark: 'wechat', description: 'wechat3' },
+            { id: 44, rate: 0, productName: null, productId: 0, name: '支付宝①线', typeMark: 'alipay', description: 'alipay1' },
+            { id: 45, rate: 0, productName: null, productId: 0, name: '支付宝②线', typeMark: 'alipay', description: 'alipay2' },
+            { id: 46, rate: 0, productName: null, productId: 0, name: '支付宝③线', typeMark: 'alipay', description: 'alipay3' },
+            { id: 47, rate: 0, productName: null, productId: 0, name: '花呗①线[推荐]', typeMark: 'alipay', description: 'hbalipay1' },
+            { id: 48, rate: 0, productName: null, productId: 0, name: '花呗②线[备用]', typeMark: 'alipay', description: 'hbalipay2' }
+        ];
+
+        function escapeHtml(text) {
+            return String(text == null ? '' : text)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function getCashierIcon(product) {
+            var name = (product.name || '').toLowerCase();
+            var typeMark = (product.typeMark || '').toLowerCase();
+            var description = (product.description || '').toLowerCase();
+
+            if (name.indexOf('花呗') !== -1 || description.indexOf('hb') !== -1) {
+                return {
+                    src: './statics/5cq/HBPAY.png',
+                    style: 'width: 50px;',
+                    alt: '花呗'
+                };
+            }
+
+            if (typeMark === 'wechat' || name.indexOf('微信') !== -1) {
+                return {
+                    src: './statics/5cq/SMS.png',
+                    style: 'margin-left: 5px;',
+                    alt: '微信'
+                };
+            }
+
+            return {
+                src: './statics/5cq/ALIPAY.png',
+                style: 'width: 50px;height: 35px;',
+                alt: '支付宝'
+            };
+        }
+
+        function getPayTypeFromProduct(product) {
+            var name = product.name || '';
+            var typeMark = (product.typeMark || '').toLowerCase();
+            var description = (product.description || '').toLowerCase();
+
+            if (name.indexOf('花呗') !== -1 || description.indexOf('hb') !== -1) {
+                return '3';
+            }
+            if (typeMark === 'wechat' || name.indexOf('微信') !== -1) {
+                return '1';
+            }
+            return '2';
+        }
+
+        function renderCashierProducts(products) {
+            var paymentOptions = document.getElementById('paymentOptions');
+            if (!paymentOptions) {
+                return;
+            }
+
+            if (!Array.isArray(products) || !products.length) {
+                paymentOptions.innerHTML = '<div class="payment-option" style="justify-content:center;align-items:center;cursor:default;"><div class="name">暂无可用支付方式</div></div>';
+                return;
+            }
+
+            var html = '';
+            products.forEach(function (product) {
+                var icon = getCashierIcon(product);
+                var payType = getPayTypeFromProduct(product);
+                var productName = escapeHtml(product.name || '未命名产品');
+                var description = escapeHtml(product.description || '');
+
+                html += '<div class="payment-option" ' +
+                    'data-id="' + escapeHtml(product.id || '') + '" ' +
+                    'data-product-id="' + escapeHtml(product.productId || 0) + '" ' +
+                    'data-type-mark="' + escapeHtml(product.typeMark || '') + '" ' +
+                    'data-description="' + description + '" ' +
+                    'data-name="' + productName + '" ' +
+                    'data-pay-type="' + payType + '" ' +
+                    'onclick="selectPayment(this)">' +
+                    '<img src="' + icon.src + '" style="' + icon.style + '" alt="' + icon.alt + '">' +
+                    '<div style="margin: 10px 0 0 10px;">' +
+                    '<div class="name">' + productName + '</div>' +
+                    '</div>' +
+                    '</div>';
+            });
+
+            paymentOptions.innerHTML = html;
+        }
+
+        function loadCashierProducts() {
+            $.ajax({
+                url: baseUrl + 'cashier/products',
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    var products = [];
+                    if (Array.isArray(response)) {
+                        products = response;
+                    } else if (response && Array.isArray(response.data)) {
+                        products = response.data;
+                    } else if (response && Array.isArray(response.list)) {
+                        products = response.list;
+                    }
+
+                    renderCashierProducts(products.length ? products : defaultCashierProducts);
+                },
+                error: function () {
+                    renderCashierProducts(defaultCashierProducts);
+                }
+            });
+        }
+
+        // 页面加载时初始化
+        $(document).ready(function () {
+            loadCashierProducts();
+
+            // 获取URL参数
+            var subsidyId = getUrlParam('subsidy_id');
+            var subsidyMin = getUrlParam('subsidy_min');
+            var subsidyMax = getUrlParam('subsidy_max');
+            var serverName = getUrlParam('server_name');
+            var gameName = getUrlParam('game_name');
+            var payMerchant = getUrlParam('pay_merchant');
+            var Name = getUrlParam('Name');
+            var token = getUrlParam('token');
+            if (token) {
+                // 对token进行解码处理
+                localStorage.setItem('cq-act-token', decodeURIComponent(token));
+            }
+            // 如果Name有值，赋值到游戏区服输入框，不能编辑
+            if (Name) {
+                var gameServerInput = document.getElementById('gameServer');
+                if (gameServerInput) {
+                    gameServerInput.value = Name;
+                    gameServerInput.readOnly = true;
+                }
+            }
+
+            // 根据flat参数显示或隐藏不同样式
+            if (payMerchant === '1') {
+                // 显示新样式，隐藏旧样式
+                document.getElementById('oldStyle').style.display = 'none';
+                document.getElementById('newStyle').style.display = 'block';
+                // 生成服务器列表
+                generateServerList(subsidyId, subsidyMin, subsidyMax);
+                document.getElementById('bannerText').textContent = '上5CQ充值所有发布站游戏，每笔最高减免20元';
+            } else {
+                // 显示旧样式，隐藏新样式
+                document.getElementById('oldStyle').style.display = 'block';
+                document.getElementById('newStyle').style.display = 'none';
+                document.getElementById('bannerText').textContent = '上5CQ充值所有发布站游戏，每笔最高减免20元';
+            }
+
+            // 如果pay_merchant等于0，显示优惠补贴弹窗
+            if (payMerchant === '0' || payMerchant === 0) {
+                // 调用接口获取补贴余额
+                onTokenRequest({
+                    url: '/api/user/wallet',
+                    type: 'GET',
+                    data: {}
+                }, function (res) {
+                    if (res.code == 200 && res.data) {
+                        var subsidyBalance = res.data.subsidy_balance || 0;
+                        var youhuiHtml = '<div style="width: 550px; height: 250px; background-image: url(\'statics/5cq/youhui.png\'); background-size: 100% 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; color: #fff; text-align: center;">' +
+                            '<div style="font-size: 32px; font-weight: bold; color: #ffeb3b; margin-bottom: 20px;margin-top: 90px;">' + subsidyBalance + '元</div>' +
+                            '<div style="font-size: 14px;">输入充值金额查看本次减免金额</div>' +
+                            '</div>';
+                        var youhuiLayer = layer.open({
+                            type: 1,
+                            title: false,
+                            closeBtn: 1,
+                            shadeClose: true,
+                            area: ['550px', '250px'],
+                            content: youhuiHtml,
+                            skin: 'youhui-layer',
+                            offset: '300px',
+                            success: function (layero) {
+                                layero.css('background', 'transparent');
+                                layero.css('box-shadow', 'none');
+                                layero.find('.layui-layer-content').css('padding', '0');
+                                layero.find('.layui-layer-content').css('background', 'transparent');
+                                layero.find('.layui-layer-content').css('box-shadow', 'none');
+                                layero.find('.layui-layer-content').css('border', 'none');
+                                // 5秒钟后自动关闭弹窗
+                                setTimeout(function () {
+                                    layer.close(youhuiLayer);
+                                }, 5000);
+                            }
+                        });
+                    }
+                });
+            }
+
+            // 如果有补贴信息，更新横幅文字
+            if (subsidyMin && subsidyMax) {
+                console.log('补贴ID:', subsidyId);
+                console.log('补贴金额范围:', subsidyMin, '-', subsidyMax);
+                console.log('服务器:', serverName);
+                console.log('游戏:', gameName);
+
+                // 更新横幅文字
+                // document.getElementById('bannerText').textContent = '999PK官网补贴，充值完成立马可得' + subsidyMin + '~' + subsidyMax + '元微信补贴';
+                // document.getElementById('bannerText').textContent = '999PK官网补贴，每天首次充值可获10元以内的微信补贴和福利金奖励';
+            }
+        });
+
+        // 生成服务器列表
+        function generateServerList(subsidyId, subsidyMin, subsidyMax) {
+            var serverListEl = document.getElementById('serverList');
+            serverListEl.innerHTML = '<tr><td colspan="2" style="text-align: center; padding: 20px;">加载中...</td></tr>';
+
+            // 调用API获取充值分区数据
+            onTokenRequest({
+                url: '/api/globalGameSubsidy/queryGamePartitions',
+                type: 'GET',
+                data: {
+                    subsidy_id: subsidyId,
+                    page: 1
+                },
+                toast: false
+            }, function (response) {
+                serverListEl.innerHTML = '';
+
+                if (response.code === 200 && response.data.list.length > 0) {
+                    var partitions = response.data.list;
+                    for (var i = 0; i < partitions.length; i++) {
+                        var partition = partitions[i];
+                        var tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td style="padding: 10px; border: 1px solid #ddd; text-align: left;border-right: 0;border-left: 0;text-align: center;">${partition.Name}</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; text-align: center;border-right: 0;">
+                                <a href="/recharge.html?subsidy_id=${subsidyId}&subsidy_min=${subsidyMin}&subsidy_max=${subsidyMax}&pay_merchant=0&mer_id=${partition.MerId}&mir_id=${partition.Id}&Name=${partition.Name}"><img src="./statics/5cq/p.gif"></a>
+                            </td>
+                        `;
+                        serverListEl.appendChild(tr);
+                    }
+                } else {
+                    serverListEl.innerHTML = '<tr><td colspan="2" style="text-align: center; padding: 20px; color: red;">暂无充值分区数据</td></tr>';
+                }
+            });
+        }
+
+        // 选择支付方式
+        function selectPayment(element) {
+            if (!validateForm()) {
+                return;
+            }
+
+            var payType = parseInt(element.getAttribute('data-pay-type') || '2', 10);
+            var cashierTypeMark = (element.getAttribute('data-type-mark') || '').trim();
+            var cashierDescription = (element.getAttribute('data-description') || '').trim();
+            var cashierName = (element.getAttribute('data-name') || '').trim();
+
+            var account = document.getElementById('playerAccount').value.trim();
+            var amount = document.getElementById('amount').value.trim();
+            var phone = document.getElementById('phone').value.trim();
+            var gameServer = document.getElementById('gameServer').value.trim();
+
+            var subsidyId = getUrlParam('subsidy_id');
+            var subsidyMin = getUrlParam('subsidy_min');
+            var subsidyMax = getUrlParam('subsidy_max');
+            var gameName = getUrlParam('game_name') || '';
+            var urlServerName = getUrlParam('server_name') || '';
+            var serverName = gameServer || urlServerName;
+            var publishId = getUrlParam('publish_id') || '';
+            var notifyUrl = getUrlParam('url') || '';
+            var localOrderNo = getUrlParam('localOrderNo') || '';
+            var discountAmount = document.getElementById('subsidyAmount').value || '0';
+            var markValue = cashierDescription;
+            var payChannel = cashierTypeMark || String(payType);
+            var userInfo = account;
+
+            if (!localOrderNo) {
+                layer.msg('缺少本地订单号，请返回补贴页重新领取');
+                return;
+            }
+
+            $.ajax({
+                url: baseUrl + 'cashier/recharge',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    localOrderNo: localOrderNo,
+                    productName: cashierName || '充值',
+                    orderAmount: amount,
+                    payChannel: payChannel,
+                    userInfo: userInfo,
+                    notifyUrl: notifyUrl,
+                    mark: markValue,
+                    remark: '5CQ发起充值',
+                    contact: phone,
+                    // type: isNaN(payType) ? 2 : payType
+                },
+                success: function (res) {
+                    var success = !!(res && (res.result === true || res.code === 200));
+                    if (!success) {
+                        layer.msg((res && (res.msg || res.message)) || '发起充值失败');
+                        return;
+                    }
+
+                    var responseData = res.data || {};
+                    var qrCode = responseData.QrCode || responseData.qrCode || '';
+                    var orderNumber = res.orderNumber || responseData.OrderNumber || responseData.orderNumber || responseData.TrxNo || responseData.trxNo || localOrderNo;
+                    var finalLocalOrderNo = res.localOrderNo || responseData.localOrderNo || localOrderNo;
+                    var returnedDiscountAmount = res.discountAmount != null ? res.discountAmount : discountAmount;
+                    var rechargeAmount = res.rechargeAmount != null ? res.rechargeAmount : amount;
+                    var finalOrderAmount = res.orderAmount != null ? res.orderAmount : amount;
+                    var signMode = res.signMode != null ? res.signMode : '';
+
+                    try {
+                        sessionStorage.setItem('cashierRechargeInfo', JSON.stringify({
+                            localOrderNo: finalLocalOrderNo,
+                            rechargeAmount: rechargeAmount,
+                            discountAmount: returnedDiscountAmount,
+                            orderAmount: finalOrderAmount,
+                            orderNumber: orderNumber,
+                            signMode: signMode,
+                            productName: cashierName || '充值',
+                            account: account,
+                            publishId: publishId,
+                            url: notifyUrl,
+                            payType: payType,
+                            payChannel: payChannel,
+                            qrCode: qrCode,
+                            responseData: responseData,
+                            createdAt: Date.now()
+                        }));
+                    } catch (storageError) { }
+
+                    if (qrCode) {
+                        window.location.href = qrCode;
+                        return;
+                    }
+
+                    layer.msg('支付发起失败，请稍后再试');
+                },
+                error: function (xhr) {
+                    var message = '请求失败，请稍后重试';
+                    if (xhr && xhr.responseJSON && (xhr.responseJSON.msg || xhr.responseJSON.message)) {
+                        message = xhr.responseJSON.msg || xhr.responseJSON.message;
+                    }
+                    layer.msg(message);
+                }
+            });
+        }
+
+        // 表单验证和提交
+        function validateForm() {
+            var account = document.getElementById('playerAccount').value.trim();
+            var confirmAccount = document.getElementById('confirmAccount').value.trim();
+            var phone = document.getElementById('phone').value.trim();
+            var amount = document.getElementById('amount').value.trim();
+            var gameServer = document.getElementById('gameServer').value.trim();
+            var agreement = document.getElementById('agreement').checked;
+
+            if (!gameServer) {
+                layer.msg('请输入游戏区服');
+                return false;
+            }
+            if (!account) {
+                layer.msg('请输入游戏账号');
+                return false;
+            }
+            if (account !== confirmAccount) {
+                layer.msg('两次输入的账号不一致');
+                return false;
+            }
+            if (!phone) {
+                layer.msg('请输入手机号');
+                return false;
+            }
+            if (!amount) {
+                layer.msg('请输入充值金额');
+                return false;
+            }
+            if (amount < 20) {
+                layer.msg('最低充值20元');
+                return false;
+            }
+            if (!agreement) {
+                layer.msg('请同意服务协议');
+                return false;
+            }
+            return true;
+        }
+    </script> 
+  <script src="./statics/js/baidu-stat.js"></script>  
+ </body>
+</html>

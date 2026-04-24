@@ -1,0 +1,546 @@
+.commonTitle {
+  line-height: 60px;
+}
+
+.commonTitle span {
+  display: inline-block;
+  width: 4px;
+  height: 22px;
+  background: #da0000;
+  vertical-align: -5px;
+}
+
+.commonTitle div {
+  display: inline-block;
+  margin-left: 10px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.commonContent {
+  margin-top: 0;
+  background: #fff url(familyBg.jpg) no-repeat center bottom;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 0 16px 30px;
+}
+
+.adv {
+  margin: 20px 0;
+}
+
+.adv a {
+  float: left;
+  width: 294px;
+  height: 100px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  margin-right: 8px;
+  margin-bottom: 10px;
+  -webkit-box-shadow: 0 2px 6px rgba(135, 135, 135, 0.2);
+  box-shadow: 0 2px 6px rgba(135, 135, 135, 0.2);
+  box-sizing: border-box;
+  border: 1px solid #ee8484;
+}
+
+.adv a:nth-child(4n) {
+  margin-right: 0;
+}
+
+.adv a:nth-last-child(1),
+.adv a:nth-last-child(2),
+.adv a:nth-last-child(3),
+.adv a:nth-last-child(4) {
+  margin-bottom: 0;
+}
+
+.adv a img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.commonTable {
+  width: 100%;
+  background: #fff;
+}
+
+.commonTable .th {
+  font-weight: bold;
+}
+
+.commonTable .td {
+  font-size: 12px;
+  color: #888;
+}
+
+.commonTable .td a {
+  color: inherit;
+}
+
+.commonTable .td a:hover {
+  text-decoration: underline;
+}
+
+.commonTable td {
+  line-height: 36px;
+  text-align: center;
+  border: 1px solid #dddddd;
+  border-top: none;
+  border-left: none;
+}
+
+.commonTable td .blueA {
+  display: inline-block;
+  width: 78px;
+  line-height: 24px;
+  font-size: 12px;
+  text-align: center;
+  color: #fff;
+  background: #1aace9;
+  border-radius: 4px;
+}
+
+.commonTable td .mixA {
+  display: inline-block;
+  width: 78px;
+  line-height: 24px;
+  font-size: 12px;
+  text-align: center;
+  color: #fff;
+  border-radius: 4px;
+  background: #a112c3;
+}
+
+.commonTable td .mixA.bgred {
+  background: #da0000;
+}
+
+.commonTable td .mixA.bgviolet {
+  background: #a112c3;
+}
+
+.commonTable td .mixA.bgyellow {
+  background: #e47c00;
+}
+
+.commonTable td .mixA.bgyellow1 {
+  background: #ffd737;
+  color: #333;
+}
+
+.commonTable td .mixA.bgblue {
+  background: #008ca9;
+}
+
+.commonTable td .mixA.bgorg {
+  background: orange;
+}
+
+.agentqq {
+  border-top: 2px solid #da0000;
+  background: #fff;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.agentqq .title {
+  line-height: 36px;
+  font-weight: bold;
+}
+
+.agentqq ul {
+  border-top: 1px solid #dddddd;
+}
+
+.agentqq li {
+  width: 20%;
+  float: left;
+  height: 36px;
+  line-height: 36px;
+  border-right: 1px solid #dddddd;
+  border-bottom: 1px solid #dddddd;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.agentqq li:nth-child(5n) {
+  border-right: none;
+}
+
+.agentqq li a {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.agentqq li img {
+  vertical-align: -3px;
+}
+
+.tdHover .tdHoverFlag {
+  position: absolute;
+}
+
+.tdHover .tdHoverP {
+  display: inline-block;
+  cursor: pointer;
+  line-height: initial;
+  color: inherit;
+}
+
+.tdHover .tdHoverP.active {
+  color: #da0000;
+}
+
+.tdHover .tdHoverP.active .tdHoverSpan {
+  color: #333;
+}
+
+.tdHover .tdHoverP .tdHoverSpan {
+  display: none;
+  position: absolute;
+  background: #fff;
+  padding: 10px;
+  -webkit-box-shadow: 0 0 14px rgba(67, 90, 142, 0.2);
+  box-shadow: 0 0 14px rgba(67, 90, 142, 0.2);
+  z-index: 5;
+  border-radius: 6px;
+  border: 1px solid #dddddd;
+  line-height: initial;
+}
+
+.tdHover .tdHoverP .tdHoverSpan em {
+  display: block;
+  width: 0;
+  height: 0;
+  border-width: 10px 10px 10px 0;
+  border-style: solid;
+  border-color: transparent #dddddd transparent transparent;
+  position: absolute;
+  top: 50%;
+  margin-top: -10px;
+  left: -10px;
+  /* 三角形居中显示 */
+}
+
+.tdHover .tdHoverP .tdHoverSpan em i {
+  display: block;
+  width: 0;
+  height: 0;
+  border-width: 10px 10px 10px 0;
+  border-style: solid;
+  border-color: transparent #fff transparent transparent;
+  position: absolute;
+  top: -10px;
+  left: 1px;
+}
+
+.tdHoverBar .echartsBar {
+  display: none;
+  -webkit-box-shadow: 0 0 37px rgba(0, 0, 0, 0.27);
+  box-shadow: 0 0 37px rgba(0, 0, 0, 0.27);
+  border-radius: 8px;
+  position: absolute;
+  background: #f3f3f3;
+  z-index: 10;
+}
+
+.tdHoverBar .echartsBar.left:before {
+  content: '';
+  width: 0;
+  height: 0;
+  border-width: 12px;
+  border-color: transparent #F3F3F3 transparent transparent;
+  border-style: solid;
+  position: absolute;
+  top: 20px;
+  left: -24px;
+  -webkit-filter: drop-shadow(0 0 18px rgba(0, 0, 0, 0.27));
+  filter: drop-shadow(0 0 18px rgba(0, 0, 0, 0.27));
+}
+
+.tdHoverBar .echartsBar.right:after {
+  content: '';
+  width: 0;
+  height: 0;
+  border-width: 12px;
+  border-color: transparent transparent transparent #F3F3F3;
+  border-style: solid;
+  position: absolute;
+  top: 20px;
+  right: -24px;
+  -webkit-filter: drop-shadow(0 0 18px rgba(0, 0, 0, 0.27));
+  filter: drop-shadow(0 0 18px rgba(0, 0, 0, 0.27));
+}
+
+.secondaryMarket {
+  background: #fff;
+  padding: 0 30px 30px;
+}
+
+.secondaryMarket .filter {
+  background: #fff;
+  padding: 20px 0 6px;
+  position: relative;
+}
+
+.secondaryMarket .filter .icon-sale {
+  position: absolute;
+  right: 60px;
+  top: -2px;
+}
+
+.secondaryMarket .filter .filterItem {
+  line-height: 26px;
+}
+
+.secondaryMarket .filter .filterItem>span {
+  float: left;
+  width: 75px;
+}
+
+.secondaryMarket .filter .filterItem>div {
+  float: left;
+}
+
+.secondaryMarket .filter .filterItem .item {
+  width: 900px;
+}
+
+.secondaryMarket .filter .filterItem .item a {
+  color: #666;
+  display: inline-block;
+  margin-right: 21px;
+  margin-bottom: 16px;
+  padding: 0 5px;
+  border-radius: 4px;
+  position: relative;
+}
+
+.secondaryMarket .filter .filterItem .item a img {
+  display: block;
+  position: absolute;
+  top: -17px;
+  right: -6px;
+}
+
+.secondaryMarket .filter .filterItem .item a.hot {
+  color: #deb57e;
+}
+
+.secondaryMarket .filter .filterItem .item a:hover {
+  color: #fff;
+  background: #deb57e;
+}
+
+.secondaryMarket .filter .filterItem .item a.active {
+  color: #fff;
+  background: linear-gradient(90deg, #c89857 0%, #deb57e 100%);
+}
+
+.secondaryMarket .filter .filterItem .item a:last-child {
+  margin-right: 0;
+}
+
+.secondaryMarket .filter .filterItemInput {
+  line-height: 30px;
+  margin-bottom: 16px;
+}
+
+.secondaryMarket .filter .filterItemInput input {
+  width: 200px;
+  height: 28px;
+  border: 1px solid #dddddd;
+  text-indent: 6px;
+}
+
+.secondaryMarket .filter .filterItemInput .searchBtn {
+  display: inline-block;
+  vertical-align: -1px;
+  margin-left: 5px;
+  width: 60px;
+  height: 28px;
+  color: #fff;
+  background: linear-gradient(90deg, #c89857 0%, #deb57e 100%);
+  outline: none;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 28px;
+  text-align: center;
+}
+
+.secondaryMarket .filter .filterItemInput .link {
+  margin-left: 20px;
+  display: inline-block;
+}
+
+.secondaryMarket .rulesLink {
+  margin-bottom: 30px;
+}
+
+.secondaryMarket .rulesLink a {
+  color: #da0000;
+  text-decoration: underline;
+  margin-right: 20px;
+}
+
+.secondaryMarket .sort {
+  line-height: 40px;
+  border: 1px solid #e1e1e1;
+  padding-right: 30px;
+}
+
+.secondaryMarket .sort .lf li {
+  float: left;
+  width: 100px;
+  text-align: center;
+  border-right: 1px solid #E1E1E1;
+  cursor: pointer;
+}
+
+.secondaryMarket .sort .lf li em {
+  display: none;
+}
+
+.secondaryMarket .sort .lf li.active {
+  color: #da0000;
+}
+
+.secondaryMarket .sort .lf li.active em {
+  display: inline;
+}
+
+.secondaryMarket .sort .lf li.active span {
+  display: none;
+}
+
+.secondaryMarket .sort .rt {
+  color: #888;
+}
+
+.secondaryMarket .sort .rt span {
+  color: #D60203;
+}
+
+.secondaryMarket .listc {
+  margin-top: 20px;
+}
+
+.secondaryMarket .listc li {
+  display: inline-block;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.secondaryMarket .listc li:first-child {
+  width: 535px;
+  text-align: left;
+  padding-left: 25px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.secondaryMarket .listc li:nth-child(2) {
+  width: 175px;
+}
+
+.secondaryMarket .listc li:nth-child(3) {
+  width: 225px;
+}
+
+.secondaryMarket .listc li:nth-child(4) {
+  width: 155px;
+}
+
+.secondaryMarket .listc .th {
+  line-height: 46px;
+  border-top: 1px solid #dddddd;
+  border-bottom: 1px solid #dddddd;
+}
+
+.secondaryMarket .listc .list .listItem {
+  border-bottom: 1px dashed #dddddd;
+  line-height: 70px;
+}
+
+.secondaryMarket .listc .list .listItem:hover li:first-child {
+  color: #deb57e;
+  text-decoration: underline;
+}
+
+.secondaryMarket .listc .list .listItem:hover li:nth-child(3) {
+  color: #deb57e;
+}
+
+.secondaryMarket .listc .list .listItem:hover li:nth-child(4) div {
+  background: #deb57e;
+}
+
+.secondaryMarket .listc .list .listItem li:first-child {
+  font-size: 16px;
+}
+
+.secondaryMarket .listc .list .listItem li:first-child .placeTop {
+  margin-right: 6px;
+  display: inline-block;
+  font-size: 12px;
+  color: #fff;
+  line-height: 22px;
+  background: linear-gradient(90deg, #c89857 0%, #deb57e 100%);
+  border-radius: 4px;
+  padding: 0 10px;
+}
+
+.secondaryMarket .listc .list .listItem li:nth-child(2) {
+  font-size: 18px;
+  color: #deb57e;
+  font-weight: bold;
+}
+
+.secondaryMarket .listc .list .listItem li:nth-child(3) {
+  font-size: 16px;
+}
+
+.secondaryMarket .listc .list .listItem li:nth-child(4) {
+  text-align: center;
+}
+
+.secondaryMarket .listc .list .listItem li:nth-child(4) div {
+  display: inline-block;
+  width: 80px;
+  height: 30px;
+  color: #fff;
+  background: linear-gradient(90deg, #c89857 0%, #deb57e 100%);
+  outline: none;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 16px;
+  line-height: 30px;
+  text-align: center;
+}
+
+.secondaryMarket .paginationWrapper {
+  margin-top: 30px;
+}
+
+.digg {
+  height: 60px;
+  line-height: 60px;
+  overflow: hidden;
+  text-align: center;
+}
+
+.digg a,
+.digg span {
+  padding: 8px 15px;
+  border: solid 1px #F6F6F6;
+  margin-right: 5px;
+}
+
+.digg span.current {
+  background: linear-gradient(90deg, #c89857 0%, #deb57e 100%);
+  color: #FFFFFF;
+}

@@ -439,7 +439,7 @@
                         done: function (res) {
                             var price = res.data;
 
-                            if (hours >= 23) {
+                            if (hours < 23) {
                                 var url1 = layui.setter.url + 'addAdogin?token=' + localStorage.getItem('vipvtoken');
                                 var text = $("#form1 textarea[name='content']").val();
                                 var parsed = parseAdText(text);

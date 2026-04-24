@@ -1,6 +1,6 @@
 <html>
- <head> 
-  <meta http-equiv="content-type" content="text/html; charset=utf-8"> 
+ <head>
+  <meta charset="utf-8">  
   <title>5CQ-传奇广告查询站_传奇广告排行_传奇资源站_新开传奇新服排名站(5CQ.COM)</title>
   <meta name="description" content="5CQ.Com传奇广告排行榜,传奇私服查询站,传奇资源站,好玩的传奇排名站,玩家最爱的新开传奇,GM最喜欢的传奇工具,传奇直播,传奇新开服,传奇相关尽在5CQ(玩传奇)">
   <meta name="keywords" content="传奇广告查询站,传奇资源站,传奇广告排行,传奇SF广告统计(5CQ.COM)">   
@@ -30,6 +30,27 @@
             transition: left .4s ease-out, opacity .3s ease-out;
             z-index: -1;
         }
+        #ph_html tr.tder {
+            background: #f9f9d4;
+        }
+
+        #ph_html tr.tder:hover,
+        #ph_html tr.tder:hover td {
+            position: relative;
+            background: #f8f6f4 !important;
+        }
+        .blueA{
+                background: #d33f3f;
+                border-radius: 4px;
+                width: 65px;
+                height: 24px;
+                line-height: 24px;
+                text-align: center;
+                display: inline-block;
+                font-size: 12px;
+                color: #FFFFFF;
+                font-weight: 500;
+        }
     </style> 
  </head> 
  <body> 
@@ -37,16 +58,16 @@
   <div class="header_module"> 
    <div class="header_nav clearfix banxin"> 
     <ul class="clearfix fl"> 
-     <li class="fl"> <h1 style="margin: 0 auto;"> <a class="logo-a" href="http://cess.5cq.com/" title="传奇私服"><img src="./statics/images/ico.png" alt="传奇私服"></a> </h1> </li> 
-     <li class="fl"><a href="http://cess.5cq.com/" target="_blank">广告查询</a></li> 
-     <li class="fl"><a href="http://cess.5cq.com/code/phoneRank.html" target="_blank">传奇手游</a> </li> 
-     <li class="fl"><a href="http://cess.5cq.com//code/ppdf.html" target="_blank">品牌好服</a></li> 
-     <li class="fl"><a href="http://cess.5cq.com/" ref="nofollow" target="_blank">授权查询</a></li> 
+     <li class="fl"> <h1 style="margin: 0 auto;"> <a class="logo-a" href="http://cess.5cq.com/" title="传奇私服"><img src="./statics/images/ico1.png" alt="传奇私服"></a> </h1> </li> 
+     <li class="fl"><a href="https://www.5cq.com/" target="_blank">广告查询</a></li> 
+     <li class="fl"><a href="https://www.5cq.com/code/phoneRank.html" target="_blank">传奇手游</a> </li> 
+     <li class="fl"><a href="https://www.5cq.com//code/ppdf.html" target="_blank">品牌好服</a></li> 
+     <li class="fl"><a href="https://www.5cq.com/" ref="nofollow" target="_blank">授权查询</a></li> 
      <li class="fl loging"> 
       <div class="login-info" style="display: none;"> 
        <img src="" alt="头像"> 
-       <a href="http://cess.5cq.com/" class="receive-coin">领取金币</a> 
-       <a href="http://cess.5cq.com/" class="logout">退出</a> 
+       <a href="https://www.5cq.com/" class="receive-coin">领取金币</a> 
+       <a href="https://www.5cq.com/" class="logout">退出</a> 
       </div> <a id="login" style=""> 
        <div class="login"></div> </a> 
       <div class="login_menu"> 
@@ -61,18 +82,17 @@
   </div> 
   <header> 
    <title>传奇圈,传奇发布网,正版传奇授权发布网,WwW.CQQ.CoM</title> 
-   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
   </header> 
   <block name="body"> 
    <div id="index-content" class="content container"> 
     <div id="header" class="header"> 
-     <a href="http://cess.5cq.com/" target="_blank"> 
+     <a href="https://www.5cq.com/" target="_blank"> 
       <div>
         查看授权 
       </div> </a> 
     </div> 
     <div class="advertisement">
-      [www.chacq.Com] 官方授权→同步站点www.5cq.com 严禁：赌博色情，病毒木马劫持违法行为。一经发现立即删除并提交相关部门处理 
+      [www.5cq.com] 官方授权→同步站点www.chacq.Com 严禁：赌博色情，病毒木马劫持违法行为。一经发现立即删除并提交相关部门处理 
     </div> 
     <!--       <div class="advertisingsa">
         <a href="http://cqq.com/" target="_blank">
@@ -157,84 +177,87 @@
            <th style="width: 250px;">详细版本介绍</th> 
            <th style="width: 132px;">客服QQ</th> 
            <th style="width:80px;">游戏主页</th> 
-           <th style="width: 90px;">广告总价</th> 
+           <th style="width: 90px;">官方福利</th> 
           </tr> 
           <!--自发广告--> 
           <script>
-                                // var { pubList } = showHtml('http://jaxone.5cq.com/server/' + 'report/selectAllByVersion', null);
-                                var { pubList } = showHtml('http://localhost:8086/server/' + 'report/selectAllByVersion', null);
-                                var dataHtml = '';
-                                for (var item of pubList) {
-                                    item.url = item.url
-                                    dataHtml +=
-                                        `<tr class="tder" data="542309" data-href="${item.url}" style="background: rgb(255,255,0);">
-                                        <td><img src="./statics/images/vip1.gif" style="height: 40px;"></td>
-                                        <td><a href="${item.url}"
-                                               target="_blank">${item.name}</a></td>
-                                        <td style="width: 156px;word-break:break-all;"><a
-                                                href="${item.url}"
-                                                target="_blank">${item.ipname}</a></td>
-                                        <td><a href="${item.url}"
-                                               target="_blank">${item.line}</a></td>
-                                        <td><a href="${item.url}"
-                                               target="_blank">${item.versiondepict}</a></td>
-                                        <td><a href="${item.url}"
-                                               target="_blank">${item.kfqq}</a></td>
-                                        <td><a href="${item.url}"
-                                               target="_blank" class="Redbtn blueA">点击查看</a></td>
-                                        <td><img src="./statics/images/tui1.gif" style="vertical-align: inherit;height: 20px;"></td>
-                                    </tr>`
-                                }
-
-                                document.write(dataHtml);
-                            </script> 
+                // var { pubList } = showHtml('http://jaxone.5cq.com/server/' + 'report/selectAllByVersion', null);
+                var { pubList } = showHtml('http://localhost:8086/server/' + 'report/selectAllByVersion', null);
+                var dataHtml = '';
+                for (var item of pubList) {
+                    item.url = item.url
+                    dataHtml +=
+                        `<tr class="tder" data="542309" data-href="${item.url}">
+                        <td><img src="./statics/images/vip1.gif" style="height: 30px;"></td>
+                        <td><a href="${item.url}"
+                                target="_blank">${item.name}</a></td>
+                        <td style="width: 156px;word-break:break-all;"><a
+                                href="${item.url}"
+                                target="_blank">${item.ipname}</a></td>
+                        <td><a href="${item.url}"
+                                target="_blank">${item.line}</a></td>
+                        <td><a href="${item.url}"
+                                target="_blank">${item.versiondepict}</a></td>
+                        <td><a href="${item.url}"
+                                target="_blank">${item.kfqq}</a></td>
+                        <td><a href="${item.url}"
+                                target="_blank" class="Redbtn blueA">领取补贴</a></td>
+                        <td><img src="./statics/images/tui1.gif" style="vertical-align: inherit;height: 24px;"></td>
+                    </tr>`
+                }
+                document.write(dataHtml);
+            </script> 
           <!--采集广告--> 
           <script>
-                                var formData = new FormData();
-                                formData.append("webpage", 1);
-                                formData.append("limit", 500);
-                                // var { data } = showHtml('http://jaxone.5cq.com/server/' + 'ranking/select', formData);
-                                var { data } = showHtml('http://localhost:8086/server/' + 'ranking/select', formData);
-                                var dataHtml = '';
-
-                                for (let i = 1; i <= data.rankings.length; i++) {
-                                    var item = data.rankings[i - 1];
-                                    item.url = item.url
-                                    var topClass;
-                                    switch (i) {
-                                        case 1:
-                                            topClass = 'top-1';
-                                            break;
-                                        case 2:
-                                            topClass = 'top-2';
-                                            break;
-                                        case 3:
-                                            topClass = 'top-3';
-                                            break;
-                                        default:
-                                            topClass = 'top-4';
-                                    }
-                                    dataHtml +=
-                                        `<tr class="tder" data="542309" data-href="${item.url}" style="background: rgb(255,255,0);">
-                                        <td><a class="ranking-top ${topClass}">${i > 3 ? i : ''}</a></td>
-                                        <td><a href="${item.url}"
-                                               target="_blank">${item.name}</a></td>
-                                        <td style="width: 156px;word-break:break-all;"><a
-                                                href="${item.url}"
-                                                target="_blank">${item.ipname}</a></td>
-                                        <td><a href="${item.url}"
-                                               target="_blank">${item.line}</a></td>
-                                        <td><a href="${item.url}"
-                                               target="_blank">${item.versiondepict}</a></td>
-                                        <td><a href="${item.url}"
-                                               target="_blank">${item.kfqq}</a></td>
-                                        <td><a href="${item.url}"
-                                               target="_blank" class="Redbtn blueA">点击查看</a></td>
-                                        <td>${item.money}</td>
-                                    </tr>`
-                                }
-                                document.write(dataHtml);
-                            </script> 
+                var formData = new FormData();
+                formData.append("webpage", 1);
+                formData.append("limit", 100);
+                // var { data } = showHtml('http://jaxone.5cq.com/server/' + 'ranking/select', formData);
+                var { data } = showHtml('http://localhost:8086/server/' + 'ranking/select', formData);
+                var dataHtml = '';
+                dataHtml += `<tr class="tder">
+                    <td colspan="8" style="padding:0; text-align:center;">
+                        <img src="/statics/images/rankbar1.gif" style="display:block; width:100%; margin:0 auto; padding:0;" height="60" width="1300">
+                    </td>
+                </tr>`;
+                for (let i = 1; i <= data.rankings.length; i++) {
+                    var item = data.rankings[i - 1];
+                    item.url = item.url
+                    var topClass;
+                    switch (i) {
+                        case 1:
+                            topClass = 'top-1';
+                            break;
+                        case 2:
+                            topClass = 'top-2';
+                            break;
+                        case 3:
+                            topClass = 'top-3';
+                            break;
+                        default:
+                            topClass = 'top-4';
+                    }
+                    dataHtml +=
+                        `<tr class="tder" data="542309" data-href="${item.url}">
+                        <td><a class="ranking-top ${topClass}">${i > 3 ? i : ''}</a></td>
+                        <td><a href="${item.url}"
+                                target="_blank">${item.name}</a></td>
+                        <td style="width: 156px;word-break:break-all;"><a
+                                href="${item.url}"
+                                target="_blank">${item.ipname}</a></td>
+                        <td><a href="${item.url}"
+                                target="_blank">${item.line}</a></td>
+                        <td><a href="${item.url}"
+                                target="_blank">${item.versiondepict}</a></td>
+                        <td><a href="${item.url}"
+                                target="_blank">${item.kfqq}</a></td>
+                        <td><a href="${item.url}"
+                                target="_blank" class="Redbtn blueA">点击查看</a></td>
+                        <td>${item.money}</td>
+                    </tr>`
+                }
+                document.write(dataHtml);
+            </script> 
          </tbody> 
         </table> 
         <!--<div class="ph_loding" style="display: none; text-align: center">--> 

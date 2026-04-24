@@ -51,7 +51,7 @@
 /* 顶部 6 卡 */
 #personHome.ph-static .phs-top{
     display:grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr 1fr; /* 用户/排行榜/加成/金币/钱包/右侧按钮 */
+    grid-template-columns: 1.5fr 0.5fr 1fr 1fr 1fr 1fr; /* 用户/排行榜/加成/金币/钱包/右侧按钮 */
     border:1px solid #eee;
     background:#fff;
 }
@@ -69,9 +69,25 @@
 
 /* 用户卡：左头像+修改资料；右昵称+两行信息 */
 #personHome.ph-static .phs-user{
+    flex-direction:column;
     justify-content:flex-start;
     align-items:flex-start;
+    gap:12px;
+}
+#personHome.ph-static .phs-usertop{
+    width:100%;
+    display:flex;
+    align-items:flex-start;
     gap:14px;
+}
+#personHome.ph-static .phs-usermain{
+    flex:1;
+    width:100%;
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    gap:10px;
 }
 #personHome.ph-static .phs-avatarcol{
     width:86px;
@@ -116,6 +132,32 @@
     font-size:12px;text-decoration:none;
 }
 #personHome.ph-static .phs-userinfo{flex:1;min-width:0;}
+#personHome.ph-static .phs-useractions{
+    display:flex;
+    width:100%;
+    flex-wrap:nowrap;
+    gap:10px;
+    padding-top:10px;
+    border-top:1px dashed #ead9c6;
+}
+#personHome.ph-static .phs-useraction-btn{
+    flex:1;
+    min-width:0;
+    height:34px;
+    line-height:34px;
+    margin:0;
+    padding:0 18px;
+    border:none;
+    border-radius:18px;
+    background:linear-gradient(135deg, #b51f24 0%, #e34b39 100%) !important;
+    box-shadow:0 8px 18px rgba(211,63,63,.18);
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:.5px;
+}
+#personHome.ph-static .phs-useraction-btn:hover{
+    opacity:.92;
+}
 #personHome.ph-static .phs-name{
     font-size:16px;font-weight:900;color:#222;
     margin:2px 0 8px;
@@ -181,7 +223,8 @@
 #personHome.ph-static .phs-act{
     width:150px;height:34px;line-height:34px;
     text-align:center;border-radius:6px;
-    background:#ff6a00;color:#fff;
+    background:linear-gradient(175deg, #8b1d21, #f70404);;
+    color:#fff;
     text-decoration:none;
     font-size:12px;font-weight:1000;
 }
@@ -551,6 +594,12 @@
     #personHome.ph-static .phs-row2,
     #personHome.ph-static .phs-row3{grid-template-columns:1fr;}
     #personHome.ph-static .phs-actions{align-items:center;}
+    #personHome.ph-static .phs-user{align-items:center;}
+    #personHome.ph-static .phs-usertop{flex-direction:column;align-items:center;}
+    #personHome.ph-static .phs-usermain{width:100%;}
+    #personHome.ph-static .phs-userinfo{text-align:center;}
+    #personHome.ph-static .phs-useractions{flex-wrap:wrap;justify-content:center;}
+    #personHome.ph-static .phs-useraction-btn{min-width:140px;flex:0 1 160px;}
 }
 
 /* 幸运转盘样式 */

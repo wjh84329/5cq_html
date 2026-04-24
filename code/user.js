@@ -88,13 +88,14 @@ function checkTimeCountMinites(){
 
 function updatePageByUserInfo(data){
     checkUserPhoneAndSfz();
-    $('.phs-userinfo .phs-name').text(data.nickname);
+    $('.phs-userinfo .phs-name').text(data.name);
     $('.headimg').attr('src', data.avatar);
     $('.phs-meta .lv').text(data.lv);
     $('.phs-meta .userid').text(data.id);
     $('.phs-meta .yxsc').text(data.total_yxsc);
     var coin_num_ = data.coin_num.replace(/\.\d+$/, '');
     $('.coin_num').text(coin_num_);
+    $('.fuli').text(data.waelfare.replace(/\.\d+$/, ''));
     $('.money').text(data.money.replace(/\.\d+$/, ''));
     $('#bagGold').text('金币:' + coin_num_);
     $('#bagMoney').text('元宝:' + data.money.replace(/\.\d+$/, ''));
@@ -131,13 +132,14 @@ function getHzUser() {
                 var data = response.data;
                 hzUserObj = data;
                 checkUserPhoneAndSfz();
-                $('.phs-userinfo .phs-name').text(data.nickname);
+                $('.phs-userinfo .phs-name').text(data.name);
                 $('.headimg').attr('src', data.avatar);
                 $('.phs-meta .lv').text(data.lv);
                 $('.phs-meta .yxsc').text(data.yxsc);
                 $('.phs-meta .userid').text(data.id);
                 var coin_num_ = data.coin_num.replace(/\.\d+$/, '');
                 $('.coin_num').text(coin_num_);
+                $('.fuli').text(data.waelfare.replace(/\.\d+$/, ''));
                 $('.money').text(data.money.replace(/\.\d+$/, ''));
                 $('#bagGold').text('金币:' + coin_num_);
                 $('#bagMoney').text('元宝:' + data.money.replace(/\.\d+$/, ''));
@@ -738,6 +740,57 @@ function exchangeMoney(num) {
         }
     });
 }
+
+function exchangeWelfare(num) {
+    var token = $.cookie('hzusertoken');
+    if (!token) {
+        uiMsg('请先登录', { icon: 2 });
+        return;
+    }
+
+    var customer = getUser();
+    var openId = customer ? (customer.open_id || customer.openid) : '';
+
+    if (!openId) {
+        uiMsg('未获取到用户 open_id', { icon: 2 });
+        return;
+    }
+
+    $.ajax({
+        url: hzRequestUrl + 'user/coinToWelfare',
+        type: 'POST',
+        headers: {
+            boxVersion: '1.0.0',
+            'token': $.cookie('hzusertoken')
+        },
+        dataType: 'json',
+        data: {
+            open_id: openId,
+            coin_num: num
+        },
+        success: function (response) {
+            if (response.code === 200) {
+                uiMsg(response.msg || '兑换成功', { icon: 1 });
+
+                if (response.user_info) {
+                    var nextCoin = String(response.user_info.coin_num == null ? 0 : response.user_info.coin_num).replace(/\.\d+$/, '');
+                    var nextWelfare = String(response.user_info.waelfare == null ? 0 : response.user_info.waelfare).replace(/\.\d+$/, '');
+                    $('.coin_num').text(nextCoin);
+                    $('.fuli').text(nextWelfare);
+                } else {
+                    getHzUser();
+                }
+            } else {
+                uiMsg(response.msg || '兑换失败', { icon: 2 });
+            }
+        },
+        error: function (error) {
+            console.error('Error exchanging welfare:', error);
+            uiMsg('兑换请求失败，请稍后再试', { icon: 2 });
+        }
+    });
+}
+
 $(document)
     .off('click.exchangeWallet')
     .on('click.exchangeWallet', '#exchangeWalletBtn', function (e) {
@@ -787,6 +840,63 @@ $(document)
                 }
 
                 exchangeMoney(num);
+                layer.close(index);
+            }
+        });
+    });
+
+$(document)
+    .off('click.exchangeWelfare')
+    .on('click.exchangeWelfare', '#exchangeWelfareBtn', function (e) {
+        e.preventDefault();
+
+        var customer = getUser();
+        if (!customer) {
+            uiMsg('请先登录', { icon: 2 });
+            if (typeof myLogin === 'function') myLogin();
+            return;
+        }
+
+        var currentCoin = Number($('.coin_num').text()) || 0;
+        var currentWelfare = Number($('.fuli').text()) || 0;
+
+        layer.closeAll();
+        layer.open({
+            type: 1,
+            title: '兑换补贴金',
+            area: ['420px', '300px'],
+            shadeClose: true,
+            content:
+                '<div style="padding:20px;">' +
+                    '<div style="margin-bottom:12px;">兑换比例：100金币 = 1补贴金</div>' +
+                    '<div style="margin-bottom:12px;">当前金币：' + currentCoin + '</div>' +
+                    '<div style="margin-bottom:12px;">当前补贴金：' + currentWelfare + '</div>' +
+                    '<div style="margin-bottom:12px;">' +
+                        '<input id="exchangeWelfareInput" type="number" min="100" step="100" placeholder="请输入兑换金币数量" ' +
+                        'style="width:100%;height:36px;border:1px solid #ddd;padding:0 10px;box-sizing:border-box;" />' +
+                    '</div>' +
+                    '<div style="color:#999;">请输入 100 的整数倍</div>' +
+                '</div>',
+            btn: ['确认兑换', '取消'],
+            yes: function (index) {
+                var num = Number($('#exchangeWelfareInput').val());
+
+                if (!num || num < 100) {
+                    uiMsg('最少兑换100金币', { icon: 2 });
+                    return;
+                }
+
+                if (num % 100 !== 0) {
+                    uiMsg('请输入100的整数倍', { icon: 2 });
+                    return;
+                }
+
+                if (num > currentCoin) {
+                    uiMsg('金币余额不足', { icon: 2 });
+                    return;
+                }
+
+                exchangeWelfare(num);
                 layer.close(index);
             }
         });
@@ -867,7 +977,7 @@ function updateProgressBar(minite) {
 
 
 
-function fillRedBagUseForm() {
+function fillRedBagUseForm__deprecated() {
   $('#redBagServerName').val((window.gamePackPublishData && window.gamePackPublishData.name) || '');
   $('#redBagGameUrl').val((window.gamePackPublishData && window.gamePackPublishData.url) || '');
   $('#redBagCurrency').val('');
@@ -877,7 +987,7 @@ function fillRedBagUseForm() {
   $('#totalAmount').text('0');
 }
 
-function getRedBagFormData() {
+function getRedBagFormData__legacy() {
   return {
     yxmc: $('#redBagServerName').val(),
     yxgw: $('#redBagGameUrl').val(),
@@ -888,13 +998,13 @@ function getRedBagFormData() {
   };
 }
 
-function validateRedBagForm(formData) {
+function validateRedBagForm__legacy(formData) {
   return formData.hbmc && formData.czzh && formData.czqf && formData.QQ;
 }
 
 
 
-function openRedBagUseDialog(redBagIds, redBagListDialog, totalAmount) {
+function openRedBagUseDialog__legacy(redBagIds, redBagListDialog, totalAmount) {
   layui.use(['layer'], function(){
     var layer = layui.layer;
 
@@ -945,7 +1055,20 @@ function openRedBagUseDialog(redBagIds, redBagListDialog, totalAmount) {
     });
   });
 }
-function submitRedBagBatch(redBagIds, open_id, formData, done) {
+function submitRedBagBatch__legacy(redBagIds, open_id, formData, done) {
+    var publishId = gamePackPublishData.id;
+    console.log('Submitting red bag batch with data:', {
+        open_id: open_id,
+        red_bag_ids: redBagIds.join(','),
+        yxmc: formData.yxmc,
+        yxgw: formData.yxgw,
+        hbmc: formData.hbmc,
+        czzh: formData.czzh,
+        czqf: formData.czqf,
+        QQ: formData.QQ,
+        publishId: publishId
+    });
+    return false; // 先阻止实际提交，等调试完再去掉
   $.ajax({
     url: hzRequestUrl + 'kill/use_red_bag',
     type: 'POST',
@@ -999,3 +1122,434 @@ function submitRedBagBatch(redBagIds, open_id, formData, done) {
 //     }
 //   };
 // })(jQuery);
+
+function escapeRedBagHtml(value) {
+  return String(value == null ? '' : value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function getRedBagDialogMeta(redBagIds, totalAmount) {
+  var publishData = window.gamePackPublishData || {};
+  return {
+    title: publishData.name || '',
+    url: publishData.url || '#',
+    amount: Number(totalAmount) || 0,
+    count: redBagIds.length
+  };
+}
+
+function getRedBagFormData__deprecated() {
+  return {
+    yxmc: (window.gamePackPublishData && window.gamePackPublishData.name) || '',
+    yxgw: (window.gamePackPublishData && window.gamePackPublishData.url) || '',
+    hbmc: ($('#redbag_currency').val() || '').trim(),
+    czzh: ($('#redbag_account').val() || '').trim(),
+    czqf: ($('#redbag_server').val() || '').trim(),
+    QQ: ($('#redbag_qq').val() || '').trim()
+  };
+}
+
+function validateRedBagForm__deprecated(formData) {
+  if (!formData.hbmc) return '请输入充值货币名称';
+  if (!formData.czzh || formData.czzh.length < 4) return '请输入有效充值账号，至少4位';
+  if (formData.czzh !== (($('#redbag_confirm_account').val() || '').trim())) return '两次输入的充值账号不一致';
+  if (!formData.czqf) return '请输入充值区服';
+  if (!formData.QQ) return '请输入联系QQ';
+  return '';
+}
+
+function showRedBagUseSuccess(meta, formData) {
+  layui.use(['layer'], function(){
+    var layer = layui.layer;
+    var targetUrl = meta.url || 'javascript:void(0);';
+    var openTarget = meta.url && meta.url !== '#' ? ' target="_blank"' : '';
+    var nowText = new Date().toLocaleString('zh-CN', { hour12: false });
+    var html = '<div style="padding:18px 18px 20px;background:#fff;">';
+    html += '<div style="text-align:center;line-height:1.3;">';
+    html += '<div style="font-size:26px;color:#222;">￥' + escapeRedBagHtml(meta.amount) + '元</div>';
+    html += '<div style="font-size:14px;color:#2c6ed5;margin-top:8px;">' + escapeRedBagHtml(meta.title) + '</div>';
+    html += '<div style="font-size:14px;color:#2c6ed5;margin-top:2px;">';
+    if (meta.url && meta.url !== '#') {
+      html += '<a href="' + escapeRedBagHtml(targetUrl) + '"' + openTarget + ' style="color:#2c6ed5;text-decoration:none;">进入网站</a>';
+    }
+    html += '</div>';
+    html += '</div>';
+    html += '<div style="margin:16px 0 14px;text-align:center;color:#ff4d4f;font-size:14px;">使用流程：进入游戏 -> 联系充值NPC/客服 -> 按填写信息发放红包充值</div>';
+    html += '<div style="position:relative;border:1px solid #e7e7e7;border-radius:8px;padding:16px 18px 14px;margin-bottom:16px;">';
+    html += '<div style="position:absolute;right:14px;top:14px;color:#ff7875;border:3px solid #ff9c9c;border-radius:50%;width:86px;height:86px;transform:rotate(-18deg);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;opacity:0.75;">成功</div>';
+    html += '<div style="padding-right:98px;line-height:1.9;font-size:14px;color:#333;">';
+    html += '<div><span style="display:inline-block;width:88px;font-weight:700;">充值货币</span>' + escapeRedBagHtml(formData.hbmc) + '</div>';
+    html += '<div><span style="display:inline-block;width:88px;font-weight:700;">充值账号</span>' + escapeRedBagHtml(formData.czzh) + '</div>';
+    html += '<div><span style="display:inline-block;width:88px;font-weight:700;">充值区服</span>' + escapeRedBagHtml(formData.czqf) + '</div>';
+    html += '<div><span style="display:inline-block;width:88px;font-weight:700;">联系QQ</span>' + escapeRedBagHtml(formData.QQ) + '</div>';
+    html += '<div><span style="display:inline-block;width:88px;font-weight:700;">红包数量</span>' + escapeRedBagHtml(meta.count) + '个</div>';
+    html += '<div><span style="display:inline-block;width:88px;font-weight:700;">红包金额</span>' + escapeRedBagHtml(meta.amount) + '元真实充值</div>';
+    html += '<div><span style="display:inline-block;width:88px;font-weight:700;">提交时间</span>' + escapeRedBagHtml(nowText) + '</div>';
+    html += '</div>';
+    html += '</div>';
+    if (meta.url && meta.url !== '#') {
+      html += '<a href="' + escapeRedBagHtml(targetUrl) + '"' + openTarget + ' style="display:block;width:100%;box-sizing:border-box;background:#1677ff;color:#fff;text-align:center;border-radius:6px;padding:13px 12px;font-size:16px;font-weight:700;text-decoration:none;">进入游戏</a>';
+    }
+    html += '</div>';
+
+    layer.open({
+      type: 1,
+      shadeClose: true,
+      title: false,
+      closeBtn: 1,
+      area: ['480px', 'auto'],
+      content: html
+    });
+  });
+}
+
+function openRedBagUseDialog__deprecated(redBagIds, redBagListDialog, totalAmount) {
+  layui.use(['layer'], function(){
+    var layer = layui.layer;
+    var meta = getRedBagDialogMeta(redBagIds, totalAmount);
+    var html = '<div style="padding:20px;">';
+    html += '<div style="text-align:center;margin-bottom:10px;">';
+    html += '<div style="font-size:28px;color:#e53935;font-weight:700;">' + escapeRedBagHtml(meta.amount) + '元</div>';
+    html += '<div style="font-size:14px;color:#1E88E5;margin-top:8px;">' + escapeRedBagHtml(meta.title) + '</div>';
+    html += '<div style="font-size:12px;color:#999;margin-top:6px;">共 ' + escapeRedBagHtml(meta.count) + ' 个红包</div>';
+    html += '</div>';
+    html += '<p style="color:#d32f2f;text-align:center;margin:10px 0;">使用流程：进入游戏 -> 填写充值信息 -> 提交后由系统发放红包充值</p>';
+    html += '<div style="margin:10px 0;"><label>充值货币</label><input id="redbag_currency" style="width:100%;padding:8px;margin-top:6px;border:1px solid #e0e0e0;border-radius:4px;" placeholder="请输入充值货币名称"></div>';
+    html += '<div style="margin:10px 0;"><label>充值账号</label><input id="redbag_account" style="width:100%;padding:8px;margin-top:6px;border:1px solid #e0e0e0;border-radius:4px;" placeholder="请输入4位以上充值账号"></div>';
+    html += '<div style="margin:10px 0;"><label>确认账号</label><input id="redbag_confirm_account" style="width:100%;padding:8px;margin-top:6px;border:1px solid #e0e0e0;border-radius:4px;" placeholder="请再次输入充值账号"></div>';
+    html += '<div style="margin:10px 0;"><label>充值区服</label><input id="redbag_server" style="width:100%;padding:8px;margin-top:6px;border:1px solid #e0e0e0;border-radius:4px;" placeholder="请输入充值区服"></div>';
+    html += '<div style="margin:10px 0;"><label>联系QQ</label><input id="redbag_qq" style="width:100%;padding:8px;margin-top:6px;border:1px solid #e0e0e0;border-radius:4px;" placeholder="请输入联系QQ"></div>';
+    html += '<button id="useRedBagSubmitBtn" style="width:100%;padding:10px;background-color:#1E9FFF;color:#fff;border:none;border-radius:4px;margin-top:10px;">确定使用</button>';
+    html += '<div style="font-size:12px;color:#999;text-align:center;margin-top:12px;line-height:1.4;">红包仅按当前填写信息进行发放，请务必核对充值账号与区服，提交后请留意联系QQ消息。</div>';
+    html += '</div>';
+
+    var dialogIndex = layer.open({
+      type: 1,
+      shadeClose: true,
+      title: redBagIds.length > 1 ? '批量使用红包' : '使用红包',
+      area: ['520px', 'auto'],
+      content: html
+    });
+
+    $('#useRedBagSubmitBtn').off('click').on('click', function(){
+      var user = getUser ? getUser(1) : null;
+      var open_id = user ? user.openid : '';
+
+      if (!open_id) {
+        layer.msg('请先登录');
+        return;
+      }
+
+      var formData = getRedBagFormData();
+      var validateMsg = validateRedBagForm(formData);
+      if (validateMsg) {
+        layer.msg(validateMsg);
+        return;
+      }
+
+      var $btn = $(this);
+      if ($btn.data('submitting')) return;
+      $btn.data('submitting', 1).text('提交中...');
+
+      submitRedBagBatch(redBagIds, open_id, formData, function(result){
+        $btn.removeData('submitting').text('确定使用');
+
+        if (!result || !result.ok) {
+          layer.msg((result && result.msg) || '红包使用失败');
+          return;
+        }
+
+        layer.close(dialogIndex);
+        if (redBagListDialog) {
+          layer.close(redBagListDialog);
+        }
+        openRedBagDetailModal();
+        showRedBagUseSuccess(meta, formData);
+      });
+    });
+  });
+}
+
+function submitRedBagBatch__deprecated(redBagIds, open_id, formData, done) {
+  $.ajax({
+    url: hzRequestUrl + 'kill/use_red_bag',
+    type: 'POST',
+    dataType: 'json',
+    data: {
+      open_id: open_id,
+      red_bag_ids: redBagIds.join(','),
+      yxmc: formData.yxmc,
+      yxgw: formData.yxgw,
+      hbmc: formData.hbmc,
+      czzh: formData.czzh,
+      czqf: formData.czqf,
+      QQ: formData.QQ
+    },
+    headers: {
+      boxVersion: '1.0.0',
+      token: $.cookie('hzusertoken')
+    },
+    success: function(res) {
+      if (res && Number(res.code) === 200) {
+        done({
+          ok: true,
+          successCount: redBagIds.length,
+          msg: res.msg || ''
+        });
+        return;
+      }
+
+      done({
+        ok: false,
+        successCount: 0,
+        msg: (res && (res.msg || res.message)) || '红包使用失败'
+      });
+    },
+    error: function() {
+      done({
+        ok: false,
+        successCount: 0,
+        msg: '网络错误，红包使用失败'
+      });
+    }
+  });
+}
+
+function fillRedBagUseForm() {
+  if (typeof fillRedBagUseForm__deprecated === 'function') {
+    return fillRedBagUseForm__deprecated.apply(this, arguments);
+  }
+}
+
+function getRedBagFormData() {
+  return getRedBagFormData__deprecated.apply(this, arguments);
+}
+
+function validateRedBagForm(formData) {
+  return validateRedBagForm__deprecated.apply(this, arguments);
+}
+
+function openRedBagUseDialog(redBagIds, redBagListDialog, totalAmount) {
+  return openRedBagUseDialog__deprecated.apply(this, arguments);
+}
+
+function submitRedBagBatch(redBagIds, open_id, formData, done) {
+  var publishData = window.gamePackPublishData || {};
+  var publishId = publishData.id || '';
+  var token = $.cookie('hzusertoken') || $.cookie('usertoken') || $.cookie('token') || '';
+  // Prefer the UI selection; fallback to publish defaults to avoid hardcoded "1".
+  var partitionId = (formData && formData.partitionId) || publishData.partitionId || publishData.defaultPartitionId || '';
+
+  if (!partitionId) {
+    done({
+      ok: false,
+      successCount: 0,
+      msg: '请选择充值区服'
+    });
+    return;
+  }
+
+  // Note: report/* 接口返回结构是 {result,msg,...} 没有 code 字段，用 admin.req 会被当成异常弹窗提示。
+  $.ajax({
+    url: (layui && layui.setter ? layui.setter.url : '') + 'report/hzManualRecharge',
+    type: 'POST',
+    dataType: 'json',
+    data: {
+      openId: open_id,
+      publishId: publishId,
+      redBagIds: redBagIds.join(','),
+      cczh: formData.czzh,
+      partitionId: partitionId,
+      token: token,
+      QQ: formData.QQ
+    },
+    success: function (res) {
+      if (res && (res.result === true || res.result === 'true')) {
+        done({
+          ok: true,
+          successCount: redBagIds.length,
+          msg: res.msg || ''
+        });
+        return;
+      }
+
+      done({
+        ok: false,
+        successCount: 0,
+        msg: (res && (res.msg || res.message)) || '红包使用失败'
+      });
+    },
+    error: function () {
+      done({
+        ok: false,
+        successCount: 0,
+        msg: '网络错误，红包使用失败'
+      });
+    }
+  });
+}
+
+function getRedBagFormData() {
+  return {
+    yxmc: (window.gamePackPublishData && window.gamePackPublishData.name) || '',
+    yxgw: (window.gamePackPublishData && window.gamePackPublishData.url) || '',
+    hbmc: '',
+    czzh: ($('#redbag_account').val() || '').trim(),
+    czqf: '',
+    QQ: ($('#redbag_qq').val() || '').trim(),
+    partitionId: ($('#partitionSelect').val() || '').toString()
+  };
+}
+
+function validateRedBagForm(formData) {
+  if (!formData.czzh || formData.czzh.length < 4) return '请输入有效充值账号，至少4位';
+  if (formData.czzh !== (($('#redbag_confirm_account').val() || '').trim())) return '两次输入的充值账号不一致';
+  if (!formData.partitionId) return '请选择充值区服';
+  if (!formData.QQ) return '请输入联系QQ';
+  return '';
+}
+
+function showRedBagUseSuccess(meta, formData) {
+  layui.use(['layer'], function(){
+    var layer = layui.layer;
+    var targetUrl = meta.url || 'javascript:void(0);';
+    var openTarget = meta.url && meta.url !== '#' ? ' target="_blank"' : '';
+    var nowText = new Date().toLocaleString('zh-CN', { hour12: false });
+    var html = '<div style="padding:18px 18px 20px;background:#fff;">';
+    html += '<div style="text-align:center;line-height:1.3;">';
+    html += '<div style="font-size:26px;color:#222;">￥' + escapeRedBagHtml(meta.amount) + '元</div>';
+    html += '<div style="font-size:14px;color:#2c6ed5;margin-top:8px;">' + escapeRedBagHtml(meta.title) + '</div>';
+    html += '<div style="font-size:14px;color:#2c6ed5;margin-top:2px;">';
+    if (meta.url && meta.url !== '#') {
+      html += '<a href="' + escapeRedBagHtml(targetUrl) + '"' + openTarget + ' style="color:#2c6ed5;text-decoration:none;">进入网站</a>';
+    }
+    html += '</div>';
+    html += '</div>';
+    html += '<div style="margin:16px 0 14px;text-align:center;color:#ff4d4f;font-size:14px;">使用流程：进入游戏 -> 联系充值NPC/客服 -> 按填写信息发放红包充值</div>';
+    html += '<div style="position:relative;border:1px solid #e7e7e7;border-radius:8px;padding:16px 18px 14px;margin-bottom:16px;">';
+    html += '<div style="position:absolute;right:14px;top:14px;color:#ff7875;border:3px solid #ff9c9c;border-radius:50%;width:86px;height:86px;transform:rotate(-18deg);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;opacity:0.75;">成功</div>';
+    html += '<div style="padding-right:98px;line-height:1.9;font-size:14px;color:#333;">';
+    html += '<div><span style="display:inline-block;width:88px;font-weight:700;">充值账号</span>' + escapeRedBagHtml(formData.czzh) + '</div>';
+    html += '<div><span style="display:inline-block;width:88px;font-weight:700;">联系QQ</span>' + escapeRedBagHtml(formData.QQ) + '</div>';
+    html += '<div><span style="display:inline-block;width:88px;font-weight:700;">红包数量</span>' + escapeRedBagHtml(meta.count) + '个</div>';
+    html += '<div><span style="display:inline-block;width:88px;font-weight:700;">红包金额</span>' + escapeRedBagHtml(meta.amount) + '元真实充值</div>';
+    html += '<div><span style="display:inline-block;width:88px;font-weight:700;">提交时间</span>' + escapeRedBagHtml(nowText) + '</div>';
+    html += '</div>';
+    html += '</div>';
+    if (meta.url && meta.url !== '#') {
+      html += '<a href="' + escapeRedBagHtml(targetUrl) + '"' + openTarget + ' style="display:block;width:100%;box-sizing:border-box;background:#1677ff;color:#fff;text-align:center;border-radius:6px;padding:13px 12px;font-size:16px;font-weight:700;text-decoration:none;">进入游戏</a>';
+    }
+    html += '</div>';
+
+    layer.open({
+      type: 1,
+      shadeClose: true,
+      title: false,
+      closeBtn: 1,
+      area: ['480px', 'auto'],
+      content: html
+    });
+  });
+}
+
+function openRedBagUseDialog(redBagIds, redBagListDialog, totalAmount) {
+  layui.use(['layer'], function(){
+    var layer = layui.layer;
+    var meta = getRedBagDialogMeta(redBagIds, totalAmount);
+
+    var publishData = window.gamePackPublishData || {};
+    var publishId = publishData.id || '';
+    if (!publishId) {
+      layer.msg('未找到发布ID，无法获取区服');
+      return;
+    }
+
+    // Note: report/* 接口返回结构是 {result,msg,...} 没有 code 字段，用 admin.req 会被当成异常弹窗提示。
+    $.ajax({
+      url: (layui && layui.setter ? layui.setter.url : '') + 'report/getPartitionsByGroupId',
+      type: 'GET',
+      dataType: 'json',
+      data: { publishId: publishId },
+      success: function(res) {
+        var partitionOptions = '';
+        if (res && (res.result === true || res.result === 'true') && res.platformResponse && res.platformResponse.length) {
+          partitionOptions = res.platformResponse.map(function(p) {
+            return '<option value="' + escapeRedBagHtml(p.id) + '">' + escapeRedBagHtml(p.name) + '</option>';
+          }).join('');
+        }
+
+        if (!partitionOptions) {
+          partitionOptions = '<option value="">暂无可选区服</option>';
+        }
+
+        var html = '<div style="padding:20px;">';
+        html += '<div style="text-align:center;margin-bottom:10px;">';
+        html += '<div style="font-size:28px;color:#e53935;font-weight:700;">' + escapeRedBagHtml(meta.amount) + '元</div>';
+        html += '<div style="font-size:14px;color:#1E88E5;margin-top:8px;">' + escapeRedBagHtml(meta.title) + '</div>';
+        html += '<div style="font-size:12px;color:#999;margin-top:6px;">共 ' + escapeRedBagHtml(meta.count) + ' 个红包</div>';
+        html += '</div>';
+        html += '<p style="color:#d32f2f;text-align:center;margin:10px 0;">使用流程：进入游戏 -> 填写充值账号 -> 选择充值区服 -> 提交后由系统发放红包充值</p>';
+        html += '<div style="margin:10px 0;"><label>充值账号</label><input id="redbag_account" style="width:100%;padding:8px;margin-top:6px;border:1px solid #e0e0e0;border-radius:4px;" placeholder="请输入4位以上充值账号"></div>';
+        html += '<div style="margin:10px 0;"><label>确认账号</label><input id="redbag_confirm_account" style="width:100%;padding:8px;margin-top:6px;border:1px solid #e0e0e0;border-radius:4px;" placeholder="请再次输入充值账号"></div>';
+        html += '<div style="margin:10px 0;"><label>充值区服</label><select id="partitionSelect" style="width:100%;padding:8px;margin-top:6px;border:1px solid #e0e0e0;border-radius:4px;">' + partitionOptions + '</select></div>';
+        html += '<div style="margin:10px 0;"><label>联系QQ</label><input id="redbag_qq" style="width:100%;padding:8px;margin-top:6px;border:1px solid #e0e0e0;border-radius:4px;" placeholder="请输入联系QQ"></div>';
+        html += '<button id="useRedBagSubmitBtn" style="width:100%;padding:10px;background-color:#1E9FFF;color:#fff;border:none;border-radius:4px;margin-top:10px;">确定使用</button>';
+        html += '<div style="font-size:12px;color:#999;text-align:center;margin-top:12px;line-height:1.4;">红包仅按当前填写的充值账号、区服和联系QQ进行处理，提交前请核对信息。</div>';
+        html += '</div>';
+
+        var dialogIndex = layer.open({
+          type: 1,
+          shadeClose: true,
+          title: redBagIds.length > 1 ? '批量使用红包' : '使用红包',
+          area: ['520px', 'auto'],
+          content: html
+        });
+
+        $('#useRedBagSubmitBtn').off('click').on('click', function(){
+          var user = getUser ? getUser(1) : null;
+          var open_id = user ? user.openid : '';
+
+          if (!open_id) {
+            layer.msg('请先登录');
+            return;
+          }
+
+          var formData = getRedBagFormData();
+          var validateMsg = validateRedBagForm(formData);
+          if (validateMsg) {
+            layer.msg(validateMsg);
+            return;
+          }
+
+          var $btn = $(this);
+          if ($btn.data('submitting')) return;
+          $btn.data('submitting', 1).text('提交中...');
+
+          submitRedBagBatch(redBagIds, open_id, formData, function(result){
+            $btn.removeData('submitting').text('确定使用');
+
+            if (!result || !result.ok) {
+              layer.msg((result && result.msg) || '红包使用失败');
+              return;
+            }
+
+            // Close all related popups before showing the final success modal.
+            layer.close(dialogIndex);
+            if (redBagListDialog) {
+              layer.close(redBagListDialog);
+            }
+            layer.closeAll('page');
+            showRedBagUseSuccess(meta, formData);
+          });
+        });
+      },
+      error: function() {
+        layer.msg('网络错误，获取区服信息失败');
+      }
+    });
+  });
+}

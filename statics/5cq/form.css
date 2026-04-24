@@ -1,0 +1,141 @@
+.swrapbox {
+	overflow: hidden;
+	background: linear-gradient(90deg, #c8985766 0%, #deb57e66 100%);
+	padding-top: 20px;
+	text-align: center;
+}
+
+.schbox {
+	width: 850px;
+	height: 47px;
+	overflow: hidden;
+	margin: 0 auto;
+}
+
+/*/ FORMè¡¨å• /*/
+input.txtbox {
+	width: 560px;
+	box-sizing: border-box;
+	font-size: 15px;
+	height: 46px;
+	outline: none;
+	padding: 13px 10px 12px 10px;
+	border: 1px solid #DDDDDD;
+
+}
+
+input.ckbox {
+	padding: 15px;
+}
+
+input.schbtn {
+	-webkit-appearance: none;
+	border: 0;
+	border-radius: 0;
+	cursor: pointer;
+	font-family: "Microsoft YaHei";
+	font-size: 18px;
+	height: 46px;
+	letter-spacing: 1px;
+	top: 0;
+	vertical-align: top;
+	width: 120px;
+	background: linear-gradient(90deg, #c89857 0%, #deb57e 100%);
+	color: #FFFFFF;
+}
+
+input.schbtna {
+	-webkit-appearance: none;
+	border: 0;
+	border-radius: 0;
+	cursor: pointer;
+	font-family: "Microsoft YaHei";
+	font-size: 18px;
+	height: 46px;
+	letter-spacing: 1px;
+	top: 0;
+	vertical-align: top;
+	width: 120px;
+	background-color: #333;
+	color: #FFFFFF;
+}
+
+input.schbtn:hover {
+	background-color: #FF9933;
+	cursor: pointer;
+}
+
+input.schbtna:hover {
+	background-color: #888;
+	cursor: pointer;
+}
+
+input.subtn {
+	width: 320px;
+	height: 55px;
+	line-height: 55px;
+	color: #FFFFFF;
+	background-color: #DA0000;
+	border: solid 1px FC5F3A;
+	border-radius: 2px;
+}
+
+input.subtn:hover {
+	background-color: #C24237;
+	cursor: pointer;
+}
+
+/*/ è¡¨å•ç¾ŽåŒ– /*/
+.bigdroplst {
+	border: 1px solid #DDDDDD;
+	height: 43px;
+}
+
+.droplist {
+	display: inline-block;
+	width: 100px;
+	position: relative;
+	vertical-align: middle;
+	padding: 0;
+	overflow: hidden;
+	background-color: #fff;
+	color: #555;
+	border: 1px solid #DA0000;
+	text-shadow: none;
+	border-radius: 4px;
+	transition: box-shadow 0.25s ease;
+	z-index: 2;
+	height: 30px;
+}
+
+.droplist:hover {
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+.droplist:before {
+	content: "";
+	position: absolute;
+	width: 0;
+	height: 0;
+	border: 10px solid transparent;
+	border-top-color: #ccc;
+	top: 14px;
+	right: 10px;
+	cursor: pointer;
+	z-index: -2;
+}
+
+.droplist select {
+	cursor: pointer;
+	padding: 10px;
+	width: 100%;
+	border: none;
+	background: transparent;
+	background-image: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+}
+
+.droplist select:focus {
+	outline: none;
+}

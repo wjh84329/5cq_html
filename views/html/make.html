@@ -127,6 +127,114 @@
             admin = layui.admin,
             form = layui.form,
             layer = layui.layer;
+
+        function escapeHtml(value) {
+            return String(value || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;')
+        }
+
+        function normalizeColor(value) {
+            return (value || '').trim()
+        }
+
+        function updateSiteInfoElement($element, data) {
+            var color = normalizeColor(data.color)
+            $element.attr('data-url', data.url || '')
+            $element.attr('data-english', data.english || '')
+            $element.attr('data-isshow', data.isshow == null ? '0' : data.isshow)
+            $element.attr('data-color', color)
+            $element.text(data.name || '')
+            $element.attr('style', color ? 'color:' + color + ';' : '')
+        }
+
+        function buildSiteButton(item) {
+            var id = item.id || ''
+            var name = item.name || ''
+            var english = item.english || ''
+            var url = item.url || ''
+            var isshow = item.isshow == null ? '0' : String(item.isshow)
+            var color = normalizeColor(item.color)
+            var colorAttr = escapeHtml(color)
+            var styleAttr = color ? ' style="color:' + colorAttr + ';"' : ''
+            return `<button class="layui-btn layui-btn-primary"><span class="siteinfo" data-name="${escapeHtml(name)}" data-isshow="${escapeHtml(isshow)}" data-english="${escapeHtml(english)}" data-url="${escapeHtml(url)}" data-color="${colorAttr}" data-id="${escapeHtml(id)}"${styleAttr}>${escapeHtml(name)}</span><i class="layui-icon siteinfoicon" data-id="${escapeHtml(id)}" style="margin-left: 10px">&#x1006;</i></button>`
+        }
+
+        function getSiteInfoFormHtml(name, url, english, isshow, color) {
+            return `<form class="layui-form" action="">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">名称</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" id="name" name="name" required lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input" value="${escapeHtml(name)}">
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">链接</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" id="url" name="url" required lay-verify="required" placeholder="请输入链接" autocomplete="off" class="layui-input" value="${escapeHtml(url)}">
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">英文</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" id="english" name="english" required lay-verify="required" placeholder="请输入英文标识" autocomplete="off" class="layui-input" value="${escapeHtml(english)}">
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">颜色</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" id="color" name="color" placeholder="如 #ff4d4f，可为空" autocomplete="off" class="layui-input" value="${escapeHtml(color)}">
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">显示</label>
+                                        <div class="layui-input-block" style="display: flex">
+                                          <input type="radio" name="isshow" value="0" title="首页显示" ${String(isshow) === '0' ? 'checked' : ''}>
+                                          <input type="radio" name="isshow" value="1" title="显示" ${String(isshow) === '1' ? 'checked' : ''}>
+                                          <input type="radio" name="isshow" value="2" title="隐藏" ${String(isshow) === '2' ? 'checked' : ''}>
+                                        </div>
+                                      </div>
+                                    <div class="layui-form-item">
+                                        <div class="layui-input-block">
+                                            <button class="layui-btn" lay-submit lay-filter="siteInfoSubmit">保存</button>
+                                            <button type="reset" class="layui-btn layui-btn-primary">取消</button>
+                                        </div>
+                                    </div>
+                                </form>`
+        }
+
+        function openSiteInfoDialog(target) {
+            var $target = $(target)
+            var name = $target.text()
+            var url = $target.attr('data-url') || ''
+            var english = $target.attr('data-english') || ''
+            var isshow = $target.attr('data-isshow') || '0'
+            var color = $target.attr('data-color') || ''
+            layer.open({
+                type: 1,
+                content: getSiteInfoFormHtml(name, url, english, isshow, color),
+                success: function () {
+                    form.render()
+                    form.on('submit(siteInfoSubmit)', function(data){
+                        updateSiteInfoElement($target, data.field)
+                        layer.closeAll()
+                        return false
+                    })
+                }
+            })
+        }
+
+        function bindSiteInfoEvents() {
+            $('.siteinfo').off('click').on('click', function () {
+                openSiteInfoDialog(this)
+            })
+            $('.siteinfoicon').off('click').on('click', function () {
+                $(this).parent().remove()
+            })
+        }
         /*$.ajax({
             url: "/statics/column_data.txt",
             type: 'GET',
@@ -147,179 +255,21 @@
                 var html = ''
                 $("#wzlm").html('')
                 $.each(data,function (index,item) {
-                    html +=`<button class="layui-btn layui-btn-primary"><span class="siteinfo" data-name="${item.name}" data-isshow="${item.isshow}" data-english="${item.english}" data-url="${item.url}" data-id="${item.id}">${item.name}</span><i class="layui-icon siteinfoicon" data-id="${item.id}" style="margin-left: 10px">&#x1006;</i></button>`
+                    html += buildSiteButton(item)
                 })
                 $("#wzlm").html(html)
-                $('.siteinfo').click(function () {
-                    var name = $(this).text()
-                    var url = $(this).attr('data-url')
-                    var english = $(this).attr('data-english')
-                    var isshow = $(this).attr('data-isshow')
-                    form.render()
-                    var curren = this
-                    layer.open({
-                        type:1,
-                        content:`<form class="layui-form" action="">
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label">名称</label>
-                                        <div class="layui-input-block">
-                                            <input type="text" id="name" name="name" required  lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input" value="${name}">
-                                        </div>
-                                    </div>
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label">链接</label>
-                                        <div class="layui-input-block">
-                                            <input type="text" id="url" name="url" required  lay-verify="required" placeholder="请输入链接" autocomplete="off" class="layui-input" value="${url}">
-                                        </div>
-                                    </div>
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label">英文</label>
-                                        <div class="layui-input-block">
-                                            <input type="text" id="english" name="english" required  lay-verify="required" placeholder="请输入英文" autocomplete="off" class="layui-input" value="${english}">
-                                        </div>
-                                    </div>
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label">图标</label>
-                                        <div class="layui-input-block" style="display: flex">
-                                          <input type="radio" name="isshow" value="0" title="无图标" ${isshow==0?'checked':''}>
-                                          <input type="radio" name="isshow" value="1" title="热门" ${isshow==1?'checked':''}>
-                                          <input type="radio" name="isshow" value="2" title="推荐" ${isshow==2?'checked':''}>
-                                        </div>
-                                      </div>
-                                    <div class="layui-form-item">
-                                        <div class="layui-input-block">
-                                            <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
-                                            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-                                        </div>
-                                    </div>
-                                </form>`,
-                        success: function (layero,index) {
-                            form.render()
-                            form.on('submit(formDemo)', function(data){
-                                console.log(data.field)
-                                $(curren).attr('data-url',data.field.url)
-                                $(curren).attr('data-english',data.field.english)
-                                $(curren).attr('data-isshow',data.field.isshow)
-                                $(curren).text(data.field.name)
-                                layer.closeAll()
-                                return false;
-                            });
-                        }
-                    })
-                })
-                $('.siteinfoicon').click(function () {
-                    $(this).parent().remove()
-                })
+                bindSiteInfoEvents()
             }
         })
         $('#addlm').click(function (){
             layer.open({
                 type:1,
-                content:`<form class="layui-form" action="">
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label">名称</label>
-                                        <div class="layui-input-block">
-                                            <input type="text" id="name" name="name" required  lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input">
-                                        </div>
-                                    </div>
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label">链接</label>
-                                        <div class="layui-input-block">
-                                            <input type="text" id="url" name="url" required  lay-verify="required" placeholder="请输入链接" autocomplete="off" class="layui-input">
-                                        </div>
-                                    </div>
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label">英文</label>
-                                        <div class="layui-input-block">
-                                            <input type="text" id="english" name="english" required  lay-verify="required" placeholder="请输入英文" autocomplete="off" class="layui-input">
-                                        </div>
-                                    </div>
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label">图标</label>
-                                        <div class="layui-input-block" style="display: flex">
-                                          <input type="radio" name="isshow" value="0" title="无图标" checked>
-                                          <input type="radio" name="isshow" value="1" title="热门">
-                                          <input type="radio" name="isshow" value="2" title="推荐">
-                                        </div>
-                                      </div>
-                                    <div class="layui-form-item">
-                                        <div class="layui-input-block">
-                                            <button class="layui-btn" lay-submit lay-filter="add">立即提交</button>
-                                            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-                                        </div>
-                                    </div>
-                                </form>`,
-                success: function (layero,index) {
+                content:getSiteInfoFormHtml('', '', '', '0', ''),
+                success: function () {
                     form.render()
-                    form.on('submit(add)', function(data){
-                        var data = data.field
-                        // console.log(data)
-                        var name = data.name
-                        var url = data.url
-                        var english = data.english
-                        var isshow = data.isshow
-                        var html =`<button class="layui-btn layui-btn-primary"><span class="siteinfo" data-name="${name}" data-url="${url}" data-english="${english}" data-isShow="${isshow}">${name}</span><i class="layui-icon siteinfoicon" style="margin-left: 10px">&#x1006;</i></button>`
-                        $("#wzlm").append(html)
-                        $('.siteinfoicon').click(function () {
-                            $(this).parent().remove()
-                        })
-                        $('.siteinfo').click(function () {
-                            var name = $(this).text()
-                            var url = $(this).attr('data-url')
-                            var english = $(this).attr('data-english')
-                            var isshow = $(this).attr('data-isshow')
-                            form.render()
-                            var curren = this
-                            layer.open({
-                                type:1,
-                                content:`<form class="layui-form" action="">
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label">名称</label>
-                                        <div class="layui-input-block">
-                                            <input type="text" id="name" name="name" required  lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input" value="${name}">
-                                        </div>
-                                    </div>
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label">链接</label>
-                                        <div class="layui-input-block">
-                                            <input type="text" id="url" name="url" required  lay-verify="required" placeholder="请输入链接" autocomplete="off" class="layui-input" value="${url}">
-                                        </div>
-                                    </div>
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label">英文</label>
-                                        <div class="layui-input-block">
-                                            <input type="text" id="english" name="english" required  lay-verify="required" placeholder="请输入英文" autocomplete="off" class="layui-input" value="${english}">
-                                        </div>
-                                    </div>
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label">图标</label>
-                                        <div class="layui-input-block" style="display: flex">
-                                          <input type="radio" name="isshow" value="0" title="无图标" ${isshow==0?'checked':''}>
-                                          <input type="radio" name="isshow" value="1" title="热门" ${isshow==1?'checked':''}>
-                                          <input type="radio" name="isshow" value="2" title="推荐" ${isshow==2?'checked':''}>
-                                        </div>
-                                      </div>
-                                    <div class="layui-form-item">
-                                        <div class="layui-input-block">
-                                            <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
-                                            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-                                        </div>
-                                    </div>
-                                </form>`,
-                                success: function (layero,index) {
-                                    form.render()
-                                    form.on('submit(formDemo)', function(data){
-                                        console.log(data.field)
-                                        $(curren).attr('data-url',data.field.url)
-                                        $(curren).attr('data-english',data.field.english)
-                                        $(curren).attr('data-isshow',data.field.isshow)
-                                        $(curren).text(data.field.name)
-                                        layer.closeAll()
-                                        return false;
-                                    });
-                                }
-                            })
-                        })
+                    form.on('submit(siteInfoSubmit)', function(data){
+                        $("#wzlm").append(buildSiteButton(data.field))
+                        bindSiteInfoEvents()
                         layer.closeAll()
                         return false;
                     });
@@ -836,6 +786,7 @@
                     url:$(this).data('url'),
                     english:$(this).attr('data-english'),
                     isshow:$(this).attr('data-isshow'),
+                    color: normalizeColor($(this).attr('data-color')),
                     state:1
                 })
             })

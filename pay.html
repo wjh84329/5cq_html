@@ -1,0 +1,655 @@
+<!doctype html>
+<html lang="zh-CN">
+ <head>
+  <meta charset="utf-8">  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>5CQ-传奇广告查询站_传奇广告排行_传奇资源站_新开传奇新服排名站(5CQ.COM)</title>
+  <meta name="description" content="5CQ.Com传奇广告排行榜,传奇私服查询站,传奇资源站,好玩的传奇排名站,玩家最爱的新开传奇,GM最喜欢的传奇工具,传奇直播,传奇新开服,传奇相关尽在5CQ(玩传奇)">
+  <meta name="keywords" content="传奇广告查询站,传奇资源站,传奇广告排行,传奇SF广告统计(5CQ.COM)">   
+  <link rel="stylesheet" href="./statics/5cq/act.css?1130"> 
+  <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "SimSun", sans-serif;
+            background-color: #f5f5f5;
+            font-size: 14px;
+        }
+
+        /* 支付页面 */
+        .pay-page {
+            background-color: #f5f5f5;
+            min-height: 85.5vh;
+        }
+
+        .pay-header {
+            background: linear-gradient(90deg, #1677ff, #4096ff);
+            color: #fff;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pay-header img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #fff;
+            padding: 3px;
+        }
+
+        .pay-header-text {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .pay-header-text span {
+            font-size: 14px;
+            margin-left: 10px;
+            opacity: 0.9;
+        }
+
+        .pay-content {
+            max-width: 1000px;
+            background-color: #fff;
+            margin: 10px auto;
+            border-radius: 4px;
+            padding: 30px 20px;
+        }
+
+        .pay-warning {
+            background-color: #e6f4ff;
+            border: 1px solid #91caff;
+            border-radius: 4px;
+            padding: 15px 20px;
+            margin-bottom: 30px;
+        }
+
+        .pay-warning-title {
+            color: #ff4d4f;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pay-warning-title::before {
+            content: "!";
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            background: #ff4d4f;
+            color: #fff;
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .pay-warning p {
+            color: #ff4d4f;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .pay-main {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+        }
+
+        .pay-qrcode {
+            text-align: center;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            background: #fff;
+        }
+
+        .pay-qrcode img {
+            width: 200px;
+            height: 200px;
+            margin-bottom: 15px;
+        }
+
+        .pay-qrcode-text {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .pay-info {
+            flex: 1;
+        }
+
+        .pay-amount {
+            display: flex;
+        }
+
+        .pay-amount-label {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-top: 18px;
+        }
+
+        .pay-amount-value {
+            font-size: 36px;
+            color: #ff4d4f;
+            font-weight: bold;
+        }
+
+        .pay-amount-value span {
+            font-size: 18px;
+        }
+
+        .pay-fee {
+            color: #666;
+            font-weight: bold;
+            margin-top: 5px;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .pay-fee span {
+            color: #ff4d4f;
+        }
+
+        .pay-notice {
+            margin-bottom: 20px;
+        }
+
+        .pay-notice-title {
+            font-size: 16px;
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .pay-notice p {
+            color: #666;
+            font-size: 13px;
+            line-height: 1.8;
+            margin-bottom: 5px;
+        }
+
+        .pay-order-no {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        .pay-tips {
+            color: #ff4d4f;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .pay-service {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 30px;
+        }
+
+        .pay-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .pay-btn {
+            padding: 10px 25px;
+            border: 1px solid #266fff;
+            border-radius: 20px;
+            background: #fff;
+            color: #266fff;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .pay-btn:hover {
+            background: #f6ffed;
+        }
+
+        .pay-btn img {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* 底部 */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+            font-size: 12px;
+            border-top: 1px solid #e0e0e0;
+            background-color: #fff;
+            margin-top: 50px;
+        }
+
+        .footer p {
+            margin-bottom: 5px;
+        }
+
+        /* 支付完成页面 */
+        .pay-success-page {
+            display: none;
+            background-color: #fff;
+        }
+
+        .pay-success-page.show {
+            display: block;
+        }
+
+        .pay-success-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .pay-success-main {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 50px;
+        }
+
+        .pay-success-left {
+            text-align: center;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .customer-service-qr {
+            width: 200px;
+            height: 200px;
+            background-image: url('./statics/5cq/shabake.png');
+            background-size: 100% 100%;
+            border: 2px solid #1677ff;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .pay-success-left .qr-tip {
+            color: #666;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .pay-success-right {
+            flex: 1;
+            max-width: 550px;
+        }
+
+        .pay-success-title {
+            font-size: 18px;
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .pay-success-box {
+            border: 1px dashed #ff4d4f;
+            border-radius: 8px;
+            padding: 30px;
+            background: #fff;
+        }
+
+        .pay-success-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .pay-success-amount {
+            font-size: 48px;
+            color: #ff4d4f;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .pay-success-amount::before {
+            font-size: 24px;
+            margin-right: 5px;
+        }
+
+        .pay-success-tip {
+            font-size: 14px;
+            color: #333;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .pay-main.hide {
+            display: none;
+        }
+    </style> 
+ </head> 
+ <body> 
+  <!-- 支付页面 --> 
+  <div class="pay-page" id="payPage"> 
+   <div class="pay-header"> 
+    <img src="./statics/5cq/zfb.png" alt="支付宝"> 
+    <div class="pay-header-text">
+      支付 
+     <span>PAY</span> 
+    </div> 
+   </div> 
+   <div class="pay-content"> 
+    <div class="pay-warning"> 
+     <div class="pay-warning-title">
+       请确认充值游戏为传奇游戏，其他游戏暂不提供游戏币充值服务，非传奇游戏举报QQ：1839728（举报最高奖励1000元） 
+     </div> 
+     <p>注：禁止未成年人充值！</p> 
+     <p>注：平台服务费非强制收取，联系游戏客服充值免收！</p> 
+    </div> 
+    <div class="pay-main" id="payMain"> 
+     <div class="pay-qrcode"> 
+      <div id="qrcodeContainer"></div> 
+      <div class="pay-qrcode-text">
+        请使用微信或支付宝扫一扫，扫码支付 
+      </div> 
+     </div> 
+     <div class="pay-info"> 
+      <div class="pay-amount" id="orderAmountRow" style="display: none;"> 
+       <div class="pay-amount-label">
+         订单金额： 
+       </div> 
+       <div class="pay-amount-label" id="orderAmountDisplay" style="color: #ff4d4f;font-size: 24px;margin-top: 15px;">
+         0元 
+       </div> 
+      </div> 
+      <div class="pay-amount" id="subsidyAmountRow" style="display: none;margin-top: -15px;"> 
+       <div class="pay-amount-label">
+         本单减免金额： 
+       </div> 
+       <div class="pay-amount-label" id="subsidyAmountDisplay" style="color: #4da0ff;font-size: 24px;margin-top: 15px;">
+         0元 
+       </div> 
+      </div> 
+      <div class="pay-amount"> 
+       <div class="pay-amount-label">
+         应付金额： 
+       </div> 
+       <div class="pay-amount-value" id="payAmount">
+         0元 
+       </div> 
+      </div> 
+      <div class="pay-fee" id="paySubsidyInfo" style="display: none;">
+        支付完成可得 
+       <span id="subsidySpan" style="color: #666;">补贴<span id="paySubsidyAmount">￥1.68</span>+</span>福利金 
+       <span id="welfareAmount">￥0.00</span> 
+      </div> 
+      <div class="pay-notice"> 
+       <div class="pay-notice-title">
+         请您尽快付款，以便订单及时处理！ 
+       </div> 
+       <p>请您在订单提交后5分钟内完成支付，否则订单会自动取消</p> 
+       <p>订单号：<span id="orderNo">26031819434043694404</span></p> 
+      </div> 
+      <div class="pay-tips">
+        注：客服QQ不是群号，QQ只处理订单问题，不会收取任何费用,谨防被骗！ 
+      </div> 
+      <div class="pay-service">
+        客服QQ：1963088888 
+      </div> 
+      <div class="pay-buttons"> 
+       <button class="pay-btn" onclick="showPaySuccess()"> 我已扫码支付 </button> 
+      </div> 
+     </div> 
+    </div> 
+    <!-- 支付完成页面 --> 
+    <div class="pay-success-page" id="paySuccessPage"> 
+     <div class="pay-success-main"> 
+      <div class="pay-success-left"> 
+       <div class="customer-service-qr"> 
+       </div> 
+       <div class="qr-tip">
+         支付完成，如有疑问请联系客服 
+       </div> 
+      </div> 
+      <div class="pay-success-right"> 
+       <div class="pay-success-title">
+         支付完成，请前往游戏内领取货币 
+       </div> 
+       <div class="pay-success-box"> 
+        <div class="pay-success-label">
+          游戏补贴 
+        </div> 
+        <div class="pay-success-amount"> 
+         <span id="subsidyAmount">0</span> 
+         <span id="addwelfareAmount" style="color: #1677ff;">0</span> 
+         <span style="font-size: 24px;color: #1677ff;">福利金</span> 
+        </div> 
+        <div class="pay-success-tip" id="paySuccessTip">
+          已打款至您的微信，请及时查收 
+        </div> 
+       </div> 
+      </div> 
+     </div> 
+    </div> 
+   </div> 
+  </div> 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script> 
+  <script type="text/javascript" src="./statics/js/jquery1.js"></script> 
+  <script type="text/javascript" src="./statics/layer/layer.js"></script> 
+  <script type="text/javascript" src="./statics/js/comm1.js?1130"></script> 
+  <script type="text/javascript" src="./statics/js/act.js?1130"></script> 
+  <script>
+        // 从URL获取参数
+        function getUrlParam(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return decodeURIComponent(r[2]);
+            return null;
+        }
+
+        function showPaySuccessState(message) {
+            document.getElementById('payMain').style.display = 'none';
+            document.getElementById('paySuccessPage').classList.add('show');
+            window.scrollTo(0, 0);
+            if (message) {
+                layer.msg(message);
+            }
+        }
+
+        function updateSuccessAmounts() {
+            var subsidyWelfareAmount = getUrlParam('subsidy_welfare_amount_yuan');
+            var avgWelfare = parseFloat(subsidyWelfareAmount) || 0;
+            var welfareAmountEl = document.getElementById('addwelfareAmount');
+            if (welfareAmountEl) {
+                welfareAmountEl.textContent = '￥' + avgWelfare.toFixed(2);
+            }
+        }
+
+        function renderQrContent(qrText) {
+            var container = document.getElementById('qrcodeContainer');
+            if (!container) {
+                return;
+            }
+
+            container.innerHTML = '';
+
+            if (!qrText) {
+                container.innerHTML = '<div style="width:200px;height:200px;display:flex;align-items:center;justify-content:center;background:#f7f7f7;color:#999;border:1px dashed #ddd;">暂无二维码</div>';
+                return;
+            }
+
+            if (/^https?:\/\/.+\.(png|jpg|jpeg|gif|webp)(\?.*)?$/i.test(qrText) || /^data:image\//i.test(qrText)) {
+                var img = document.createElement('img');
+                img.src = qrText;
+                img.alt = '支付二维码';
+                img.style.width = '200px';
+                img.style.height = '200px';
+                container.appendChild(img);
+                return;
+            }
+
+            var link = document.createElement('a');
+            link.href = qrText;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            link.style.display = 'flex';
+            link.style.width = '200px';
+            link.style.height = '200px';
+            link.style.alignItems = 'center';
+            link.style.justifyContent = 'center';
+            link.style.background = '#f7f7f7';
+            link.style.border = '1px dashed #ddd';
+            link.style.color = '#1677ff';
+            link.style.textAlign = 'center';
+            link.style.padding = '16px';
+            link.style.lineHeight = '1.6';
+            link.textContent = '点击打开支付链接';
+            container.appendChild(link);
+        }
+
+        function pollCashierOrderStatus(localOrderNo) {
+            if (!localOrderNo) {
+                return null;
+            }
+
+            function queryOrderStatus() {
+                $.ajax({
+                    url: baseUrl + 'cashier/rechargeResult',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        localOrderNo: localOrderNo
+                    },
+                    success: function (res) {
+                        if (!res) {
+                            return;
+                        }
+
+                        var responseData = res.data || {};
+                        var orderNumber = res.orderNumber || responseData.orderNumber || responseData.OrderNumber || responseData.TrxNo || responseData.trxNo || '';
+                        var qrCode = responseData.QrCode || responseData.qrCode || '';
+
+                        if (orderNumber) {
+                            document.getElementById('orderNo').textContent = orderNumber;
+                        }
+                        if (qrCode) {
+                            renderQrContent(qrCode);
+                        }
+
+                        var status = responseData.status;
+                        var paidFlag = responseData.paid;
+                        if (status === 1 || status === '1' || status === 2 || status === '2' || paidFlag === true || paidFlag === 'true') {
+                            updateSuccessAmounts();
+                            showPaySuccessState('支付成功');
+                        }
+                    }
+                });
+            }
+
+            queryOrderStatus();
+            return setInterval(queryOrderStatus, 2000);
+        }
+
+        // 页面加载时初始化
+        $(document).ready(function () {
+            var amount = getUrlParam('amount') || '30';
+            var orderNo = getUrlParam('orderNo');
+            var localOrderNo = getUrlParam('localOrderNo') || '';
+            var account = getUrlParam('account') || '';
+            var qrCode = getUrlParam('qrCode') || '';
+
+            var subsidyId = getUrlParam('subsidy_id');
+            var subsidyMin = getUrlParam('subsidy_min');
+            var subsidy_amount_yuan = getUrlParam('subsidy_amount_yuan');
+            var subsidy_welfare_amount_yuan = getUrlParam('subsidy_welfare_amount_yuan');
+            var subsidyMax = getUrlParam('subsidy_max');
+            var serverName = getUrlParam('server_name');
+            var gameName = getUrlParam('game_name');
+            var subsidyAmount = getUrlParam('subsidy_amount');
+            var orderAmount = getUrlParam('orderAmount');
+
+            if (subsidy_amount_yuan == 0) {
+                var subsidySpan = document.getElementById('subsidySpan');
+                if (subsidySpan) {
+                    subsidySpan.style.display = 'none';
+                }
+            }
+
+            var rechargeAmount = parseFloat(amount) || 0;
+            var subsidyAmountValue = parseFloat(subsidyAmount) || 0;
+            var payableAmount = parseFloat(orderAmount);
+            if (isNaN(payableAmount)) {
+                payableAmount = rechargeAmount;
+            }
+
+            if (subsidyAmountValue > 0) {
+                document.getElementById('subsidyAmountDisplay').textContent = subsidyAmountValue.toFixed(2) + '元';
+                document.getElementById('subsidyAmountRow').style.display = 'flex';
+            }
+            document.getElementById('orderAmountDisplay').textContent = rechargeAmount.toFixed(2) + '元';
+            document.getElementById('orderAmountRow').style.display = 'flex';
+            document.getElementById('payAmount').textContent = payableAmount.toFixed(2) + '元';
+
+            if (subsidyAmountValue > 0) {
+                document.getElementById('paySuccessTip').textContent = '补贴已发放，每天都可以来领取一笔喔~';
+            }
+
+            if (subsidy_amount_yuan) {
+                var subsidyYuan = parseFloat(subsidy_amount_yuan) || 0;
+                if (subsidyYuan > 0) {
+                    document.getElementById('paySubsidyAmount').textContent = '￥' + subsidyYuan.toFixed(2);
+                    document.getElementById('paySubsidyInfo').style.display = 'block';
+                }
+            }
+            document.getElementById('orderNo').textContent = orderNo || localOrderNo || '-';
+
+            if (subsidyMin && subsidyMax) {
+                var avgSubsidy = parseFloat(subsidy_amount_yuan) || 0;
+                var avgWelfare = parseFloat(subsidy_welfare_amount_yuan) || 0;
+                var subsidyAmountEl = document.getElementById('subsidyAmount');
+                var welfareAmountEl = document.getElementById('welfareAmount');
+
+                if (avgSubsidy === 0) {
+                    if (subsidyAmountEl) {
+                        subsidyAmountEl.style.display = 'none';
+                    }
+                    if (welfareAmountEl) {
+                        welfareAmountEl.textContent = '￥' + avgWelfare.toFixed(2);
+                    }
+                } else {
+                    if (subsidyAmountEl) {
+                        subsidyAmountEl.textContent = '￥' + avgSubsidy.toFixed(2) + '+';
+                    }
+                    if (welfareAmountEl) {
+                        welfareAmountEl.textContent = '￥' + avgWelfare.toFixed(2);
+                    }
+                }
+            }
+
+            renderQrContent(qrCode);
+
+            var orderStatusTimer = pollCashierOrderStatus(localOrderNo);
+            $(window).on('beforeunload', function () {
+                if (orderStatusTimer) {
+                    clearInterval(orderStatusTimer);
+                    orderStatusTimer = null;
+                }
+            });
+        });
+
+        function showPaySuccess() {
+            updateSuccessAmounts();
+            showPaySuccessState('已标记为支付完成，请等待到账');
+        }
+    </script>  
+ </body>
+</html>
