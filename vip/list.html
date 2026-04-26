@@ -19,9 +19,41 @@
         .layui-fluid,
         .layui-row,
         .layui-card,
-        .layui-card-body,
         .layui-table-view {
             min-width: 1220px;
+        }
+
+        .layui-card-body {
+            min-width: 1220px;
+        }
+
+        #layui-reserve-pause .layui-fluid {
+            padding: 0;
+            min-width: auto;
+        }
+
+        #layui-reserve-pause .layui-card {
+            margin: 0;
+            box-shadow: none;
+            min-width: auto;
+        }
+
+        #layui-reserve-pause .layui-card-body {
+            padding: 20px 20px 10px !important;
+            overflow: hidden;
+            min-width: auto;
+        }
+
+        #layui-reserve-pause .layui-form-label {
+            width: 90px;
+        }
+
+        #layui-reserve-pause .layui-input-block {
+            margin-left: 120px;
+        }
+
+        #layui-reserve-pause .layui-input {
+            width: 100%;
         }
   </style> 
  </head> 
@@ -53,6 +85,9 @@
     </button>
     <button lay-event="zt" class="layui-btn layui-btn-primary layui-btn-xs"><i
             class="layui-icon">&#xe651;</i>{{d.state == '3' ? "开始" : "暂停"}}
+    </button>
+    <button lay-event="reservePause" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe642;</i>操作
     </button>
 </script> 
   <!--添加--> 
@@ -213,6 +248,39 @@
     </div> 
    </div> 
   </div> 
+  <div id="layui-reserve-pause" hidden>
+   <div class="layui-fluid">
+    <div class="layui-card">
+     <div class="layui-card-body" style="padding: 20px 15px 10px;">
+      <form class="layui-form" id="layui-form-reserve-pause" lay-filter="layui-form-reserve-pause">
+       <input type="hidden" name="id">
+       <div class="layui-form-item">
+        <label class="layui-form-label">暂停时间</label>
+        <div class="layui-input-block">
+         <input type="text" name="reservePauseTime" id="reservePauseTime" autocomplete="off" lay-verify="required" placeholder="请选择或输入暂停时间" class="layui-input">
+        </div>
+       </div>
+       <div class="layui-form-item">
+        <label class="layui-form-label">开启时间</label>
+        <div class="layui-input-block">
+         <input type="text" name="reserveStartTime" id="reserveStartTime" autocomplete="off" placeholder="不填则只预约暂停" class="layui-input">
+        </div>
+       </div>
+       <div class="layui-form-item">
+        <div class="layui-input-block" style="color: #999;">
+         开启时间选填。不填写时只会预约暂停。
+        </div>
+       </div>
+       <div class="layui-form-item">
+        <div class="layui-input-block">
+         <button class="layui-btn" lay-submit lay-filter="submit-reserve-pause">立即提交</button>
+        </div>
+       </div>
+      </form>
+     </div>
+    </div>
+   </div>
+  </div>
   <script type="text/html" id="timeTpl">
     <input type="text" id="startdate_{{d.id}}" value="{{d.startdate}}" readonly="readonly"
            class="layui-input layui-input-date" style="margin-top: -3px;text-align: center"/>
@@ -238,6 +306,25 @@
         var day = ("0" + date.getDate()).slice(-2); // Add leading 0 and slice last 2 digits
         return year + "-" + month + "-" + day;
     }
+
+    function getFormattedDateTime(date) {
+        var currentDate = date || new Date();
+        var year = currentDate.getFullYear();
+        var month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
+        var day = ("0" + currentDate.getDate()).slice(-2);
+        var hours = ("0" + currentDate.getHours()).slice(-2);
+        var minutes = ("0" + currentDate.getMinutes()).slice(-2);
+        var seconds = ("0" + currentDate.getSeconds()).slice(-2);
+        return year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
+    }
+
+    function parseDateTime(dateTimeStr) {
+        if (!dateTimeStr) {
+            return null;
+        }
+        return new Date(dateTimeStr.replace(/-/g, '/'));
+    }
+
     layui.config({
         base: '../../../layuiadmin/' //静态资源所在路径
     }).extend({
@@ -250,7 +337,7 @@
             form = layui.form,//控制添加修改（同一个弹出层）关闭弹出层的索引
             laydate = layui.laydate,
             upload = layui.upload,
-            layer = layui.layer, closeindex;
+            layer = layui.layer, closeindex, reservePauseLayerIndex;
 
         // layui.setter.url = 'http://localhost:8086/server/'
 
@@ -267,6 +354,20 @@
             trigger: 'click',
             elem: '#startdate_update',
             type: 'date',
+        });
+        laydate.render({
+            format: 'yyyy-MM-dd HH:mm:ss',
+            theme: 'grid',
+            trigger: 'click',
+            elem: '#reservePauseTime',
+            type: 'datetime'
+        });
+        laydate.render({
+            format: 'yyyy-MM-dd HH:mm:ss',
+            theme: 'grid',
+            trigger: 'click',
+            elem: '#reserveStartTime',
+            type: 'datetime'
         });
         // initType();
         initPrice();
@@ -362,7 +463,7 @@
                     }
                 }
                 , {field: 'create_date', title: '发布时间', sort: false, width: 200,}
-                , {fixed: 'right', title: '操作', toolbar: '#auth-state',width:180}
+                , {fixed: 'right', title: '操作', toolbar: '#auth-state',width:200}
             ]]
             , page: true
             , where: {token: localStorage.getItem('vipvtoken')}
@@ -686,6 +787,19 @@
                     layer.msg('该服广告还未开始，无法操作！')
                     return;
                 }
+            }else if(obj.event == 'reservePause'){
+                form.val('layui-form-reserve-pause', {
+                    id: obj.data.id,
+                    reservePauseTime: getFormattedDateTime(),
+                    reserveStartTime: ''
+                });
+                reservePauseLayerIndex = layer.open({
+                    type: 1,
+                    area: ['560px', '300px'],
+                    title: '预约暂停/开启',
+                    shadeClose: false,
+                    content: $("#layui-reserve-pause")
+                });
             }
         })
 
@@ -941,6 +1055,64 @@
             }
 
         })
+
+        form.on('submit(submit-reserve-pause)', function (data) {
+            var field = data.field || {};
+            var reservePauseDate = parseDateTime(field.reservePauseTime);
+            var reserveStartDate = parseDateTime(field.reserveStartTime);
+            var now = new Date();
+
+            if (!reservePauseDate || isNaN(reservePauseDate.getTime())) {
+                layer.msg('请输入正确的暂停时间');
+                return false;
+            }
+
+            if (reservePauseDate.getTime() <= now.getTime()) {
+                layer.msg('预约暂停时间必须大于当前时间');
+                return false;
+            }
+
+            if (field.reserveStartTime) {
+                if (!reserveStartDate || isNaN(reserveStartDate.getTime())) {
+                    layer.msg('请输入正确的开启时间');
+                    return false;
+                }
+
+                if (reserveStartDate.getTime() <= reservePauseDate.getTime()) {
+                    layer.msg('预约开始时间必须大于预约暂停时间');
+                    return false;
+                }
+            }
+
+            var payload = {
+                id: field.id,
+                reservePauseTime: field.reservePauseTime
+            };
+
+            if (field.reserveStartTime) {
+                payload.reserveStartTime = field.reserveStartTime;
+            }
+
+            admin.req({
+                url: layui.setter.url + 'ranking/reservePause',
+                type: 'POST',
+                processData: false,
+                traditonal: true,
+                contentType: 'application/json',
+                data: JSON.stringify(payload),
+                done: function (res) {
+                    layer.msg(res.msg);
+                    if (res && res.code === 0) {
+                        if (reservePauseLayerIndex) {
+                            layer.close(reservePauseLayerIndex);
+                            reservePauseLayerIndex = null;
+                        }
+                        table.reload('auth-table');
+                    }
+                }
+            });
+            return false;
+        });
 
         $('.test-table-reload-btn .layui-btn').on('click', function () {
             var type = $(this).data('type');

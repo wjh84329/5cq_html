@@ -2360,7 +2360,7 @@ table.gamelist th {
 }
 
 .main-bg {
-  background-image: url(/statics/imgs/bg.png);
+  background-image: url(/statics/imgs/bg.jpg);
   background-size: cover;
   box-sizing: border-box;
   overflow: hidden;

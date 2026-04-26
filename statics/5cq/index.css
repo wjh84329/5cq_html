@@ -1037,7 +1037,7 @@
   height: auto;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  background: linear-gradient(90deg, #c8985766 0%, #deb57e66 100%);
+  background: linear-gradient(90deg, #7c2b2b 0%, #e02b3f 100%);
   -webkit-box-shadow: 0 0 14px rgba(67, 90, 142, 0.2);
   box-shadow: 0 0 14px rgba(67, 90, 142, 0.2);
 }
@@ -1162,7 +1162,7 @@
 }
 
 .advRankList .advListTable {
-  background: linear-gradient(90deg, #c8985766 0%, #deb57e66 100%);
+  background: linear-gradient(90deg, #7c2b2b 0%, #e02b3f 100%);
 }
 
 .advRankList .advListTable .table3 {

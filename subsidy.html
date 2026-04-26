@@ -1462,35 +1462,35 @@
 				}
 
 				// 检查登录并跳转
-				function checkLoginAndRedirect(subsidyId, subsidyMin, subsidyMax, payMerchant) {
-					var token = window.localStorage ? localStorage.getItem('cq-act-token') : '';
-					if (!token) {
-						layer.msg('未登录，请先登录');
-						openWXCode(1);
-						return;
-					}
-					// 已登录，先检查补贴余额
-					onTokenRequest({
-						url: '/api/user/userInfo',
-						type: 'GET',
-						toast: false
-					}, function (res) {
-						if (res.code == 200 && res.data) {
-							var subsidyBalance = res.data.subsidy_balance || 0;
-							if (subsidyBalance < 10) {
-								layer.msg('补贴余额不足');
-								return;
-							}
-							// 补贴余额充足，新开页面跳转
-							var url = './recharge.html?subsidy_id=' + subsidyId + '&subsidy_min=' + subsidyMin + '&subsidy_max=' + subsidyMax + '&pay_merchant=' + payMerchant;
-							window.open(url, '_blank');
-						} else {
-							layer.msg('未登录，请先登录');
-							openWXCode(1);
-							return;
-						}
-					});
-				}
+				// function checkLoginAndRedirect(subsidyId, subsidyMin, subsidyMax, payMerchant) {
+				// 	var token = window.localStorage ? localStorage.getItem('cq-act-token') : '';
+				// 	if (!token) {
+				// 		layer.msg('未登录，请先登录');
+				// 		openWXCode(1);
+				// 		return;
+				// 	}
+				// 	// 已登录，先检查补贴余额
+				// 	onTokenRequest({
+				// 		url: '/api/user/userInfo',
+				// 		type: 'GET',
+				// 		toast: false
+				// 	}, function (res) {
+				// 		if (res.code == 200 && res.data) {
+				// 			var subsidyBalance = res.data.subsidy_balance || 0;
+				// 			if (subsidyBalance < 10) {
+				// 				layer.msg('补贴余额不足');
+				// 				return;
+				// 			}
+				// 			// 补贴余额充足，新开页面跳转
+				// 			var url = './recharge.html?subsidy_id=' + subsidyId + '&subsidy_min=' + subsidyMin + '&subsidy_max=' + subsidyMax + '&pay_merchant=' + payMerchant;
+				// 			window.open(url, '_blank');
+				// 		} else {
+				// 			layer.msg('未登录，请先登录');
+				// 			openWXCode(1);
+				// 			return;
+				// 		}
+				// 	});
+				// }
 
 				// 检查是否是今天首次访问
 				function isFirstVisitToday() {

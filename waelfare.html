@@ -2618,11 +2618,11 @@
 						rankingFormData.append('limit', 100);
 
 						var pubResponse = request5cqSync('report/selectAllByVersion', null) || {};
-						var rankingResponse = request5cqSync('ranking/select', rankingFormData) || {};
+						var rankingResponse = request5cqSync('ranking/selectRankingCurList', rankingFormData) || {};
 
 						window.__fiveCQCache = {
 							pubList: Array.isArray(pubResponse.pubList) ? pubResponse.pubList : [],
-							rankings: rankingResponse.data && Array.isArray(rankingResponse.data.rankings) ? rankingResponse.data.rankings : []
+							rankings: Array.isArray(rankingResponse.rankings) ? rankingResponse.rankings : []
 						};
 					}
 
@@ -2967,6 +2967,14 @@
 					return month + '-' + day;
 				}
 
+				function get999pkTodayRankingsCache(forceRefresh) {
+					if (!window.__rankingsTodayCache || forceRefresh) {
+						var rankingResponse = request5cqSync('ranking/selectRankingCurList', null) || {};
+						window.__rankingsTodayCache = Array.isArray(rankingResponse.rankings) ? rankingResponse.rankings : [];
+					}
+					return window.__rankingsTodayCache;
+				}
+
 				function get999pkRankingsJsonCache(forceRefresh) {
 					if (!window.__rankingsJsonCache || forceRefresh) {
 						var result = [];
@@ -3017,14 +3025,9 @@
 
 				function render999pkJsonRankTable(selectType, keyword) {
 					var normalizedType = selectType === 1 ? 1 : 2;
-					var today = get999pkTodayMonthday();
-					var sourceList = get999pkRankingsJsonCache().slice();
-
-					if (normalizedType === 1) {
-						sourceList = sourceList.filter(function (item) {
-							return String(item.datetime || '') === today;
-						});
-					}
+					var sourceList = normalizedType === 1
+						? get999pkTodayRankingsCache().slice()
+						: get999pkRankingsJsonCache().slice();
 
 					sourceList = filter5cqList(sourceList, keyword);
 					sourceList.sort(function (a, b) {
