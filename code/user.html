@@ -1010,6 +1010,9 @@
     <!-- 中奖记录将通过JS动态填充 --> 
    </table> 
   </div> 
+  <div id="subsidyOrderModal" style="display:none; padding: 12px 14px;"> 
+   <table id="subsidyOrderTable" lay-filter="subsidyOrderTable"></table> 
+  </div> 
   <script>
     var rateV;
     var operationData = null; // 存储operation接口的结果
@@ -1029,6 +1032,11 @@
 
     // 页面加载时先从 cookie 渲染
     renderUserInfoFromCookie();
+    $(function () {
+      $('#signInBtn').off('click.subsidyOrder').on('click.subsidyOrder', function () {
+        openSubsidyRecordModal();
+      });
+    });
 
     // 然后异步获取最新的用户信息
     var customer = getUserInfo();
@@ -2823,6 +2831,87 @@
           }
           // 默认切换到金币记录 tab
           $('#defaultTab_jinbi').click();
+        }
+      });
+    }
+
+    function renderSubsidyOrderTable(table) {
+      var customer = (typeof getUser === 'function') ? getUser(1) : null;
+      var openId = customer ? customer.openid : '';
+
+      if (!openId) {
+        layer.msg('未获取到open_id，请先登录');
+        return;
+      }
+
+      table.render({
+        elem: '#subsidyOrderTable',
+        id: 'subsidyOrderTableId',
+        url: baseUrl + 'cashier/orderList',
+        method: 'GET',
+        where: {
+          open_id: openId,
+          page: 1,
+          limit: 10
+        },
+        request: {
+          pageName: 'page',
+          limitName: 'limit'
+        },
+        page: true,
+        limit: 10,
+        height: 520,
+        parseData: function (res) {
+          return {
+            code: 0,
+            msg: res ? (res.msg || '') : '',
+            count: res ? (res.count || 0) : 0,
+            data: res ? (res.data || []) : []
+          };
+        },
+        cols: [[
+          { field: 'gameName', title: '游戏名称', align: 'center' },
+          {
+            field: 'publishUrl', title: '游戏网址', minWidth: 180, templet: function (d) {
+              var url = d.publishUrl || d.requestUrl || '-';
+              if (url === '-') return '-';
+              return '<a href="' + url + '" target="_blank" style="color:#1E9FFF;">' + url + '</a>';
+            }
+          },
+          { field: 'currencyName', title: '货币名称', width: 120, align: 'center' },
+          { field: 'userInfo', title: '充值账户', width: 120, align: 'center' },
+          { field: 'orderAmount', title: '充值金额', width: 120, align: 'center' },
+          { field: 'discountAmount', title: '补贴金额', width: 100, align: 'center' },
+          { field: 'amount', title: '实付金额', width: 100, align: 'center' },
+          { field: 'createTime', title: '订单时间', minWidth: 180, align: 'center' },
+          { field: 'localOrderNo', title: '订单号', minWidth: 200, align: 'center' },
+          {
+            field: 'status', title: '支付状态', width: 100, align: 'center', templet: function (d) {
+              var status = parseInt(d.status, 10);
+              if (status === 1) return '<span style="color:green;">支付成功</span>';
+              if (status === 0) return '<span>待支付</span>';
+              if (status === 2) return '<span style="color:red;">支付失败</span>';
+              return '<span style="color:gray;">未知状态</span>';
+            }
+          },
+        ]]
+      });
+    }
+
+    function openSubsidyRecordModal() {
+      var layer = layui.layer;
+      var table = layui.table;
+
+      layer.closeAll();
+      layer.open({
+        type: 1,
+        title: '补贴记录',
+        shadeClose: true,
+        area: ['1385px', '660px'],
+        shade: 0.3,
+        content: $('#subsidyOrderModal'),
+        success: function () {
+          renderSubsidyOrderTable(table);
         }
       });
     }

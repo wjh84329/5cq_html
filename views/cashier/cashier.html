@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Cashier订单查询</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+</head>
+<body>
+<style>
+    .cashier-stat-section {
+        margin-bottom: 14px;
+    }
+
+    .cashier-stat-section-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: #333;
+        margin: 0 0 12px 2px;
+    }
+
+    .cashier-stat-grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+    .cashier-stat-card {
+        position: relative;
+        overflow: hidden;
+        min-height: 132px;
+        border-radius: 14px;
+        padding: 18px 20px 16px;
+        color: #fff;
+        box-shadow: 0 10px 24px rgba(31, 35, 41, 0.12);
+    }
+
+    .cashier-stat-card:before {
+        content: '';
+        position: absolute;
+        right: -24px;
+        top: -24px;
+        width: 88px;
+        height: 88px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.14);
+    }
+
+    .cashier-stat-card.orders { background: linear-gradient(135deg, #1f6feb 0%, #4f8cff 100%); }
+    .cashier-stat-card.discount { background: linear-gradient(135deg, #8a3ffc 0%, #b15eff 100%); }
+    .cashier-stat-card.order-amount { background: linear-gradient(135deg, #d9485f 0%, #ff7a7a 100%); }
+    .cashier-stat-card.actual-pay { background: linear-gradient(135deg, #0f9d58 0%, #38c172 100%); }
+    .cashier-stat-card.risk { background: linear-gradient(135deg, #b26a00 0%, #f0a020 100%); }
+
+    .cashier-stat-label {
+        position: relative;
+        z-index: 1;
+        font-size: 13px;
+        opacity: 0.92;
+        margin-bottom: 16px;
+    }
+
+    .cashier-stat-compare {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .cashier-stat-side {
+        padding: 10px 12px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.10);
+        backdrop-filter: blur(2px);
+    }
+
+    .cashier-stat-side-title {
+        font-size: 12px;
+        opacity: 0.82;
+        margin-bottom: 8px;
+    }
+
+    .cashier-stat-value {
+        font-size: 28px;
+        line-height: 1.2;
+        font-weight: 700;
+    }
+
+    .cashier-stat-unit {
+        font-size: 14px;
+        margin-left: 4px;
+        opacity: 0.9;
+    }
+
+    .cashier-stat-date {
+        margin-top: 10px;
+        font-size: 12px;
+        opacity: 0.82;
+    }
+
+    .cashier-search-bar {
+        margin-bottom: 10px;
+        padding: 16px 0 6px;
+    }
+
+    @media screen and (max-width: 1366px) {
+        .cashier-stat-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @media screen and (max-width: 768px) {
+        .cashier-stat-grid,
+        .cashier-stat-compare {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card layui-form">
+                <div class="layui-card-header">Cashier订单查询</div>
+                <div class="layui-card-body">
+                    <div class="cashier-stat-section">
+                        <div class="cashier-stat-section-title">今天 / 昨天统计对比</div>
+                        <div class="cashier-stat-grid">
+                            <div class="cashier-stat-card orders">
+                                <div class="cashier-stat-label">订单笔数</div>
+                                <div class="cashier-stat-compare">
+                                    <div class="cashier-stat-side">
+                                        <div class="cashier-stat-side-title">今天</div>
+                                        <div class="cashier-stat-value" id="todayOrderCount">0<span class="cashier-stat-unit">笔</span></div>
+                                        <!-- <div class="cashier-stat-date" id="todaySuccessCountText">成功订单 0 笔</div> -->
+                                    </div>
+                                    <div class="cashier-stat-side">
+                                        <div class="cashier-stat-side-title">总比数</div>
+                                        <div class="cashier-stat-value" id="yesterdayOrderCount">0<span class="cashier-stat-unit">笔</span></div>
+                                        <!-- <div class="cashier-stat-date" id="yesterdaySuccessCountText">成功订单 0 笔</div> -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="cashier-stat-card discount">
+                                <div class="cashier-stat-label">补贴金额</div>
+                                <div class="cashier-stat-compare">
+                                    <div class="cashier-stat-side">
+                                        <div class="cashier-stat-side-title">今天</div>
+                                        <div class="cashier-stat-value" id="todayDiscountAmount">0.00<span class="cashier-stat-unit">元</span></div>
+                                        <!-- <div class="cashier-stat-date">todayDiscountAmount</div> -->
+                                    </div>
+                                    <div class="cashier-stat-side">
+                                        <div class="cashier-stat-side-title">总金额</div>
+                                        <div class="cashier-stat-value" id="yesterdayDiscountAmount">0.00<span class="cashier-stat-unit">元</span></div>
+                                        <!-- <div class="cashier-stat-date">yesterdayDiscountAmount</div> -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="cashier-stat-card order-amount">
+                                <div class="cashier-stat-label">订单金额</div>
+                                <div class="cashier-stat-compare">
+                                    <div class="cashier-stat-side">
+                                        <div class="cashier-stat-side-title">今天</div>
+                                        <div class="cashier-stat-value" id="todayOrderAmount">0.00<span class="cashier-stat-unit">元</span></div>
+                                        <!-- <div class="cashier-stat-date">todayRechargeAmount</div> -->
+                                    </div>
+                                    <div class="cashier-stat-side">
+                                        <div class="cashier-stat-side-title">总金额</div>
+                                        <div class="cashier-stat-value" id="yesterdayOrderAmount">0.00<span class="cashier-stat-unit">元</span></div>
+                                        <!-- <div class="cashier-stat-date">yesterdayRechargeAmount</div> -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="cashier-stat-card actual-pay">
+                                <div class="cashier-stat-label">实际支付金额</div>
+                                <div class="cashier-stat-compare">
+                                    <div class="cashier-stat-side">
+                                        <div class="cashier-stat-side-title">今天</div>
+                                        <div class="cashier-stat-value" id="todayActualPayAmount">0.00<span class="cashier-stat-unit">元</span></div>
+                                        <!-- <div class="cashier-stat-date">todayActualPayAmount</div> -->
+                                    </div>
+                                    <div class="cashier-stat-side">
+                                        <div class="cashier-stat-side-title">总金额</div>
+                                        <div class="cashier-stat-value" id="yesterdayActualPayAmount">0.00<span class="cashier-stat-unit">元</span></div>
+                                        <!-- <div class="cashier-stat-date">yesterdayActualPayAmount</div> -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="cashier-stat-card risk">
+                                <div class="cashier-stat-label">风控金</div>
+                                <div class="cashier-stat-compare">
+                                    <div class="cashier-stat-side">
+                                        <div class="cashier-stat-side-title">今天</div>
+                                        <div class="cashier-stat-value" id="todayRiskAmount">0.00<span class="cashier-stat-unit">元</span></div>
+                                        <!-- <div class="cashier-stat-date">todayRiskControlAmount</div> -->
+                                    </div>
+                                    <div class="cashier-stat-side">
+                                        <div class="cashier-stat-side-title">总金额</div>
+                                        <div class="cashier-stat-value" id="yesterdayRiskAmount">0.00<span class="cashier-stat-unit">元</span></div>
+                                        <!-- <div class="cashier-stat-date">yesterdayRiskControlAmount</div> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-card layui-form cashier-search-bar">
+                        <div class="layui-inline" style="width: 160px;">
+                            <select name="type" id="type">
+                                <option value="0" selected>支付成功</option>
+                                <option value="1">全部订单</option>
+                            </select>
+                        </div>
+                        <div class="layui-inline" style="width: 160px;">
+                            <select name="rechargeStatus" id="rechargeStatus">
+                                <option value="" selected>处理状态</option>
+                                <option value="1">已处理</option>
+                                <option value="0">未处理</option>
+                            </select>
+                        </div>
+                        <div class="layui-inline" style="width: 220px;">
+                            <input class="layui-input" name="orderNo" id="orderNo" autocomplete="off" placeholder="请输入订单号">
+                        </div>
+                        <div class="layui-inline" style="width: 260px;">
+                            <input class="layui-input" name="url" id="url" autocomplete="off" placeholder="请输入URL">
+                        </div>
+                        <div class="layui-inline" style="width: 180px;">
+                            <input class="layui-input" name="userInfo" id="userInfo" autocomplete="off" placeholder="请输入充值账号">
+                        </div>
+                        <div class="layui-inline" style="width: 190px;">
+                            <input class="layui-input" name="starttime" id="starttime" autocomplete="off" placeholder="开始时间" readonly>
+                        </div>
+                        <div class="layui-inline" style="width: 190px;">
+                            <input class="layui-input" name="endtime" id="endtime" autocomplete="off" placeholder="结束时间" readonly>
+                        </div>
+                        <button class="layui-btn" id="reload">搜索</button>
+                        <button class="layui-btn layui-btn-primary" id="reset">重置</button>
+                        <button id="gear-config-btn" class="layui-btn layui-btn-normal"><i class="layui-icon">&#xe614;</i>金额配置</button>
+                    </div>
+                    <table class="layui-hide" id="auth-table" lay-filter="auth-table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--金额配置表单-->
+<div id="gear-config-form" hidden>
+  <div class="layui-fluid">
+    <div class="layui-card">
+      <div class="layui-card-body" style="padding: 15px;">
+        <form class="layui-form" id="layui-form-gear">
+          <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">最小金额：</label>
+            <div class="layui-input-inline">
+              <input type="text" id="gear1" name="gear1" placeholder="请输入最小金额" class="layui-input">
+            </div>
+          </div>
+          <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">最大金额：</label>
+            <div class="layui-input-inline">
+              <input type="text" id="gear2" name="gear2" placeholder="请输入最大金额" class="layui-input">
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/html" id="cashier-op-bar">
+    <a class="layui-btn layui-btn-xs" lay-event="orderRecharge">订单充值</a>
+</script>
+<div id="cashier-recharge-form-wrap" hidden>
+    <div class="layui-fluid" style="padding: 18px 18px 0;">
+        <form class="layui-form" id="cashier-recharge-form" lay-filter="cashier-recharge-form">
+            <input type="hidden" name="rechargeRecordId">
+            <input type="hidden" name="rechargeSourceOrderNo">
+            <div class="layui-form-item">
+                <label class="layui-form-label">充值账号</label>
+                <div class="layui-input-block">
+                    <input type="text" name="rechargeAccountValue" placeholder="请输入充值账号" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">充值地址</label>
+                <div class="layui-input-block">
+                    <input type="text" name="rechargeAddress" placeholder="请输入充值地址" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">充值金额</label>
+                <div class="layui-input-block">
+                    <input type="text" name="rechargeAmountValue" placeholder="请输入充值金额" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">充值时间</label>
+                <div class="layui-input-block">
+                    <input type="text" id="cashier-recharge-time" name="rechargeTimeValue" placeholder="请选择充值时间" autocomplete="off" class="layui-input" readonly>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">充值订单号</label>
+                <div class="layui-input-block">
+                    <input type="text" name="rechargeOrderNoValue" placeholder="请输入充值订单号" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">备注</label>
+                <div class="layui-input-block">
+                    <textarea name="rechargeRemarkText" placeholder="请输入备注" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item" style="display:none;">
+                <button class="layui-btn" lay-submit lay-filter="cashier-recharge-submit" id="cashier-recharge-submit-btn">提交</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="../../layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../layuiadmin/'
+    }).extend({
+        index: 'lib/index'
+    }).use(['index', 'table', 'form', 'laydate', 'layer'], function () {
+        var $ = layui.jquery,
+            table = layui.table,
+            form = layui.form,
+            laydate = layui.laydate,
+            layer = layui.layer,
+            cashierTableInstance = null,
+            cashierRechargeLayerIndex = null;
+
+        function toNumber(value) {
+            var num = parseFloat(value);
+            return isNaN(num) ? 0 : num;
+        }
+
+        function formatMoney(value) {
+            return toNumber(value).toFixed(2);
+        }
+
+        function getCashierOrderId(rowData) {
+            if (!rowData) {
+                return '';
+            }
+            return rowData.cashier_order_id || rowData.cashierOrderId || rowData.id || '';
+        }
+
+        function getRechargeRecordData(res) {
+            if (!res) {
+                return null;
+            }
+            if (res.data && typeof res.data === 'object') {
+                return res.data;
+            }
+            if (typeof res === 'object' && (res.order_number || res.recharge_url || res.recharge_account)) {
+                return res;
+            }
+            return null;
+        }
+
+        function getRechargeRecordField(record, camelKey, snakeKey) {
+            if (!record) {
+                return '';
+            }
+            if (typeof record[camelKey] !== 'undefined' && record[camelKey] !== null) {
+                return record[camelKey];
+            }
+            if (typeof record[snakeKey] !== 'undefined' && record[snakeKey] !== null) {
+                return record[snakeKey];
+            }
+            return '';
+        }
+
+        function getCurrentDateTimeString() {
+            var now = new Date();
+            var year = now.getFullYear();
+            var month = ('0' + (now.getMonth() + 1)).slice(-2);
+            var day = ('0' + now.getDate()).slice(-2);
+            var hours = ('0' + now.getHours()).slice(-2);
+            var minutes = ('0' + now.getMinutes()).slice(-2);
+            var seconds = ('0' + now.getSeconds()).slice(-2);
+            return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+        }
+
+        function getRechargeFormDefaultValues(rowData) {
+            return {
+                rechargeRecordId: getCashierOrderId(rowData),
+                rechargeAccountValue: rowData && rowData.userInfo ? rowData.userInfo : '',
+                rechargeAddress: '',
+                rechargeAmountValue: rowData && rowData.orderAmount != null ? rowData.orderAmount : '',
+                rechargeTimeValue: getCurrentDateTimeString(),
+                rechargeOrderNoValue: '',
+                rechargeRemarkText: ''
+            };
+        }
+
+        function getQueryParams() {
+            var rechargeStatus = $('#rechargeStatus').val();
+            var params = {
+                type: $('#type').val(),
+                orderNo: $('#orderNo').val().trim(),
+                url: $('#url').val().trim(),
+                userInfo: $('#userInfo').val().trim(),
+                starttime: $('#starttime').val().trim(),
+                endtime: $('#endtime').val().trim()
+            };
+            if (rechargeStatus !== '') {
+                params.rechargeStatus = rechargeStatus;
+            }
+            return params;
+        }
+
+        function reloadCashierTable(resetPage) {
+            var requestUrl = buildCashierSelectUrl();
+            if (cashierTableInstance && cashierTableInstance.config) {
+                cashierTableInstance.config.where = {};
+                cashierTableInstance.config.url = requestUrl;
+            }
+            table.reload('auth-table', {
+                url: requestUrl,
+                page: resetPage ? {curr: 1} : undefined,
+                where: {}
+            });
+        }
+
+        function buildCashierSelectUrl() {
+            var queryString = $.param(getQueryParams());
+            return layui.setter.url + 'cashier/select' + (queryString ? '?' + queryString : '');
+        }
+
+        function renderStats(summary) {
+            $('#todayOrderCount').html((summary.count || 0) + '<span class="cashier-stat-unit">笔</span>');
+            $('#todayDiscountAmount').html(formatMoney(summary.todayDiscountAmount) + '<span class="cashier-stat-unit">元</span>');
+            $('#todayOrderAmount').html(formatMoney(summary.todayRechargeAmount) + '<span class="cashier-stat-unit">元</span>');
+            $('#todayActualPayAmount').html(formatMoney(summary.todayActualPayAmount) + '<span class="cashier-stat-unit">元</span>');
+            $('#todayRiskAmount').html(formatMoney(summary.todayRiskControlAmount) + '<span class="cashier-stat-unit">元</span>');
+            $('#todaySuccessCountText').text('成功订单 ' + (summary.todaySuccessCount || 0) + ' 笔');
+
+            $('#yesterdayOrderCount').html((summary.yesterdaySuccessCount || 0) + '<span class="cashier-stat-unit">笔</span>');
+            $('#yesterdayDiscountAmount').html(formatMoney(summary.yesterdayDiscountAmount || 0) + '<span class="cashier-stat-unit">元</span>');
+            $('#yesterdayOrderAmount').html(formatMoney(summary.yesterdayRechargeAmount) + '<span class="cashier-stat-unit">元</span>');
+            $('#yesterdayActualPayAmount').html(formatMoney(summary.yesterdayActualPayAmount) + '<span class="cashier-stat-unit">元</span>');
+            $('#yesterdayRiskAmount').html(formatMoney(summary.yesterdayRiskControlAmount) + '<span class="cashier-stat-unit">元</span>');
+            $('#yesterdaySuccessCountText').text('成功订单 ' + (summary.yesterdaySuccessCount || 0) + ' 笔');
+        }
+
+        laydate.render({
+            elem: '#starttime',
+            type: 'date',
+            format: 'yyyy-MM-dd',
+            trigger: 'click'
+        });
+
+        laydate.render({
+            elem: '#endtime',
+            type: 'date',
+            format: 'yyyy-MM-dd',
+            trigger: 'click'
+        });
+
+        $('#gear-config-btn').on('click', function() {
+            //先加载配置信息
+            $.ajax({
+                url: layui.setter.url + 'ranking/getSubsidyRange',
+                method: 'get',
+                success: function(res) {
+                    res = res || {};
+                    console.log('金额配置:', res)
+                    //回填配置信息
+                    $('#gear1').val(res.data.min || '');
+                    $('#gear2').val(res.data.max || '');
+                    
+                    layer.open({
+                        type: 1,
+                        area: ['400px', '320px'],
+                        title: '金额设置',
+                        shadeClose: false,
+                        content: $('#gear-config-form'),
+                        btn: ['确定', '取消'],
+                        yes: function(index, layero) {
+                            var gear1 = $('#gear1').val();
+                            var gear2 = $('#gear2').val();
+                            
+                            //提交配置
+                            $.ajax({
+                                url: layui.setter.url + 'ranking/updateSubsidyRange',
+                                method: 'post',
+                                contentType: 'application/json',
+                                data: JSON.stringify({
+                                    min: gear1 || 0,
+                                    max: gear2 || 0
+                                }),
+                                success: function(res) {
+                                    layer.msg('金额设置已保存');
+                                    layer.close(index);
+                                }
+                            });
+                        },
+                        success: function(index, layero) {
+                            form.render();
+                        }
+                    });
+                }
+            });
+        });
+
+        function openCashierRechargeForm(rowData) {
+            var defaultValues = getRechargeFormDefaultValues(rowData);
+            var cashierOrderId = defaultValues.rechargeRecordId;
+
+            form.val('cashier-recharge-form', defaultValues);
+
+            cashierRechargeLayerIndex = layer.open({
+                type: 1,
+                area: ['620px', '520px'],
+                title: '订单充值',
+                shadeClose: false,
+                content: $('#cashier-recharge-form-wrap'),
+                btn: ['提交', '取消'],
+                yes: function () {
+                    $('#cashier-recharge-submit-btn').trigger('click');
+                },
+                success: function () {
+                    laydate.render({
+                        elem: '#cashier-recharge-time',
+                        type: 'datetime',
+                        format: 'yyyy-MM-dd HH:mm:ss',
+                        trigger: 'click'
+                    });
+                    form.render();
+                },
+                end: function () {
+                    cashierRechargeLayerIndex = null;
+                    form.val('cashier-recharge-form', {
+                        rechargeRecordId: '',
+                        rechargeAccountValue: '',
+                        rechargeAddress: '',
+                        rechargeAmountValue: '',
+                        rechargeTimeValue: '',
+                        rechargeOrderNoValue: '',
+                        rechargeRemarkText: ''
+                    });
+                }
+            });
+
+            if (!cashierOrderId) {
+                return;
+            }
+
+            $.ajax({
+                url: layui.setter.url + 'cashier/rechargeRecord',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    cashier_order_id: cashierOrderId
+                },
+                success: function (res) {
+                    var record = getRechargeRecordData(res);
+                    if (!record || cashierRechargeLayerIndex === null) {
+                        return;
+                    }
+                    var rechargeAccount = getRechargeRecordField(record, 'rechargeAccount', 'recharge_account');
+                    var rechargeUrl = getRechargeRecordField(record, 'rechargeUrl', 'recharge_url');
+                    var rechargeAmount = getRechargeRecordField(record, 'rechargeAmount', 'recharge_amount');
+                    var rechargeTime = getRechargeRecordField(record, 'rechargeTime', 'recharge_time');
+                    var orderNumber = getRechargeRecordField(record, 'orderNumber', 'order_number');
+                    var remark = getRechargeRecordField(record, 'remark', 'remark');
+                    form.val('cashier-recharge-form', {
+                        rechargeRecordId: cashierOrderId,
+                        rechargeAccountValue: rechargeAccount || defaultValues.rechargeAccountValue,
+                        rechargeAddress: rechargeUrl || '',
+                        rechargeAmountValue: rechargeAmount !== '' ? rechargeAmount : defaultValues.rechargeAmountValue,
+                        rechargeTimeValue: rechargeTime || defaultValues.rechargeTimeValue,
+                        rechargeOrderNoValue: orderNumber || '',
+                        rechargeRemarkText: remark || ''
+                    });
+                    form.render();
+                }
+            });
+        }
+
+        cashierTableInstance = table.render({
+            elem: '#auth-table',
+            url: buildCashierSelectUrl(),
+            method: 'GET',
+            title: 'Cashier订单查询',
+            page: true,
+            limit: 20,
+            limits: [10, 20, 50, 100],
+            where: {},
+            parseData: function (res) {
+                renderStats(res || {});
+                return {
+                    code: res && typeof res.code !== 'undefined' ? res.code : 0,
+                    msg: res ? (res.msg || '') : '',
+                    count: res ? (res.count || 0) : 0,
+                    data: res ? (res.data || []) : []
+                };
+            },
+            cols: [[
+                {field: 'customerId', title: '用户ID', width: 80, align: 'center'},
+                {field: 'customerName', title: '用户昵称', width: 120, align: 'center'},
+                {field: 'contact', title: '联系方式', width: 130, align: 'center'},
+                {field: 'localOrderNo', title: '订单号', width: 200},
+                {field: 'trxNo', title: '支付平台订单号', width: 200},
+                {
+                    field: 'url', title: 'URL', minWidth: 260, templet: function (d) {
+                        var url = d.url || d.publishUrl || d.requestUrl || '';
+                        if (!url) return '-';
+                        return '<a href="' + url + '" target="_blank" style="color:#1E9FFF;">' + url + '</a>';
+                    }
+                },
+                {field: 'gameName', title: '游戏名称', minWidth: 160},
+                {field: 'currencyName', title: '货币名称', width: 110, align: 'center'},
+                {
+                    field: 'orderAmount', title: '订单金额', width: 110, align: 'center', templet: function (d) {
+                        var orderAmount = d.orderAmount == null || d.orderAmount === '' ? '-' : formatMoney(d.orderAmount);
+                        return '<span style="color:red;">' + orderAmount + '</span>';
+                    }
+                },
+                {
+                    field: 'discountAmount', title: '补贴金额', width: 110, align: 'center', templet: function (d) {
+                        return formatMoney(d.discountAmount);
+                    }
+                },
+                {
+                    field: 'amount', title: '实际支付金额', width: 130, align: 'center', templet: function (d) {
+                        return d.amount == null || d.amount === '' ? '-' : formatMoney(d.amount);
+                    }
+                },
+                {
+                    field: 'status', title: '支付状态', width: 110, align: 'center', templet: function (d) {
+                        var status = parseInt(d.status, 10);
+                        if (status === 1) return '<span style="color:#16b777;">支付成功</span>';
+                        if (status === 0) return '<span style="color:#ff9800;">待支付</span>';
+                        if (status === 2) return '<span style="color:#ff5722;">支付失败</span>';
+                        return '<span style="color:#999;">未知</span>';
+                    }
+                },
+                {field: 'userInfo', title: '充值账号', width: 120, align: 'center'},
+                {field: 'productName', title: '支付渠道', width: 110, align: 'center'},
+                {field: 'createTime', title: '订单时间', width: 180, align: 'center'}, 
+                {field: 'isProcessed', title: '是否处理', width: 110, align: 'center', templet: function (d) {
+                    return d.hasRechargeRecord == 1 ? '<span style="color:#16b777;">已处理</span>' : '<span style="color:#ff5722;">未处理</span>';
+                }},
+                {title: '操作', width: 110, align: 'center', toolbar: '#cashier-op-bar', fixed: 'right'}
+            ]]
+        });
+
+        table.on('tool(auth-table)', function (obj) {
+            if (obj.event === 'orderRecharge') {
+                openCashierRechargeForm(obj.data || {});
+            }
+        });
+
+        form.on('submit(cashier-recharge-submit)', function (data) {
+            var fields = data.field || {};
+            var rechargeAmountNumber = $.trim(fields.rechargeAmountValue || '');
+
+            if (!$.trim(fields.rechargeAddress || '')) {
+                layer.msg('请输入充值地址');
+                return false;
+            }
+            if (!$.trim(fields.rechargeAccountValue || '')) {
+                layer.msg('请输入充值账号');
+                return false;
+            }
+            if (!rechargeAmountNumber || isNaN(rechargeAmountNumber)) {
+                layer.msg('请输入正确的充值金额');
+                return false;
+            }
+            if (!$.trim(fields.rechargeTimeValue || '')) {
+                layer.msg('请选择充值时间');
+                return false;
+            }
+            if (!$.trim(fields.rechargeOrderNoValue || '')) {
+                layer.msg('请输入充值订单号');
+                return false;
+            }
+
+            $.ajax({
+                url: layui.setter.url + 'cashier/saveRechargeRecord',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    cashier_order_id: fields.rechargeRecordId || '',
+                    order_number: $.trim(fields.rechargeOrderNoValue || ''),
+                    recharge_url: $.trim(fields.rechargeAddress || ''),
+                    recharge_time: $.trim(fields.rechargeTimeValue || ''),
+                    recharge_amount: rechargeAmountNumber,
+                    recharge_account: $.trim(fields.rechargeAccountValue || ''),
+                    remark: $.trim(fields.rechargeRemarkText || '')
+                },
+                success: function (res) {
+                    if (!(res && (res.code === 0 || res.success === true))) {
+                        layer.msg((res && (res.msg || res.message)) || '提交失败');
+                        return;
+                    }
+                    if (cashierRechargeLayerIndex !== null) {
+                        layer.close(cashierRechargeLayerIndex);
+                        cashierRechargeLayerIndex = null;
+                    }
+                    layer.msg((res && (res.msg || res.message)) || '提交成功');
+                    reloadCashierTable(true);
+                },
+                error: function (xhr) {
+                    var message = '提交失败，请稍后重试';
+                    if (xhr && xhr.responseJSON && (xhr.responseJSON.msg || xhr.responseJSON.message)) {
+                        message = xhr.responseJSON.msg || xhr.responseJSON.message;
+                    }
+                    layer.msg(message);
+                }
+            });
+            return false;
+        });
+
+        $('#reload').on('click', function () {
+            reloadCashierTable(true);
+        });
+
+        $('#reset').on('click', function () {
+            $('#type').val('0');
+            $('#rechargeStatus').val('');
+            $('#orderNo').val('');
+            $('#url').val('');
+            $('#userInfo').val('');
+            $('#starttime').val('');
+            $('#endtime').val('');
+            form.render();
+            reloadCashierTable(true);
+        });
+
+        $('#type,#orderNo,#url,#userInfo,#starttime,#endtime').on('keydown', function (event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                $('#reload').click();
+            }
+        });
+
+    });
+</script>
+</body>
+</html>

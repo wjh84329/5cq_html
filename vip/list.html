@@ -526,6 +526,11 @@
                             data: JSON.stringify(fromdate),
                             contentType: "application/json",
                             done: function (res) {
+                                if (res && res.code == -1 && res.msg === '代理广告只能暂停或撤销一次') {
+                                    layer.close(index);
+                                    layer.msg(res.msg);
+                                    return;
+                                }
                                 table.reload("auth-table");
                                 layer.msg(res.msg);
                                 $.get({url: layui.setter.url + "ranking/test1"});
@@ -656,6 +661,11 @@
                             data: JSON.stringify(formdate),
                             contentType: "application/json",
                             done: function (res) {
+                                if (res && res.code == -1 && res.msg === '代理广告只能暂停或撤销一次') {
+                                    layer.close(index);
+                                    layer.msg(res.msg);
+                                    return;
+                                }
                                 table.reload("auth-table");
                                 layer.msg(res.msg);
                                 $.ajax({

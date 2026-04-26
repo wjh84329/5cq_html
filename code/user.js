@@ -864,7 +864,7 @@ $(document)
         layer.open({
             type: 1,
             title: '兑换补贴金',
-            area: ['420px', '300px'],
+            area: ['420px', '320px'],
             shadeClose: true,
             content:
                 '<div style="padding:20px;">' +

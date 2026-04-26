@@ -1,35 +1,38 @@
 ﻿<html>
- <head>
-  <meta charset="utf-8">  
- </head> 
- <body>
-  <meta name="referrer" content="always"> 
-  <title>5CQ-传奇广告查询站_传奇广告排行_传奇资源站_新开传奇新服排名站(5CQ.COM)</title>
-  <meta name="description" content="5CQ.Com传奇广告排行榜,传奇私服查询站,传奇资源站,好玩的传奇排名站,玩家最爱的新开传奇,GM最喜欢的传奇工具,传奇直播,传奇新开服,传奇相关尽在5CQ(玩传奇)">
-  <meta name="keywords" content="传奇广告查询站,传奇资源站,传奇广告排行,传奇SF广告统计(5CQ.COM)">   
-  <meta name="renderer" content="webkit"> 
-  <meta name="force-rendering" content="webkit"> 
-  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"> 
-  <link rel="stylesheet" href="./statics/5cq/sprite.css"> 
-  <link rel="stylesheet" href="./statics/5cq/main.css"> 
-  <link rel="stylesheet" href="./statics/5cq/index.css"> 
-  <link rel="stylesheet" href="./statics/5cq/form.css"> 
-  <link rel="stylesheet" href="./statics/5cq/article.css"> 
-  <link rel="stylesheet" href="./statics/5cq/lxwm.css"> 
-  <link rel="stylesheet" href="./statics/5cq/act.css"> 
-  <script src="./statics/js/jquery-3.2.1.min.js"></script> 
-  <script src="./statics/js/jquery.cookie.js"></script> 
-  <script src="./statics/js/public.js"></script> 
-  <script src="./statics/adminconfig.js"></script> 
-  <script src="./statics/admin.js"></script> 
-  <script src="./statics/config.js"></script> 
-  <script src="./statics/js/layer.js"></script> 
-  <script src="./layuiadmin/layui/layui.js"></script> 
-  <script src="./statics/js/report.js"></script> 
-  <!--    <script type="text/javascript" src="./statics/js/ad1.js"></script>--> 
-  <script type="text/javascript" src="./statics/js/ad5.js"></script> 
-  <link rel="stylesheet" href="./statics/css/slide-unlock.css"> 
-  <style>
+
+<head>
+	<meta charset="utf-8">
+</head>
+
+<body>
+	<meta name="referrer" content="always">
+	<title>5CQ-传奇广告查询站_传奇广告排行_传奇资源站_新开传奇新服排名站(5CQ.COM)</title>
+	<meta name="description"
+		content="5CQ.Com传奇广告排行榜,传奇私服查询站,传奇资源站,好玩的传奇排名站,玩家最爱的新开传奇,GM最喜欢的传奇工具,传奇直播,传奇新开服,传奇相关尽在5CQ(玩传奇)">
+	<meta name="keywords" content="传奇广告查询站,传奇资源站,传奇广告排行,传奇SF广告统计(5CQ.COM)">
+	<meta name="renderer" content="webkit">
+	<meta name="force-rendering" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+	<link rel="stylesheet" href="./statics/5cq/sprite.css">
+	<link rel="stylesheet" href="./statics/5cq/main.css">
+	<link rel="stylesheet" href="./statics/5cq/index.css">
+	<link rel="stylesheet" href="./statics/5cq/form.css">
+	<link rel="stylesheet" href="./statics/5cq/article.css">
+	<link rel="stylesheet" href="./statics/5cq/lxwm.css">
+	<link rel="stylesheet" href="./statics/5cq/act.css">
+	<script src="./statics/js/jquery-3.2.1.min.js"></script>
+	<script src="./statics/js/jquery.cookie.js"></script>
+	<script src="./statics/js/public.js"></script>
+	<script src="./statics/adminconfig.js"></script>
+	<script src="./statics/admin.js"></script>
+	<script src="./statics/config.js"></script>
+	<script src="./statics/js/layer.js"></script>
+	<script src="./layuiadmin/layui/layui.js"></script>
+	<script src="./statics/js/report.js"></script>
+	<!--    <script type="text/javascript" src="./statics/js/ad1.js"></script>-->
+	<script type="text/javascript" src="./statics/js/ad5.js"></script>
+	<link rel="stylesheet" href="./statics/css/slide-unlock.css">
+	<style>
 		.btnActive {
 			background: #da0000 !important;
 			color: #036407;
@@ -139,8 +142,8 @@
 				background-position: 0% 50%;
 			}
 		}
-	</style> 
-  <style>
+	</style>
+	<style>
 		/* 流光效果按钮 - 类似 qltj.gif 的快速扫光效果 */
 		.shimmer-btn {
 			position: relative;
@@ -217,7 +220,7 @@
 
 		/* 热门搜索下拉框样式 */
 		.hot-search-select {
-			background-image: linear-gradient(180deg, #67271F 0%, #D40202 100%);
+			background-image: linear-gradient(180deg, #f98475 0%, #d40202 100%);
 			border: none;
 			padding: 14px 10px 14px 6px;
 			margin-left: 10px;
@@ -231,8 +234,15 @@
 
 		.search .input .accurateSearch {
 			/* background: initial !important; */
-			background-image: linear-gradient(180deg, #67271F 0%, #D40202 100%);
+			background-image: linear-gradient(180deg, #f98475 0%, #d40202 100%);
 			border-radius: 8px;
+		}
+
+		.search .input .allNetworkSearch {
+			background-image: linear-gradient(180deg, #f4b35d 0%, #d97706 100%);
+			border-radius: 8px;
+			margin-left: auto;
+			flex-shrink: 0;
 		}
 
 		.hot-search-select option {
@@ -480,7 +490,7 @@
 		}
 
 		body {
-			background: linear-gradient(180deg, #f4e9db 0, #efe3d2 220px, #f7f3ee 220px, #f7f3ee 100%);
+			/* background: linear-gradient(180deg, #f4e9db 0, #efe3d2 220px, #f7f3ee 220px, #f7f3ee 100%); */
 			color: var(--welfare-site-text);
 		}
 
@@ -513,7 +523,7 @@
 			border: 1px solid var(--welfare-site-line);
 			/* border-radius: 8px; */
 			box-shadow: 0 16px 36px rgba(84, 49, 26, 0.08);
-			padding: 0 0 30px;
+			padding: 0 0 0;
 		}
 
 		.main-bg>.main-body>.content>.container {
@@ -557,11 +567,11 @@
 		#welfare-classic-footer .p1 a {
 			color: #fff;
 		}
-	</style> 
-  <link rel="stylesheet" href="./statics/css/public.css"> 
-  <script type="text/javascript" src="./statics/js/comm1.js"></script> 
-  <script type="text/javascript" src="./statics/js/act.js"></script> 
-  <style>
+	</style>
+	<link rel="stylesheet" href="./statics/css/public.css">
+	<script type="text/javascript" src="./statics/js/comm1.js"></script>
+	<script type="text/javascript" src="./statics/js/act.js"></script>
+	<style>
 		/* 幸运抽奖弹窗样式 */
 		.lucky-popup-overlay {
 			position: fixed;
@@ -831,405 +841,494 @@
 		.table #db tr {
 			background: #F9F9D4;
 		}
-	</style> 
-  <div class="topinfo"> 
-   <div class="wid" style="width: 100%;justify-content: space-around"> 
-    <div class="topinfo_l">
-      同步站 Www.Chacq.Com[查传奇] 
-    </div> 
-    <div class="topinfo_c">
-      通知：严厉打击带有赌博、诈骗等违法内容的游戏，欢迎监督举报。 
-    </div> 
-    <div class="topinfo_r"> 
-     <a href="/" style="color: white;margin-right: 15px">首页</a> 
-     <a href="./code/recruTran.html" style="color: white;margin-right: 15px" target="_blank">招聘交易发布</a> 
-     <a href="#" style="color: white;margin-right: 15px" onclick="shoucang()">收藏网址</a> 
-     <a href="./code/5cq.com传奇站.url" download="5cq.com传奇站.url" style="color: white;margin-right: 15px">保存桌面</a> 
-    </div> 
-   </div> 
-  </div> 
-  <div id="head" style="height: 270px;"> 
-   <script>window.zhaoff && zhaoff.inithead("#head");</script> 
-  </div> 
-  <div class="navc" id="first_title"> 
-   <div class="nav clearfix" id="cdmenu"> 
-    <a href="/index.html" target="" onclick="openActive('首页','/index.html',1);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
-     <div> 
-      <p>首页</p> 
-      <p>HOME</p> 
-     </div> <em></em> </a> 
-    <a href="/code/ranking.html" target="" onclick="openActive('广告排行','/code/ranking.html',2);" class=" clearfix" style="cursor: pointer"> <img style="display:block;" src="/statics/images/hot.gif" class="icon"> 
-     <div> 
-      <p>广告排行</p> 
-      <p>AD RANKING</p> 
-     </div> <em></em> </a> 
-    <a href="/waelfare.html" target="" onclick="openActive('福利补贴','/waelfare.html',3);" class="active clearfix" style="cursor: pointer"> <img style="display:block;" src="/statics/images/hot.gif" class="icon"> 
-     <div> 
-      <p style="color:red;">福利补贴</p> 
-      <p style="color:red;">WAELFARE</p> 
-     </div> <em></em> </a> 
-    <a href="/chat.html" target="" onclick="openActive('AI助手','/chat.html',4);" class=" clearfix" style="cursor: pointer"> <img style="display:block;" src="/statics/images/hot.gif" class="icon"> 
-     <div> 
-      <p>AI助手</p> 
-      <p>AI CHAT</p> 
-     </div> <em></em> </a> 
-    <a href="/code/dataAnalysis.html" target="" onclick="openActive('广告分析','/code/dataAnalysis.html',5);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
-     <div> 
-      <p>广告分析</p> 
-      <p>AD REQUEST</p> 
-     </div> <em></em> </a> 
-    <a href="/code/fastscreen.html" target="" onclick="openActive('广告筛选','/code/fastscreen.html',6);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
-     <div> 
-      <p>广告筛选</p> 
-      <p>AD SEARCH</p> 
-     </div> <em></em> </a> 
-    <a href="/code/report.html" target="" onclick="openActive('黑名单','/code/report.html',7);" class=" clearfix" style="cursor: pointer"> <img style="display:block;" src="/statics/images/hot.gif" class="icon"> 
-     <div> 
-      <p>黑名单</p> 
-      <p>BLACK LIST</p> 
-     </div> <em></em> </a> 
-    <a href="/code/recruTran.html" target="" onclick="openActive('招聘交易','/code/recruTran.html',8);" class=" clearfix" style="cursor: pointer"> <img style="display:block;" src="/statics/images/tj.gif" class="icon"> 
-     <div> 
-      <p>招聘交易</p> 
-      <p>RECRUIT·TRADE</p> 
-     </div> <em></em> </a> 
-    <a href="/code/journalism.html" target="" onclick="openActive('传奇攻略','/code/journalism.html',9);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
-     <div> 
-      <p>传奇攻略</p> 
-      <p>NEWS GUIDE</p> 
-     </div> <em></em> </a> 
-    <a href="/code/publishSites.html" target="" onclick="openActive('发布站点','/code/publishSites.html',10);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
-     <div> 
-      <p>发布站点</p> 
-      <p>PUBLISH SITES</p> 
-     </div> <em></em> </a> 
-    <a href="/code/resourceNavigation.html" target="" onclick="openActive('工具导航','/code/resourceNavigation.html',11);" class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon"> 
-     <div> 
-      <p>工具导航</p> 
-      <p>DATA DOWN</p> 
-     </div> <em></em> </a> 
-   </div> 
-  </div> 
-  <!-- 幸运抽奖弹窗 --> 
-  <div class="lucky-popup-overlay" id="luckyPopup" style="display: none;"> 
-   <div class="lucky-popup"> 
-    <div class="lucky-popup-close" onclick="document.getElementById('luckyPopup').style.display = 'none';">
-      × 
-    </div> 
-    <div class="lucky-popup-title">
-      获得幸运抽奖机会 
-    </div> 
-    <div class="lucky-popup-subtitle">
-      添加客服参与抽奖 
-    </div> 
-    <div class="lucky-popup-qrcode" id="luckyPopupQrcode" style="margin: 20px 0; text-align: center;"></div> 
-    <div class="lucky-popup-history">
-      查看历史记录 
-    </div> 
-   </div> 
-  </div> 
-  <!-- 兑奖确认弹窗 --> 
-  <div class="withdraw-confirm-overlay" id="withdrawConfirmPopup" style="display: none;"> 
-   <div class="withdraw-confirm-popup"> 
-    <div class="withdraw-confirm-header"> 
-     <span class="withdraw-confirm-title">确认操作</span> 
-     <span class="withdraw-confirm-close" onclick="document.getElementById('withdrawConfirmPopup').style.display = 'none';">×</span> 
-    </div> 
-    <div class="withdraw-confirm-amount"> 
-     <span class="withdraw-amount-value" id="withdrawPopupBalance">0</span> 
-     <span class="withdraw-amount-label">可用</span> 
-    </div> 
-    <div class="withdraw-confirm-input"> 
-     <div class="withdraw-input-label">
-       输入金额 
-     </div> 
-     <input type="text" class="withdraw-input-field" placeholder="单笔最低10.00元"> 
-    </div> 
-    <div class="withdraw-confirm-info">
-      兑奖说明：目前只支持直接兑奖到微信，兑奖会在1个工作日内到账，每天限兑奖1次，如有疑问请联系客服 
-    </div> 
-    <div class="withdraw-confirm-footer"> 
-     <button class="withdraw-confirm-btn" onclick="confirmWithdrawRedBalance()">确认</button> 
-    </div> 
-   </div> 
-  </div> 
-  <!-- 茅台中奖弹窗 --> 
-  <div class="moutai-popup-overlay" id="moutaiPopup" style="display: none;"> 
-   <div class="moutai-popup"> 
-    <div class="moutai-popup-close" onclick="document.getElementById('moutaiPopup').style.display = 'none';">
-      × 
-    </div> 
-    <div class="moutai-popup-phase">
-      第五期 
-    </div> 
-    <div class="moutai-popup-title">
-      恭喜获得大奖 
-    </div> 
-    <div class="moutai-popup-subtitle">
-      飞天茅台 
-    </div> 
-    <img src="/statics/5cq/bb.png" class="moutai-popup-image" onerror="this.src='statics/images/moutai.png';this.onerror=null;"> 
-    <button class="moutai-popup-btn" id="moutaiPopupBtn">填写邮寄信息</button> 
-   </div> 
-  </div> 
-  <script>
+
+		.commonTable td .blueA {
+			display: inline-block;
+			width: 78px;
+			line-height: 24px;
+			font-size: 12px;
+			text-align: center;
+			color: #fff;
+			background: #2E84D3;
+			border-radius: 4px;
+		}
+
+		.listContainer {
+			margin-top: initial !important;
+		}
+	</style>
+	<div class="topinfo">
+		<div class="wid" style="width: 100%;justify-content: space-around">
+			<div class="topinfo_l">
+				同步站 Www.Chacq.Com[查传奇]
+			</div>
+			<div class="topinfo_c">
+				通知：严厉打击带有赌博、诈骗等违法内容的游戏，欢迎监督举报。
+			</div>
+			<div class="topinfo_r">
+				<a href="/" style="color: white;margin-right: 15px">首页</a>
+				<a href="./code/recruTran.html" style="color: white;margin-right: 15px" target="_blank">招聘交易发布</a>
+				<a href="#" style="color: white;margin-right: 15px" onclick="shoucang()">收藏网址</a>
+				<a href="./code/5cq.com传奇站.url" download="5cq.com传奇站.url"
+					style="color: white;margin-right: 15px">保存桌面</a>
+			</div>
+		</div>
+	</div>
+	<div id="head" style="height: 270px;">
+		<script>window.zhaoff && zhaoff.inithead("#head");</script>
+	</div>
+	<div class="navc" id="first_title">
+		<div class="nav clearfix" id="cdmenu">
+			<a href="/index.html" target="" onclick="openActive('首页','/index.html',1);" class=" clearfix"
+				style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon">
+				<div>
+					<p>首页</p>
+					<p>HOME</p>
+				</div> <em></em>
+			</a>
+			<a href="/code/ranking.html" target="" onclick="openActive('广告排行','/code/ranking.html',2);"
+				class=" clearfix" style="cursor: pointer"> <img style="display:block;" src="/statics/images/hot.gif"
+					class="icon">
+				<div>
+					<p>广告排行</p>
+					<p>AD RANKING</p>
+				</div> <em></em>
+			</a>
+			<a href="/waelfare.html" target="" onclick="openActive('福利补贴','/waelfare.html',3);" class="active clearfix"
+				style="cursor: pointer"> <img style="display:block;" src="/statics/images/hot.gif" class="icon">
+				<div>
+					<p style="color:red;">福利补贴</p>
+					<p style="color:red;">WAELFARE</p>
+				</div> <em></em>
+			</a>
+			<a href="/chat.html" target="" onclick="openActive('AI助手','/chat.html',4);" class=" clearfix"
+				style="cursor: pointer"> <img style="display:block;" src="/statics/images/hot.gif" class="icon">
+				<div>
+					<p>AI助手</p>
+					<p>AI CHAT</p>
+				</div> <em></em>
+			</a>
+			<a href="/code/dataAnalysis.html" target="" onclick="openActive('广告分析','/code/dataAnalysis.html',5);"
+				class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif"
+					class="icon">
+				<div>
+					<p>广告分析</p>
+					<p>AD REQUEST</p>
+				</div> <em></em>
+			</a>
+			<a href="/code/fastscreen.html" target="" onclick="openActive('广告筛选','/code/fastscreen.html',6);"
+				class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif"
+					class="icon">
+				<div>
+					<p>广告筛选</p>
+					<p>AD SEARCH</p>
+				</div> <em></em>
+			</a>
+			<a href="/code/report.html" target="" onclick="openActive('黑名单','/code/report.html',7);" class=" clearfix"
+				style="cursor: pointer"> <img style="display:block;" src="/statics/images/hot.gif" class="icon">
+				<div>
+					<p>黑名单</p>
+					<p>BLACK LIST</p>
+				</div> <em></em>
+			</a>
+			<a href="/code/recruTran.html" target="" onclick="openActive('招聘交易','/code/recruTran.html',8);"
+				class=" clearfix" style="cursor: pointer"> <img style="display:block;" src="/statics/images/tj.gif"
+					class="icon">
+				<div>
+					<p>招聘交易</p>
+					<p>RECRUIT·TRADE</p>
+				</div> <em></em>
+			</a>
+			<a href="/code/journalism.html" target="" onclick="openActive('传奇攻略','/code/journalism.html',9);"
+				class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif"
+					class="icon">
+				<div>
+					<p>传奇攻略</p>
+					<p>NEWS GUIDE</p>
+				</div> <em></em>
+			</a>
+			<a href="/code/publishSites.html" target="" onclick="openActive('发布站点','/code/publishSites.html',10);"
+				class=" clearfix" style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif"
+					class="icon">
+				<div>
+					<p>发布站点</p>
+					<p>PUBLISH SITES</p>
+				</div> <em></em>
+			</a>
+			<a href="/code/resourceNavigation.html" target=""
+				onclick="openActive('工具导航','/code/resourceNavigation.html',11);" class=" clearfix"
+				style="cursor: pointer"> <img style="display:none;" src="/statics/images/tj.gif" class="icon">
+				<div>
+					<p>工具导航</p>
+					<p>DATA DOWN</p>
+				</div> <em></em>
+			</a>
+		</div>
+	</div>
+	<!-- 幸运抽奖弹窗 -->
+	<div class="lucky-popup-overlay" id="luckyPopup" style="display: none;">
+		<div class="lucky-popup">
+			<div class="lucky-popup-close" onclick="document.getElementById('luckyPopup').style.display = 'none';">
+				×
+			</div>
+			<div class="lucky-popup-title">
+				获得幸运抽奖机会
+			</div>
+			<div class="lucky-popup-subtitle">
+				添加客服参与抽奖
+			</div>
+			<div class="lucky-popup-qrcode" id="luckyPopupQrcode" style="margin: 20px 0; text-align: center;"></div>
+			<div class="lucky-popup-history">
+				查看历史记录
+			</div>
+		</div>
+	</div>
+	<!-- 兑奖确认弹窗 -->
+	<div class="withdraw-confirm-overlay" id="withdrawConfirmPopup" style="display: none;">
+		<div class="withdraw-confirm-popup">
+			<div class="withdraw-confirm-header">
+				<span class="withdraw-confirm-title">确认操作</span>
+				<span class="withdraw-confirm-close"
+					onclick="document.getElementById('withdrawConfirmPopup').style.display = 'none';">×</span>
+			</div>
+			<div class="withdraw-confirm-amount">
+				<span class="withdraw-amount-value" id="withdrawPopupBalance">0</span>
+				<span class="withdraw-amount-label">可用</span>
+			</div>
+			<div class="withdraw-confirm-input">
+				<div class="withdraw-input-label">
+					输入金额
+				</div>
+				<input type="text" class="withdraw-input-field" placeholder="单笔最低10.00元">
+			</div>
+			<div class="withdraw-confirm-info">
+				兑奖说明：目前只支持直接兑奖到微信，兑奖会在1个工作日内到账，每天限兑奖1次，如有疑问请联系客服
+			</div>
+			<div class="withdraw-confirm-footer">
+				<button class="withdraw-confirm-btn" onclick="confirmWithdrawRedBalance()">确认</button>
+			</div>
+		</div>
+	</div>
+	<!-- 茅台中奖弹窗 -->
+	<div class="moutai-popup-overlay" id="moutaiPopup" style="display: none;">
+		<div class="moutai-popup">
+			<div class="moutai-popup-close" onclick="document.getElementById('moutaiPopup').style.display = 'none';">
+				×
+			</div>
+			<div class="moutai-popup-phase">
+				第五期
+			</div>
+			<div class="moutai-popup-title">
+				恭喜获得大奖
+			</div>
+			<div class="moutai-popup-subtitle">
+				飞天茅台
+			</div>
+			<img src="/statics/5cq/bb.png" class="moutai-popup-image"
+				onerror="this.src='statics/images/moutai.png';this.onerror=null;">
+			<button class="moutai-popup-btn" id="moutaiPopupBtn">填写邮寄信息</button>
+		</div>
+	</div>
+	<script>
 		function getWelfareScrollElement() {
 			return document.querySelector('.main-body') || document.scrollingElement || document.documentElement;
 		}
-	</script> 
-  <div class="main-bg"> 
-   <div class="main-body"> 
-    <div class="content"> 
-     <div class="container"> 
-      <div class="search"> 
-       <div class="searchInner"> 
-        <div class="input clearfix" style="display: flex;align-items: center;"> 
-         <input type="text" style="width: 800px;border-radius: 8px;" maxlength="50" id="searchInput2" placeholder="输入您所在游戏的网址，查看微信补贴详情"> 
-         <select class="hot-search-select" id="hotSearchSelect" onchange="onHotSearchChange(this)"> <option value="">热门搜索</option> <option value="神器">神器</option> <option value="专属">专属</option> <option value="合击">合击</option> <option value="单职业">单职业</option> <option value="超变">超变</option> <option value="中变">中变</option> <option value="微变">微变</option> <option value="迷失">迷失</option> <option value="大极品">大极品</option> <option value="冰雪">冰雪</option> <option value="暗黑">暗黑</option> <option value="火龙">火龙</option> <option value="公益">公益</option> <option value="1.76">1.76</option> <option value="1.80">1.80</option> <option value="1.85">1.85</option> <option value="1.95">1.95</option> <option value="复古">复古</option> <option value="沉默">沉默</option> <option value="三端">三端</option> </select> 
-         <div class="clearfix searchBtn"> 
-          <div class="btn accurateSearch" onclick="searchSubsidy2()"> 
-           <span>补贴查询<span> 
-             <div class="icon-arrow"></div> </span></span> 
-          </div> 
-         </div> 
-        </div> 
-       </div> 
-      </div> 
-     </div> 
-     <div id="result"> 
-     </div> 
-     <div class="listContainer"> 
-      <div class="advRankList" style="margin-top:0;"> 
-       <div class="advListTable"> 
-        <div class="indexCommonTitle"> 
-         <div style="height: 55px;border-top: 0px;background: #fff;display: flex;padding:0 0;position: relative;width: 100%;"> 
-          <div class="left" style="float: left;background: url('./statics/images/zst.png') no-repeat 0 center;width: 300px;height: 55px;display: flex;align-items: center"> 
-           <p style="font-size: 18px;font-weight: bold;color: white;line-height: 55px;text-align: left;margin-left: 30px"> 传奇广告统计排行</p> 
-          </div> 
-          <div style="margin-left: 10px"> 
-           <p style="color: #d33f3f;font-weight: bold;position: absolute;left: 50%;top: 50%;transform: translate(-50%,-50%)"> 温馨提示：网站数据匀采集互联网,如发现违规违法行为请联系我们删除,不法信息举报QQ:3067585</p> 
-          </div> 
-         </div> 
-         <div> 
-         </div> 
-        </div> 
-        <div class="commonTable table3" style="height:auto;"> 
-         <table width="100%" class="table"> 
-          <tbody> 
-           <tr class="th "> 
-            <td>排名</td> 
-            <td>名称</td> 
-            <td>IP</td> 
-            <td>线路</td> 
-            <td>详细版本介绍</td> 
-            <td>客服QQ</td> 
-            <td>投放站数</td> 
-            <td>同服务器</td> 
-            <td>查看详细</td> 
-            <td>官方福利</td> 
-           </tr> 
-          </tbody> 
-          <tbody id="db"> 
-          </tbody> 
-          <tbody id="db2"> 
-           <script type="text/javascript">
+	</script>
+	<div class="main-bg">
+		<div class="main-body">
+			<div class="content">
+				<div class="container">
+					<div class="search">
+						<div class="searchInner">
+							<div class="input clearfix" style="display: flex;align-items: center;">
+								<input type="text" style="width: 600px;border-radius: 8px;" maxlength="50"
+									id="searchInput2" placeholder="输入您所在游戏的网址，查看补贴详情">
+								<select class="hot-search-select" id="hotSearchSelect"
+									onchange="onHotSearchChange(this)">
+									<option value="">热门搜索</option>
+									<option value="神器">神器</option>
+									<option value="专属">专属</option>
+									<option value="合击">合击</option>
+									<option value="单职业">单职业</option>
+									<option value="超变">超变</option>
+									<option value="中变">中变</option>
+									<option value="微变">微变</option>
+									<option value="迷失">迷失</option>
+									<option value="大极品">大极品</option>
+									<option value="冰雪">冰雪</option>
+									<option value="暗黑">暗黑</option>
+									<option value="火龙">火龙</option>
+									<option value="公益">公益</option>
+									<option value="1.76">1.76</option>
+									<option value="1.80">1.80</option>
+									<option value="1.85">1.85</option>
+									<option value="1.95">1.95</option>
+									<option value="复古">复古</option>
+									<option value="沉默">沉默</option>
+									<option value="三端">三端</option>
+								</select>
+								<div class="clearfix searchBtn">
+									<div class="btn accurateSearch" onclick="searchSubsidy2()" style="width: 100px;">
+										<span>查询补贴<span>
+												<div class="icon-arrow"></div>
+											</span></span>
+									</div>
+								</div>
+								<div class="btn allNetworkSearch" onclick="searchAllSubsidy2()" style="display: initial;">
+									全网补贴<img src="./statics/5cq/公告公示.png" style="width: 100%;width: 25px;height: 25px;margin-left: 4px;">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div>
+					<img src="./statics/5cq/1300heng.png" style="width: 100%;height: auto;">
+				</div>
+				<div id="result">
+				</div>
+				<div class="listContainer">
+					<div class="advRankList" style="margin-top:0;">
+						<div class="advListTable">
+							<div class="indexCommonTitle">
+								<div
+									style="height: 55px;border-top: 0px;background: #fff;display: flex;padding:0 0;position: relative;width: 100%;">
+									<div class="left"
+										style="float: left;background: url('./statics/images/zst.png') no-repeat 0 center;width: 300px;height: 55px;display: flex;align-items: center">
+										<p
+											style="font-size: 18px;font-weight: bold;color: white;line-height: 55px;text-align: left;margin-left: 30px">
+											传奇广告统计排行</p>
+									</div>
+									<div style="margin-left: 10px">
+										<p
+											style="color: #d33f3f;font-weight: bold;position: absolute;left: 50%;top: 50%;transform: translate(-50%,-50%)">
+											温馨提示：网站数据匀采集互联网,如发现违规违法行为请联系我们删除,不法信息举报QQ:3067585</p>
+									</div>
+								</div>
+								<div>
+								</div>
+							</div>
+							<div class="commonTable table3" style="height:auto;">
+								<table width="100%" class="table">
+									<tbody>
+										<tr class="th ">
+											<td>排名</td>
+											<td>名称</td>
+											<td>IP</td>
+											<td>线路</td>
+											<td>详细版本介绍</td>
+											<td>客服QQ</td>
+											<td>投放站数</td>
+											<td>同服务器</td>
+											<td>查看详细</td>
+											<td>官方福利</td>
+										</tr>
+									</tbody>
+									<tbody id="db">
+									</tbody>
+									<tbody id="db2">
+										<script type="text/javascript">
 											//document.writeln(_html);
-										</script> 
-          </tbody> 
-         </table> 
-         <div class="siterankbox2"> 
-          <ul id="rankbar" style="margin: auto;"> 
-           <!-- 选项卡由接口动态渲染 --> 
-          </ul> 
-         </div> 
-         <div id="ranklistbox"></div> 
-         <table width="100%" id="indexranklist" style="border-top:solid 1px #DDDDDD;"> 
-          <tbody> 
-           <tr class="th" id="sortTableHeader"> 
-            <td style="width: 90px;">排名</td> 
-            <td style="width: 100px;">游戏名称</td> 
-            <td style="width: 100px;">IP</td> 
-            <td>线路</td> 
-            <td id="gameIntroHeader">游戏介绍</td> 
-            <td>客服QQ</td> 
-            <td id="stationCountHeader" style="width: 70px;">投放站数</td> 
-            <td id="sameServerHeader" style="width: 70px;">同服务器</td> 
-            <td id="totalWelfareHeader" style="display: none;">累计送出</td> 
-            <td style="width: 80px;">查看详细</td> 
-            <td id="totalPriceHeader" style="width: 70px;">广告总价</td> 
-            <td style="width: 100px;">官方福利</td> 
-           </tr> 
-          </tbody> 
-          <tbody id="SortTable"> 
-          </tbody> 
-         </table> 
-        </div> 
-       </div> 
-      </div> 
-     </div> 
-    </div> 
-    <!-- TK图片弹窗 --> 
-    <div id="tk-popup" class="popup-overlay"> 
-     <div class="popup-content"> 
-      <img src="./statics/5cq/cha.png" class="popup-close" style="width: 60px;height: 60px;"> 
-      <div class="sign-reward-container"> 
-       <div style="width: 521px; height: 56px; border-radius: 4px;
-                                        border: 1px solid #924b36; box-sizing: border-box; background: #461100e6;line-height: 56px;padding-left: 10px;"> 
-        <div class="sign-reward-title" style="display: flex;"> 
-         <div class="reward-amount">
-           今日签到获得 
-          <span>X福利金</span> 
-         </div> 
-         <div class="qiandao" style="margin-left: 20px;">
-           当前已连续签到X天 
-         </div> 
-        </div> 
-       </div> 
-       <div class="sign-reward-grid" style="display: flex;"> 
-        <div> 
-         <div style="display: flex;"> 
-          <div class="sign-day active"> 
-           <div class="day-number">
-             第1天 
-           </div> 
-           <img src="./statics/5cq/yuanbao.png" style="width: 72px;height: 72px;"> 
-           <div class="day-reward">
-             1-5福利金 
-           </div> 
-          </div> 
-          <div class="sign-day"> 
-           <div class="day-number">
-             第2天 
-           </div> 
-           <img src="./statics/5cq/yuanbao.png" style="width: 72px;height: 72px;"> 
-           <div class="day-reward">
-             1-5福利金 
-           </div> 
-          </div> 
-          <div class="sign-day"> 
-           <div class="day-number">
-             第3天 
-           </div> 
-           <img src="./statics/5cq/yuanbao.png" style="width: 72px;height: 72px;"> 
-           <div class="day-reward">
-             1-5福利金 
-           </div> 
-          </div> 
-         </div> 
-         <div style="display: flex;margin-top: 8px;"> 
-          <div class="sign-day"> 
-           <div class="day-number">
-             第4天 
-           </div> 
-           <img src="./statics/5cq/yuanbao.png" style="width: 72px;height: 72px;"> 
-           <div class="day-reward">
-             1-5福利金 
-           </div> 
-          </div> 
-          <div class="sign-day"> 
-           <div class="day-number">
-             第5天 
-           </div> 
-           <img src="./statics/5cq/yuanbao.png" style="width: 72px;height: 72px;"> 
-           <div class="day-reward">
-             1-5福利金 
-           </div> 
-          </div> 
-          <div class="sign-day"> 
-           <div class="day-number">
-             第6天 
-           </div> 
-           <img src="./statics/5cq/yuanbao.png" style="width: 72px;height: 72px;"> 
-           <div class="day-reward">
-             1-5福利金 
-           </div> 
-          </div> 
-         </div> 
-        </div> 
-        <div class="sign-day seventh-day" style="background-image: url(./statics/5cq/chang.png);"> 
-         <div class="day-number">
-           第七天 
-         </div> 
-         <img src="./statics/5cq/bx.png" style="width: 94px;height: 96px;margin-top: 60px;"> 
-         <div class="day-reward" style="margin-top: 50px;">
-           1-5福利金 
-         </div> 
-        </div> 
-       </div> 
-      </div> 
-     </div> 
-    </div> 
-    <!-- <div class="toolbar">
+										</script>
+									</tbody>
+								</table>
+								<div class="siterankbox2">
+									<ul id="rankbar" style="margin: auto;">
+										<!-- 选项卡由接口动态渲染 -->
+									</ul>
+								</div>
+								<div id="ranklistbox"></div>
+								<table width="100%" id="indexranklist" style="border-top:solid 1px #DDDDDD;">
+									<tbody>
+										<tr class="th" id="sortTableHeader">
+											<td style="width: 90px;">排名</td>
+											<td style="width: 100px;">游戏名称</td>
+											<td style="width: 100px;">IP</td>
+											<td>线路</td>
+											<td id="gameIntroHeader">游戏介绍</td>
+											<td>客服QQ</td>
+											<td id="stationCountHeader" style="width: 70px;">投放站数</td>
+											<td id="sameServerHeader" style="width: 70px;">同服务器</td>
+											<td id="totalWelfareHeader" style="display: none;">累计送出</td>
+											<td style="width: 80px;">查看详细</td>
+											<td id="totalPriceHeader" style="width: 70px;">广告总价</td>
+											<td style="width: 100px;">官方福利</td>
+										</tr>
+									</tbody>
+									<tbody id="SortTable">
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- TK图片弹窗 -->
+			<div id="tk-popup" class="popup-overlay">
+				<div class="popup-content">
+					<img src="./statics/5cq/cha.png" class="popup-close" style="width: 60px;height: 60px;">
+					<div class="sign-reward-container">
+						<div
+							style="width: 521px; height: 56px; border-radius: 4px;
+                                        border: 1px solid #924b36; box-sizing: border-box; background: #461100e6;line-height: 56px;padding-left: 10px;">
+							<div class="sign-reward-title" style="display: flex;">
+								<div class="reward-amount">
+									今日签到获得
+									<span>X福利金</span>
+								</div>
+								<div class="qiandao" style="margin-left: 20px;">
+									当前已连续签到X天
+								</div>
+							</div>
+						</div>
+						<div class="sign-reward-grid" style="display: flex;">
+							<div>
+								<div style="display: flex;">
+									<div class="sign-day active">
+										<div class="day-number">
+											第1天
+										</div>
+										<img src="./statics/5cq/yuanbao.png" style="width: 72px;height: 72px;">
+										<div class="day-reward">
+											1-5福利金
+										</div>
+									</div>
+									<div class="sign-day">
+										<div class="day-number">
+											第2天
+										</div>
+										<img src="./statics/5cq/yuanbao.png" style="width: 72px;height: 72px;">
+										<div class="day-reward">
+											1-5福利金
+										</div>
+									</div>
+									<div class="sign-day">
+										<div class="day-number">
+											第3天
+										</div>
+										<img src="./statics/5cq/yuanbao.png" style="width: 72px;height: 72px;">
+										<div class="day-reward">
+											1-5福利金
+										</div>
+									</div>
+								</div>
+								<div style="display: flex;margin-top: 8px;">
+									<div class="sign-day">
+										<div class="day-number">
+											第4天
+										</div>
+										<img src="./statics/5cq/yuanbao.png" style="width: 72px;height: 72px;">
+										<div class="day-reward">
+											1-5福利金
+										</div>
+									</div>
+									<div class="sign-day">
+										<div class="day-number">
+											第5天
+										</div>
+										<img src="./statics/5cq/yuanbao.png" style="width: 72px;height: 72px;">
+										<div class="day-reward">
+											1-5福利金
+										</div>
+									</div>
+									<div class="sign-day">
+										<div class="day-number">
+											第6天
+										</div>
+										<img src="./statics/5cq/yuanbao.png" style="width: 72px;height: 72px;">
+										<div class="day-reward">
+											1-5福利金
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="sign-day seventh-day" style="background-image: url(./statics/5cq/chang.png);">
+								<div class="day-number">
+									第七天
+								</div>
+								<img src="./statics/5cq/bx.png" style="width: 94px;height: 96px;margin-top: 60px;">
+								<div class="day-reward" style="margin-top: 50px;">
+									1-5福利金
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- <div class="toolbar">
 			<ul>
 				<li id="myhis"><a href="javascript:void(0);"><i class="icons icon-bar-feed"></i>浏览记录</a></li>
 				<li class="header_home"> </li>
 				<li id="backToTop"><a href="javascript:void(0);"><i class="icons icon-bar-top"></i>回顶部</a></li>
 			</ul>
-		</div> --> 
-    <footer class="footer"> 
-     <div class="container clearfix"> 
-      <p class="text">拒绝盗版游戏 注意自我保护 谨防受骗上当 适度游戏益脑 沉迷游戏伤身 合理安排时间 享受健康生活<br><br> 本站只收录官方授权游戏信息，非官方授权游戏请在办理业务之前告知.<br><br> *注释：网站数据匀采集互联网，有不良信息举报联系我们，将会尽快核实处理，站长邮箱：sf1111@111.com<br><br> Copyright 2019-2025 All Rights Reserved.备案号: <a target="_blank" href="https://beian.miit.gov.cn">琼ICP备2025065481号-2</a></p> 
-     </div> 
-     <div class="rank-box"> 
-      <img src="./statics/images/wait.gif" id="show"> 
-      <div class="rank-img"> 
-       <img class="bg" src="./statics/imgs/rank.png" height="800" width="530"> 
-       <img class="pk" src="./statics/imgs/999pk.png" height="140" width="140"> 
-       <div class="public"> 
-        <div class="title"> 
-         <span>全网传奇广告排行榜</span> 
-         <span>汇总全网发布站</span> 
-        </div> 
-        <div class="content"> 
-         <span>第</span> 
-         <span class="rank">1</span> 
-         <span>名</span> 
-        </div> 
-        <div class="name">
-          【至尊九五】 
-        </div> 
-        <div class="price-title">
-          本服广告总价 
-        </div> 
-        <div class="price">
-          ￥0 
-        </div> 
-        <div class="time" style="margin-top: 10px;">
-          2025年12月23日 
-        </div> 
-        <div style="border: 1px solid #924b36;width: 450px;margin: auto;display: flex;height: 90px;"> 
-         <div class="shengc" style="padding: 5px;"> 
-          <!-- 二维码图片 --> 
-          <img src="" style="width: 80px; height: 80px;"> 
-         </div> 
-         <div> 
-          <div style="font-size: 18px;margin: 15px 0 0 10px;">
-            👈扫码查看本服广告详情 
-          </div> 
-          <div class="pk-footer" style="font-size: 22px;margin-top: 10px;margin-left: 10px;">
-            数据由 999PK.COM 汇总发布 
-          </div> 
-         </div> 
-        </div> 
-       </div> 
-      </div> 
-      <div class="create-rank"></div> 
-     </div> 
-     <div class="rank-box2"> 
-      <div class="rank-img2"> 
-       <img class="bg2" src="./statics/5cq/shouquan.png" height="800" width="530"> 
-       <img class="pk2" src="./statics/5cq/gaizhang.png" height="140" width="140"> 
-       <div class="public2"> 
-        <div class="content2" style="align-items: center;"> 
-         <div class="rank2" style="font-size: 56px;color: #000;"></div> 
-         <div class="addrank2" style="font-size: 38px;color: #000;"></div> 
-        </div> 
-        <div class="name2"></div> 
-       </div> 
-      </div> 
-     </div> 
-    </footer> 
-    <script type="text/javascript">
+		</div> -->
+			<footer class="footer">
+				<div class="container clearfix">
+					<p class="text">拒绝盗版游戏 注意自我保护 谨防受骗上当 适度游戏益脑 沉迷游戏伤身 合理安排时间 享受健康生活<br><br>
+						本站只收录官方授权游戏信息，非官方授权游戏请在办理业务之前告知.<br><br>
+						*注释：网站数据匀采集互联网，有不良信息举报联系我们，将会尽快核实处理，站长邮箱：sf1111@111.com<br><br> Copyright 2019-2025 All Rights
+						Reserved.备案号: <a target="_blank" href="https://beian.miit.gov.cn">琼ICP备2025065481号-2</a></p>
+				</div>
+				<div class="rank-box">
+					<img src="./statics/images/wait.gif" id="show">
+					<div class="rank-img">
+						<img class="bg" src="./statics/imgs/rank.png" height="800" width="530">
+						<img class="pk" src="./statics/imgs/999pk.png" height="140" width="140">
+						<div class="public">
+							<div class="title">
+								<span>全网传奇广告排行榜</span>
+								<span>汇总全网发布站</span>
+							</div>
+							<div class="content">
+								<span>第</span>
+								<span class="rank">1</span>
+								<span>名</span>
+							</div>
+							<div class="name">
+								【至尊九五】
+							</div>
+							<div class="price-title">
+								本服广告总价
+							</div>
+							<div class="price">
+								￥0
+							</div>
+							<div class="time" style="margin-top: 10px;">
+								2025年12月23日
+							</div>
+							<div
+								style="border: 1px solid #924b36;width: 450px;margin: auto;display: flex;height: 90px;">
+								<div class="shengc" style="padding: 5px;">
+									<!-- 二维码图片 -->
+									<img src="" style="width: 80px; height: 80px;">
+								</div>
+								<div>
+									<div style="font-size: 18px;margin: 15px 0 0 10px;">
+										👈扫码查看本服广告详情
+									</div>
+									<div class="pk-footer" style="font-size: 22px;margin-top: 10px;margin-left: 10px;">
+										数据由 999PK.COM 汇总发布
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="create-rank"></div>
+				</div>
+				<div class="rank-box2">
+					<div class="rank-img2">
+						<img class="bg2" src="./statics/5cq/shouquan.png" height="800" width="530">
+						<img class="pk2" src="./statics/5cq/gaizhang.png" height="140" width="140">
+						<div class="public2">
+							<div class="content2" style="align-items: center;">
+								<div class="rank2" style="font-size: 56px;color: #000;"></div>
+								<div class="addrank2" style="font-size: 38px;color: #000;"></div>
+							</div>
+							<div class="name2"></div>
+						</div>
+					</div>
+				</div>
+			</footer>
+			<script type="text/javascript">
 				var currentSelectType = 2;
 				var SelectType = 1;
 				var params = new URLSearchParams(window.location.search);
@@ -1359,34 +1458,34 @@
 						getUserInfo(token, function (userInfo) {
 							// 这里可以使用userInfo做进一步处理
 							if (userInfo) {
-							// 用户已登录，处理用户信息
-							// 检查接口返回的时间与当前时间是否一致
-							var currentTime = new Date();
-							var isTimeMatch = false;
-							// 只有当接口返回了时间字段时，才进行时间比较
-							if (userInfo.signin_date) {
-								var interfaceTime = new Date(userInfo.signin_date);
-								// 比较日期部分是否一致（年/月/日）
-								isTimeMatch = (interfaceTime.getFullYear() === currentTime.getFullYear() &&
-									interfaceTime.getMonth() === currentTime.getMonth() &&
-									interfaceTime.getDate() === currentTime.getDate());
-							}
-							// 只有当时间不一致时才显示弹窗
-							// if (!isTimeMatch) {
-							// 	// 检查今天是否已经显示过弹窗
-							// 	var today = new Date().toISOString().split('T')[0]; // 获取当前日期（格式：YYYY-MM-DD）
-							// 	var popupShown = localStorage.getItem('signin-popup-shown-' + today);
-							// 	if (!popupShown) {
-							// 		// 显示弹窗
-							// 		setTimeout(renderSigninPopup, 1000);
-							// 		// 标记今天已经显示过弹窗
-							// 		localStorage.setItem('signin-popup-shown-' + today, 'true');
-							// 	}
-							// } else {
-							// 	isLoggedIn = false;
-							// }
-						} else {
-							// 用户未登录
+								// 用户已登录，处理用户信息
+								// 检查接口返回的时间与当前时间是否一致
+								var currentTime = new Date();
+								var isTimeMatch = false;
+								// 只有当接口返回了时间字段时，才进行时间比较
+								if (userInfo.signin_date) {
+									var interfaceTime = new Date(userInfo.signin_date);
+									// 比较日期部分是否一致（年/月/日）
+									isTimeMatch = (interfaceTime.getFullYear() === currentTime.getFullYear() &&
+										interfaceTime.getMonth() === currentTime.getMonth() &&
+										interfaceTime.getDate() === currentTime.getDate());
+								}
+								// 只有当时间不一致时才显示弹窗
+								// if (!isTimeMatch) {
+								// 	// 检查今天是否已经显示过弹窗
+								// 	var today = new Date().toISOString().split('T')[0]; // 获取当前日期（格式：YYYY-MM-DD）
+								// 	var popupShown = localStorage.getItem('signin-popup-shown-' + today);
+								// 	if (!popupShown) {
+								// 		// 显示弹窗
+								// 		setTimeout(renderSigninPopup, 1000);
+								// 		// 标记今天已经显示过弹窗
+								// 		localStorage.setItem('signin-popup-shown-' + today, 'true');
+								// 	}
+								// } else {
+								// 	isLoggedIn = false;
+								// }
+							} else {
+								// 用户未登录
 							}
 						});
 					}
@@ -1558,6 +1657,10 @@
 				function onHotSearchChange(select) {
 					var val = select.value;
 					if (val) {
+						if (typeof resetWelfareSearchResult === 'function') {
+							resetWelfareSearchResult();
+						}
+						$('#searchInput2').val(val);
 						siteData(val);
 						getData(currentSelectType, val);
 					}
@@ -2123,7 +2226,7 @@
 									html += '<td style="color:#FE6503;font-weight: bold;"><a onclick="checkSubsidyTimeAndRedirect(\'' + encodeURIComponent(item['global_subsidy_info']['subsidy_id']) + '\', \'' + encodeURIComponent(item['global_subsidy_info']['subsidy_min_amount']) + '\', \'' + encodeURIComponent(item['global_subsidy_info']['subsidy_max_amount']) + '\', \'' + encodeURIComponent(payMerchant) + '\', ' + isInSubsidyTime + ', ' + item['global_subsidy_info']['start_hour'] + ', ' + item['global_subsidy_info']['end_hour'] + ', ' + (item['global_subsidy_info']['start_minute'] || 0) + ', ' + (item['global_subsidy_info']['end_minute'] || 0) + ')" title="游戏补贴金额￥' + item['global_subsidy_info']['subsidy_min_amount'] + '~￥' + item['global_subsidy_info']['subsidy_max_amount'] + '" style="margin-left:5px;padding:4px 8px;color:red;border:none;border-radius:3px;cursor:pointer;font-size:12px;line-height:20px;text-decoration: none;">领取补贴</a></td>';
 								}
 							} else {
-								html += '<td style="color:red;font-weight:bold;"><a href="javascript:void(0)" onclick="goPay(\'' + encodeURIComponent(item.id || '') + '\', \'' + encodeURIComponent(item.url || '') + '\')">领取补贴</a></td>';
+								html += '<td style="color:red;font-weight:bold;"><a href="javascript:void(0)" onclick="goPay(\'' + encodeURIComponent(item.id || '') + '\', \'' + encodeURIComponent(item.url || '') + '\', \'' + encodeURIComponent(item.name || '') + '\')">领取补贴</a></td>';
 							}
 							html += '</tr>';
 							html += '</tbody>';
@@ -2697,7 +2800,7 @@
 							'<td><span style="color:#666;">-</span></td>' +
 							'<td><a href="' + url + '" style="width:60px;" class="Redbtn blueA detail-link" rel="nofollow" target="_blank" data-game-name="' + safeName + '" data-version="' + safeVersion + '">点击查看</a></td>' +
 							'<td>' + totalPriceHtml + '</td>' +
-							'<td style="color:red;font-weight:bold;"><a href="javascript:void(0)" onclick="goPay(\'\', \'' + encodeURIComponent(item.url || '') + '\')" style="color:red;font-weight:bold;">领取补贴</a></td>' +
+							'<td style="color:red;font-weight:bold;"><a href="javascript:void(0)" onclick="goPay(\'\', \'' + encodeURIComponent(item.url || '') + '\', \'' + encodeURIComponent(item.name || '') + '\')" style="color:red;font-weight:bold;">领取补贴</a></td>' +
 							'</tr>'
 						);
 					});
@@ -2726,6 +2829,8 @@
 
 				function onHotSearchChange(select) {
 					var val = select ? select.value : '';
+					resetWelfareSearchResult();
+					$('#searchInput2').val(val || '');
 					siteData(val);
 					getData(currentSelectType, val);
 				}
@@ -2821,7 +2926,7 @@
 							'<td><span style="color:#666;">-</span></td>' +
 							'<td><a href="' + url + '" style="width:60px;" class="Redbtn blueA detail-link" rel="nofollow" target="_blank" data-game-name="' + safeName + '" data-version="' + safeVersion + '">点击查看</a></td>' +
 							'<td>' + escape999pkHtml(get999pkValue(item.money, '-')) + '</td>' +
-							'<td style="color:red;font-weight:bold;"><a href="javascript:void(0)" onclick="goPay(\'\', \'' + encodeURIComponent(item.url || '') + '\')" style="color:red;font-weight:bold;">领取补贴</a></td>' +
+							'<td style="color:red;font-weight:bold;"><a href="javascript:void(0)" onclick="goPay(\'\', \'' + encodeURIComponent(item.url || '') + '\', \'' + encodeURIComponent(item.name || '') + '\')" style="color:red;font-weight:bold;">领取补贴</a></td>' +
 							'</tr>'
 						);
 					});
@@ -2981,7 +3086,7 @@
 							'<td><span style="color:#000;" onclick="openGame(JSON.parse(decodeURIComponent(\'' + rankPayload + '\')))" class="webtotal_1">' + escape999pkHtml(item.ip_repeat_count) + '个游戏</span></td>' +
 							'<td><a href="' + (item.site || '#') + '" style="width:60px;" class="Redbtn blueA" rel="nofollow" target="_blank">点击查看</a></td>' +
 							'<td>' + escape999pkHtml(price) + '</td>' +
-							'<td style="color:red;font-weight:bold;"><a href="javascript:void(0)" onclick="goPay(\'\', \'' + encodedSite + '\')" style="color:red;font-weight:bold;">领取补贴</a></td>' +
+							'<td style="color:red;font-weight:bold;"><a href="javascript:void(0)" onclick="goPay(\'\', \'' + encodedSite + '\', \'' + encodeURIComponent(item.name || '') + '\', \'' + encodeURIComponent(price || '') + '\')" style="color:red;font-weight:bold;">领取补贴</a></td>' +
 							'</tr>'
 						);
 					});
@@ -3081,7 +3186,7 @@
 							'<td style="max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="' + safeLine + '">' + safeLine + '</td>' +
 							'<td>' + safeQq + '</td>' +
 							'<td><a href="' + url + '" class="Redbtn blueA detail-link" data-game-name="' + safeName + '" data-version="' + safeVersion + '" target="_blank">\u70b9\u51fb\u67e5\u770b</a></td>' +
-							'<td><a href="javascript:void(0)" onclick="goPay(\'' + encodeURIComponent(item.id || '') + '\', \'' + encodeURIComponent(item.url || '') + '\')" style="color:red;font-weight:bold;">\u9886\u53d6\u8865\u8d34</a></td>' +
+							'<td><a href="javascript:void(0)" onclick="goPay(\'' + encodeURIComponent(item.id || '') + '\', \'' + encodeURIComponent(item.url || '') + '\', \'' + encodeURIComponent(item.name || '') + '\')" style="color:red;font-weight:bold;">\u9886\u53d6\u8865\u8d34</a></td>' +
 							'</tr>';
 					});
 
@@ -3205,7 +3310,7 @@
 					window.open(url, '_blank');
 				}
 
-				function goPay(publishId, url) {
+				function goPay(publishId, url, gameName, money) {
 					var customer = typeof getUser === 'function' ? getUser() : null;
 					if (!customer || !customer.openid) {
 						if (typeof myLogin === 'function') {
@@ -3218,6 +3323,7 @@
 
 					var decodedPublishId = '';
 					var decodedUrl = '';
+					var decodedGameName = '';
 
 					try {
 						decodedPublishId = decodeURIComponent(publishId || '').trim();
@@ -3231,31 +3337,22 @@
 						decodedUrl = (url || '').trim();
 					}
 
+					try {
+						decodedGameName = decodeURIComponent(gameName || '').trim();
+					} catch (e) {
+						decodedGameName = (gameName || '').trim();
+					}
+
 					var discountAmount = '';
 					var localOrderNo = '';
-					var rechargeFormData = new FormData();
-					if (customer && customer.openid) {
-						rechargeFormData.append('open_id', customer.openid);
+					var decodedMoney = '';
+
+					try {
+						decodedMoney = decodeURIComponent(money || '').trim();
+					} catch (e) {
+						decodedMoney = (money || '').trim();
 					}
-					if (decodedPublishId) {
-						rechargeFormData.append('publish_id', decodedPublishId);
-					}
-					if (decodedUrl) {
-						rechargeFormData.append('url', decodedUrl);
-					}
-					if (decodedPublishId || decodedUrl) {
-						var rechargeResult = request5cqSync('cashier/rechargeResult', rechargeFormData) || {};
-						if (rechargeResult.data && rechargeResult.data.discountAmount != null) {
-							discountAmount = rechargeResult.data.discountAmount;
-						} else if (rechargeResult.discountAmount != null) {
-							discountAmount = rechargeResult.discountAmount;
-						}
-						if (rechargeResult.data && rechargeResult.data.localOrderNo != null) {
-							localOrderNo = rechargeResult.data.localOrderNo;
-						} else if (rechargeResult.localOrderNo != null) {
-							localOrderNo = rechargeResult.localOrderNo;
-						}
-					}
+
 					var queryParts = [];
 					if (decodedPublishId) {
 						queryParts.push('publish_id=' + encodeURIComponent(decodedPublishId));
@@ -3263,9 +3360,15 @@
 					if (decodedUrl) {
 						queryParts.push('url=' + encodeURIComponent(decodedUrl));
 					}
-					// if (discountAmount !== '') {
-					// 	queryParts.push('discountAmount=' + encodeURIComponent(discountAmount));
-					// }
+					if (decodedGameName) {
+						queryParts.push('game_name=' + encodeURIComponent(decodedGameName));
+					}
+					if (decodedMoney !== '') {
+						queryParts.push('money=' + encodeURIComponent(decodedMoney));
+					}
+					if (discountAmount !== '') {
+						queryParts.push('discountAmount=' + encodeURIComponent(discountAmount));
+					}
 					if (localOrderNo !== '') {
 						queryParts.push('localOrderNo=' + encodeURIComponent(localOrderNo));
 					}
@@ -3278,11 +3381,11 @@
 					window.open(targetUrl, '_blank');
 				}
 				// ================== 新的领取补贴功能结束 ==================
-			</script> 
-   </div> 
-  </div> 
-  <div id="tcHtml"></div> 
-  <script>
+			</script>
+		</div>
+	</div>
+	<div id="tcHtml"></div>
+	<script>
 		(function () {
 			$.get('/statics/userinfo.html', function (html) {
 				$('#tcHtml').html(html);
@@ -3294,8 +3397,8 @@
 				}
 			});
 		})();
-  </script> 
-  <script>
+	</script>
+	<script>
 		// 处理抢红包点击事件
 		function handleQiangClick() {
 			var token = window.localStorage ? localStorage.getItem('cq-act-token') : '';
@@ -3633,9 +3736,9 @@
 				}
 			});
 		}
-	</script> 
-  <!-- 右侧首沙城主悬浮框 --> 
-  <!-- <div id="firstShaFloatBox"
+	</script>
+	<!-- 右侧首沙城主悬浮框 -->
+	<!-- <div id="firstShaFloatBox"
 		style="position: fixed; right: 45px; top: 50%;text-align: center; transform: translateY(-50%); width: 220px; z-index: 9999;background-image: url('./statics/5cq/linghb.gif');background-size: 100% 100%;height: 230px;cursor: pointer;"
 		onclick="switchFirstShaBg(this)">
 		<div style="font-size: 11px; color: #FFEBBD; margin-top: 80px;font-weight: bold;display: none;"
@@ -3655,8 +3758,8 @@
 			class="sha-close">
 			×
 		</div>
-	</div> --> 
-  <script>
+	</div> -->
+	<script>
 		function switchFirstShaBg(element) {
 			element.style.backgroundImage = "url('./statics/5cq/shachen.png')";
 			element.style.width = '220px';
@@ -3668,28 +3771,38 @@
 			img.style.display = 'block';
 			closeBtn.style.display = 'block';
 		}
-	</script> 
-  <script src="./statics/js/baidu-stat.js"></script> 
-  <!-- <script src="https://mirtjurl.27tj.com/stat.php?siteid=41077"></script> --> 
-  <!-- 返回顶部箭头 --> 
-  <div id="backToTop" style="position: fixed; bottom: 50px; right: 200px; width: 50px; height: 50px;
+	</script>
+	<script src="./statics/js/baidu-stat.js"></script>
+	<!-- <script src="https://mirtjurl.27tj.com/stat.php?siteid=41077"></script> -->
+	<!-- 返回顶部箭头 -->
+	<div id="backToTop" style="position: fixed; bottom: 50px; right: 200px; width: 50px; height: 50px;
 	border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; 
-	opacity: 0; transition: opacity 0.3s; z-index: 9999;background-color: #999;"> 
-   <img src="/statics/5cq/ffhh.png" style="width: 50px; height: 50px;"> 
-  </div> 
-  <div id="welfare-classic-footer" style="width:100%;margin: 30px auto 0;box-sizing: border-box;background: #1f1f24;padding: 30px 0 20px"> 
-   <div class="container" style="text-align: center;"> 
-    <div class="clearfix" style="width: 100%;margin: 0 auto"> 
-     <div class="link clearfix" style="border-bottom: 1px solid #36363a;padding-bottom: 30px;text-align: center" id="wzlm"></div> 
-     <p class="p1"> <span>开服广告在线查询站&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span> <em>一个新开传奇网站、单职业传奇、复古传奇、传奇手游的信息展示与交流平台</em> <a rel="nofollow" href="/statics/sitemap.html" target="_blank" style="margin-left: 20px">网站地图<em></em></a> </p> 
-     <p class="p2"> <span><em class="icon-link"></em>友情链接：</span> <a rel="nofollow" href="https://www.5cq.com" target="_blank">传奇广告查询<em>|</em></a> <a rel="nofollow" href="https://www.1sf.com/" target="_blank">1SF传奇资源站<em>|</em></a> <a rel="nofollow" href="https://www.2sf.com/" target="_blank">2SF传奇资源站<em>|</em></a> <a rel="nofollow" href="https://www.5cq.com/duty.html" target="_blank">免责声明<em>|</em></a> </p> 
-    </div> 
-    <p class="textfoot">拒绝盗版游戏 注意自我保护 谨防受骗上当 适度游戏益脑 沉迷游戏伤身 合理安排时间 享受健康生活</p> 
-    <p class="textfoot">本站页面与数据均来自互联网采集整理，涉及违规或侵权内容请及时联系处理。</p> 
-    <p class="textfoot"><a style="color: white;text-align: center;width: 100%" target="_blank" href="https://beian.miit.gov.cn">Copyright 2019-2027 All Rights Reserved</a></p> 
-   </div> 
-  </div> 
-  <script>
+	opacity: 0; transition: opacity 0.3s; z-index: 9999;background-color: #999;">
+		<img src="/statics/5cq/ffhh.png" style="width: 50px; height: 50px;">
+	</div>
+	<div id="welfare-classic-footer"
+		style="width:100%;margin: 30px auto 0;box-sizing: border-box;background: #1f1f24;padding: 30px 0 20px">
+		<div class="container" style="text-align: center;">
+			<div class="clearfix" style="width: 100%;margin: 0 auto">
+				<div class="link clearfix"
+					style="border-bottom: 1px solid #36363a;padding-bottom: 30px;text-align: center" id="wzlm"></div>
+				<p class="p1"> <span>开服广告在线查询站&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span>
+					<em>一个新开传奇网站、单职业传奇、复古传奇、传奇手游的信息展示与交流平台</em> <a rel="nofollow" href="/statics/sitemap.html"
+						target="_blank" style="margin-left: 20px">网站地图<em></em></a>
+				</p>
+				<p class="p2"> <span><em class="icon-link"></em>友情链接：</span> <a rel="nofollow"
+						href="https://www.5cq.com" target="_blank">传奇广告查询<em>|</em></a> <a rel="nofollow"
+						href="https://www.1sf.com/" target="_blank">1SF传奇资源站<em>|</em></a> <a rel="nofollow"
+						href="https://www.2sf.com/" target="_blank">2SF传奇资源站<em>|</em></a> <a rel="nofollow"
+						href="https://www.5cq.com/duty.html" target="_blank">免责声明<em>|</em></a> </p>
+			</div>
+			<p class="textfoot">拒绝盗版游戏 注意自我保护 谨防受骗上当 适度游戏益脑 沉迷游戏伤身 合理安排时间 享受健康生活</p>
+			<p class="textfoot">本站页面与数据均来自互联网采集整理，涉及违规或侵权内容请及时联系处理。</p>
+			<p class="textfoot"><a style="color: white;text-align: center;width: 100%" target="_blank"
+					href="https://beian.miit.gov.cn">Copyright 2019-2027 All Rights Reserved</a></p>
+		</div>
+	</div>
+	<script>
 		// 显示/隐藏返回顶部按钮
 		function toggleBackToTop() {
 			var backToTopBtn = document.getElementById('backToTop');
@@ -3718,9 +3831,9 @@
 
 		// 初始调用
 		toggleBackToTop();
-	</script> 
-  <!-- 视频弹窗 --> 
-  <!-- <div id="videoPopup"
+	</script>
+	<!-- 视频弹窗 -->
+	<!-- <div id="videoPopup"
 		style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center;">
 		<div
 			style="position: relative; width: 80%; max-width: 800px; background: #000; border-radius: 8px; overflow: hidden;">
@@ -3731,8 +3844,8 @@
 				您的浏览器不支持视频播放。
 			</video>
 		</div>
-	</div> --> 
-  <script>
+	</div> -->
+	<script>
 		// 检查是否需要显示视频弹窗（每天只弹一次）
 		// function checkAndShowVideoPopup() {
 		// 	var lastShowDate = localStorage.getItem('videoPopupLastShowDate');
@@ -3761,8 +3874,8 @@
 		document.addEventListener('DOMContentLoaded', function () {
 			// checkAndShowVideoPopup();
 		});
-	</script> 
-  <script>
+	</script>
+	<script>
 		function draw999pkRankImage(options) {
 			var ranking = options.ranking || '';
 			var adName = options.adName || '';
@@ -3848,127 +3961,8 @@
 			});
 		}
 
-		function ensure999pkRankPopups() {
-			if (!$('#opensite').length) {
-				$('body').append(
-					'<div id="opensite" style="padding:20px;display:none;">' +
-					'<table cellpadding="0" cellspacing="0" style="margin-top:20px;" width="100%" class="rankingtable" id="searchsite">' +
-					'<thead><tr id="searchsitehead"></tr></thead>' +
-					'<tbody id="searchsitebody"></tbody>' +
-					'</table>' +
-					'</div>'
-				);
-			}
-			if (!$('#openhost').length) {
-				$('body').append(
-					'<div id="openhost" style="min-width:1300px;padding:25px;display:none;">' +
-					'<table class="layui-table">' +
-					'<thead style="background:red;">' +
-					'<tr style="background-color:#d33f3f;border:1px solid #c9d3e7;">' +
-					'<th colspan="8" style="font-size:16px;font-weight:700;color:white;" id="openiplisthead"></th>' +
-					'</tr>' +
-					'<tr style="background-color:#c9d3e7;">' +
-					'<th width="11%" style="text-align:center;">游戏名称</th>' +
-					'<th width="12%" style="text-align:center;">服务器名</th>' +
-					'<th width="11%" style="text-align:center;">线路类别</th>' +
-					'<th width="20%" style="text-align:center;">游戏介绍</th>' +
-					'<th width="10%" style="text-align:center;">客服QQ</th>' +
-					'<th width="21%" style="text-align:center;">网址</th>' +
-					'<th width="9%" style="text-align:center;">广告投入</th>' +
-					'<th width="6%" style="text-align:center;">游戏数据</th>' +
-					'</tr>' +
-					'</thead>' +
-					'<tbody id="openiplist"></tbody>' +
-					'</table>' +
-					'</div>'
-				);
-			}
-		}
-
-		function request999pkReportByItem(item, callback) {
-			var formdata = new FormData();
-			formdata.append('ip', item.ip || '');
-			formdata.append('host', item.host || '');
-			formdata.append('url', item.url || item.site || '');
-			$.ajax({
-				url: baseUrl + 'report/selectReportByNameOrDate',
-				type: 'POST',
-				data: formdata,
-				processData: false,
-				contentType: false,
-				timeout: 10000,
-				dataType: 'json',
-				success: callback,
-				error: function () {
-					layer.msg('\u52a0\u8f7d\u5931\u8d25\uff0c\u8bf7\u7a0d\u540e\u518d\u8bd5');
-				}
-			});
-		}
-
-		function openIP(item) {
-			ensure999pkRankPopups();
-			var name = item.name || '';
-			request999pkReportByItem(item, function (res) {
-				var list = res.DateData || [];
-				var rows = '';
-				$('#searchsitehead').html('<th>发布站</th><th>广告费</th>');
-				for (var i = 0; i < list.length; i++) {
-					var money = 0;
-					var infos = list[i].infos || [];
-					for (var j = 0; j < infos.length; j++) {
-						money += parseFloat(infos[j].contexts || 0) || 0;
-					}
-					rows += '<tr style="text-align:center;"><td>' + escape999pkHtml(list[i].baseurl || '') + '</td><td class="moneyCount" data-count="' + money + '">' + money + '</td></tr>';
-				}
-				rows += '<tr><td colspan="2" style="text-align:center;">在<span style="font-size:18px;color:red;">' + list.length + '个</span>发布站投放了广告推广</td></tr>';
-				$('#searchsitebody').html(rows);
-				layer.open({
-					type: 1,
-					title: name,
-					content: $('#opensite'),
-					shadeClose: true
-				});
-			});
-		}
-
-		function openGame(item) {
-			ensure999pkRankPopups();
-			var name = item.name || '';
-			var currentUrl = item.url || item.site || '';
-			request999pkReportByItem(item, function (res) {
-				var iplist = res.iplist || [];
-				var rows = '';
-				if (iplist.length > 0) {
-					$('#openiplisthead').html('\u8be5\u670d\u7f51\u7ad9IP\uff1a<span style="color:white;margin-right:30px;">' + escape999pkHtml(iplist[0].ip || '') + '</span>\u540c\u65f6\u6709<span style="color:white;">' + iplist.length + '</span>\u4e2a\u6e38\u620f\u8fd0\u884c\u5728\u6b64\u670d\u52a1\u5668\u4e0a');
-					for (var i = 0; i < iplist.length; i++) {
-						var row = iplist[i];
-						var rowPayload = encodeURIComponent(JSON.stringify(row));
-						rows += '<tr>' +
-							'<td class="tdclass">' + escape999pkHtml(row.name || '') + '</td>' +
-							'<td class="tdclass">' + escape999pkHtml(row.ipname || '') + '</td>' +
-							'<td class="tdclass">' + escape999pkHtml(row.line || '') + '</td>' +
-							'<td class="tdclass">' + escape999pkHtml(row.versiondepict || '') + '</td>' +
-							'<td class="tdclass">' + escape999pkHtml(row.kfqq || '') + '</td>' +
-							'<td class="tdclass" style="color:' + (row.url === currentUrl ? 'red' : '') + ';">' + escape999pkHtml(row.url || '') + '</td>' +
-							'<td class="tdclass">' + escape999pkHtml(row.allmoney || row.money || '') + '</td>' +
-							'<td class="tdclass"><a href="' + (row.url || '#') + '" class="djck"><span class="click-look" style="background:#d33f3f !important;">点击查看</span></a></td>' +
-							'</tr>';
-					}
-				} else {
-					$('#openiplisthead').html('\u6682\u65e0\u540c\u670d\u52a1\u5668\u6e38\u620f');
-				}
-				$('#openiplist').html(rows);
-				layer.open({
-					type: 1,
-					title: name,
-					shadeClose: true,
-					area: '1380px',
-					content: $('#openhost')
-				});
-			});
-		}
-	</script> 
-  <script>
+	</script>
+	<script>
 		function ensure999pkRankPopups() {
 			if (!$('#opensite').length) {
 				$('body').append(
@@ -4042,6 +4036,7 @@
 						type: 0,
 						title: legacyName,
 						btn: [],
+						shadeClose: true,
 						area: ['400px', '520px'],
 						content: '<div style="padding:5px;"><table width="360" border="0" class="gamelist"><tbody><tr><th>\u53d1\u5e03\u7ad9</th><th>\u5e7f\u544a\u8d39</th></tr></tbody><tbody>' + rows.join('') + '</tbody><tbody><tr><th colspan="2">\u5728 <span style="font-size:16px;color:red;">' + list.length + '\u4e2a</span> \u53d1\u5e03\u7ad9\u6295\u653e\u4e86\u5e7f\u544a\u63a8\u5e7f</th></tr></tbody></table></div>'
 					});
@@ -4065,6 +4060,7 @@
 					type: 0,
 					title: name,
 					btn: [],
+					shadeClose: true,
 					area: ['400px', Math.max(220, list.length * 30 + 200) + 'px'],
 					content: '<div style="padding:5px;"><table width="360" border="0" class="gamelist"><tbody><tr><th>\u53d1\u5e03\u7ad9</th><th>\u5e7f\u544a\u8d39</th></tr></tbody><tbody>' + rows.join('') + '</tbody><tbody><tr><th colspan="2">\u5728 <span style="font-size:16px;color:red;">' + list.length + '\u4e2a</span> \u53d1\u5e03\u7ad9\u6295\u653e\u4e86\u5e7f\u544a\u63a8\u5e7f</th></tr></tbody></table></div>'
 				});
@@ -4117,12 +4113,11 @@
 				});
 			});
 		}
-	</script>  
-  <style>
+	</script>
+	<style>
 		#welfareSearchResultWrap {
 			width: 1300px;
-			margin: 24px auto 0;
-			display: none;
+			/* margin: 24px auto 0; */
 			box-sizing: border-box;
 		}
 
@@ -4171,7 +4166,7 @@
 		}
 
 		.welfare-search-table-wrap {
-			padding: 20px 24px 26px;
+			/* padding: 20px 24px 26px; */
 			overflow-x: hidden;
 			box-sizing: border-box;
 		}
@@ -4182,7 +4177,7 @@
 			border-spacing: 0;
 			table-layout: fixed;
 			background: #fff;
-			border: 1px solid #efdfcd;
+			/* border: 1px solid #efdfcd; */
 			box-sizing: border-box;
 		}
 
@@ -4192,7 +4187,7 @@
 			border-bottom: 1px solid #f2e5d7;
 			border-right: 1px solid #f6eadf;
 			text-align: center;
-			color: #4a3a2a;
+			/* color: #4a3a2a; */
 			font-size: 13px;
 			line-height: 1.5;
 			word-break: break-all;
@@ -4225,15 +4220,24 @@
 
 		.welfare-search-link {
 			display: inline-block;
+			max-width: 100%;
 			color: #b96c18;
 			text-decoration: underline;
-			overflow-wrap: anywhere;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
 		}
 
 		.welfare-search-desc {
 			text-align: left;
 			color: #6c5947;
-			word-break: break-word;
+		}
+
+		.welfare-search-ellipsis {
+			display: block;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
 		}
 
 		.welfare-site-tags {
@@ -4249,14 +4253,15 @@
 			display: inline-flex;
 			align-items: center;
 			justify-content: center;
-			min-width: 88px;
+			min-width: 50px;
 			height: 28px;
 			padding: 0 12px;
-			border-radius: 999px;
-			background-image: linear-gradient(180deg, #67271F 0%, #D40202 100%);
+			border-radius: 4px;
+			/* background-image: linear-gradient(180deg, #67271F 0%, #D40202 100%); */
+			background: #2E84D3;
 			color: #fff !important;
 			font-size: 12px;
-			font-weight: bold;
+			/* font-weight: bold; */
 			cursor: pointer;
 			white-space: nowrap;
 			box-shadow: 0 6px 14px rgba(180, 33, 24, 0.14);
@@ -4281,13 +4286,13 @@
 
 		.welfare-price-cell {
 			color: #c43124;
-			font-weight: bold;
+			/*font-weight: bold;*/
 			font-size: 15px;
 		}
 
 		.welfare-amount-cell {
 			color: #cf7c24;
-			font-weight: bold;
+			/*font-weight: bold;*/
 			white-space: nowrap;
 		}
 
@@ -4307,7 +4312,7 @@
 			height: 34px;
 			padding: 0 12px;
 			border-radius: 999px;
-			background: linear-gradient(180deg, #db4a3a 0%, #b61d17 100%);
+			background-image: linear-gradient(180deg, #f98475 0%, #d40202 100%);
 			color: #fff;
 			font-weight: bold;
 			cursor: pointer;
@@ -4329,6 +4334,48 @@
 			color: #8b725f;
 		}
 
+		.welfare-loading {
+			min-height: 320px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			gap: 14px;
+			padding: 40px 20px;
+			text-align: center;
+			color: #8b725f;
+		}
+
+		.welfare-loading-spinner {
+			width: 52px;
+			height: 52px;
+			border-radius: 50%;
+			border: 4px solid rgba(211, 63, 63, 0.14);
+			border-top-color: #d33f3f;
+			animation: welfare-loading-spin 0.9s linear infinite;
+		}
+
+		.welfare-loading-title {
+			font-size: 20px;
+			font-weight: bold;
+			color: #7b2817;
+		}
+
+		.welfare-loading-desc {
+			font-size: 14px;
+			color: #9b846f;
+		}
+
+		@keyframes welfare-loading-spin {
+			from {
+				transform: rotate(0deg);
+			}
+
+			to {
+				transform: rotate(360deg);
+			}
+		}
+
 		.welfare-empty-title {
 			font-size: 20px;
 			font-weight: bold;
@@ -4343,6 +4390,7 @@
 
 		.welfare-number-col {
 			white-space: nowrap;
+			color: #ff2020;
 		}
 
 		.welfare-action-col {
@@ -4360,7 +4408,7 @@
 			}
 		}
 	</style>
-  <script>
+	<script>
 		(function () {
 			var welfareSearchRequest = null;
 			var welfareSearchKeyword = '';
@@ -4453,18 +4501,20 @@
 			}
 
 			function buildWelfareSearchEmptyHtml(keyword) {
-				var safeKeyword = escape999pkHtml(keyword || '');
 				return '<div class="welfare-search-card">' +
-					'<div class="welfare-search-head">' +
-					'<div>' +
-					'<div class="welfare-search-title">补贴查询结果</div>' +
-					'<div class="welfare-search-summary">关键字：' + safeKeyword + '</div>' +
-					'</div>' +
-					'<div class="welfare-search-reset" onclick="resetWelfareSearchResult()">返回排行</div>' +
-					'</div>' +
 					'<div class="welfare-empty">' +
 					'<div class="welfare-empty-title">暂无补贴数据</div>' +
 					'<div class="welfare-empty-desc">请尝试输入完整域名、游戏名称或版本关键字重新查询</div>' +
+					'</div>' +
+					'</div>';
+			}
+
+			function buildWelfareSearchLoadingHtml(keyword) {
+				return '<div class="welfare-search-card">' +
+					'<div class="welfare-loading">' +
+					'<div class="welfare-loading-spinner"></div>' +
+					'<div class="welfare-loading-title">加载中...</div>' +
+					'<div class="welfare-loading-desc">正在查询补贴数据，请稍候</div>' +
 					'</div>' +
 					'</div>';
 			}
@@ -4486,21 +4536,21 @@
 					var siteCount = siteNames.length;
 					var siteHtml = '<span class="welfare-site-link" onclick="openIP(JSON.parse(decodeURIComponent(\'' + sitePayload + '\')))">' + siteCount + '个站发布</span>';
 					var price = formatWelfareMoney(getWelfareField(item, 'money', ''));
-					var claimedTotal = formatWelfareMoney(getWelfareField(item, 'claimed_total_amount', 'claimed_discount_amount'));
+					var claimedTotal = formatWelfareMoney(getWelfareField(item, 'claimed_discount_amount', 'claimed_total_amount'));
 					var orderCount = getWelfareField(item, 'claimed_order_count', '');
 					var actionMeta = getWelfareActionMeta(item);
 					var actionHtml = actionMeta.disabled
 						? '<span class="welfare-action-btn disabled">' + escape999pkHtml(actionMeta.text) + '</span>'
-						: '<span class="welfare-action-btn" onclick="goPay(\'' + encodeURIComponent(publishId || '') + '\', \'' + encodeURIComponent(getWelfareField(item, 'url', '') || '') + '\')">' + escape999pkHtml(actionMeta.text) + '</span>';
+						: '<span class="welfare-action-btn" onclick="goPay(\'' + encodeURIComponent(publishId || '') + '\', \'' + encodeURIComponent(getWelfareField(item, 'url', '') || '') + '\', \'' + encodeURIComponent(getWelfareField(item, 'name', 'legend_name') || '') + '\')">' + escape999pkHtml(actionMeta.text) + '</span>';
 
 					return '<tr>' +
-						'<td class="welfare-search-name">' + gameName + '</td>' +
+						'<td class="welfare-search-name"><span class="welfare-search-ellipsis">' + gameName + '</span></td>' +
 						'<td><a class="welfare-search-link" href="' + (gameUrl === '-' ? 'javascript:void(0);' : gameUrl) + '" target="_blank" rel="nofollow">' + gameUrl + '</a></td>' +
-						'<td class="welfare-search-desc">' + version + '</td>' +
+						'<td class="welfare-search-desc"><span class="welfare-search-ellipsis">' + version + '</span></td>' +
 						'<td>' + siteHtml + '</td>' +
-						'<td class="welfare-price-cell welfare-number-col">' + price + '</td>' +
-						'<td class="welfare-amount-cell welfare-number-col">' + claimedTotal +
-							'<span class="welfare-amount-sub">已领' + escape999pkHtml(orderCount === '' ? '0' : String(orderCount)) + '单</span>' +
+						'<td class="welfare-price-cell welfare-number-col">¥' + price + '</td>' +
+						'<td class="welfare-amount-cell welfare-number-col">¥' + claimedTotal +
+						// '<span class="welfare-amount-sub">已领' + escape999pkHtml(orderCount === '' ? '0' : String(orderCount)) + '单</span>' +
 						'</td>' +
 						'<td class="welfare-amount-cell welfare-number-col">¥3~¥20</td>' +
 						'<td class="welfare-action-col">' + actionHtml + '</td>' +
@@ -4509,25 +4559,17 @@
 			}
 
 			function buildWelfareSearchTableHtml(list, keyword) {
-				var safeKeyword = escape999pkHtml(keyword || '');
 				return '<div class="welfare-search-card">' +
-					'<div class="welfare-search-head">' +
-					'<div>' +
-					'<div class="welfare-search-title">补贴查询结果</div>' +
-					'<div class="welfare-search-summary">关键字：' + safeKeyword + '，共找到 ' + list.length + ' 条记录</div>' +
-					'</div>' +
-					'<div class="welfare-search-reset" onclick="resetWelfareSearchResult()">返回排行</div>' +
-					'</div>' +
 					'<div class="welfare-search-table-wrap">' +
 					'<table class="welfare-search-table">' +
 					'<colgroup>' +
-					'<col style="width:13%;">' +
 					'<col style="width:16%;">' +
-					'<col style="width:22%;">' +
-					'<col style="width:14%;">' +
-					'<col style="width:10%;">' +
-					'<col style="width:9%;">' +
-					'<col style="width:9%;">' +
+					'<col style="width:20%;">' +
+					'<col style="width:24%;">' +
+					'<col style="width:8%;">' +
+					'<col style="width:8%;">' +
+					'<col style="width:7%;">' +
+					'<col style="width:7%;">' +
 					'<col style="width:110px;">' +
 					'</colgroup>' +
 					'<thead>' +
@@ -4567,29 +4609,35 @@
 				return formData;
 			}
 
-			window.resetWelfareSearchResult = resetWelfareSearchResult;
-
-			window.searchSubsidy2 = function () {
+			function requestWelfareSearch(apiPath, failMessage, options) {
+				options = options || {};
 				var keyword = normalizeWelfareKeyword($('#searchInput2').val());
-				if (!keyword) {
+				if (!keyword && !options.allowEmptyKeyword) {
 					layer.msg('请输入游戏网址或关键字');
 					resetWelfareSearchResult();
 					return;
 				}
 
 				welfareSearchKeyword = keyword;
-				$('#searchInput2').val(keyword);
+				if (keyword) {
+					$('#searchInput2').val(keyword);
+				}
 
 				if (welfareSearchRequest && welfareSearchRequest.readyState !== 4) {
 					welfareSearchRequest.abort();
 				}
+				//如果是全网补贴,不传参数
+				if(keyword && options.allowEmptyKeyword){
+					keyword = '';
+				}
 
 				var formData = buildWelfareSearchFormData(keyword);
-				$('.listContainer').hide();
-				$('#result').show().html('<div id="welfareSearchResultWrap"><div class="welfare-search-card"><div class="welfare-empty"><div class="welfare-empty-title">查询中...</div><div class="welfare-empty-desc">正在加载补贴数据，请稍候</div></div></div></div>');
+				toggleWelfareSearchView(true);
+				$('#result').show().html('<div id="welfareSearchResultWrap">' + buildWelfareSearchLoadingHtml(welfareSearchKeyword) + '</div>');
+				$('#welfareSearchResultWrap').show();
 
 				welfareSearchRequest = $.ajax({
-					url: baseUrl + 'report/selectPublishSubsidyList',
+					url: baseUrl + apiPath,
 					type: 'POST',
 					data: formData,
 					processData: false,
@@ -4605,8 +4653,20 @@
 							return;
 						}
 						renderWelfareSearchResult([], welfareSearchKeyword);
-						layer.msg('补贴查询失败，请稍后重试');
+						layer.msg(failMessage);
 					}
+				});
+			}
+
+			window.resetWelfareSearchResult = resetWelfareSearchResult;
+
+			window.searchSubsidy2 = function () {
+				requestWelfareSearch('report/selectPublishSubsidyList', '补贴查询失败，请稍后重试');
+			};
+
+			window.searchAllSubsidy2 = function () {
+				requestWelfareSearch('report/selectPaidPublishSubsidyList', '全网查询失败，请稍后重试', {
+					allowEmptyKeyword: true
 				});
 			};
 
@@ -4626,5 +4686,6 @@
 			});
 		})();
 	</script>
- </body>
+</body>
+
 </html>

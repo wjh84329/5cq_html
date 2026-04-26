@@ -631,47 +631,48 @@
             background-color: #D33F3F;
             color: #FFFF00;
         }
-        #allRank,
-        #curRank,
-        #likesRank {
-            min-width: 138px;
-            height: 40px;
-            line-height: 40px;
-            padding: 0 22px;
-            margin: 0 10px 14px 0;
-            border-radius: 10px;
-            border: none;
-            font-size: 15px;
-            font-weight: bold;
+        .home-rank-tabs.siterankbox2 {
+            background-color: #FFFFFF;
+            width: 1295px;
+            overflow: hidden;
+            /* margin: 5px auto 0 auto; */
+            padding-left: 5px;
+            text-align: center;
+        }
+        .home-rank-tabs.siterankbox2 li {
+            list-style: none;
+            width: 150px;
+            height: 50px;
+            line-height: 50px;
+            display: inline-block;
+            margin-right: 25px;
+            text-align: center;
+            background-color: #EBEBEB;
+            color: #333333;
+            font-size: 16px;
+            font-family: "Microsoft YaHei", sans-serif;
+            border-radius: 10px 10px 0 0;
+            font-weight: 800;
             cursor: pointer;
-            box-sizing: border-box;
-            transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
         }
-        #allRank.selected-one-1,
-        #curRank.selected-one-1,
-        #likesRank.selected-one-1 {
-            background-image: linear-gradient(180deg, #67271F 0%, #D40202 100%);
-            color: #fff;
-            box-shadow: 0 8px 18px rgba(180, 33, 24, 0.18);
+        .home-rank-tabs.siterankbox2 li:hover {
+            background: #DA0000;
+            color: #FFFF00;
         }
-        #allRank.selected-one-2,
-        #curRank.selected-one-2,
-        #likesRank.selected-one-2 {
-            background-image: linear-gradient(180deg, #F6E1BF 0%, #D6A35E 100%);
-            color: #7b2817;
-            box-shadow: inset 0 0 0 1px rgba(152, 101, 49, 0.18);
+        .home-rank-tabs.siterankbox2 li.chked {
+            background: #DA0000;
+            color: #FFFF00;
         }
-        #allRank:hover,
-        #curRank:hover,
-        #likesRank:hover {
-            transform: translateY(-1px);
-        }
-        #allRank:disabled,
-        #curRank:disabled,
-        #likesRank:disabled {
+        .home-rank-tabs.siterankbox2 li.is-disabled {
             opacity: 0.65;
             cursor: not-allowed;
-            transform: none;
+            pointer-events: none;
+        }
+        #rankingtable {
+            margin-top: 0;
+        }
+        #rankingtableTB {
+            border-top: solid 2px #d33f3f !important;
         }
         .divdivds {
             width: 24.5%;
@@ -879,11 +880,13 @@
     <div style="height:70px;background-color: #fff;"> 
      <img src="/statics/images/rankbar1.gif" style="width:100%; margin:0; padding:0;" height="60" width="1300"> 
     </div> 
-    <div style="background-color: white;"> 
-     <button type="button" id="allRank" class="selected-one-1">总投入排行</button> 
-     <button type="button" id="curRank" class="selected-one-2">今日投入榜 </button> 
-     <button type="button" id="likesRank" class="selected-one-2">点赞排行榜 </button> 
-    </div> 
+   <div class="siterankbox2 home-rank-tabs"> 
+    <ul id="homeRankbar" style="margin: auto;"> 
+     <li class="chked" data-rank-type="all">总投入排行</li> 
+     <li data-rank-type="cur">今日投入榜</li> 
+     <li data-rank-type="likes">点赞排行榜</li> 
+    </ul> 
+   </div> 
     <div style="position: relative; display: contents;"> 
      <table cellpadding="0" cellspacing="0" width="100%" class="rankingtable" id="rankingtable"> 
       <tbody id="rankingtableTB" style="border-top: solid 2px #d33f3f;"> 
@@ -1490,16 +1493,21 @@
             }
         });
 
+        function setHomeRankTabState(activeType) {
+            $('#homeRankbar li').removeClass('chked');
+            $('#homeRankbar li[data-rank-type="' + activeType + '"]').addClass('chked');
+        }
+
         function showRankLoading() {
             $("#rankingtableTB").hide();
             $("#rank_loading_box").show();
-            $("#allRank, #curRank, #likesRank").prop("disabled", true);
+            $('#homeRankbar li').addClass('is-disabled');
         }
 
         function hideRankLoading() {
             $("#rank_loading_box").hide();
             $("#rankingtableTB").show();
-            $("#allRank, #curRank, #likesRank").prop("disabled", false);
+            $('#homeRankbar li').removeClass('is-disabled');
         }
         function getInviteUpId() {
             return sessionStorage.getItem("invite_up_id") || "";
@@ -1598,21 +1606,16 @@
                 content: '/myhis.html'
             });
         });
-        $('#allRank').click(function () {
-            // getPM('')
-            $(this).removeClass('selected-one-1 selected-one-2').addClass('selected-one-1');
-            $('#likesRank').removeClass('selected-one-1 selected-one-2').addClass('selected-one-2');
-            $('#curRank').removeClass('selected-one-1 selected-one-2').addClass('selected-one-2');
+        $('#homeRankbar').on('click', 'li[data-rank-type="all"]', function () {
+            setHomeRankTabState('all');
             $("#rankingtableTB").html(allDom);
             $("#seach_result").show();
             $("#rankingtable").show();
             $("#loding_box").hide();
             $("#rankingtable1").hide;
-        })
-        $('#curRank').click(function () {
-            $(this).removeClass('selected-one-1 selected-one-2').addClass('selected-one-1');
-            $('#allRank').removeClass('selected-one-1 selected-one-2').addClass('selected-one-2');
-            $('#likesRank').removeClass('selected-one-1 selected-one-2').addClass('selected-one-2');
+        });
+        $('#homeRankbar').on('click', 'li[data-rank-type="cur"]', function () {
+            setHomeRankTabState('cur');
 
             showRankLoading();
             $("#rankingtableTB").html('');
@@ -1664,7 +1667,7 @@
                 }
             });
         });
-        $('#likesRank').click(function () {
+        $('#homeRankbar').on('click', 'li[data-rank-type="likes"]', function () {
             //获取今天的日期
             // 创建一个新的Date对象（不传递任何参数）将默认设置为当前日期和时间
             var today = new Date();
@@ -1687,9 +1690,7 @@
 
             // getPM(todayString)
 
-            $(this).removeClass('selected-one-1 selected-one-2').addClass('selected-one-1');
-            $('#allRank').removeClass('selected-one-1 selected-one-2').addClass('selected-one-2');
-            $('#curRank').removeClass('selected-one-1 selected-one-2').addClass('selected-one-2');
+            setHomeRankTabState('likes');
 
             // var url = '/statics/rankings.json'
             showRankLoading()
@@ -1748,7 +1749,7 @@
                 }
             });
 
-        })
+        });
 
         function getPM(monthday) {
             var formdata = new FormData;
