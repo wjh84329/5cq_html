@@ -845,7 +845,7 @@
   box-shadow: 0 0 37px rgba(0, 0, 0, 0.27);
   border-radius: 8px;
   position: absolute;
-  background: #f3f3f3;
+  /* background: #f3f3f3; */
   z-index: 10;
 }
 

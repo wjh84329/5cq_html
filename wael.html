@@ -12,12 +12,21 @@
 	<meta name="force-rendering" content="webkit">
 	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
 	<link rel="stylesheet" href="./statics/5cq/sprite.css">
+	<link rel="stylesheet" href="./statics/css/public.css">
 	<link rel="stylesheet" href="./statics/5cq/main.css">
 	<link rel="stylesheet" href="./statics/5cq/index.css">
 	<link rel="stylesheet" href="./statics/5cq/form.css">
 	<link rel="stylesheet" href="./statics/5cq/article.css">
 	<link rel="stylesheet" href="./statics/5cq/lxwm.css">
 	<link rel="stylesheet" href="./statics/5cq/act.css">
+	<script src="./statics/js/jquery-3.2.1.min.js"></script>
+	<script src="./statics/js/jquery.cookie.js"></script>
+	<script src="./statics/js/public.js"></script>
+	<script src="./statics/adminconfig.js"></script>
+	<script src="./statics/config.js"></script>
+	<script src="./statics/js/layer.js"></script>
+	<script src="./layuiadmin/layui/layui.js"></script>
+	<script src="./statics/js/report.js"></script>
 	<style>
 		.btnActive {
 			background: #da0000 !important;
@@ -112,6 +121,18 @@
 			100% {
 				background-position: 0% 50%;
 			}
+		}
+
+		.advRankList .advListTable .table3 {
+			height: 500px;
+			overflow: inherit;
+
+		}
+
+		body {
+			background-image: url(/statics/imgs/bg.jpg);
+			background-size: 100% 100%;
+			box-sizing: border-box;
 		}
 	</style>
 	<style>
@@ -439,10 +460,7 @@
 		}
 	</style>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
-	<script type="text/javascript" src="./statics/js/jquery.js"></script>
-	<script type="text/javascript" src="./statics/layer/layer.js"></script>
 	<script type="text/javascript" src="./statics/js/comm1.js"></script>
-	<script type="text/javascript" src="./statics/js/public.js"></script>
 	<script type="text/javascript" src="./statics/js/act.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
 	<style>
@@ -702,6 +720,23 @@
 		.moutai-popup-close:hover {
 			background-color: #f0f0f0;
 		}
+
+		.content {
+			border: initial !important;
+			padding: 0px 5px 10px 5px;
+		}
+
+		html,
+		body {
+			margin: 0;
+			padding: 0;
+			width: 100%;
+			min-width: 1300px;
+			background-color: initial !important;
+			/* background: url(https://www.1PK.COM/bg.jpg) no-repeat center; */
+			background-attachment: fixed;
+			background-size: 100% 100%;
+		}
 	</style>
 </head>
 
@@ -956,11 +991,9 @@
 					}
 				</style>
 				<script type="text/javascript" src="./statics/js/act.js?1130"></script>
-				<div style="padding: 40px 0 0 0; text-align: center;display: flex;justify-content: center;">
+				<div style="padding: 10px 0 0 0; text-align: center;display: flex;justify-content: center;">
 					<!-- 标题 -->
 					<div>
-						<div id="todaySubsidyAmount" style="width: 180px;height: 40px;background-color: #3a3a3a;margin: 0 auto;border-radius: 5px;line-height: 40px;
-		text-align: center;color: #fff;font-weight: bold;">今日已补 11879.28 元</div>
 						<div style="display: flex;">
 							<div
 								style="background-image: url('../statics/5cq/suisui.png');background-size: 100% 100%;width: 850px;height: 430px;position: relative;">
@@ -974,7 +1007,9 @@
 									<img src="../statics/5cq/chaxun1.png" alt=""
 										style="width: 650px;height: 90px;display: block;">
 								</div>
-								<div style="background-image: url('./statics/5cq/5CQ-TOP.png');background-size: 100% 100%;background-repeat: no-repeat;width: 600px;height: 283px;margin: 10px auto 0;pointer-events: none;opacity: 0.95;"></div>
+								<div
+									style="background-image: url('./statics/5cq/5CQ-TOP.png');background-size: 100% 100%;background-repeat: no-repeat;width: 600px;height: 283px;margin: 10px auto 0;pointer-events: none;opacity: 0.95;">
+								</div>
 							</div>
 							<img onclick="window.open('https://999pk.com/pro.mp4')" src="../statics/5cq/jiaoc.png"
 								alt="" style="width: 90px;
@@ -1276,9 +1311,10 @@
 						</div>
 					</div>
 					<div class="container">
-						<div style="background-image: url('../statics/5cq/bibei.png');background-size: 100% 100%;width: 400px;height: 40px;
+						<div
+							style="background-image: url('../statics/5cq/bibei.png');background-size: 100% 100%;width: 400px;height: 40px;
 			margin: 0 auto 28px;font-size: 20px;color: #fff;line-height: 40px;text-align: center;position: relative;z-index: 5;">
-							999PK.COM - 玩服<span style="border: 1.1px solid #ffffff;box-sizing: border-box;background: linear-gradient(180deg, #ff2727 0%, #bc1b1b 100%);
+							5CQ.COM - 玩服<span style="border: 1.1px solid #ffffff;box-sizing: border-box;background: linear-gradient(180deg, #ff2727 0%, #bc1b1b 100%);
 				border-radius: 8.5px;padding: 0 2px 0 2px;font-weight: bold;margin: 0 5px 0 5px;">省</span>钱必备
 						</div>
 
@@ -1291,7 +1327,8 @@
 										placeholder="输入您所在游戏的网址，查看微信补贴详情">
 									<select class="hot-search-select" id="hotSearchSelect"
 										onchange="onHotSearchChange(this)">
-										<option value="">热门搜索</option>
+										<option value="" selected hidden>热门搜索</option>
+										<option value="__all__">热门搜索</option>
 										<option value="神器">神器</option>
 										<option value="专属">专属</option>
 										<option value="合击">合击</option>
@@ -1334,16 +1371,17 @@
 										<span>传奇广告统计排行</span>
 									</div>
 									<div class="center"
-										style="line-height:1.5; overflow: hidden; height: 40px; position: relative;margin-left: -500px;">
+										style="line-height:1.5; overflow: hidden; height: 40px; position: relative;margin-left: -270px;">
 										<div id="rewardMarquee"
 											style="width: 400px; height: 40px; overflow: hidden; position: relative;">
 											<div id="rewardList" style="position: absolute; width: 100%;"></div>
 										</div>
 									</div>
 									<div class="right" style="position: absolute; left: 1140px;" onclick="KefuBox()">
-										<img src="/statics/5cq/kef.png"
-											style="width: 120px;height: 40px;margin-top: 28px;" alt="">
+										<img src="/statics/5cq/kef.png" style="width: 120px;height: 40px;" alt="">
 									</div>
+									<div id="todaySubsidyAmount" style="height: 40px;background-color: #3a3a3a;border-radius: 5px;line-height: 40px;width: 180px;
+		text-align: center;color: #fff;font-weight: bold;">今日已补 0.00 元</div>
 									<script>
 										// 奖励数据
 										var rewardData = [
@@ -1448,6 +1486,23 @@
 											'涛 ** 在充值中获得充值减免，成功节省 8.64 元',
 											'瑶 ** 在充值中获得充值减免，成功节省 5.48 元'
 										];
+										var fallbackRewardData = ['今日暂无补贴记录'];
+
+										function formatTodayDiscountAmount(value) {
+											var amount = parseFloat(value);
+											if (isNaN(amount)) {
+												amount = 0;
+											}
+											return amount.toFixed(2);
+										}
+
+										function updateTodayDiscountAmount(amount) {
+											var amountElement = document.getElementById('todaySubsidyAmount');
+											if (!amountElement) {
+												return;
+											}
+											amountElement.innerText = '今日已补 ' + formatTodayDiscountAmount(amount) + ' 元';
+										}
 
 										// 打乱数组顺序
 										function shuffleArray(array) {
@@ -1487,13 +1542,62 @@
 										var currentRewardIndex = 0;
 										var shuffledRewardData = [];
 										var isAnimating = false;
+										var rewardMarqueeTimer = null;
+										var todayDiscountSummaryTimer = null;
+
+										function resetRewardMarquee() {
+											var rewardList = document.getElementById('rewardList');
+											currentRewardIndex = 0;
+											isAnimating = false;
+											if (rewardList) {
+												rewardList.innerHTML = '';
+											}
+										}
+
+										function updateRewardMessages(messages) {
+											var normalizedMessages = $.isArray(messages) ? messages.filter(function (item) {
+												return item !== null && item !== undefined && $.trim(String(item)) !== '';
+											}).map(function (item) {
+												return String(item);
+											}) : [];
+
+											rewardData = normalizedMessages.length ? normalizedMessages : fallbackRewardData.slice();
+											shuffledRewardData = shuffleArray(rewardData.slice());
+											resetRewardMarquee();
+											startRewardMarquee();
+										}
+
+										function loadTodayDiscountSummary() {
+											$.ajax({
+												url: baseUrl + 'cashier/todayDiscountSummary',
+												type: 'POST',
+												dataType: 'json',
+												success: function (res) {
+													if (res && res.code === 0 && res.data) {
+														updateTodayDiscountAmount(res.data.todayDiscountAmount);
+														updateRewardMessages(res.data.messages);
+														return;
+													}
+
+													updateTodayDiscountAmount(0);
+													updateRewardMessages([]);
+												},
+												error: function () {
+													updateTodayDiscountAmount(0);
+													updateRewardMessages([]);
+												}
+											});
+										}
 
 										function startRewardMarquee() {
 											if (isAnimating || shuffledRewardData.length === 0) return;
 											isAnimating = true;
 
 											var rewardList = document.getElementById('rewardList');
-											if (!rewardList) return;
+											if (!rewardList) {
+												isAnimating = false;
+												return;
+											}
 
 											// 获取当前要显示的两条数据
 											var index1 = currentRewardIndex;
@@ -1540,10 +1644,17 @@
 
 										// 页面加载时随机打乱并启动跑马灯
 										$(document).ready(function () {
-											shuffledRewardData = shuffleArray(rewardData.slice());
-											startRewardMarquee();
-											// 每3秒切换一次
-											setInterval(startRewardMarquee, 3000);
+											updateTodayDiscountAmount(0);
+											updateRewardMessages([]);
+											if (rewardMarqueeTimer) {
+												clearInterval(rewardMarqueeTimer);
+											}
+											if (todayDiscountSummaryTimer) {
+												clearInterval(todayDiscountSummaryTimer);
+											}
+											rewardMarqueeTimer = setInterval(startRewardMarquee, 3000);
+											loadTodayDiscountSummary();
+											todayDiscountSummaryTimer = setInterval(loadTodayDiscountSummary, 60000);
 										});
 									</script>
 									<!-- 口令红包按钮 - 放在right外面避免触发hover -->
@@ -1758,6 +1869,36 @@
 							</div>
 						</div>
 					</div>
+				</div>
+				<div id=""
+					style="width:100%;margin: 30px auto 0;box-sizing: border-box;background: #1f1f24;padding: 30px 0 20px">
+					<div class="clearfix" style="width: 100%;margin: 0 auto">
+						<div class="link clearfix"
+							style="border-bottom: 1px solid #36363a;padding-bottom: 30px;text-align: center" id="wzlm">
+						</div>
+						<p class="p1"> <span>开服广告在线查询站 &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span> <em>为
+								新开传奇网站，单职业传奇，复古传奇，传奇手游
+								提供一个传奇发布网交流平台 </em> <a rel="nofollow" href="/statics/sitemap.html" target="_blank"
+								style="color: white;margin-left: 20px">网站地图<em></em></a> </p>
+						<p class="p2"> <span><em class="icon-link"></em>友情链接：</span> <a rel="nofollow"
+								href="https://www.5cq.com" target="_blank">传奇广告查询 <em>|</em></a> <a rel="nofollow"
+								href="https://www.1sf.com/" target="_blank">1SF传奇资源站 <em>|</em></a> <a rel="nofollow"
+								href="https://www.2sf.com/" target="_blank"> 2SF传奇资源站 <em>|</em></a> <a rel="nofollow"
+								href="https://www.5cq.com/duty.html" target="_blank">免责申明 <em>|</em></a> </p>
+					</div>
+					<p class="textfoot">拒绝盗版游戏 注意自我保护 谨防受骗上当 适度游戏益脑 沉迷游戏伤身 合理安排时间 享受健康生活</p>
+					<p class="textfoot">本站只收录官方授权游戏信息，非官方授权游戏请在办理业务之前告知.</p>
+					<p class="textfoot">*注释：网站数据匀采集互联网，有不良信息举报联系我们，将会尽快核实处理，站长QQ：3067585</p>
+					<p class="textfoot"> <a style="color: white;text-align: center;width: 100%" target="_blank"
+							id="beian" href="https://beian.miit.gov.cn">Copyright 2019-2027 All Rights Reserved </a><a
+							href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank" style="color: #fff">
+							信产部ICP备案号：黔ICP备2022005643号　| </a> <span style="color: #fff">营业执照注册证号：91522301MABP8XJ71N
+						</span> <a id="_pingansec_bottomimagesmall_shiming" target="_blank"
+							href="//si.trustutn.org/info?sn=840240419040948778244&amp;certType=1"><img
+								src="//v.trustutn.org/images/cert/realname_small_img.png"></a>
+						<script type="text/javascript" src="https://v1.cnzz.com/z.js?id=1281476833"></script>
+					</p>
+					<p></p>
 				</div>
 				<!-- <div class="toolbar">
 			<ul>
@@ -2835,10 +2976,12 @@
 					var lastRankLoadAt = 0;
 
 					// 滚动加载更多数据
-					$('.main-body').scroll(function () {
-						var scrollTop = $(this).scrollTop();
-						var windowHeight = $(this).height();
-						var documentHeight = $(this)[0].scrollHeight;
+					$(window).on('scroll', function () {
+						var $scrollTarget = $('.main-body');
+						var useMainBody = $scrollTarget.length && $scrollTarget.css('overflow') !== 'visible';
+						var scrollTop = useMainBody ? $scrollTarget.scrollTop() : $(window).scrollTop();
+						var windowHeight = useMainBody ? $scrollTarget.height() : $(window).height();
+						var documentHeight = useMainBody ? $scrollTarget[0].scrollHeight : $(document).height();
 
 						// 更新返回顶部按钮状态
 						toggleBackToTop();
@@ -3149,22 +3292,19 @@
 						return result;
 					}
 
-					function get5cqCache(forceRefresh) {
-						if (!window.__fiveCQCache || forceRefresh) {
-							var rankingFormData = new FormData();
-							rankingFormData.append('webpage', 1);
-							rankingFormData.append('limit', 500);
+					function get5cqCache() {
+						var rankingFormData = new FormData();
+						rankingFormData.append('webpage', 1);
+						rankingFormData.append('limit', 500);
 
-							var pubResponse = request5cqSync('report/selectAllByVersion', null) || {};
-							var rankingResponse = request5cqSync('ranking/selectRankingCurList', rankingFormData) || {};
+						var pubResponse = request5cqSync('report/selectAllByVersion', null) || {};
+						var rankingResponse = request5cqSync('ranking/select', rankingFormData) || {};
+						var rankingPayload = rankingResponse.data || rankingResponse;
 
-							window.__fiveCQCache = {
-								pubList: Array.isArray(pubResponse.pubList) ? pubResponse.pubList : [],
-								rankings: Array.isArray(rankingResponse.rankings) ? rankingResponse.rankings : []
-							};
-						}
-
-						return window.__fiveCQCache;
+						return {
+							pubList: Array.isArray(pubResponse.pubList) ? pubResponse.pubList : [],
+							rankings: Array.isArray(rankingPayload.rankings) ? rankingPayload.rankings : []
+						};
 					}
 
 					function escape999pkHtml(value) {
@@ -3365,10 +3505,44 @@
 						getData(currentSelectType);
 					}
 
+					function getCurrentRankKeyword(explicitKeyword) {
+						if (explicitKeyword === '__all__') {
+							explicitKeyword = '';
+						}
+						if (typeof explicitKeyword === 'string') {
+							window.__currentHotSearchKeyword = explicitKeyword;
+							return explicitKeyword;
+						}
+						var hotSearchSelect = document.getElementById('hotSearchSelect');
+						var hotKeyword = hotSearchSelect ? String(hotSearchSelect.value || '') : '';
+						if (hotKeyword) {
+							window.__currentHotSearchKeyword = hotKeyword;
+							return hotKeyword;
+						}
+						return window.__currentHotSearchKeyword || '';
+					}
+
 					function onHotSearchChange(select) {
 						var val = select ? select.value : '';
-						siteData(val);
+						if (val === '__all__') {
+							val = '';
+						}
+						window.__currentHotSearchKeyword = val || '';
+						if (typeof resetWelfareSearchResult === 'function') {
+							resetWelfareSearchResult();
+						}
+						if (typeof toggleWelfareSearchView === 'function') {
+							toggleWelfareSearchView(false);
+						}
+						$('#result').hide().empty();
+						$('.listContainer').show();
+						$('#searchInput2').val(val || '');
+						$('#rankbar li').removeClass('chked');
+						$('#rankbar li[data-type="' + currentSelectType + '"]').addClass('chked');
 						getData(currentSelectType, val);
+						if (select) {
+							select.value = '';
+						}
 					}
 
 					function onTab(type, arr) {
@@ -3503,33 +3677,90 @@
 						return month + '-' + day;
 					}
 
-					function get999pkTodayRankingsCache(forceRefresh) {
-						if (!window.__rankingsTodayCache || forceRefresh) {
-							var rankingResponse = request5cqSync('ranking/selectRankingCurList', null) || {};
-							window.__rankingsTodayCache = Array.isArray(rankingResponse.rankings) ? rankingResponse.rankings : [];
-						}
-						return window.__rankingsTodayCache;
+					function request5cqGetSync(path, data) {
+						var result = null;
+						$.ajax({
+							url: baseUrl + path,
+							type: 'GET',
+							async: false,
+							cache: false,
+							data: data || {},
+							dataType: 'json',
+							success: function (response) {
+								result = response;
+							},
+							error: function () {
+								result = null;
+							}
+						});
+						return result;
 					}
 
-					function get999pkRankingsJsonCache(forceRefresh) {
-						if (!window.__rankingsJsonCache || forceRefresh) {
-							var result = [];
-							$.ajax({
-								url: './statics/rankings.json',
-								type: 'GET',
-								async: false,
-								cache: false,
-								dataType: 'json',
-								success: function (response) {
-									result = Array.isArray(response) ? response : [];
-								},
-								error: function () {
-									result = [];
-								}
-							});
-							window.__rankingsJsonCache = result;
+					function extract999pkRankings(response) {
+						var payload = response && response.data ? response.data : response;
+						if (payload && Array.isArray(payload.rankings)) {
+							return payload.rankings;
 						}
-						return window.__rankingsJsonCache;
+						if (response && Array.isArray(response.rankings)) {
+							return response.rankings;
+						}
+						if (payload && payload.data && Array.isArray(payload.data)) {
+							return payload.data;
+						}
+						return [];
+					}
+
+					function fetch999pkRankingNow(path, method, payloadBuilder) {
+						var result = null;
+						var requestData = typeof payloadBuilder === 'function' ? payloadBuilder() : (payloadBuilder || null);
+						$.ajax({
+							url: baseUrl + path + (path.indexOf('?') === -1 ? '?' : '&') + '_t=' + Date.now(),
+							type: method,
+							async: false,
+							cache: false,
+							data: requestData,
+							processData: method === 'POST' ? false : true,
+							contentType: method === 'POST' ? false : 'application/x-www-form-urlencoded; charset=UTF-8',
+							dataType: 'json',
+							success: function (response) {
+								result = response;
+							},
+							error: function () {
+								result = null;
+							}
+						});
+						return extract999pkRankings(result);
+					}
+
+					function get999pkTodayRankingsCache(keyword) {
+						var rankingParams = {};
+						rankingParams.webpage = 1;
+						rankingParams.limit = 1000;
+						if (keyword) {
+							rankingParams.likename = keyword;
+						}
+						return fetch999pkRankingNow('ranking/selectRankingCurList', 'GET', rankingParams);
+					}
+
+					function get999pkRankingsJsonCache(keyword) {
+						return fetch999pkRankingNow('ranking/select', 'POST', function () {
+							var rankingFormData = new FormData();
+							rankingFormData.append('webpage', 1);
+							rankingFormData.append('limit', 1000);
+							rankingFormData.append('_t', Date.now());
+							if (keyword) {
+								rankingFormData.append('likename', keyword);
+							}
+							return rankingFormData;
+						});
+					}
+
+					function request5cqPubListByKeyword(keyword) {
+						var formData = new FormData();
+						formData.append('version', keyword || '');
+						formData.append('state', 0);
+						var response = request5cqSync('report/selectAllByVersion', formData) || {};
+						return Array.isArray(response.pubList) ? response.pubList : [];
 					}
 
 					function get999pkRankMoney(item, type) {
@@ -3538,11 +3769,26 @@
 						return isNaN(numberValue) ? 0 : numberValue;
 					}
 
+					function buildRankLoadingRow() {
+						return '<tr class="td rank-loading-row"><td colspan="11" style="padding:0;">' +
+							'<div class="welfare-loading">' +
+							'<div class="welfare-loading-spinner"></div>' +
+							'<div class="welfare-loading-title">加载中...</div>' +
+							'<div class="welfare-loading-desc">正在更新排行数据，请稍候</div>' +
+							'</div>' +
+							'</td></tr>';
+					}
+
+					function showRankTableLoading() {
+						window.__rankingsJsonCurrentList = [];
+						$('#SortTable').html(buildRankLoadingRow());
+					}
+
 					function normalize999pkRankItem(item) {
 						return {
 							id: get999pkValue(item.id, ''),
 							name: get999pkValue(item.name, '-'),
-							site: get999pkValue(item.url, '#'),
+							site: get999pkValue(item.url || item.site, '#'),
 							ip: get999pkValue(item.ipname || item.ip, '-'),
 							raw_ip: get999pkValue(item.ip, ''),
 							host: get999pkValue(item.host, ''),
@@ -3552,24 +3798,24 @@
 							qq: get999pkValue(item.kfqq || item.qq, '-'),
 							from_count: get999pkValue(item.ip_count || item.from_count, '-'),
 							ip_repeat_count: get999pkValue(item.url_count || item.ip_repeat_count, '-'),
-							total_price: get999pkValue(item.money || item.allmoney, '-'),
-							allmoney: get999pkValue(item.allmoney || item.money, '-'),
+							total_price: get999pkValue(item.money || item.total_price || item.allmoney, '-'),
+							allmoney: get999pkValue(item.allmoney || item.total_price || item.money, '-'),
 							is_hot: item.is_hot || 0,
 							datetime: get999pkValue(item.datetime, '')
 						};
 					}
 
-					function render999pkJsonRankTable(selectType, keyword) {
+					function render999pkJsonRankTable(selectType, keyword, sourceList) {
 						var normalizedType = selectType === 1 ? 1 : 2;
-						var sourceList = normalizedType === 1
-							? get999pkTodayRankingsCache().slice()
-							: get999pkRankingsJsonCache().slice();
-
-						sourceList = filter5cqList(sourceList, keyword);
-						sourceList.sort(function (a, b) {
+						var rankings = Array.isArray(sourceList) ? sourceList.slice() : (
+							normalizedType === 1
+								? get999pkTodayRankingsCache(keyword).slice()
+								: get999pkRankingsJsonCache(keyword).slice()
+						);
+						rankings.sort(function (a, b) {
 							return get999pkRankMoney(b, normalizedType) - get999pkRankMoney(a, normalizedType);
 						});
-						window.__rankingsJsonCurrentList = sourceList;
+						window.__rankingsJsonCurrentList = rankings;
 
 						currentPage = 1;
 						render999pkJsonRankPage(false);
@@ -3658,7 +3904,7 @@
 						);
 						currentSelectType = 1;
 						SelectType = 1;
-						getData(1);
+						getData(1, getCurrentRankKeyword());
 					}
 
 					function onTab(type, arr) {
@@ -3666,7 +3912,7 @@
 						SelectType = currentSelectType;
 						$('#rankbar li').removeClass('chked');
 						$('#rankbar li[data-type="' + currentSelectType + '"]').addClass('chked');
-						getData(currentSelectType);
+						getData(currentSelectType, getCurrentRankKeyword());
 					}
 
 					function getData(selectType, hotKeyword, isLoadMore) {
@@ -3684,20 +3930,35 @@
 							isLoading = false;
 							return;
 						}
-						var keyword = typeof hotKeyword === 'string' ? hotKeyword : site;
+						var keyword = getCurrentRankKeyword(hotKeyword);
 						var normalizedType = selectType === 2 ? 2 : 1;
 						currentSelectType = normalizedType;
 						currentSelectTypeForScroll = normalizedType;
-						pageSize = 50;
+						pageSize = 20;
+						currentPage = 1;
 						hasMoreData = true;
-						isLoading = false;
+						isLoading = true;
 						lastRankLoadAt = 0;
-						render999pkJsonRankTable(normalizedType, keyword);
+						showRankTableLoading();
+						if (window.__waelRankRenderTimer) {
+							clearTimeout(window.__waelRankRenderTimer);
+						}
+						window.__waelRankRenderTimer = setTimeout(function () {
+							var sourceList = normalizedType === 1
+								? get999pkTodayRankingsCache(keyword)
+								: get999pkRankingsJsonCache(keyword);
+							render999pkJsonRankTable(normalizedType, keyword, sourceList);
+							window.__waelRankRenderTimer = null;
+						}, 0);
 					}
+					window.onHotSearchChange = onHotSearchChange;
+					window.onTab = onTab;
+					window.getData = getData;
+					window.loadRankButtons = loadRankButtons;
+					window.render999pkJsonRankTable = render999pkJsonRankTable;
 
 					function render5cqTopTables(keyword) {
-						var cache = get5cqCache();
-						var pubList = filter5cqList(cache.pubList, keyword);
+						var pubList = request5cqPubListByKeyword(keyword);
 						var pubHtml = '';
 						var headerHtml =
 							'<td style="width:130px;">\u670d\u52a1\u5668\u540d\u79f0</td>' +
@@ -3740,6 +4001,7 @@
 						$('#db2').html('');
 						bind5cqTrackingEvents('#db');
 					}
+					window.render5cqTopTables = render5cqTopTables;
 
 					function renderSigninPopup(e) {
 						// 检查是否登录
@@ -4343,7 +4605,7 @@
 				closeBtn.style.display = 'block';
 			}
 		</script>
-		<script src="./statics/js/baidu-stat.js"></script>
+		<!-- <script src="./statics/js/baidu-stat.js"></script> -->
 		<!-- <script src="https://mirtjurl.27tj.com/stat.php?siteid=41077"></script> -->
 		<!-- 返回顶部箭头 -->
 		<div id="backToTop" style="position: fixed; bottom: 50px; right: 200px; width: 50px; height: 50px;
@@ -4352,22 +4614,31 @@
 			<img src="/statics/5cq/ffhh.png" style="width: 50px; height: 50px;">
 		</div>
 		<script>
+			function getWaelScrollElement() {
+				var mainBody = document.querySelector('.main-body');
+				if (mainBody && getComputedStyle(mainBody).overflow !== 'visible') {
+					return mainBody;
+				}
+				return document.scrollingElement || document.documentElement || document.body;
+			}
+
 			// 显示/隐藏返回顶部按钮
 			function toggleBackToTop() {
 				var backToTopBtn = document.getElementById('backToTop');
-				var mainBody = document.querySelector('.main-body');
-				var scrollTop = mainBody.scrollTop;
-				// 当滚动高度超过500px时显示按钮
-				if (scrollTop > 6000) {
+				var scrollElement = getWaelScrollElement();
+				var scrollTop = scrollElement ? scrollElement.scrollTop : 0;
+				if (scrollTop > 800) {
 					backToTopBtn.style.opacity = '1';
+					backToTopBtn.style.pointerEvents = 'auto';
 				} else {
 					backToTopBtn.style.opacity = '0';
+					backToTopBtn.style.pointerEvents = 'none';
 				}
 			}
 
 			// 返回顶部功能
 			document.getElementById('backToTop').addEventListener('click', function () {
-				document.querySelector('.main-body').scrollTo({
+				getWaelScrollElement().scrollTo({
 					top: 0,
 					behavior: 'smooth'
 				});
@@ -4959,101 +5230,101 @@
 				var loginPollingTimer999pk = null;
 				var loginOpening999pk = false;
 
-			function get999pkCookieUser() {
-				if (typeof $ === 'undefined' || !$.cookie) {
-					return null;
-				}
+				function get999pkCookieUser() {
+					if (typeof $ === 'undefined' || !$.cookie) {
+						return null;
+					}
 					try {
 						var cookieValue = $.cookie('user');
 						return cookieValue ? JSON.parse(cookieValue) : null;
 					} catch (e) {
-					return null;
-				}
-			}
-
-			function render999pkHeaderUser() {
-				var wsName = '';
-				if (typeof hzUserObj !== 'undefined' && hzUserObj && hzUserObj.name) {
-					wsName = hzUserObj.name;
-				}
-				var loggedIn = is999pkLoggedIn();
-				var cookieUser = typeof getUser === 'function' ? getUser() : null;
-				if (!cookieUser) {
-					cookieUser = get999pkCookieUser();
-				}
-				if (!wsName && cookieUser) {
-					wsName = cookieUser.name || cookieUser.nickname || '';
-				}
-				var $nameWrap = $('.gg .tx-name-id').first();
-				var $nameText = $nameWrap.find('.name').first();
-				var $logoutBtn = $('#logoutBtn').first();
-				var $loginEntry = $('#menu ul li a').filter(function () {
-					return $.trim($(this).text()) === '会员登录';
-				}).first().closest('li');
-				if (loggedIn) {
-					$nameText.text(wsName || '已登录');
-					$nameWrap.css('display', 'flex');
-					$logoutBtn.show();
-					$loginEntry.hide();
-				} else {
-					$nameText.text('');
-					$nameWrap.hide();
-					$logoutBtn.hide();
-					$loginEntry.show();
-				}
-			}
-
-			function ensure999pkWsLogin() {
-				var customer = typeof getUser === 'function' ? getUser() : null;
-				if (!customer) {
-					customer = get999pkCookieUser();
-				}
-				var openId = customer ? (customer.openid || customer.open_id || '') : '';
-				var hzToken = typeof $ !== 'undefined' && $.cookie ? ($.cookie('hzusertoken') || '') : '';
-				if (!openId || !hzToken) {
-					return;
-				}
-				if (typeof ws !== 'undefined' && ws && ws.readyState === WebSocket.OPEN) {
-					ws.send(JSON.stringify({
-						type: '5cq_login',
-						open_id: openId,
-						token: hzToken
-					}));
-					return;
-				}
-				if (typeof wsModule === 'function') {
-					wsModule(openId);
-				}
-			}
-
-			window.logout999pkHeader = function () {
-				if (typeof ws !== 'undefined' && ws) {
-					try {
-						ws.close();
-					} catch (e) {
+						return null;
 					}
-					ws = null;
 				}
-				if (typeof $ !== 'undefined' && $.removeCookie) {
-					$.removeCookie('hzusertoken', { path: '/' });
-					$.removeCookie('token', { path: '/' });
-					$.removeCookie('userinfo', { path: '/' });
-					$.removeCookie('usertoken', { path: '/' });
-					$.removeCookie('user', { path: '/' });
-				}
-				if (window.localStorage) {
-					localStorage.removeItem('cq-act-token');
-				}
-				if (typeof hzUserObj !== 'undefined') {
-					hzUserObj = null;
-				}
-				render999pkHeaderUser();
-			};
 
-			function is999pkLoggedIn() {
-				var customer = typeof getUser === 'function' ? getUser() : null;
-				if (!customer) {
-					customer = get999pkCookieUser();
+				function render999pkHeaderUser() {
+					var wsName = '';
+					if (typeof hzUserObj !== 'undefined' && hzUserObj && hzUserObj.name) {
+						wsName = hzUserObj.name;
+					}
+					var loggedIn = is999pkLoggedIn();
+					var cookieUser = typeof getUser === 'function' ? getUser() : null;
+					if (!cookieUser) {
+						cookieUser = get999pkCookieUser();
+					}
+					if (!wsName && cookieUser) {
+						wsName = cookieUser.name || cookieUser.nickname || '';
+					}
+					var $nameWrap = $('.gg .tx-name-id').first();
+					var $nameText = $nameWrap.find('.name').first();
+					var $logoutBtn = $('#logoutBtn').first();
+					var $loginEntry = $('#menu ul li a').filter(function () {
+						return $.trim($(this).text()) === '会员登录';
+					}).first().closest('li');
+					if (loggedIn) {
+						$nameText.text(wsName || '已登录');
+						$nameWrap.css('display', 'flex');
+						$logoutBtn.show();
+						$loginEntry.hide();
+					} else {
+						$nameText.text('');
+						$nameWrap.hide();
+						$logoutBtn.hide();
+						$loginEntry.show();
+					}
+				}
+
+				function ensure999pkWsLogin() {
+					var customer = typeof getUser === 'function' ? getUser() : null;
+					if (!customer) {
+						customer = get999pkCookieUser();
+					}
+					var openId = customer ? (customer.openid || customer.open_id || '') : '';
+					var hzToken = typeof $ !== 'undefined' && $.cookie ? ($.cookie('hzusertoken') || '') : '';
+					if (!openId || !hzToken) {
+						return;
+					}
+					if (typeof ws !== 'undefined' && ws && ws.readyState === WebSocket.OPEN) {
+						ws.send(JSON.stringify({
+							type: '5cq_login',
+							open_id: openId,
+							token: hzToken
+						}));
+						return;
+					}
+					if (typeof wsModule === 'function') {
+						wsModule(openId);
+					}
+				}
+
+				window.logout999pkHeader = function () {
+					if (typeof ws !== 'undefined' && ws) {
+						try {
+							ws.close();
+						} catch (e) {
+						}
+						ws = null;
+					}
+					if (typeof $ !== 'undefined' && $.removeCookie) {
+						$.removeCookie('hzusertoken', { path: '/' });
+						$.removeCookie('token', { path: '/' });
+						$.removeCookie('userinfo', { path: '/' });
+						$.removeCookie('usertoken', { path: '/' });
+						$.removeCookie('user', { path: '/' });
+					}
+					if (window.localStorage) {
+						localStorage.removeItem('cq-act-token');
+					}
+					if (typeof hzUserObj !== 'undefined') {
+						hzUserObj = null;
+					}
+					render999pkHeaderUser();
+				};
+
+				function is999pkLoggedIn() {
+					var customer = typeof getUser === 'function' ? getUser() : null;
+					if (!customer) {
+						customer = get999pkCookieUser();
 					}
 					return !!(customer && (customer.openid || customer.open_id));
 				}
@@ -5206,17 +5477,17 @@
 											async: false,
 											dataType: 'json',
 											success: function (loginResult) {
-											if (!loginResult || !loginResult.data || !loginResult.token) {
-												layer.msg(loginResult && loginResult.msg ? loginResult.msg : '登录失败');
-												return;
-											}
-											sync999pkLoginCookies(loginResult, res.data);
-											ensure999pkWsLogin();
-											render999pkHeaderUser();
-											var action = pending999pkAction;
-											close999pkLoginPopup();
-											if (typeof action === 'function') {
-												action();
+												if (!loginResult || !loginResult.data || !loginResult.token) {
+													layer.msg(loginResult && loginResult.msg ? loginResult.msg : '登录失败');
+													return;
+												}
+												sync999pkLoginCookies(loginResult, res.data);
+												ensure999pkWsLogin();
+												render999pkHeaderUser();
+												var action = pending999pkAction;
+												close999pkLoginPopup();
+												if (typeof action === 'function') {
+													action();
 												}
 											},
 											error: function () {
@@ -5235,54 +5506,54 @@
 					});
 				}
 
-			window.openWXCode = function () {
-				show999pkLoginQr();
-			};
-
-			window.myLogin = function () {
-				show999pkLoginQr();
-			};
-
-			window.logoutWhenTokenInvalidOrWsClosed = function () {
-				if (typeof $ !== 'undefined' && $.removeCookie) {
-					$.removeCookie('hzusertoken', { path: '/' });
-					$.removeCookie('token', { path: '/' });
-					$.removeCookie('userinfo', { path: '/' });
-					$.removeCookie('usertoken', { path: '/' });
-					$.removeCookie('user', { path: '/' });
-				}
-				if (typeof ws !== 'undefined' && ws) {
-					try {
-						ws.close();
-					} catch (e) {
-					}
-					ws = null;
-				}
-				if (typeof hzUserObj !== 'undefined') {
-					hzUserObj = null;
-				}
-				render999pkHeaderUser();
-				window.location.reload();
-			};
-
-			if (typeof wsMessage === 'function') {
-				var original999pkWsMessage = wsMessage;
-				window.wsMessage = function (event) {
-					original999pkWsMessage(event);
-					try {
-						var wsPayload = JSON.parse(event.data);
-						if (wsPayload && wsPayload.type === '5cq_login') {
-							render999pkHeaderUser();
-						}
-					} catch (e) {
-					}
+				window.openWXCode = function () {
+					show999pkLoginQr();
 				};
-				if (typeof ws !== 'undefined' && ws && ws.readyState === WebSocket.OPEN) {
-					ws.onmessage = window.wsMessage;
-				}
-			}
 
-			function open999pkRecharge(publishId, url, gameName, money) {
+				window.myLogin = function () {
+					show999pkLoginQr();
+				};
+
+				window.logoutWhenTokenInvalidOrWsClosed = function () {
+					if (typeof $ !== 'undefined' && $.removeCookie) {
+						$.removeCookie('hzusertoken', { path: '/' });
+						$.removeCookie('token', { path: '/' });
+						$.removeCookie('userinfo', { path: '/' });
+						$.removeCookie('usertoken', { path: '/' });
+						$.removeCookie('user', { path: '/' });
+					}
+					if (typeof ws !== 'undefined' && ws) {
+						try {
+							ws.close();
+						} catch (e) {
+						}
+						ws = null;
+					}
+					if (typeof hzUserObj !== 'undefined') {
+						hzUserObj = null;
+					}
+					render999pkHeaderUser();
+					window.location.reload();
+				};
+
+				if (typeof wsMessage === 'function') {
+					var original999pkWsMessage = wsMessage;
+					window.wsMessage = function (event) {
+						original999pkWsMessage(event);
+						try {
+							var wsPayload = JSON.parse(event.data);
+							if (wsPayload && wsPayload.type === '5cq_login') {
+								render999pkHeaderUser();
+							}
+						} catch (e) {
+						}
+					};
+					if (typeof ws !== 'undefined' && ws && ws.readyState === WebSocket.OPEN) {
+						ws.onmessage = window.wsMessage;
+					}
+				}
+
+				function open999pkRecharge(publishId, url, gameName, money) {
 					var decodedPublishId = safeDecode999pkValue(publishId);
 					var decodedUrl = safeDecode999pkValue(url);
 					var decodedGameName = safeDecode999pkValue(gameName);
@@ -5512,8 +5783,7 @@
 				};
 
 				window.render5cqTopTables = function (keyword) {
-					var cache = get5cqCache();
-					var pubList = filter5cqList(cache.pubList, keyword);
+					var pubList = request5cqPubListByKeyword(keyword);
 					var pubHtml = '';
 					var headerHtml =
 						'<td style="width:130px;">服务器名称</td>' +

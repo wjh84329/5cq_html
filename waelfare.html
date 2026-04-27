@@ -1045,7 +1045,8 @@
 									id="searchInput2" placeholder="输入您所在游戏的网址，查看补贴详情">
 								<select class="hot-search-select" id="hotSearchSelect"
 									onchange="onHotSearchChange(this)">
-									<option value="">热门搜索</option>
+									<option value="" selected hidden>热门搜索</option>
+									<option value="__all__">热门搜索</option>
 									<option value="神器">神器</option>
 									<option value="专属">专属</option>
 									<option value="合击">合击</option>
@@ -1348,6 +1349,7 @@
 						window.open(encodeURIComponent(key), '_blank');
 					});
 					loadRankButtons();
+					render5cqTopTables(getCurrentRankKeyword());
 					// 全局变量存储倒计时定时器
 					var floatCountdownTimer = null;
 
@@ -2611,22 +2613,19 @@
 					return result;
 				}
 
-				function get5cqCache(forceRefresh) {
-					if (!window.__fiveCQCache || forceRefresh) {
-						var rankingFormData = new FormData();
-						rankingFormData.append('webpage', 1);
-						rankingFormData.append('limit', 100);
+				function get5cqCache() {
+					var rankingFormData = new FormData();
+					rankingFormData.append('webpage', 1);
+					rankingFormData.append('limit', 100);
 
-						var pubResponse = request5cqSync('report/selectAllByVersion', null) || {};
-						var rankingResponse = request5cqSync('ranking/selectRankingCurList', rankingFormData) || {};
+					var pubResponse = request5cqSync('report/selectAllByVersion', null) || {};
+					var rankingResponse = request5cqSync('ranking/select', rankingFormData) || {};
+					var rankingPayload = rankingResponse.data || rankingResponse;
 
-						window.__fiveCQCache = {
-							pubList: Array.isArray(pubResponse.pubList) ? pubResponse.pubList : [],
-							rankings: Array.isArray(rankingResponse.rankings) ? rankingResponse.rankings : []
-						};
-					}
-
-					return window.__fiveCQCache;
+					return {
+						pubList: Array.isArray(pubResponse.pubList) ? pubResponse.pubList : [],
+						rankings: Array.isArray(rankingPayload.rankings) ? rankingPayload.rankings : []
+					};
 				}
 
 				function escape999pkHtml(value) {
@@ -2827,12 +2826,44 @@
 					getData(currentSelectType);
 				}
 
+				function getCurrentRankKeyword(explicitKeyword) {
+					if (explicitKeyword === '__all__') {
+						explicitKeyword = '';
+					}
+					if (typeof explicitKeyword === 'string') {
+						window.__currentHotSearchKeyword = explicitKeyword;
+						return explicitKeyword;
+					}
+					var hotSearchSelect = document.getElementById('hotSearchSelect');
+					var hotKeyword = hotSearchSelect ? String(hotSearchSelect.value || '') : '';
+					if (hotKeyword) {
+						window.__currentHotSearchKeyword = hotKeyword;
+						return hotKeyword;
+					}
+					return window.__currentHotSearchKeyword || '';
+				}
+
 				function onHotSearchChange(select) {
 					var val = select ? select.value : '';
-					resetWelfareSearchResult();
+					if (val === '__all__') {
+						val = '';
+					}
+					window.__currentHotSearchKeyword = val || '';
+					if (typeof resetWelfareSearchResult === 'function') {
+						resetWelfareSearchResult();
+					}
+					if (typeof toggleWelfareSearchView === 'function') {
+						toggleWelfareSearchView(false);
+					}
+					$('#result').hide().empty();
+					$('.listContainer').show();
 					$('#searchInput2').val(val || '');
-					siteData(val);
+					$('#rankbar li').removeClass('chked');
+					$('#rankbar li[data-type="' + currentSelectType + '"]').addClass('chked');
 					getData(currentSelectType, val);
+					if (select) {
+						select.value = '';
+					}
 				}
 
 				function onTab(type, arr) {
@@ -2967,39 +2998,111 @@
 					return month + '-' + day;
 				}
 
-				function get999pkTodayRankingsCache(forceRefresh) {
-					if (!window.__rankingsTodayCache || forceRefresh) {
-						var rankingResponse = request5cqSync('ranking/selectRankingCurList', null) || {};
-						window.__rankingsTodayCache = Array.isArray(rankingResponse.rankings) ? rankingResponse.rankings : [];
-					}
-					return window.__rankingsTodayCache;
+				function request5cqGetSync(path, data) {
+					var result = null;
+					$.ajax({
+						url: baseUrl + path,
+						type: 'GET',
+						async: false,
+						cache: false,
+						data: data || {},
+						dataType: 'json',
+						success: function (response) {
+							result = response;
+						},
+						error: function () {
+							result = null;
+						}
+					});
+					return result;
 				}
 
-				function get999pkRankingsJsonCache(forceRefresh) {
-					if (!window.__rankingsJsonCache || forceRefresh) {
-						var result = [];
-						$.ajax({
-							url: './statics/rankings.json',
-							type: 'GET',
-							async: false,
-							cache: false,
-							dataType: 'json',
-							success: function (response) {
-								result = Array.isArray(response) ? response : [];
-							},
-							error: function () {
-								result = [];
-							}
-						});
-						window.__rankingsJsonCache = result;
+				function extract999pkRankings(response) {
+					var payload = response && response.data ? response.data : response;
+					if (payload && Array.isArray(payload.rankings)) {
+						return payload.rankings;
 					}
-					return window.__rankingsJsonCache;
+					if (response && Array.isArray(response.rankings)) {
+						return response.rankings;
+					}
+					if (payload && payload.data && Array.isArray(payload.data)) {
+						return payload.data;
+					}
+					return [];
+				}
+
+				function fetch999pkRankingNow(path, method, payloadBuilder) {
+					var result = null;
+					var requestData = typeof payloadBuilder === 'function' ? payloadBuilder() : (payloadBuilder || null);
+					$.ajax({
+						url: baseUrl + path + (path.indexOf('?') === -1 ? '?' : '&') + '_t=' + Date.now(),
+						type: method,
+						async: false,
+						cache: false,
+						data: requestData,
+						processData: method === 'POST' ? false : true,
+						contentType: method === 'POST' ? false : 'application/x-www-form-urlencoded; charset=UTF-8',
+						dataType: 'json',
+						success: function (response) {
+							result = response;
+						},
+						error: function () {
+							result = null;
+						}
+					});
+					return extract999pkRankings(result);
+				}
+
+				function get999pkTodayRankingsCache(keyword) {
+					var rankingParams = {};
+					rankingParams.webpage = 1;
+					rankingParams.limit = 100;
+					if (keyword) {
+						rankingParams.likename = keyword;
+					}
+					return fetch999pkRankingNow('ranking/selectRankingCurList', 'GET', rankingParams);
+				}
+
+				function get999pkRankingsJsonCache(keyword) {
+					return fetch999pkRankingNow('ranking/select', 'POST', function () {
+						var rankingFormData = new FormData();
+						rankingFormData.append('webpage', 1);
+						rankingFormData.append('limit', 100);
+						rankingFormData.append('_t', Date.now());
+						if (keyword) {
+							rankingFormData.append('likename', keyword);
+						}
+						return rankingFormData;
+					});
+				}
+
+				function request5cqPubListByKeyword(keyword) {
+					var formData = new FormData();
+					formData.append('version', keyword || '');
+					formData.append('state', 0);
+					var response = request5cqSync('report/selectAllByVersion', formData) || {};
+					return Array.isArray(response.pubList) ? response.pubList : [];
 				}
 
 				function get999pkRankMoney(item, type) {
 					var value = type === 1 ? item.money : (item.allmoney || item.money);
 					var numberValue = parseFloat(value);
 					return isNaN(numberValue) ? 0 : numberValue;
+				}
+
+				function buildRankLoadingRow() {
+					return '<tr class="td rank-loading-row"><td colspan="11" style="padding:0;">' +
+						'<div class="welfare-loading">' +
+						'<div class="welfare-loading-spinner"></div>' +
+						'<div class="welfare-loading-title">加载中...</div>' +
+						'<div class="welfare-loading-desc">正在更新排行数据，请稍候</div>' +
+						'</div>' +
+						'</td></tr>';
+				}
+
+				function showRankTableLoading() {
+					window.__rankingsJsonCurrentList = [];
+					$('#SortTable').html(buildRankLoadingRow());
 				}
 
 				function normalize999pkRankItem(item) {
@@ -3023,17 +3126,17 @@
 					};
 				}
 
-				function render999pkJsonRankTable(selectType, keyword) {
+				function render999pkJsonRankTable(selectType, keyword, sourceList) {
 					var normalizedType = selectType === 1 ? 1 : 2;
-					var sourceList = normalizedType === 1
-						? get999pkTodayRankingsCache().slice()
-						: get999pkRankingsJsonCache().slice();
-
-					sourceList = filter5cqList(sourceList, keyword);
-					sourceList.sort(function (a, b) {
+					var rankings = Array.isArray(sourceList) ? sourceList.slice() : (
+						normalizedType === 1
+							? get999pkTodayRankingsCache(keyword).slice()
+							: get999pkRankingsJsonCache(keyword).slice()
+					);
+					rankings.sort(function (a, b) {
 						return get999pkRankMoney(b, normalizedType) - get999pkRankMoney(a, normalizedType);
 					});
-					window.__rankingsJsonCurrentList = sourceList;
+					window.__rankingsJsonCurrentList = rankings;
 
 					currentPage = 1;
 					render999pkJsonRankPage(false);
@@ -3119,8 +3222,7 @@
 					);
 					currentSelectType = 1;
 					SelectType = 1;
-					render5cqTopTables(site);
-					getData(1);
+					getData(1, getCurrentRankKeyword());
 				}
 
 				function onTab(type, arr) {
@@ -3128,16 +3230,15 @@
 					SelectType = currentSelectType;
 					$('#rankbar li').removeClass('chked');
 					$('#rankbar li[data-type="' + currentSelectType + '"]').addClass('chked');
-					render5cqTopTables(site);
-					getData(currentSelectType);
+					getData(currentSelectType, getCurrentRankKeyword());
 				}
 
 				function getData(selectType, hotKeyword, isLoadMore) {
-					var keyword = typeof hotKeyword === 'string' ? hotKeyword : site;
+					var keyword = getCurrentRankKeyword(hotKeyword);
 					var normalizedType = selectType === 2 ? 2 : 1;
 					currentSelectType = normalizedType;
 					currentSelectTypeForScroll = normalizedType;
-					pageSize = 50;
+					pageSize = 20;
 
 					if (isLoadMore) {
 						if (isLoading || !hasMoreData) {
@@ -3148,17 +3249,31 @@
 						return;
 					}
 
-					render5cqTopTables(keyword);
+					currentPage = 1;
 					hasMoreData = true;
 					isLoading = true;
-					lastRankLoadAt = Date.now();
-					render999pkJsonRankTable(normalizedType, keyword);
+					lastRankLoadAt = 0;
+					showRankTableLoading();
+					if (window.__waelfareRankRenderTimer) {
+						clearTimeout(window.__waelfareRankRenderTimer);
+					}
+					window.__waelfareRankRenderTimer = setTimeout(function () {
+						var sourceList = normalizedType === 1
+							? get999pkTodayRankingsCache(keyword)
+							: get999pkRankingsJsonCache(keyword);
+						render999pkJsonRankTable(normalizedType, keyword, sourceList);
+						window.__waelfareRankRenderTimer = null;
+					}, 0);
 				}
+				window.onHotSearchChange = onHotSearchChange;
+				window.onTab = onTab;
+				window.getData = getData;
+				window.loadRankButtons = loadRankButtons;
+				window.render999pkJsonRankTable = render999pkJsonRankTable;
 				window.__waelfareRankGetData = getData;
 
 				function render5cqTopTables(keyword) {
-					var cache = get5cqCache();
-					var pubList = filter5cqList(cache.pubList, keyword);
+					var pubList = request5cqPubListByKeyword(keyword);
 					var pubHtml = '';
 					var headerHtml =
 						'<td style="width:130px;">\u670d\u52a1\u5668\u540d\u79f0</td>' +
@@ -3201,6 +3316,7 @@
 					$('#db2').html('');
 					bind5cqTrackingEvents('#db');
 				}
+				window.render5cqTopTables = render5cqTopTables;
 
 				// 关闭弹窗 - 支持所有弹窗
 				// 合并处理所有弹窗关闭按钮
@@ -3811,11 +3927,12 @@
 			var backToTopBtn = document.getElementById('backToTop');
 			var mainBody = getWelfareScrollElement();
 			var scrollTop = mainBody ? mainBody.scrollTop : 0;
-			// 当滚动高度超过500px时显示按钮
-			if (scrollTop > 6000) {
+			if (scrollTop > 800) {
 				backToTopBtn.style.opacity = '1';
+				backToTopBtn.style.pointerEvents = 'auto';
 			} else {
 				backToTopBtn.style.opacity = '0';
+				backToTopBtn.style.pointerEvents = 'none';
 			}
 		}
 

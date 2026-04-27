@@ -576,19 +576,62 @@
             <span onclick="closeHongbaoPopup()"
                 style="position: absolute; top: 12px; right: 18px; width: 28px; height: 28px; line-height: 28px; border-radius: 50%; background: rgba(0, 0, 0, 0.35); color: #fff; font-size: 20px; cursor: pointer;">×</span>
             <div style="font-size: 20px;margin-top: 60px;font-weight: bold;">首笔充值可得全网补贴最高减免</div>
-            <div style="font-size: 40px; font-weight: bold; color: #ffeb3b; margin-bottom: 20px;margin-top: 20px;">10元
+            <div class="hongbao-max-amount" style="font-size: 40px; font-weight: bold; color: #ffeb3b; margin-bottom: 20px;margin-top: 20px;">10元
             </div>
             <div style="font-size: 14px;">创建订单时自动减免</div>
         </div>
     </div>
     <script>
         var hongbaoLayerIndex = null;
+        var defaultSubsidyMaxText = '10元';
 
         function closeHongbaoPopup() {
             if (hongbaoLayerIndex !== null) {
                 layer.close(hongbaoLayerIndex);
                 hongbaoLayerIndex = null;
             }
+        }
+
+        function parseSubsidyMaxAmount(maxValue) {
+            if (maxValue === null || maxValue === undefined || maxValue === '') {
+                return '';
+            }
+            var matches = String(maxValue).match(/\d+(\.\d+)?/g);
+            if (!matches || !matches.length) {
+                return '';
+            }
+            var numbers = matches.map(function (item) {
+                return parseFloat(item);
+            }).filter(function (item) {
+                return !isNaN(item);
+            });
+            if (!numbers.length) {
+                return '';
+            }
+            return Math.max.apply(null, numbers);
+        }
+
+        function formatSubsidyMaxText(maxValue) {
+            var amount = parseSubsidyMaxAmount(maxValue);
+            return amount !== '' ? amount + '元' : defaultSubsidyMaxText;
+        }
+
+        function updateSubsidyDisplay(maxValue) {
+            var maxText = formatSubsidyMaxText(maxValue);
+            $('#bannerText').text('上5CQ充值所有发布站游戏，每笔最高减免' + maxText);
+            $('.hongbao-max-amount').text(maxText);
+        }
+
+        function fetchSubsidyRange() {
+            $.ajax({
+                url: (typeof layui !== 'undefined' && layui.setter && layui.setter.url ? layui.setter.url : '') + 'ranking/getSubsidyRange',
+                method: 'get',
+                success: function (res) {
+                    if (res && res.code === 0 && res.data) {
+                        updateSubsidyDisplay(res.data.max);
+                    }
+                }
+            });
         }
 
         function openHongbaoPopup() {
@@ -862,6 +905,8 @@
 
         // 页面加载时初始化
         $(document).ready(function () {
+            updateSubsidyDisplay();
+            fetchSubsidyRange();
             loadCashierProducts();
             openHongbaoPopup();
             initAgreementLink();
@@ -905,12 +950,10 @@
                 document.getElementById('newStyle').style.display = 'block';
                 // 生成服务器列表
                 generateServerList(subsidyId, subsidyMin, subsidyMax);
-                document.getElementById('bannerText').textContent = '上5CQ充值所有发布站游戏，每笔最高减免10元';
             } else {
                 // 显示旧样式，隐藏新样式
                 document.getElementById('oldStyle').style.display = 'block';
                 document.getElementById('newStyle').style.display = 'none';
-                document.getElementById('bannerText').textContent = '上5CQ充值所有发布站游戏，每笔最高减免10元';
             }
 
             // 如果pay_merchant等于0，显示优惠补贴弹窗

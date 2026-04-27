@@ -56,6 +56,9 @@
             border: initial !important;
             padding: 0px 5px 10px 5px;
         }
+        .header {
+            height: 115px;
+        }
     </style> 
  </head> 
  <body> 
@@ -187,7 +190,7 @@
           <!--自发广告--> 
           <script>
                 // var { pubList } = showHtml('http://jaxone.5cq.com/server/' + 'report/selectAllByVersion', null);
-                var { pubList } = showHtml('http://localhost:8086/server/' + 'report/selectAllByVersion', null);
+                var { pubList } = showHtml('https://kkw.5cq.com/server/' + 'report/selectAllByVersion', null);
                 var dataHtml = '';
                 for (var item of pubList) {
                     item.url = item.url
@@ -206,7 +209,7 @@
                         <td><a href="${item.url}"
                                 target="_blank">${item.kfqq}</a></td>
                         <td><a href="${item.url}"
-                                target="_blank" class="Redbtn blueA">领取补贴</a></td>
+                                target="_blank" class="Redbtn blueA">点击查看</a></td>
                         <td><img src="./statics/images/tui1.gif" style="vertical-align: inherit;height: 24px;"></td>
                     </tr>`
                 }
@@ -218,7 +221,7 @@
                 formData.append("webpage", 1);
                 formData.append("limit", 100);
                 // var { data } = showHtml('http://jaxone.5cq.com/server/' + 'ranking/select', formData);
-                var { data } = showHtml('http://localhost:8086/server/' + 'ranking/select', formData);
+                var { data } = showHtml('https://kkw.5cq.com/server/' + 'ranking/select', formData);
                 var dataHtml = '';
                 dataHtml += `<tr class="tder">
                     <td colspan="8" style="padding:0; text-align:center;">
@@ -377,68 +380,161 @@
     syRunHorseLight();
 </script> 
   <script type="text/javascript">
+    var realtimeBaseUrl = 'https://kkw.5cq.com/server/';
+
+    function getRealtimePubList(keyword) {
+        var formData = new FormData();
+        formData.append('version', keyword || '');
+        formData.append('state', 0);
+        var response = showHtml(realtimeBaseUrl + 'report/selectAllByVersion', formData) || {};
+        return Array.isArray(response.pubList) ? response.pubList : [];
+    }
+
+    function getRealtimeRankings(keyword) {
+        var formData = new FormData();
+        formData.append('webpage', 1);
+        formData.append('limit', 100);
+        if (keyword) {
+            formData.append('likename', keyword);
+        }
+        var response = showHtml(realtimeBaseUrl + 'ranking/select', formData) || {};
+        var payload = response.data || response;
+        return payload && Array.isArray(payload.rankings) ? payload.rankings : [];
+    }
+
+    function getRankTopClass(rank) {
+        if (rank === 1) return 'top-1';
+        if (rank === 2) return 'top-2';
+        if (rank === 3) return 'top-3';
+        return 'top-4';
+    }
+
+    function escape5cqHtml(value) {
+        return String(value == null ? '' : value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    function buildPubRows(pubList) {
+        return pubList.map(function (item) {
+            var url = escape5cqHtml(item.url || '');
+            return `<tr class="tder" data-href="${url}">
+                <td><img src="./statics/images/vip1.gif" style="height: 30px;"></td>
+                <td><a href="${url}" target="_blank">${escape5cqHtml(item.name || '')}</a></td>
+                <td style="width: 156px;word-break:break-all;"><a href="${url}" target="_blank">${escape5cqHtml(item.ipname || '')}</a></td>
+                <td><a href="${url}" target="_blank">${escape5cqHtml(item.line || '')}</a></td>
+                <td><a href="${url}" target="_blank">${escape5cqHtml(item.versiondepict || '')}</a></td>
+                <td><a href="${url}" target="_blank">${escape5cqHtml(item.kfqq || '')}</a></td>
+                <td><a href="${url}" target="_blank" class="Redbtn blueA">点击查看</a></td>
+                <td><img src="./statics/images/tui1.gif" style="vertical-align: inherit;height: 24px;"></td>
+            </tr>`;
+        }).join('');
+    }
+
+    function buildRankRows(rankings) {
+        var bannerHtml = `<tr class="tder">
+            <td colspan="8" style="padding:0; text-align:center;">
+                <img src="/statics/images/rankbar1.gif" style="display:block; width:100%; margin:0 auto; padding:0;" height="60" width="1300">
+            </td>
+        </tr>`;
+
+        return bannerHtml + rankings.map(function (item, index) {
+            var rank = index + 1;
+            var topClass = getRankTopClass(rank);
+            var url = escape5cqHtml(item.url || '');
+            return `<tr class="tder" data-href="${url}">
+                <td><a class="ranking-top ${topClass}">${rank > 3 ? rank : ''}</a></td>
+                <td><a href="${url}" target="_blank">${escape5cqHtml(item.name || '')}</a></td>
+                <td style="width: 156px;word-break:break-all;"><a href="${url}" target="_blank">${escape5cqHtml(item.ipname || '')}</a></td>
+                <td><a href="${url}" target="_blank">${escape5cqHtml(item.line || '')}</a></td>
+                <td><a href="${url}" target="_blank">${escape5cqHtml(item.versiondepict || '')}</a></td>
+                <td><a href="${url}" target="_blank">${escape5cqHtml(item.kfqq || '')}</a></td>
+                <td><a href="${url}" target="_blank" class="Redbtn blueA">点击查看</a></td>
+                <td>${escape5cqHtml(item.money || '')}</td>
+            </tr>`;
+        }).join('');
+    }
+
+    function buildRealtimeLoadingRows() {
+        return `<tr class="tder">
+            <td colspan="8" style="padding:24px 0;text-align:center;">
+                <div class="welfare-loading" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;">
+                    <div class="welfare-loading-spinner"></div>
+                    <div class="welfare-loading-title">加载中...</div>
+                    <div class="welfare-loading-desc">正在更新实时数据，请稍候</div>
+                </div>
+            </td>
+        </tr>`;
+    }
+
+    function showRealtimeTableLoading() {
+        var headerHtml = `<tr>
+            <th style="width: 60px;">排名</th>
+            <th style="width: 130px;">名称</th>
+            <th style="width: 130px;word-break:break-all;">IP</th>
+            <th style="width: 106px;">线路</th>
+            <th style="width: 250px;">详细版本介绍</th>
+            <th style="width: 132px;">客服QQ</th>
+            <th style="width:80px;">游戏主页</th>
+            <th style="width: 90px;">官方福利</th>
+        </tr>`;
+        $('#ph_html tbody').html(headerHtml + buildRealtimeLoadingRows());
+        $('.noavailable.ph').hide();
+    }
+
+    function renderRealtimeTable(keyword) {
+        showRealtimeTableLoading();
+        if (window.__realtimeRenderTimer) {
+            clearTimeout(window.__realtimeRenderTimer);
+        }
+        window.__realtimeRenderTimer = setTimeout(function () {
+            var pubList = getRealtimePubList(keyword);
+            var rankings = getRealtimeRankings(keyword);
+        var headerHtml = `<tr>
+            <th style="width: 60px;">排名</th>
+            <th style="width: 130px;">名称</th>
+            <th style="width: 130px;word-break:break-all;">IP</th>
+            <th style="width: 106px;">线路</th>
+            <th style="width: 250px;">详细版本介绍</th>
+            <th style="width: 132px;">客服QQ</th>
+            <th style="width:80px;">游戏主页</th>
+            <th style="width: 90px;">官方福利</th>
+        </tr>`;
+
+            $('#ph_html tbody').html(headerHtml + buildPubRows(pubList) + buildRankRows(rankings));
+            $('.noavailable.ph').toggle(pubList.length + rankings.length === 0);
+            window.__realtimeRenderTimer = null;
+        }, 0);
+    }
 
     $('.hky').click(function () {
         var vkey = $(this).text();
-        if (vkey == "") { alert("请先输入查询的关键词!"); return; }
-
-        if ("全部" == vkey) {
-            $('tr').removeClass('nokey');
-            $('#keyword').val("");
+        if (vkey === '全部') {
+            $('#keyword').val('');
+            renderRealtimeTable('');
             return;
         }
-
         $('#keyword').val(vkey);
-
-        $('tr').removeClass('nokey');
-
-        $('tr').each(function () {
-            var txt = $(this).text();
-            if (txt.indexOf("点击查看") > -1) {
-                if (txt.indexOf(vkey) == -1) {
-                    $(this).addClass("nokey");
-                }
-            }
-        });
+        renderRealtimeTable(vkey);
     });
 
     $('#keyword').bind('keypress', function (event) {
-        if (event.keyCode == 13) {
-            var vkey = $('#keyword').val();
-            if (vkey == "") { alert("请先输入查询的关键词!"); return; }
-
-            $('#keyword').val(vkey);
-            $('tr').removeClass('nokey');
-            $('tr').each(function () {
-                var txt = $(this).text();
-                if (txt.indexOf("点击查看") > -1) {
-                    if (txt.indexOf(vkey) == -1) {
-                        $(this).addClass("nokey");
-                    }
-                }
-            });
+        if (event.keyCode === 13) {
+            renderRealtimeTable($.trim($('#keyword').val()));
         }
     });
 
-    // 点击按钮搜索
     $('#schbtn').click(function () {
-        var vkey = $('#keyword').val();
-        if (vkey == "") { alert("请先输入查询的关键词!"); return; }
-
-        $('#keyword').val(vkey);
-        $('tr').removeClass('nokey');
-        $('tr').each(function () {
-            var txt = $(this).text();
-            if (txt.indexOf("点击查看") > -1) {
-                if (txt.indexOf(vkey) == -1) {
-                    $(this).addClass("nokey");
-                }
-            }
-        });
+        renderRealtimeTable($.trim($('#keyword').val()));
     });
 
-
-</script> 
+    $(function () {
+        renderRealtimeTable('');
+    });
+  </script> 
   <script>
     var _hmt = _hmt || [];
     (function() {
@@ -450,7 +546,7 @@
 </script> 
   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script> 
   <script>LA.init({id: "JhOKRDuiAxuLVeGs",ck: "JhOKRDuiAxuLVeGs"})</script> 
-  <div id="footer" style="width:100%;margin: 30px auto 0;box-sizing: border-box;background: #1f1f24;padding: 30px 0 20px">
+  <div id="" style="width:100%;margin: 30px auto 0;box-sizing: border-box;background: #1f1f24;padding: 30px 0 20px">
    <div class="clearfix" style="width: 100%;margin: 0 auto"> 
     <div class="link clearfix" style="border-bottom: 1px solid #36363a;padding-bottom: 30px;text-align: center" id="wzlm"> 
     </div> 
@@ -460,7 +556,7 @@
    <p class="textfoot">拒绝盗版游戏 注意自我保护 谨防受骗上当 适度游戏益脑 沉迷游戏伤身 合理安排时间 享受健康生活</p> 
    <p class="textfoot">本站只收录官方授权游戏信息，非官方授权游戏请在办理业务之前告知.</p> 
    <p class="textfoot">*注释：网站数据匀采集互联网，有不良信息举报联系我们，将会尽快核实处理，站长QQ：3067585</p> 
-   <p class="textfoot"> <a style="color: white;text-align: center;width: 100%" target="_blank" id="beian" href="https://beian.miit.gov.cn">Copyright 2019-2027 All Rights Reserved </a><a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank" style="color: #fff"> 信产部ICP备案号：黔ICP备2022005643号　| </a> <span style="color: #fff">营业执照注册证号：91522301MABP8XJ71N </span> <a id="_pingansec_bottomimagesmall_shiming" target="_blank" href="//si.trustutn.org/info?sn=840240419040948778244&amp;certType=1"><img src="//v.trustutn.org/images/cert/realname_small_img.png"></a><script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1281074630'%3E%3C/span%3E%3Cscript src='https://s4.cnzz.com/z.js%3Fid%3D1281074630%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script></p> 
+   <p class="textfoot"> <a style="color: white;text-align: center;width: 100%" target="_blank" id="beian" href="https://beian.miit.gov.cn">Copyright 2019-2027 All Rights Reserved </a><a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank" style="color: #fff"> 信产部ICP备案号：黔ICP备2022005643号　| </a> <span style="color: #fff">营业执照注册证号：91522301MABP8XJ71N </span> <a id="_pingansec_bottomimagesmall_shiming" target="_blank" href="//si.trustutn.org/info?sn=840240419040948778244&amp;certType=1"><img src="//v.trustutn.org/images/cert/realname_small_img.png"></a><script type="text/javascript" src="https://s4.cnzz.com/z.js?id=1281476835"></script></p> 
    <p></p>  
   </div> 
  </body>
