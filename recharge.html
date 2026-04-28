@@ -405,32 +405,21 @@
                     var decodedPublishId = getUrlParam('publish_id') || '';
                     var decodedUrl = getUrlParam('url') || '';
                     var amountInput = $(this);
-                    var customer = typeof getUser === 'function' ? getUser() : null;
-                    var openId = customer && customer.openid ? customer.openid : '';
-                    if (!openId) {
-                        try {
-                            var userinfoCookie = $.cookie('userinfo');
-                            var userinfo = userinfoCookie ? JSON.parse(userinfoCookie) : null;
-                            openId = userinfo && (userinfo.openid || userinfo.open_id) ? (userinfo.openid || userinfo.open_id) : '';
-                        } catch (e) {
-                            openId = '';
-                        }
-                    }
+                    var openId = getCurrentOpenId();
                     // 如果金额输入框没值，隐藏整个容器
                     if (!amount) {
-                        document.getElementById('subsidyBubbleContainer').style.display = 'none';
+                        setSubsidyBubbleVisibility(false);
                         amountInput.removeData('localOrderNo');
                         return;
                     }
                     if (amount < 20) {
                         layer.msg('最低充值金额为20元');
-                        document.getElementById('subsidyBubbleContainer').style.display = 'none';
+                        setSubsidyBubbleVisibility(false);
                         amountInput.removeData('localOrderNo');
                         return;
                     }
                     // 有值时显示整个容器
-                    document.getElementById('subsidyBubbleContainer').style.display = 'block';
-                    var openId = customer && customer.openid ? customer.openid : '';
+                    setSubsidyBubbleVisibility(true);
                     $.ajax({
                         url: baseUrl + 'cashier/rechargeResult',
                         type: 'POST',
@@ -503,9 +492,9 @@
                     // 页面加载时检查金额输入框是否有值
                     var amount = $('#amount').val().trim();
                     if (!amount) {
-                        document.getElementById('subsidyBubbleContainer').style.display = 'none';
+                        setSubsidyBubbleVisibility(false);
                     } else {
-                        document.getElementById('subsidyBubbleContainer').style.display = 'block';
+                        setSubsidyBubbleVisibility(true);
                     }
                 });
             </script>
@@ -691,6 +680,93 @@
             return null;
         }
 
+        var todayDiscountNoticeState = {
+            active: false,
+            message: ''
+        };
+
+        function getCurrentOpenId() {
+            var customer = typeof getUser === 'function' ? getUser() : null;
+            var openId = customer && customer.openid ? customer.openid : '';
+            if (openId) {
+                return openId;
+            }
+            try {
+                var userinfoCookie = $.cookie('userinfo');
+                var userinfo = userinfoCookie ? JSON.parse(userinfoCookie) : null;
+                openId = userinfo && (userinfo.openid || userinfo.open_id) ? (userinfo.openid || userinfo.open_id) : '';
+            } catch (e) {
+                openId = '';
+            }
+            return openId;
+        }
+
+        function setSubsidyBubbleVisibility(visible) {
+            var subsidyBubbleContainer = document.getElementById('subsidyBubbleContainer');
+            if (!subsidyBubbleContainer) {
+                return;
+            }
+            if (todayDiscountNoticeState.active) {
+                subsidyBubbleContainer.style.display = 'block';
+                return;
+            }
+            subsidyBubbleContainer.style.display = visible ? 'block' : 'none';
+        }
+
+        function applyTodayDiscountNotice(message) {
+            var subsidyBubble = document.getElementById('subsidyBubble');
+            var subsidyAmountRow = document.getElementById('subsidyAmountRow');
+            var subsidyAmountInput = document.getElementById('subsidyAmount');
+
+            todayDiscountNoticeState.active = true;
+            todayDiscountNoticeState.message = $.trim(message || '');
+
+            if (subsidyAmountInput) {
+                subsidyAmountInput.value = '0';
+            }
+            if (subsidyAmountRow) {
+                subsidyAmountRow.style.display = 'none';
+            }
+            if (subsidyBubble) {
+                subsidyBubble.innerHTML = '<div style="width: 280px;position: absolute;margin-top: 44px;line-height: 1.8;color: #7a3500;font-weight: bold;">' +
+                    escapeHtml(todayDiscountNoticeState.message || '当前时间段暂不支持补贴') +
+                    '</div>';
+            }
+            setSubsidyBubbleVisibility(true);
+        }
+
+        function checkTodayDiscountNotice(done) {
+            var openId = getCurrentOpenId();
+            if (!openId) {
+                if (typeof done === 'function') {
+                    done(null);
+                }
+                return;
+            }
+
+            $.ajax({
+                url: 'http://localhost:8086/server/cashier/checkTodayDiscount',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    openId: openId
+                },
+                success: function (res) {
+                    if (res && parseInt(res.code, 10) === 200) {
+                        applyTodayDiscountNotice(res.msg || '');
+                    }
+                    if (typeof done === 'function') {
+                        done(res || null);
+                    }
+                },
+                error: function () {
+                    if (typeof done === 'function') {
+                        done(null);
+                    }
+                }
+            });
+        }
+
         function updateDiscountDisplay(discountAmount, welfareAmount) {
             var subsidyValue = parseFloat(discountAmount || 0);
             var welfareValue = parseFloat(welfareAmount || 0);
@@ -708,6 +784,9 @@
 
             if (subsidyAmountInput) {
                 subsidyAmountInput.value = subsidyValue;
+            }
+            if (todayDiscountNoticeState.active) {
+                return;
             }
             if (subsidyBubbleAmountEl) {
                 subsidyBubbleAmountEl.textContent = subsidyValue.toFixed(2);
@@ -905,8 +984,6 @@
 
         // 页面加载时初始化
         $(document).ready(function () {
-            updateSubsidyDisplay();
-            fetchSubsidyRange();
             loadCashierProducts();
             openHongbaoPopup();
             initAgreementLink();
@@ -956,45 +1033,51 @@
                 document.getElementById('newStyle').style.display = 'none';
             }
 
-            // 如果pay_merchant等于0，显示优惠补贴弹窗
-            if (payMerchant === '0' || payMerchant === 0) {
-                // 调用接口获取补贴余额
-                onTokenRequest({
-                    url: '/api/user/wallet',
-                    type: 'GET',
-                    data: {}
-                }, function (res) {
-                    if (res.code == 200 && res.data) {
-                        var subsidyBalance = res.data.subsidy_balance || 0;
-                        var youhuiHtml = '<div style="width: 550px; height: 250px; background-image: url(\'statics/5cq/youhui.png\'); background-size: 100% 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; color: #fff; text-align: center;">' +
-                            '<div style="font-size: 32px; font-weight: bold; color: #ffeb3b; margin-bottom: 20px;margin-top: 90px;">' + subsidyBalance + '元</div>' +
-                            '<div style="font-size: 14px;">输入充值金额查看本次减免金额</div>' +
-                            '</div>';
-                        var youhuiLayer = layer.open({
-                            type: 1,
-                            title: false,
-                            closeBtn: 1,
-                            shadeClose: true,
-                            area: ['550px', '250px'],
-                            content: youhuiHtml,
-                            skin: 'youhui-layer',
-                            offset: '300px',
-                            success: function (layero) {
-                                layero.css('background', 'transparent');
-                                layero.css('box-shadow', 'none');
-                                layero.find('.layui-layer-content').css('padding', '0');
-                                layero.find('.layui-layer-content').css('background', 'transparent');
-                                layero.find('.layui-layer-content').css('box-shadow', 'none');
-                                layero.find('.layui-layer-content').css('border', 'none');
-                                // 5秒钟后自动关闭弹窗
-                                setTimeout(function () {
-                                    layer.close(youhuiLayer);
-                                }, 5000);
+            checkTodayDiscountNotice(function () {
+                if (!todayDiscountNoticeState.active) {
+                    updateSubsidyDisplay();
+                    fetchSubsidyRange();
+                    // 如果pay_merchant等于0，显示优惠补贴弹窗
+                    if (payMerchant === '0' || payMerchant === 0) {
+                        // 调用接口获取补贴余额
+                        onTokenRequest({
+                            url: '/api/user/wallet',
+                            type: 'GET',
+                            data: {}
+                        }, function (res) {
+                            if (res.code == 200 && res.data) {
+                                var subsidyBalance = res.data.subsidy_balance || 0;
+                                var youhuiHtml = '<div style="width: 550px; height: 250px; background-image: url(\'statics/5cq/youhui.png\'); background-size: 100% 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; color: #fff; text-align: center;">' +
+                                    '<div style="font-size: 32px; font-weight: bold; color: #ffeb3b; margin-bottom: 20px;margin-top: 90px;">' + subsidyBalance + '元</div>' +
+                                    '<div style="font-size: 14px;">输入充值金额查看本次减免金额</div>' +
+                                    '</div>';
+                                var youhuiLayer = layer.open({
+                                    type: 1,
+                                    title: false,
+                                    closeBtn: 1,
+                                    shadeClose: true,
+                                    area: ['550px', '250px'],
+                                    content: youhuiHtml,
+                                    skin: 'youhui-layer',
+                                    offset: '300px',
+                                    success: function (layero) {
+                                        layero.css('background', 'transparent');
+                                        layero.css('box-shadow', 'none');
+                                        layero.find('.layui-layer-content').css('padding', '0');
+                                        layero.find('.layui-layer-content').css('background', 'transparent');
+                                        layero.find('.layui-layer-content').css('box-shadow', 'none');
+                                        layero.find('.layui-layer-content').css('border', 'none');
+                                        // 5秒钟后自动关闭弹窗
+                                        setTimeout(function () {
+                                            layer.close(youhuiLayer);
+                                        }, 5000);
+                                    }
+                                });
                             }
                         });
                     }
-                });
-            }
+                }
+            });
 
             // 如果有补贴信息，更新横幅文字
             if (subsidyMin && subsidyMax) {

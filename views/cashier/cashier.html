@@ -242,7 +242,7 @@
                         </div>
                         <button class="layui-btn" id="reload">搜索</button>
                         <button class="layui-btn layui-btn-primary" id="reset">重置</button>
-                        <button id="gear-config-btn" class="layui-btn layui-btn-normal"><i class="layui-icon">&#xe614;</i>金额配置</button>
+                        <button id="gear-config-btn" class="layui-btn layui-btn-normal"><i class="layui-icon">&#xe614;</i>补贴配置</button>
                     </div>
                     <table class="layui-hide" id="auth-table" lay-filter="auth-table"></table>
                 </div>
@@ -257,15 +257,27 @@
       <div class="layui-card-body" style="padding: 15px;">
         <form class="layui-form" id="layui-form-gear">
           <div class="layui-form-item layui-form-text">
-            <label class="layui-form-label">最小金额：</label>
+            <label class="layui-form-label">100以内：</label>
             <div class="layui-input-inline">
               <input type="text" id="gear1" name="gear1" placeholder="请输入最小金额" class="layui-input">
             </div>
           </div>
           <div class="layui-form-item layui-form-text">
-            <label class="layui-form-label">最大金额：</label>
+            <label class="layui-form-label">500以内：</label>
             <div class="layui-input-inline">
               <input type="text" id="gear2" name="gear2" placeholder="请输入最大金额" class="layui-input">
+            </div>
+          </div>
+          <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">开始时间：</label>
+            <div class="layui-input-inline">
+              <input type="text" id="gearStartTime" name="gearStartTime" placeholder="请选择或输入开始时间，如 02:30:15" class="layui-input" autocomplete="off">
+            </div>
+          </div>
+          <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">结束时间：</label>
+            <div class="layui-input-inline">
+              <input type="text" id="gearEndTime" name="gearEndTime" placeholder="请选择或输入结束时间，如 19:55:30" class="layui-input" autocomplete="off">
             </div>
           </div>
         </form>
@@ -345,6 +357,89 @@
 
         function formatMoney(value) {
             return toNumber(value).toFixed(2);
+        }
+
+        function getConfigField(data, camelKey, snakeKey, defaultValue) {
+            if (!data || typeof data !== 'object') {
+                return defaultValue;
+            }
+            if (typeof data[camelKey] !== 'undefined' && data[camelKey] !== null && data[camelKey] !== '') {
+                return data[camelKey];
+            }
+            if (typeof data[snakeKey] !== 'undefined' && data[snakeKey] !== null && data[snakeKey] !== '') {
+                return data[snakeKey];
+            }
+            return defaultValue;
+        }
+
+        function padTimePart(value) {
+            var timeValue = parseInt(value, 10);
+            if (isNaN(timeValue) || timeValue < 0) {
+                timeValue = 0;
+            }
+            return ('0' + timeValue).slice(-2);
+        }
+
+        function normalizeTimeText(value, defaultValue) {
+            var text = $.trim(value || '');
+            if (!text) {
+                return defaultValue;
+            }
+            var match = text.match(/^(\d{1,2}):(\d{1,2})(?::(\d{1,2}))?$/);
+            if (!match) {
+                return defaultValue;
+            }
+            var hour = parseInt(match[1], 10);
+            var minute = parseInt(match[2], 10);
+            var second = typeof match[3] === 'undefined' ? 0 : parseInt(match[3], 10);
+            if (isNaN(hour) || isNaN(minute) || isNaN(second) || hour < 0 || hour > 23 || minute < 0 || minute > 59 || second < 0 || second > 59) {
+                return defaultValue;
+            }
+            return padTimePart(hour) + ':' + padTimePart(minute) + ':' + padTimePart(second);
+        }
+
+        function buildConfigTimeText(data, timeCamelKey, timeSnakeKey, hourCamelKey, hourSnakeKey, minuteCamelKey, minuteSnakeKey, defaultValue) {
+            var directTime = normalizeTimeText(getConfigField(data, timeCamelKey, timeSnakeKey, ''), '');
+            if (directTime) {
+                return directTime;
+            }
+            var hour = getConfigField(data, hourCamelKey, hourSnakeKey, '');
+            var minute = getConfigField(data, minuteCamelKey, minuteSnakeKey, '');
+            var second = getConfigField(data, 'startSecond', 'start_second', '');
+            if (timeCamelKey === 'endTime' || timeSnakeKey === 'end_time') {
+                second = getConfigField(data, 'endSecond', 'end_second', '');
+            }
+            if (hour === '' && minute === '' && second === '') {
+                return defaultValue;
+            }
+            return padTimePart(hour) + ':' + padTimePart(minute) + ':' + padTimePart(second === '' ? 0 : second);
+        }
+
+        function parseTimeRangeValue(timeText) {
+            var normalizedText = normalizeTimeText(timeText, '');
+            if (!normalizedText) {
+                return null;
+            }
+            var parts = normalizedText.split(':');
+            var hour = parseInt(parts[0], 10);
+            var minute = parseInt(parts[1], 10);
+            var second = parseInt(parts[2], 10);
+            return {
+                text: normalizedText,
+                hour: hour,
+                minute: minute,
+                second: second,
+                totalSeconds: hour * 3600 + minute * 60 + second
+            };
+        }
+
+        function bindGearTimeInput(selector) {
+            $(document).on('blur', selector, function () {
+                var normalizedValue = normalizeTimeText($(this).val(), '');
+                if (normalizedValue) {
+                    $(this).val(normalizedValue);
+                }
+            });
         }
 
         function getCashierOrderId(rowData) {
@@ -467,6 +562,23 @@
             trigger: 'click'
         });
 
+        laydate.render({
+            elem: '#gearStartTime',
+            type: 'time',
+            format: 'HH:mm:ss',
+            trigger: 'click'
+        });
+
+        laydate.render({
+            elem: '#gearEndTime',
+            type: 'time',
+            format: 'HH:mm:ss',
+            trigger: 'click'
+        });
+
+        bindGearTimeInput('#gearStartTime');
+        bindGearTimeInput('#gearEndTime');
+
         $('#gear-config-btn').on('click', function() {
             //先加载配置信息
             $.ajax({
@@ -474,14 +586,17 @@
                 method: 'get',
                 success: function(res) {
                     res = res || {};
+                    var configData = res.data || {};
                     console.log('金额配置:', res)
                     //回填配置信息
-                    $('#gear1').val(res.data.min || '');
-                    $('#gear2').val(res.data.max || '');
+                    $('#gear1').val(getConfigField(configData, 'min', 'min', ''));
+                    $('#gear2').val(getConfigField(configData, 'max', 'max', ''));
+                    $('#gearStartTime').val(buildConfigTimeText(configData, 'startTime', 'start_time', 'startHour', 'start_hour', 'startMinute', 'start_minute', '00:00:00'));
+                    $('#gearEndTime').val(buildConfigTimeText(configData, 'endTime', 'end_time', 'endHour', 'end_hour', 'endMinute', 'end_minute', '23:59:59'));
                     
                     layer.open({
                         type: 1,
-                        area: ['400px', '320px'],
+                        area: ['420px', '420px'],
                         title: '金额设置',
                         shadeClose: false,
                         content: $('#gear-config-form'),
@@ -489,6 +604,21 @@
                         yes: function(index, layero) {
                             var gear1 = $('#gear1').val();
                             var gear2 = $('#gear2').val();
+                            var gearStartTime = parseTimeRangeValue($('#gearStartTime').val());
+                            var gearEndTime = parseTimeRangeValue($('#gearEndTime').val());
+
+                            if (!gearStartTime) {
+                                layer.msg('请选择正确的开始时间');
+                                return;
+                            }
+                            if (!gearEndTime) {
+                                layer.msg('请选择正确的结束时间');
+                                return;
+                            }
+                            if (gearStartTime.totalSeconds >= gearEndTime.totalSeconds) {
+                                layer.msg('结束时间必须大于开始时间');
+                                return;
+                            }
                             
                             //提交配置
                             $.ajax({
@@ -497,7 +627,23 @@
                                 contentType: 'application/json',
                                 data: JSON.stringify({
                                     min: gear1 || 0,
-                                    max: gear2 || 0
+                                    max: gear2 || 0,
+                                    startTime: gearStartTime.text,
+                                    endTime: gearEndTime.text,
+                                    start_time: gearStartTime.text,
+                                    end_time: gearEndTime.text,
+                                    startHour: gearStartTime.hour,
+                                    endHour: gearEndTime.hour,
+                                    startMinute: gearStartTime.minute,
+                                    endMinute: gearEndTime.minute,
+                                    startSecond: gearStartTime.second,
+                                    endSecond: gearEndTime.second,
+                                    start_hour: gearStartTime.hour,
+                                    end_hour: gearEndTime.hour,
+                                    start_minute: gearStartTime.minute,
+                                    end_minute: gearEndTime.minute,
+                                    start_second: gearStartTime.second,
+                                    end_second: gearEndTime.second
                                 }),
                                 success: function(res) {
                                     layer.msg('金额设置已保存');
