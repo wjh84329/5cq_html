@@ -242,7 +242,7 @@
                         </div>
                         <button class="layui-btn" id="reload">搜索</button>
                         <button class="layui-btn layui-btn-primary" id="reset">重置</button>
-                        <button id="gear-config-btn" class="layui-btn layui-btn-normal"><i class="layui-icon">&#xe614;</i>补贴配置</button>
+                        <button id="gear-config-btn" class="layui-btn layui-btn-normal" style="display:none;"><i class="layui-icon">&#xe614;</i>补贴配置</button>
                     </div>
                     <table class="layui-hide" id="auth-table" lay-filter="auth-table"></table>
                 </div>
@@ -256,27 +256,41 @@
     <div class="layui-card">
       <div class="layui-card-body" style="padding: 15px;">
         <form class="layui-form" id="layui-form-gear">
-          <div class="layui-form-item layui-form-text">
-            <label class="layui-form-label">100以内：</label>
-            <div class="layui-input-inline">
-              <input type="text" id="gear1" name="gear1" placeholder="请输入最小金额" class="layui-input">
+          <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 110px;">补贴规则：</label>
+            <div class="layui-input-block" style="margin-left: 140px;">
+              <div id="subsidy-rule-list"></div>
+              <div style="margin-top: 10px;">
+                <button type="button" id="add-subsidy-rule-btn" class="layui-btn layui-btn-sm layui-btn-primary">新增规则</button>
+              </div>
+              <div class="layui-form-mid layui-word-aux" style="float: none; line-height: 22px; padding: 8px 0 0 0;">
+                每条规则配置 充值区间 和 补贴区间。充值最大值留空表示不封顶。
+              </div>
             </div>
           </div>
           <div class="layui-form-item layui-form-text">
-            <label class="layui-form-label">500以内：</label>
-            <div class="layui-input-inline">
-              <input type="text" id="gear2" name="gear2" placeholder="请输入最大金额" class="layui-input">
+            <label class="layui-form-label" style="width: 110px;">首笔展示金额：</label>
+            <div class="layui-input-inline" style="width: 220px;">
+              <input type="text" id="firstRechargeMax" name="firstRechargeMax" placeholder="例如 10 或 10元" class="layui-input">
             </div>
+            <div class="layui-form-mid layui-word-aux">用于 recharge 页面“首笔充值可得全网补贴最高减免 xx 元”</div>
           </div>
           <div class="layui-form-item layui-form-text">
-            <label class="layui-form-label">开始时间：</label>
-            <div class="layui-input-inline">
+            <label class="layui-form-label" style="width: 110px;">今日补贴区间：</label>
+            <div class="layui-input-inline" style="width: 220px;">
+              <input type="text" id="todayDiscountBaseAmount" name="todayDiscountBaseAmount" placeholder="例如 88-188" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">用于 wael.html “今日已补 xx 元” 总额叠加，每天零点后自动在该区间更新一次</div>
+          </div>
+          <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label" style="width: 110px;">开始时间：</label>
+            <div class="layui-input-inline" style="width: 220px;">
               <input type="text" id="gearStartTime" name="gearStartTime" placeholder="请选择或输入开始时间，如 02:30:15" class="layui-input" autocomplete="off">
             </div>
           </div>
           <div class="layui-form-item layui-form-text">
-            <label class="layui-form-label">结束时间：</label>
-            <div class="layui-input-inline">
+            <label class="layui-form-label" style="width: 110px;">结束时间：</label>
+            <div class="layui-input-inline" style="width: 220px;">
               <input type="text" id="gearEndTime" name="gearEndTime" placeholder="请选择或输入结束时间，如 19:55:30" class="layui-input" autocomplete="off">
             </div>
           </div>
@@ -343,6 +357,7 @@
         index: 'lib/index'
     }).use(['index', 'table', 'form', 'laydate', 'layer'], function () {
         var $ = layui.jquery,
+            admin = layui.admin,
             table = layui.table,
             form = layui.form,
             laydate = layui.laydate,
@@ -353,6 +368,78 @@
         function toNumber(value) {
             var num = parseFloat(value);
             return isNaN(num) ? 0 : num;
+        }
+
+        function isAdminLoginName(value) {
+            return $.trim(String(value == null ? '' : value)).toLowerCase() === 'admin';
+        }
+
+        function safeParseStorageJson(key) {
+            var raw = window.localStorage.getItem(key);
+            if (!raw) {
+                return null;
+            }
+            try {
+                return JSON.parse(raw);
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function extractLoginName(userData) {
+            if (!userData || typeof userData !== 'object') {
+                return '';
+            }
+            return $.trim(String(
+                userData.login_name
+                || userData.loginName
+                || userData.username
+                || userData.userName
+                || ''
+            ));
+        }
+
+        function setSubsidyConfigVisible(visible) {
+            $('#gear-config-btn').toggle(!!visible);
+        }
+
+        function getStoredLoginName() {
+            var user = safeParseStorageJson('user');
+            var loginName = extractLoginName(user);
+            if (loginName) {
+                return loginName;
+            }
+
+            var userInfo = safeParseStorageJson('userinfo');
+            return extractLoginName(userInfo);
+        }
+
+        function loadSubsidyConfigPermission() {
+            if (isAdminLoginName(getStoredLoginName())) {
+                setSubsidyConfigVisible(true);
+                return;
+            }
+
+            if (!admin || typeof admin.req !== 'function') {
+                setSubsidyConfigVisible(false);
+                return;
+            }
+
+            admin.req({
+                url: layui.setter.url + 'authc/getUserInfo',
+                type: 'get',
+                done: function (res) {
+                    var userData = res && res.data ? res.data : {};
+                    if (res && res.code === 0 && isAdminLoginName(extractLoginName(userData))) {
+                        setSubsidyConfigVisible(true);
+                        return;
+                    }
+                    setSubsidyConfigVisible(false);
+                },
+                error: function () {
+                    setSubsidyConfigVisible(false);
+                }
+            });
         }
 
         function formatMoney(value) {
@@ -370,6 +457,298 @@
                 return data[snakeKey];
             }
             return defaultValue;
+        }
+
+        function escapeHtmlAttr(value) {
+            return String(value == null ? '' : value)
+                .replace(/&/g, '&amp;')
+                .replace(/"/g, '&quot;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
+
+        function normalizeRuleValue(value) {
+            var text = $.trim(value == null ? '' : String(value)).replace(/元/g, '');
+            if (/^\d+(\.\d+)?$/.test(text)) {
+                return String(parseInt(text, 10));
+            }
+            return text;
+        }
+
+        function normalizeAmountRangeText(value) {
+            var text = $.trim(value == null ? '' : String(value)).replace(/元/g, '').replace(/\s+/g, '');
+            if (!text) {
+                return '';
+            }
+
+            var parts = text.split('-');
+            if (parts.length === 1) {
+                if (!/^\d+(\.\d+)?$/.test(parts[0])) {
+                    return text;
+                }
+                return String(parseFloat(parts[0]));
+            }
+
+            if (parts.length === 2 && /^\d+(\.\d+)?$/.test(parts[0]) && /^\d+(\.\d+)?$/.test(parts[1])) {
+                return String(parseFloat(parts[0])) + '-' + String(parseFloat(parts[1]));
+            }
+
+            return text;
+        }
+
+        function parseAmountRangeValue(value) {
+            var text = normalizeAmountRangeText(value);
+            if (!text) {
+                return null;
+            }
+
+            var parts = text.split('-');
+            if (parts.length === 1) {
+                var amount = parseFloat(parts[0]);
+                if (isNaN(amount) || amount < 0) {
+                    return null;
+                }
+                return {
+                    text: String(amount),
+                    min: amount,
+                    max: amount
+                };
+            }
+
+            if (parts.length === 2) {
+                var min = parseFloat(parts[0]);
+                var max = parseFloat(parts[1]);
+                if (isNaN(min) || isNaN(max) || min < 0 || max < 0 || max < min) {
+                    return null;
+                }
+                return {
+                    text: String(min) + '-' + String(max),
+                    min: min,
+                    max: max
+                };
+            }
+
+            return null;
+        }
+
+        function buildRuleData(rule) {
+            rule = rule || {};
+            return {
+                rechargeMin: normalizeRuleValue(getConfigField(rule, 'rechargeMin', 'recharge_min', '')),
+                rechargeMax: normalizeRuleValue(getConfigField(rule, 'rechargeMax', 'recharge_max', '')),
+                discountMin: normalizeRuleValue(getConfigField(rule, 'discountMin', 'discount_min', '')),
+                discountMax: normalizeRuleValue(getConfigField(rule, 'discountMax', 'discount_max', ''))
+            };
+        }
+
+        function parseLegacyRangeText(rangeText) {
+            var text = normalizeRuleValue(rangeText);
+            if (!text) {
+                return null;
+            }
+            var parts = text.split('-');
+            if (parts.length === 1) {
+                return {
+                    min: parts[0],
+                    max: parts[0]
+                };
+            }
+            return {
+                min: $.trim(parts[0] || ''),
+                max: $.trim(parts[1] || '')
+            };
+        }
+
+        function buildLegacyRuleList(configData) {
+            var rules = [];
+            var smallRange = parseLegacyRangeText(getConfigField(configData, 'min', 'min', '3-5'));
+            var largeRange = parseLegacyRangeText(getConfigField(configData, 'max', 'max', '6-10'));
+
+            if (smallRange) {
+                rules.push({
+                    rechargeMin: '20',
+                    rechargeMax: '99',
+                    discountMin: smallRange.min,
+                    discountMax: smallRange.max
+                });
+            }
+            if (largeRange) {
+                rules.push({
+                    rechargeMin: '100',
+                    rechargeMax: '499',
+                    discountMin: largeRange.min,
+                    discountMax: largeRange.max
+                });
+            }
+            rules.push({
+                rechargeMin: '500',
+                rechargeMax: '',
+                discountMin: '20',
+                discountMax: '20'
+            });
+            return rules;
+        }
+
+        function getSubsidyRuleList(configData) {
+            var rawRules = configData && $.isArray(configData.rules) ? configData.rules : [];
+            var rules = [];
+
+            $.each(rawRules, function (_, item) {
+                var rule = buildRuleData(item);
+                if (!rule.rechargeMin && !rule.rechargeMax && !rule.discountMin && !rule.discountMax) {
+                    return;
+                }
+                rules.push(rule);
+            });
+
+            if (!rules.length) {
+                rules = buildLegacyRuleList(configData || {});
+            }
+
+            if (!rules.length) {
+                rules.push(buildRuleData());
+            }
+            return rules;
+        }
+
+        function renderSubsidyRuleRows(rules) {
+            var list = $.isArray(rules) ? rules : [];
+            if (!list.length) {
+                list = [buildRuleData()];
+            }
+
+            var html = '';
+            $.each(list, function (index, item) {
+                var rule = buildRuleData(item);
+                html += '' +
+                    '<div class="subsidy-rule-row" style="margin-bottom: 10px; padding: 12px; border: 1px solid #e6e6e6; border-radius: 6px; background: #fafafa;">' +
+                        '<div style="font-size: 13px; color: #666; margin-bottom: 10px;">规则 ' + (index + 1) + '</div>' +
+                        '<div>' +
+                            '<input type="text" class="layui-input subsidy-rule-input subsidy-recharge-min" style="width: 120px; display: inline-block;" placeholder="充值最小值" value="' + escapeHtmlAttr(rule.rechargeMin) + '">' +
+                            '<span class="layui-form-mid" style="display: inline-block; float: none; padding: 9px 6px;">至</span>' +
+                            '<input type="text" class="layui-input subsidy-rule-input subsidy-recharge-max" style="width: 120px; display: inline-block;" placeholder="充值最大值" value="' + escapeHtmlAttr(rule.rechargeMax) + '">' +
+                            '<span class="layui-form-mid" style="display: inline-block; float: none; padding: 9px 12px;">补贴</span>' +
+                            '<input type="text" class="layui-input subsidy-rule-input subsidy-discount-min" style="width: 120px; display: inline-block;" placeholder="补贴最小值" value="' + escapeHtmlAttr(rule.discountMin) + '">' +
+                            '<span class="layui-form-mid" style="display: inline-block; float: none; padding: 9px 6px;">至</span>' +
+                            '<input type="text" class="layui-input subsidy-rule-input subsidy-discount-max" style="width: 120px; display: inline-block;" placeholder="补贴最大值" value="' + escapeHtmlAttr(rule.discountMax) + '">' +
+                            '<button type="button" class="layui-btn layui-btn-sm layui-btn-danger subsidy-rule-remove" style="margin-left: 12px;">删除</button>' +
+                        '</div>' +
+                    '</div>';
+            });
+
+            $('#subsidy-rule-list').html(html);
+        }
+
+        function parseRuleNumber(value) {
+            var text = normalizeRuleValue(value);
+            if (!text || !/^\d+$/.test(text)) {
+                return null;
+            }
+            var num = parseInt(text, 10);
+            return isNaN(num) ? null : num;
+        }
+
+        function getSubsidyRuleDrafts() {
+            var drafts = [];
+            $('#subsidy-rule-list').find('.subsidy-rule-row').each(function () {
+                drafts.push({
+                    rechargeMin: $(this).find('.subsidy-recharge-min').val(),
+                    rechargeMax: $(this).find('.subsidy-recharge-max').val(),
+                    discountMin: $(this).find('.subsidy-discount-min').val(),
+                    discountMax: $(this).find('.subsidy-discount-max').val()
+                });
+            });
+            return drafts;
+        }
+
+        function collectSubsidyRules() {
+            var rows = $('#subsidy-rule-list').find('.subsidy-rule-row');
+            var rules = [];
+            var invalidMessage = '';
+
+            rows.each(function (index) {
+                if (invalidMessage) {
+                    return false;
+                }
+
+                var rechargeMinText = normalizeRuleValue($(this).find('.subsidy-recharge-min').val());
+                var rechargeMaxText = normalizeRuleValue($(this).find('.subsidy-recharge-max').val());
+                var discountMinText = normalizeRuleValue($(this).find('.subsidy-discount-min').val());
+                var discountMaxText = normalizeRuleValue($(this).find('.subsidy-discount-max').val());
+
+                if (!rechargeMinText && !rechargeMaxText && !discountMinText && !discountMaxText) {
+                    return;
+                }
+
+                if (!rechargeMinText || !discountMinText || !discountMaxText) {
+                    invalidMessage = '请完整填写规则 ' + (index + 1) + ' 的金额区间';
+                    return false;
+                }
+
+                var rechargeMin = parseRuleNumber(rechargeMinText);
+                var rechargeMax = rechargeMaxText === '' ? null : parseRuleNumber(rechargeMaxText);
+                var discountMin = parseRuleNumber(discountMinText);
+                var discountMax = parseRuleNumber(discountMaxText);
+
+                if (rechargeMin === null || discountMin === null || discountMax === null || (rechargeMaxText !== '' && rechargeMax === null)) {
+                    invalidMessage = '规则 ' + (index + 1) + ' 存在无效金额';
+                    return false;
+                }
+                if (rechargeMin < 0 || (rechargeMax !== null && rechargeMax < 0) || discountMin < 0 || discountMax < 0) {
+                    invalidMessage = '规则 ' + (index + 1) + ' 金额不能小于 0';
+                    return false;
+                }
+                if (rechargeMax !== null && rechargeMax < rechargeMin) {
+                    invalidMessage = '规则 ' + (index + 1) + ' 的充值最大值不能小于最小值';
+                    return false;
+                }
+                if (discountMax < discountMin) {
+                    invalidMessage = '规则 ' + (index + 1) + ' 的补贴最大值不能小于最小值';
+                    return false;
+                }
+
+                rules.push({
+                    rechargeMin: rechargeMinText,
+                    rechargeMax: rechargeMaxText,
+                    discountMin: discountMinText,
+                    discountMax: discountMaxText
+                });
+            });
+
+            if (invalidMessage) {
+                layer.msg(invalidMessage);
+                return null;
+            }
+            if (!rules.length) {
+                layer.msg('请至少配置一条补贴规则');
+                return null;
+            }
+
+            rules.sort(function (a, b) {
+                return parseFloat(a.rechargeMin) - parseFloat(b.rechargeMin);
+            });
+
+            for (var i = 0; i < rules.length; i++) {
+                var currentMin = parseFloat(rules[i].rechargeMin);
+                var currentMax = rules[i].rechargeMax === '' ? null : parseFloat(rules[i].rechargeMax);
+                if (i > 0) {
+                    var previousMax = rules[i - 1].rechargeMax === '' ? null : parseFloat(rules[i - 1].rechargeMax);
+                    if (previousMax === null) {
+                        layer.msg('充值最大值留空的规则只能放在最后一条');
+                        return null;
+                    }
+                    if (currentMin <= previousMax) {
+                        layer.msg('充值区间不能重叠，请检查规则 ' + i + ' 和规则 ' + (i + 1));
+                        return null;
+                    }
+                }
+                if (currentMax === null && i !== rules.length - 1) {
+                    layer.msg('充值最大值留空的规则只能放在最后一条');
+                    return null;
+                }
+            }
+
+            return rules;
         }
 
         function padTimePart(value) {
@@ -578,34 +957,53 @@
 
         bindGearTimeInput('#gearStartTime');
         bindGearTimeInput('#gearEndTime');
+        $(document).on('blur', '.subsidy-rule-input, #firstRechargeMax', function () {
+            $(this).val(normalizeRuleValue($(this).val()));
+        });
+        $(document).on('blur', '#todayDiscountBaseAmount', function () {
+            $(this).val(normalizeAmountRangeText($(this).val()));
+        });
 
         $('#gear-config-btn').on('click', function() {
             //先加载配置信息
-            $.ajax({
-                url: layui.setter.url + 'ranking/getSubsidyRange',
-                method: 'get',
-                success: function(res) {
+            admin.req({
+                url: layui.setter.url + 'ranking/getSubsidyRangeAdmin',
+                type: 'get',
+                done: function(res) {
+                    if (!res || res.code !== 0) {
+                        layer.msg(res && res.msg ? res.msg : '无权限查看补贴配置');
+                        return;
+                    }
                     res = res || {};
                     var configData = res.data || {};
-                    console.log('金额配置:', res)
-                    //回填配置信息
-                    $('#gear1').val(getConfigField(configData, 'min', 'min', ''));
-                    $('#gear2').val(getConfigField(configData, 'max', 'max', ''));
+                    renderSubsidyRuleRows(getSubsidyRuleList(configData));
+                    $('#firstRechargeMax').val(getConfigField(configData, 'firstRechargeMax', 'first_recharge_max', ''));
+                    $('#todayDiscountBaseAmount').val(getConfigField(configData, 'todayDiscountBaseRange', 'today_discount_base_range', getConfigField(configData, 'todayDiscountBaseAmount', 'today_discount_base_amount', '0')));
                     $('#gearStartTime').val(buildConfigTimeText(configData, 'startTime', 'start_time', 'startHour', 'start_hour', 'startMinute', 'start_minute', '00:00:00'));
                     $('#gearEndTime').val(buildConfigTimeText(configData, 'endTime', 'end_time', 'endHour', 'end_hour', 'endMinute', 'end_minute', '23:59:59'));
                     
                     layer.open({
                         type: 1,
-                        area: ['420px', '420px'],
-                        title: '金额设置',
+                        area: ['960px', 'auto'],
+                        title: '补贴配置',
                         shadeClose: false,
                         content: $('#gear-config-form'),
                         btn: ['确定', '取消'],
                         yes: function(index, layero) {
-                            var gear1 = $('#gear1').val();
-                            var gear2 = $('#gear2').val();
+                            var rules = collectSubsidyRules();
                             var gearStartTime = parseTimeRangeValue($('#gearStartTime').val());
                             var gearEndTime = parseTimeRangeValue($('#gearEndTime').val());
+                            var firstRechargeMax = normalizeRuleValue($('#firstRechargeMax').val());
+                            var todayDiscountBaseRange = normalizeAmountRangeText($('#todayDiscountBaseAmount').val());
+                            var todayDiscountBaseRangeValue = parseAmountRangeValue(todayDiscountBaseRange);
+
+                            if (!rules) {
+                                return;
+                            }
+                            if (todayDiscountBaseRange !== '' && !todayDiscountBaseRangeValue) {
+                                layer.msg('今日补贴区间格式不正确');
+                                return;
+                            }
 
                             if (!gearStartTime) {
                                 layer.msg('请选择正确的开始时间');
@@ -621,33 +1019,28 @@
                             }
                             
                             //提交配置
-                            $.ajax({
+                            admin.req({
                                 url: layui.setter.url + 'ranking/updateSubsidyRange',
-                                method: 'post',
+                                type: 'post',
                                 contentType: 'application/json',
                                 data: JSON.stringify({
-                                    min: gear1 || 0,
-                                    max: gear2 || 0,
+                                    rules: rules,
+                                    firstRechargeMax: firstRechargeMax,
+                                    first_recharge_max: firstRechargeMax,
+                                    todayDiscountBaseRange: todayDiscountBaseRange,
+                                    today_discount_base_range: todayDiscountBaseRange,
                                     startTime: gearStartTime.text,
                                     endTime: gearEndTime.text,
                                     start_time: gearStartTime.text,
-                                    end_time: gearEndTime.text,
-                                    startHour: gearStartTime.hour,
-                                    endHour: gearEndTime.hour,
-                                    startMinute: gearStartTime.minute,
-                                    endMinute: gearEndTime.minute,
-                                    startSecond: gearStartTime.second,
-                                    endSecond: gearEndTime.second,
-                                    start_hour: gearStartTime.hour,
-                                    end_hour: gearEndTime.hour,
-                                    start_minute: gearStartTime.minute,
-                                    end_minute: gearEndTime.minute,
-                                    start_second: gearStartTime.second,
-                                    end_second: gearEndTime.second
+                                    end_time: gearEndTime.text
                                 }),
-                                success: function(res) {
-                                    layer.msg('金额设置已保存');
-                                    layer.close(index);
+                                done: function(res) {
+                                    if (res && res.code === 0) {
+                                        layer.msg('补贴配置已保存');
+                                        layer.close(index);
+                                        return;
+                                    }
+                                    layer.msg(res && res.msg ? res.msg : '补贴配置保存失败');
                                 }
                             });
                         },
@@ -657,6 +1050,23 @@
                     });
                 }
             });
+        });
+
+        $(document).on('click', '#add-subsidy-rule-btn', function() {
+            var rules = getSubsidyRuleDrafts();
+            rules.push(buildRuleData());
+            renderSubsidyRuleRows(rules);
+        });
+
+        $(document).on('click', '.subsidy-rule-remove', function() {
+            var rows = $('#subsidy-rule-list').find('.subsidy-rule-row');
+            if (rows.length <= 1) {
+                renderSubsidyRuleRows([buildRuleData()]);
+                return;
+            }
+            $(this).closest('.subsidy-rule-row').remove();
+            var currentRules = getSubsidyRuleDrafts();
+            renderSubsidyRuleRows(currentRules);
         });
 
         function openCashierRechargeForm(rowData) {
@@ -801,6 +1211,8 @@
                 {title: '操作', width: 110, align: 'center', toolbar: '#cashier-op-bar', fixed: 'right'}
             ]]
         });
+
+        loadSubsidyConfigPermission();
 
         table.on('tool(auth-table)', function (obj) {
             if (obj.event === 'orderRecharge') {

@@ -572,7 +572,8 @@
     </div>
     <script>
         var hongbaoLayerIndex = null;
-        var defaultSubsidyMaxText = '10元';
+        var defaultPerOrderSubsidyMaxText = '10元';
+        var defaultFirstRechargeSubsidyMaxText = '10元';
 
         function closeHongbaoPopup() {
             if (hongbaoLayerIndex !== null) {
@@ -581,7 +582,7 @@
             }
         }
 
-        function parseSubsidyMaxAmount(maxValue) {
+        function parseSubsidyAmountValue(maxValue) {
             if (maxValue === null || maxValue === undefined || maxValue === '') {
                 return '';
             }
@@ -600,15 +601,16 @@
             return Math.max.apply(null, numbers);
         }
 
-        function formatSubsidyMaxText(maxValue) {
-            var amount = parseSubsidyMaxAmount(maxValue);
-            return amount !== '' ? amount + '元' : defaultSubsidyMaxText;
+        function formatSubsidyAmountText(maxValue, defaultText) {
+            var amount = parseSubsidyAmountValue(maxValue);
+            return amount !== '' ? amount + '元' : defaultText;
         }
 
-        function updateSubsidyDisplay(maxValue) {
-            var maxText = formatSubsidyMaxText(maxValue);
-            $('#bannerText').text('上5CQ充值所有发布站游戏，每笔最高减免' + maxText);
-            $('.hongbao-max-amount').text(maxText);
+        function updateSubsidyDisplay(displayMaxValue, firstRechargeMaxValue) {
+            var bannerText = formatSubsidyAmountText(displayMaxValue, defaultPerOrderSubsidyMaxText);
+            var firstRechargeText = formatSubsidyAmountText(firstRechargeMaxValue, bannerText || defaultFirstRechargeSubsidyMaxText);
+            $('#bannerText').text('上5CQ充值所有发布站游戏，每笔最高减免' + bannerText);
+            $('.hongbao-max-amount').text(firstRechargeText);
         }
 
         function fetchSubsidyRange() {
@@ -617,7 +619,7 @@
                 method: 'get',
                 success: function (res) {
                     if (res && res.code === 0 && res.data) {
-                        updateSubsidyDisplay(res.data.max);
+                        updateSubsidyDisplay(res.data.display_max || res.data.max, res.data.first_recharge_max || res.data.display_max || res.data.max);
                     }
                 }
             });
@@ -745,7 +747,7 @@
             }
 
             $.ajax({
-                url: 'http://localhost:8086/server/cashier/checkTodayDiscount',
+                url: baseUrl + 'cashier/checkTodayDiscount',
                 type: 'GET',
                 dataType: 'json',
                 data: {
