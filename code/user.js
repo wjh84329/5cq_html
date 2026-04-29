@@ -4,9 +4,6 @@ var coinRecord7 = null; // 累计签到7天奖励记录
 var coinRecord14 = null; // 累计签到14天奖励记录
 var coinRecord21 = null; // 累计签到21天奖励记录
 var coinRecord28 = null; // 累计签到28天奖励记录
-var hzRequestUrl = 'https://hz.5cq.net/cq/'; // 替换为你的接口地址
-//var hzRequestUrl = 'http://localhost:8000/cq/'; // 替换为你的接口地址
-//var hzRequestUrl = 'http://192.168.1.89:8000/cq/' // 替换为你的接口地址
 
 function getUserInfo() {
     var token = $.cookie('token');
@@ -56,43 +53,76 @@ function checkTimeCountMinites(){
         }
 
         if (fs == '') break;
-        
-        // 使用闭包保存当前循环的minite值
-        (function(currentMinite) {
-            $.ajax({
-                url: hzRequestUrl + 'user/coin_info_today', // 按你实际接口
-                type: 'GET',
-                cache: false,
-                headers: { 
-                    boxVersion: '1.0.0', 
-                    'token':$.cookie('hzusertoken')
-                },
-                dataType: 'json',
-                data: { open_id: customer.openid, fs: fs, _t: Date.now() },
-                success: function (response) {
-                    console.log(response);
-                    console.log("minites is " + currentMinite);
-                    // if (response.code === 200 && response.data == null) {
-                    //     $('#'+currentMinite+'minites').css('filter', 'grayscale(0%)');
-                    //     console.log('签到'+currentMinite+'分钟奖励已领取');
-                    // } else {
-                    //     $('#'+currentMinite+'minites').css('filter', 'grayscale(100%)');
-                    // }
-                    $('#'+currentMinite+'minites').css('filter', 'grayscale(0%)');
-                },
-                error: function (xhr) { reject(xhr); }
-            });
-        })(minite);
+        syncOnlineRewardStatus(minite, fs, customer.openid);
     }
 }
 
+function getUserExpDisplayValue(data) {
+    if (!data || typeof data !== 'object') {
+        return '';
+    }
+
+    if (data.total_yxsc != null && String(data.total_yxsc) !== '') {
+        return data.total_yxsc;
+    }
+
+    if (data.yxsc != null && String(data.yxsc) !== '') {
+        return data.yxsc;
+    }
+
+    return '';
+}
+
+function hasCompleteHomeUserInfo(data) {
+    if (!data || typeof data !== 'object') {
+        return false;
+    }
+
+    if (data.id == null || String(data.id) === '') {
+        return false;
+    }
+
+    if (data.lv == null || String(data.lv) === '') {
+        return false;
+    }
+
+    return getUserExpDisplayValue(data) !== '';
+}
+
+function shouldDeferHomeUserInfoRender(data) {
+    return false;
+}
+
 function updatePageByUserInfo(data){
+    if (!data) {
+        return;
+    }
+
+    if ((data.total_yxsc == null || String(data.total_yxsc) === '') && data.yxsc != null && String(data.yxsc) !== '') {
+        data.total_yxsc = data.yxsc;
+    }
+
+    hzUserObj = data;
+    if (data.time_count != null) {
+        time_count = Number(data.time_count) || 0;
+    }
+    if (data.time_count_date != null) {
+        time_count_date = Number(data.time_count_date) || 0;
+    }
+    if (typeof syncHzUserSessionCache === 'function') {
+        syncHzUserSessionCache(data, {
+            levelInfoList: levelInfoList,
+            time_count: time_count,
+            time_count_date: time_count_date
+        });
+    }
+
     checkUserPhoneAndSfz();
     $('.phs-userinfo .phs-name').text(data.name);
     $('.headimg').attr('src', data.avatar);
     $('.phs-meta .lv').text(data.lv);
     $('.phs-meta .userid').text(data.id);
-    $('.phs-meta .yxsc').text(data.total_yxsc);
+    $('.phs-meta .yxsc').text(getUserExpDisplayValue(data));
     var coin_num_ = data.coin_num.replace(/\.\d+$/, '');
     $('.coin_num').text(coin_num_);
     $('.fuli').text(data.waelfare.replace(/\.\d+$/, ''));
@@ -112,105 +142,55 @@ function updatePageByUserInfo(data){
     
 }
 
-//获取盒子个人信息 NO USE
 function getHzUser() {
-    var customer = getUser();
-    $.ajax({
-        url: hzRequestUrl + 'user/get_user_info_h52',
-        type: 'GET',
-        headers: {
-            boxVersion: '1.0.0',
-            token: $.cookie('hzusertoken')
-        },
-        dataType: 'json',
-        data: {
-            open_id: customer.openid
-        },
-        success: function (response) {
-            if (response.code === 200) {
-                renewLoginCookies();
-                var data = response.data;
-                hzUserObj = data;
-                checkUserPhoneAndSfz();
-                $('.phs-userinfo .phs-name').text(data.name);
-                $('.headimg').attr('src', data.avatar);
-                $('.phs-meta .lv').text(data.lv);
-                $('.phs-meta .yxsc').text(data.yxsc);
-                $('.phs-meta .userid').text(data.id);
-                var coin_num_ = data.coin_num.replace(/\.\d+$/, '');
-                $('.coin_num').text(coin_num_);
-                $('.fuli').text(data.waelfare.replace(/\.\d+$/, ''));
-                $('.money').text(data.money.replace(/\.\d+$/, ''));
-                $('#bagGold').text('金币:' + coin_num_);
-                $('#bagMoney').text('元宝:' + data.money.replace(/\.\d+$/, ''));
-                $.cookie('up_id',data.id,{ path: '/' });
-
-                if (data.phone === null || data.phone === '') {
-                    // 用户未绑定手机号
-                    $('.phone-btn').text('去绑定');
-                    $('.phone-btn').addClass('danger');
-                    $('.phone-btn').off('click').on('click', function () {
-                        // ✅ 优先用已有实现（你 user.html 里有 bindUser()）
-                        if (typeof bindUser === 'function') {
-                            bindUser();
-                            return;
-                        }
-
-                        // ✅ 其次如果你真有 openPhoneBindPopup，就调用它
-                        if (typeof openPhoneBindPopup === 'function') {
-                            openPhoneBindPopup();
-                            return;
-                        }
-
-                        // ✅ 最后兜底：手写弹窗（保留你原逻辑）
-                        var html = '';
-                        html += '<div class="tc login">';
-                        html += '<form id="formBindUser">';
-                        html += '<p><span>手机号：</span><input type="text" name="phoneUser" placeholder="手机号" maxlength="11" required></p>';
-                        html += '<p><span>短信码：</span><input class="smscode" type="text" name="smsCodeUser" placeholder="手机验证码" maxlength="6" required>';
-                        html += '<button type="button" id="sendCodeUser">发送验证</button></p>';
-                        html += '<button type="button" id="bindUser" onclick="bindUserPhone()">绑定</button>';
-                        html += '</form>';
-                        html += '</div>';
-
-                        layer.open({
-                            type: 1,
-                            title: "手机号绑定",
-                            resize: !1,
-                            move: !1,
-                            zIndex: layer.zIndex,
-                            area: ["460px", "250px"],
-                            content: html,
-                            success: function (layero) {
-                                layer.setTop(layero);
-                            },
-                            end: function () {
-                                // ✅ 不要直接 clearInterval(interval)，避免 interval 未定义或清错
-                                if (window.__bindPhoneIntervalId) {
-                                    window.clearInterval(window.__bindPhoneIntervalId);
-                                    window.__bindPhoneIntervalId = null;
-                                }
-                            }
-                        });
-                    });
-                } else {
-                    // $('.phs-meta .phone').text(data.phone);
-                    $('.phone-btn').text('已完成');
-                    $('.phone-btn').removeClass('danger');
-                    $('.phone-btn').off('click');
-                }
-                // ✅ 把当前等级传进去做匹配
-                getLevelList(data.lv);
-            } else {
-                console.error('Failed to fetch customer info:', response.message);
-                intervalId && window.clearInterval(intervalId);
-            }
-        },
-        error: function (error) {
-            console.error('Error fetching customer info:', error);
-            intervalId && window.clearInterval(intervalId);
+    if (hzUserObj && typeof updatePageByUserInfo === 'function') {
+        updatePageByUserInfo(hzUserObj);
+    } else if (typeof hydrateHzUserSessionFromCookie === 'function') {
+        var cachedUser = hydrateHzUserSessionFromCookie();
+        if (cachedUser && typeof updatePageByUserInfo === 'function') {
+            updatePageByUserInfo(cachedUser);
         }
-    });
+    }
+
+    if (typeof requestWsUserInfoRefresh === 'function') {
+        requestWsUserInfoRefresh();
+    }
+}
+
+function isUserReportResponseOk(response) {
+    if (!response) {
+        return false;
+    }
+
+    var code = String(response.code);
+    return code === '0' || code === '1' || code === '2' || code === '200';
+}
+
+function applyUserReportResponse(response) {
+    if (!isUserReportResponseOk(response)) {
+        console.error('user_report unexpected code:', response && response.code, response);
+        return false;
+    }
+
+    var data = response.data || {};
+    var msg = response.msg || '';
+
+    $('.reportNum').text(data.day || '0');
+
+    if (__todaySignedOverride) {
+        if (!data.jt) {
+            data.jt = new Date().toISOString().replace('T', ' ').slice(0, 19);
+            var d = Number(data.day);
+            if (!Number.isFinite(d)) d = 0;
+            data.day = d + 1;
+            msg = '昨天已签到,当天已签到';
+        }
+        __todaySignedOverride = false;
+    }
+
+    renderPhsDays(data, msg);
+    $("#0minites").css('filter', 'grayscale(0%)');
+    return true;
 }
 //获取签到信息
 function getSignInfo() {
@@ -218,61 +198,27 @@ function getSignInfo() {
     if (!token) return;
 
     var customer = getUser();
+    if (!customer || !customer.openid) return;
 
-    $.ajax({
-        url: hzRequestUrl + 'user/user_report',
-        type: 'GET',
-        cache: false,
-        headers: {
-            boxVersion: '1.0.0',
-            token: token
-        },
-        dataType: 'json',
-        data: {
-            open_id: customer.openid,
-            _t: Date.now()
-        },
-        success: function (response) {
+    var cachedResponse = typeof getUserReportCachedResponse === 'function'
+        ? getUserReportCachedResponse(customer.openid)
+        : null;
+    if (cachedResponse) {
+        applyUserReportResponse(cachedResponse);
+    }
+
+    if (typeof requestWsUserReport !== 'function') {
+        return;
+    }
+
+    requestWsUserReport(customer.openid)
+        .then(function (response) {
             if (!response) return;
-
-            // ✅ 兼容后端：0/1/2/200 都是“正常返回”
-            var code = String(response.code);
-            var ok = (code === '0' || code === '1' || code === '2' || code === '200');
-            if (!ok) {
-                console.error('user_report unexpected code:', response.code, response);
-                return;
-            }
-
-            var data = response.data || {};
-            var msg = response.msg || '';
-
-            $('.reportNum').text(data.day || '0');
-
-            // ✅ 如果刚刚签到成功但报表接口还没体现出来：强制本次渲染为“今天已签”
-            if (__todaySignedOverride) {
-                if (!data.jt) {
-                    data.jt = new Date().toISOString().replace('T', ' ').slice(0, 19);
-                    var d = Number(data.day);
-                    if (!Number.isFinite(d)) d = 0;
-                    data.day = d + 1; // day 是“当月签到天数”，不要对 7 取 min
-                    msg = '昨天已签到,当天已签到';
-                }
-                __todaySignedOverride = false;
-            }
-
-            renderPhsDays(data, msg);
-
-            // if (response.data.jt) {
-            //     $("#0minites").css('filter', 'grayscale(100%)');
-            // } else {
-            //     $("#0minites").css('filter', 'grayscale(0%)');
-            // }
-            $("#0minites").css('filter', 'grayscale(0%)');
-        },
-        error: function (xhr) {
-            console.error('user_report error:', xhr);
-        }
-    });
+            applyUserReportResponse(response);
+        })
+        .catch(function (err) {
+            console.error('user_report error:', err);
+        });
 }
 
 // 防重复提交
@@ -471,6 +417,13 @@ function addCoin(type, callback, callback2) {
         success: function (response) {
             console.log('Response from addCoin:', response);
             if (response && String(response.code) === '200') {
+                var rewardFs = getOnlineRewardFsByType(type);
+                if (rewardFs && typeof writeCoinInfoTodayCache === 'function') {
+                    writeCoinInfoTodayCache(customer.openid, rewardFs, response.coinInfo || {
+                        open_id: customer.openid,
+                        fs: rewardFs
+                    });
+                }
                 uiMsg(response.msg, { icon: 1 });
                 getHzUser();
                 if (typeof callback === 'function') callback();
@@ -526,26 +479,28 @@ function markTodaySignedInDom() {
 //查询单条金币记录
 function getCoinRecord(fs) {
     return new Promise(function (resolve, reject) {
-        var token = $.cookie('hzusertoken');
-        if (!token) return reject(new Error('no token'));
-
         var customer = getUser();
-        $.ajax({
-            url: hzRequestUrl + 'user/coin_info_today', // 按你实际接口
-            type: 'GET',
-            cache: false,
-            headers: { 
-                boxVersion: '1.0.0', 
-                'token':$.cookie('hzusertoken')
-            },
-            dataType: 'json',
-            data: { open_id: customer.openid, fs: fs, _t: Date.now() },
-            success: function (response) {
-                if (String(response.code) === '200') return resolve(response.data);
-                reject(new Error(response.message || response.msg || 'getCoinRecord failed'));
-            },
-            error: function (xhr) { reject(xhr); }
-        });
+        if (!customer || !customer.openid) return reject(new Error('no open_id'));
+
+        var cachedRecord = typeof getCoinInfoTodayCachedData === 'function'
+            ? getCoinInfoTodayCachedData(customer.openid, fs)
+            : null;
+
+        if (isCoinInfoTodayClaimed(cachedRecord)) {
+            return resolve(cachedRecord);
+        }
+
+        if (typeof requestWsCoinInfoToday !== 'function') {
+            return resolve(cachedRecord || null);
+        }
+
+        requestWsCoinInfoToday(fs, customer.openid)
+            .then(function (record) {
+                resolve(record);
+            })
+            .catch(function (err) {
+                reject(err instanceof Error ? err : new Error('getCoinRecord failed'));
+            });
     });
 }
 //获取用户等级列表
@@ -582,6 +537,55 @@ var ONLINE_REWARD_MAP = {
     120: { type: 44, fs: '网页铂金宝箱' },
     240: { type: 45, fs: '网页钻石宝箱' }
 };
+
+function getOnlineRewardFsByType(type) {
+    var targetType = Number(type);
+    var keys = Object.keys(ONLINE_REWARD_MAP);
+
+    for (var i = 0; i < keys.length; i++) {
+        var cfg = ONLINE_REWARD_MAP[keys[i]];
+        if (cfg && Number(cfg.type) === targetType) {
+            return cfg.fs;
+        }
+    }
+
+    return '';
+}
+
+function isCoinInfoTodayClaimed(record) {
+    return !(record == null || (Array.isArray(record) && record.length === 0) || record === '');
+}
+
+function syncOnlineRewardStatus(minute, fs, openId) {
+    var $img = $('#' + minute + 'minites');
+    var $col = $img.closest('.phs-chestcol');
+    var cachedRecord = typeof getCoinInfoTodayCachedData === 'function'
+        ? getCoinInfoTodayCachedData(openId, fs)
+        : null;
+
+    $img.css('filter', 'grayscale(0%)');
+
+    if (isCoinInfoTodayClaimed(cachedRecord)) {
+        $col.attr('data-claimed', '1').addClass('claimed');
+    }
+
+    if (typeof requestWsCoinInfoToday !== 'function') {
+        return;
+    }
+
+    requestWsCoinInfoToday(fs, openId)
+        .then(function (record) {
+            $img.css('filter', 'grayscale(0%)');
+            if (isCoinInfoTodayClaimed(record)) {
+                $col.attr('data-claimed', '1').addClass('claimed');
+            } else {
+                $col.removeAttr('data-claimed').removeClass('claimed');
+            }
+        })
+        .catch(function (err) {
+            console.error('syncOnlineRewardStatus failed:', err);
+        });
+}
 
 function parseMinuteFromText(text) {
     text = (text || '').trim();
@@ -664,31 +668,29 @@ $(document).off('click.onlineReward').on('click.onlineReward', '.phs-chests .phs
 // 拉取签到报表（Promise）
 function fetchUserReport() {
     return new Promise(function (resolve, reject) {
-        var token = $.cookie('hzusertoken');
-        if (!token) return reject(new Error('no token'));
-
         var customer = getUser();
-        console.log('Fetching user report for open_id:', customer.openid);
-        $.ajax({
-            url: hzRequestUrl + 'user/user_report',
-            type: 'GET',
-            cache: false,
-            headers: {
-                boxVersion: '1.0.0',
-                'token':$.cookie('hzusertoken')
-            },
-            dataType: 'json',
-            data: { open_id: customer.openid, _t: Date.now() },
-            success: function (res) {
-                // 你的后端：code 0/1/2/200 都算正常
-                var code = res ? String(res.code) : '';
-                if (code === '0' || code === '1' || code === '2' || code === '200') {
+        if (!customer || !customer.openid) return reject(new Error('no open_id'));
+
+        if (typeof requestWsUserReport !== 'function') {
+            var cachedResponse = typeof getUserReportCachedResponse === 'function'
+                ? getUserReportCachedResponse(customer.openid)
+                : null;
+            if (cachedResponse) {
+                return resolve(cachedResponse);
+            }
+            return reject(new Error('user_report ws unavailable'));
+        }
+
+        requestWsUserReport(customer.openid)
+            .then(function (res) {
+                if (isUserReportResponseOk(res)) {
                     return resolve(res);
                 }
                 reject(new Error((res && (res.msg || res.message)) || 'user_report failed'));
-            },
-            error: function (xhr) { reject(xhr); }
-        });
+            })
+            .catch(function (err) {
+                reject(err instanceof Error ? err : new Error('user_report failed'));
+            });
     });
 }
 
@@ -937,28 +939,6 @@ function updateProgressBar(minite) {
             if (typeof myLogin === 'function') myLogin();
             return;
         }
-        /*
-        $.ajax({
-            url: hzRequestUrl + 'user/coin_info_today', // 按你实际接口
-            type: 'GET',
-            cache: false,
-            headers: { 
-                boxVersion: '1.0.0', 
-                'token':$.cookie('hzusertoken')
-            },
-            dataType: 'json',
-            data: { open_id: customer.openid, fs: fs, _t: Date.now() },
-            success: function (response) {
-                // if (String(response.code) === '200' && response.data == null) {
-                //     $('#'+minite+'minites').css('filter', 'grayscale(0%)');
-                // } else {
-                //     $('#'+minite+'minites').css('filter', 'grayscale(100%)');
-                // }
-                $('#'+minite+'minites').css('filter', 'grayscale(0%)');
-            },
-            error: function (xhr) { reject(xhr); }
-        });
-        */
     }
 
     if (minite <= 60)

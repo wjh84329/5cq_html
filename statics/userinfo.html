@@ -367,7 +367,7 @@
 
       //获取签到信息
       $.ajax({
-        url: 'https://hz.5cq.net/cq/user/user_report',
+        url: 'http://192.168.177.129:8000/cq/user/user_report',
         // processData: false,
         // contentType: false,
         type: 'POST',
@@ -441,7 +441,7 @@
               // formdate1.append("open_id", customer.openid);
               // formdate1.append("type", 1);
               $.ajax({
-                url: 'https://hz.5cq.net/cq/user/add_report',
+                url: 'http://192.168.177.129:8000/cq/user/add_report',
                 dataType: 'json',
                 type: 'POST',
                 data: {
@@ -458,7 +458,7 @@
                   // console.log(result.msg)
                   if (result.code == 200) {
                     $.ajax({
-                      url: 'https://hz.5cq.net/cq/user/setCoin',
+                      url: 'http://192.168.177.129:8000/cq/user/setCoin',
                       dataType: 'json',
                       type: 'POST',
                       data: {
@@ -484,7 +484,7 @@
                               layer.closeAll();
                           });*/
                           $.ajax({
-                            url: 'https://hz.5cq.net/cq/user/user_report',
+                            url: 'http://192.168.177.129:8000/cq/user/user_report',
                             // processData: false,
                             // contentType: false,
                             type: 'POST',
@@ -570,56 +570,35 @@
 
     //打开联系我们
     function contactus() {
-      if ($("#contactUsModal").length === 0) {
-        var html = `
-          <div id="contactUsModal">
-            <span class="contactus-close-btn" onclick="closecontactus()">×</span>
-            <div class="contactus-title">联系我们</div>
-            <div class="contactus-flex">
-              <table class="contactus-table">
-                <tr>
-                 <td>黑名单投诉举报</td>
-                  <td style="display: flex;align-items: center;">
-                    <a class="icon-qq" href="http://wpa.qq.com/msgrd?v=3&uin=1839728&site=qq&menu=yes" target="_blank">
-                    </a>
-                    <span style="margin-left:10px;">QQ：1839728</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td>5CQ站长建议反馈</td>
-                  <td style="display: flex;align-items: center;">
-                    <a class="icon-qq" href="http://wpa.qq.com/msgrd?v=3&uin=3067585&site=qq&menu=yes" target="_blank">
-                      
-                    </a>
-                    <span style="margin-left:10px;">QQ：3067585</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td>微信</td>
-                  <td style="color:red;font-weight:bold;">扫码加微信&gt;&gt;&gt;</td>
-                </tr>
-              </table>
-              <div class="contactus-qrcode">
-                <span class="icon-wx"></span><br/>
-              </div>
-            </div>
-            <div class="contactus-agent" style="display: flex;justify-content: center;">
-              <span style="color:blue;">广告推广请联系代理</span>
-            </div>
-            <div class="contactus-warning">
-              <span style="color:red;font-weight:bold;display: flex;justify-content: center;">
-                谨防骗子：如有投诉建议，请联系站长
-              </span>
-            </div>
-          </div>
-        `;
-        $("body").append(html);
-        $("#contactUsModal").fadeIn();
-      } else {
-        $("#contactUsModal").fadeIn();
+      if (typeof layer === "undefined" || !layer || typeof layer.open !== "function") {
+        window.open("/qq.html", "_blank");
+        return;
       }
+
+      if (window.contactUsLayerIndex) {
+        layer.close(window.contactUsLayerIndex);
+        window.contactUsLayerIndex = null;
+      }
+
+      window.contactUsLayerIndex = layer.open({
+        type: 2,
+        title: "联系我们",
+        area: ["780px", "460px"],
+        fixed: false,
+        maxmin: false,
+        shadeClose: true,
+        content: "/qq.html",
+        end: function () {
+          window.contactUsLayerIndex = null;
+        }
+      });
     }
     function closecontactus() {
+      if (window.contactUsLayerIndex && typeof layer !== "undefined" && layer && typeof layer.close === "function") {
+        layer.close(window.contactUsLayerIndex);
+        window.contactUsLayerIndex = null;
+        return;
+      }
       $("#contactUsModal").fadeOut();
     }
 
@@ -639,7 +618,7 @@
       loginOpening = true;
       var uuid = getUUID();
       admin.req({
-        url: 'https://hz.5cq.net/cq/user/qrcode',
+        url: 'http://192.168.177.129:8000/cq/user/qrcode',
         processData: false,
         contentType: false,
         data: {},
@@ -668,7 +647,7 @@
                     formdate.append("up_id", up_id);
                   }
                   $.ajax({
-                    url: 'https://hz.5cq.net/cq/user/get_user_info',
+                    url: 'http://192.168.177.129:8000/cq/user/get_user_info',
                     type: 'POST',
                     processData: false, // 告诉jQuery不要去处理发送的数据
                     contentType: false, // 告诉jQuery不要去设置Content-Type请求头
@@ -716,14 +695,60 @@
                                 expires: expireDate,
                                 path: '/'
                               });
-                              result.customer.phone = res.data.phone || '';
+                              var hzUserData = $.extend({}, res.data || {});
+                              result.customer.phone = hzUserData.phone || '';
+                              if (hzUserData.open_id) {
+                                result.customer.openid = hzUserData.open_id;
+                                result.customer.open_id = hzUserData.open_id;
+                              }
                               $.cookie('user', JSON.stringify(result.customer), { expires: expireDate, path: '/' });
-                              $.cookie('userinfo', JSON.stringify(result.customer), { expires: expireDate, path: '/' });
                               $.cookie('token', result.token, { expires: expireDate, path: '/' });
-                              window.location.reload();
-                              // 当前页面
-                              var currentUrl = window.location.href;
-                              window.location.href = '/code/user.html';
+
+                              function finalizeLoginRedirect(finalUserData) {
+                                var mergedUserData = $.extend({}, hzUserData, finalUserData || {});
+
+                                $.cookie('userinfo', JSON.stringify(mergedUserData), { expires: expireDate, path: '/' });
+                                $.cookie('userInfo', JSON.stringify(mergedUserData), { expires: expireDate, path: '/' });
+
+                                if (typeof syncHzUserSessionCache === 'function') {
+                                  syncHzUserSessionCache(mergedUserData, {
+                                    data: mergedUserData,
+                                    open_id: mergedUserData.open_id || result.customer.openid || result.customer.open_id || '',
+                                    openid: mergedUserData.open_id || result.customer.openid || result.customer.open_id || ''
+                                  });
+                                }
+                                if (typeof clearPendingWsUserInfoHydration === 'function') {
+                                  clearPendingWsUserInfoHydration();
+                                }
+                                try {
+                                  window.sessionStorage.removeItem('hz_person_home_snapshot_v2');
+                                } catch (e) {}
+                                window.location.replace('/code/user.html?login=1&_ts=' + Date.now());
+                              }
+
+                              $.ajax({
+                                url: 'http://192.168.177.129:8000/cq/user/get_user_info_h5',
+                                type: 'GET',
+                                dataType: 'json',
+                                headers: {
+                                  boxVersion: '1.0.0',
+                                  token: result.token
+                                },
+                                data: {
+                                  open_id: hzUserData.open_id || result.customer.openid || result.customer.open_id || ''
+                                },
+                                success: function (userInfoRes) {
+                                  if (userInfoRes && Number(userInfoRes.code) === 200 && userInfoRes.data) {
+                                    finalizeLoginRedirect(userInfoRes.data);
+                                    return;
+                                  }
+                                  finalizeLoginRedirect(hzUserData);
+                                },
+                                error: function () {
+                                  finalizeLoginRedirect(hzUserData);
+                                }
+                              });
+                              return;
                             }
                           }
                         })
@@ -758,7 +783,7 @@
 
     function fetchAgreementContent(type, callback) {
       $.ajax({
-        url: 'https://hz.5cq.net/cq/' + 'business/h5config',
+        url: 'http://192.168.177.129:8000/cq/' + 'business/h5config',
         type: 'GET',
         dataType: 'json',
         data: {
@@ -893,7 +918,12 @@
 
     //关闭联系我们
     function closecontactus() {
-      $("#contactUsModal").fadeToggle();
+      if (window.contactUsLayerIndex && typeof layer !== "undefined" && layer && typeof layer.close === "function") {
+        layer.close(window.contactUsLayerIndex);
+        window.contactUsLayerIndex = null;
+      } else {
+        $("#contactUsModal").fadeToggle();
+      }
       $("#zzcDiv").css("display", "none");
     }
 

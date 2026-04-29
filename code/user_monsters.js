@@ -11,6 +11,205 @@ var monsters = [];
 var bagItemsData = [];
 // 选中物品数组
 var selectedItemsArray = [];
+var latestKillBagPayload = null;
+var pendingKillBagPayload = null;
+var currentKillDrawRequest = null;
+var isKillRewardVisible = false;
+var spinMinPendingDuration = 900;
+
+function generateKillDrawRequestId() {
+  return 'kill_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+}
+
+function shouldDelayKillBagUpdate() {
+  return !!currentKillDrawRequest || !!isKillRewardVisible;
+}
+
+function flushPendingKillBagPayload() {
+  if (shouldDelayKillBagUpdate() || !pendingKillBagPayload) {
+    return false;
+  }
+
+  var payload = pendingKillBagPayload;
+  pendingKillBagPayload = null;
+  applyKillBagPayload(payload);
+  return true;
+}
+
+function getKillDrawTargetAngle(monsterId, idIndexMap) {
+  var monsterIdToAngle = {
+    1: 0,
+    2: 45,
+    4: 90,
+    7: 135,
+    6: 180,
+    5: 225,
+    3: 270,
+    0: 315
+  };
+  return monsterIdToAngle[idIndexMap[monsterId]] || 0;
+}
+
+function resetKillDrawRequestState() {
+  if (currentKillDrawRequest && currentKillDrawRequest.readyTimer) {
+    clearTimeout(currentKillDrawRequest.readyTimer);
+  }
+  currentKillDrawRequest = null;
+}
+
+function failKillDrawRequest(message) {
+  var request = currentKillDrawRequest;
+  if (request && request.pointer && request.pointer.length) {
+    resetPointerSpin(request.pointer);
+  }
+
+  isSpinning = false;
+  resetKillDrawRequestState();
+  flushPendingKillBagPayload();
+
+  layui.use(['layer'], function() {
+    layui.layer.msg(message || '抽奖失败');
+  });
+}
+
+function applyKillBagPayload(data) {
+  if (!data) return;
+
+  latestKillBagPayload = data;
+
+  var items = data.list || data.data || [];
+  var redItems = data.red_list || [];
+  bagItemsData = items;
+  $('.bag-slot').empty();
+
+  var currentSlotIndex = 0;
+  for (var i = 0; i < items.length; i++) {
+    var item = items[i];
+    var slot = $('.bag-slot').eq(currentSlotIndex);
+    if (slot.length && item.usable_num > 0) {
+      var itemHtml = `
+        <div class="bag-item" data-id="${item.id}" data-item-id="${item.item_id}" data-exp="${item.exp || 0}" data-mark="${item.mark || ''}" data-num="${item.usable_num}" data-title="${item.item_title || '未知物品'}" data-value-min="${item.value_min || 0}" data-value-max="${item.value_max || 0}" style="width: 100%; height: 100%; position: relative; cursor: pointer;">
+          <img src="${item.item_images || '../statics/images/01.png'}" style="width: 100%; height: 100%;">
+          <div style="position: absolute; bottom: 0; right: 0; background: rgba(0, 0, 0, 0.5); color: #fff; font-size: 10px; padding: 1px 3px;">${item.usable_num}</div>
+        </div>
+      `;
+      slot.html(itemHtml);
+      currentSlotIndex++;
+    }
+  }
+
+  for (var j = 0; j < redItems.length; j++) {
+    var redItem = redItems[j];
+    var redSlot = $('.bag-slot').eq(currentSlotIndex);
+    if (redSlot.length) {
+      var redHtml = `
+        <div class="bag-item red-bag" data-id="${redItem.id}" data-red="true" data-amount="${redItem.amount || 0}" style="width: 100%; height: 100%; position: relative; cursor: default;">
+          <img src="${redItem.red_image || '../statics/images/01.png'}" style="width: 100%; height: 100%;">
+        </div>
+      `;
+      redSlot.html(redHtml);
+      currentSlotIndex++;
+    }
+  }
+
+  bindBagItemEvents();
+}
+
+function processKillDrawResult(payload) {
+  if (!payload || !payload.monster || !currentKillDrawRequest) {
+    return false;
+  }
+
+  var requestId = String(payload.request_id || '');
+  if (requestId && currentKillDrawRequest.requestId && requestId !== currentKillDrawRequest.requestId) {
+    return false;
+  }
+
+  if (currentKillDrawRequest.resolved) {
+    return true;
+  }
+
+  var elapsedMs = Date.now() - (currentKillDrawRequest.startedAt || 0);
+  var waitMs = spinMinPendingDuration - elapsedMs;
+  if (waitMs > 0) {
+    currentKillDrawRequest.pendingPayload = payload;
+    if (currentKillDrawRequest.readyTimer) {
+      clearTimeout(currentKillDrawRequest.readyTimer);
+    }
+    currentKillDrawRequest.readyTimer = setTimeout(function() {
+      if (!currentKillDrawRequest || currentKillDrawRequest.resolved) {
+        return;
+      }
+
+      var queuedPayload = currentKillDrawRequest.pendingPayload;
+      currentKillDrawRequest.pendingPayload = null;
+      currentKillDrawRequest.readyTimer = null;
+
+      if (queuedPayload) {
+        processKillDrawResult(queuedPayload);
+      }
+    }, waitMs);
+    return true;
+  }
+
+  currentKillDrawRequest.resolved = true;
+
+  var targetMonsterId = payload.monster.id;
+  var monsterName = payload.monster.title || '未知怪物';
+  var targetAngle = getKillDrawTargetAngle(targetMonsterId, currentKillDrawRequest.idIndexMap || {});
+  var pointer = currentKillDrawRequest.pointer;
+
+  if (pointer && pointer.length) {
+    var finishDurationMs = finishPointerSpin(pointer, targetAngle);
+
+    setTimeout(function() {
+      if (pointer && pointer[0]) {
+        pointer.css('transition', 'none');
+        pointer.css('transform', 'rotate(' + targetAngle + 'deg)');
+      }
+
+      lastAngle = targetAngle;
+      spinCurrentAngle = targetAngle;
+      showRewards(payload.rewards, monsterName, payload.red_bag);
+      isSpinning = false;
+      resetKillDrawRequestState();
+    }, finishDurationMs + 80);
+
+    return true;
+  }
+
+  showRewards(payload.rewards, monsterName, payload.red_bag);
+  isSpinning = false;
+  resetKillDrawRequestState();
+  return true;
+}
+
+function handleKillDrawResultMessage(message) {
+  var payload = message && message.data ? message.data : null;
+  processKillDrawResult(payload);
+}
+
+function handleKillBagUpdatedMessage(message) {
+  var customer = getUser();
+  if (!customer) return;
+
+  var currentOpenId = String(customer.openid || customer.open_id || '');
+  var pushedOpenId = String((message && message.open_id) || (message && message.data && message.data.user && message.data.user.open_id) || '');
+  if (currentOpenId && pushedOpenId && currentOpenId !== pushedOpenId) {
+    return;
+  }
+
+  if (message && message.data) {
+    if (shouldDelayKillBagUpdate()) {
+      pendingKillBagPayload = message.data;
+      return;
+    }
+    applyKillBagPayload(message.data);
+  }
+}
+
+window.handleKillDrawResultMessage = handleKillDrawResultMessage;
+window.handleKillBagUpdatedMessage = handleKillBagUpdatedMessage;
 
 // 一开始就去初始化背包数据
 $(function() {
@@ -85,6 +284,13 @@ function getMonsterList() {
 }
 
 var lastAngle = 0;
+var spinCurrentAngle = 0;
+var spinPendingTimer = null;
+var spinPendingStartTime = 0;
+var spinPendingBaseAngle = 0;
+var spinPendingSpeed = 3800;
+var spinFinishDuration = 1.1;
+var spinFinishExtraCircles = 2;
 
 // 更新怪物格子
 function updateMonsterSlots() {
@@ -102,6 +308,81 @@ function updateMonsterSlots() {
 
 // 标记是否正在抽奖
 var isSpinning = false;
+
+function stopPendingPointerSpin() {
+  if (spinPendingTimer) {
+    clearInterval(spinPendingTimer);
+    spinPendingTimer = null;
+  }
+}
+
+function normalizeAngle(angle) {
+  var normalized = angle % 360;
+  if (normalized < 0) {
+    normalized += 360;
+  }
+  return normalized;
+}
+
+function startPendingPointerSpin(pointer) {
+  if (!pointer || !pointer.length) {
+    return;
+  }
+
+  stopPendingPointerSpin();
+  spinPendingBaseAngle = lastAngle;
+  spinCurrentAngle = spinPendingBaseAngle;
+  spinPendingStartTime = Date.now();
+
+  pointer.css('transition', 'none');
+  pointer.css('transform', 'rotate(' + spinCurrentAngle + 'deg)');
+
+  spinPendingTimer = setInterval(function() {
+    var elapsedSeconds = (Date.now() - spinPendingStartTime) / 1000;
+    spinCurrentAngle = spinPendingBaseAngle + elapsedSeconds * spinPendingSpeed;
+    pointer.css('transform', 'rotate(' + spinCurrentAngle + 'deg)');
+  }, 16);
+}
+
+function finishPointerSpin(pointer, targetAngle) {
+  if (!pointer || !pointer.length) {
+    return 0;
+  }
+
+  stopPendingPointerSpin();
+
+  var currentAngle = spinCurrentAngle || lastAngle;
+  var currentNormalized = normalizeAngle(currentAngle);
+  var finalTargetAngle = normalizeAngle(targetAngle);
+  var diffAngle = normalizeAngle(finalTargetAngle - currentNormalized);
+  var totalAngle = currentAngle + 360 * spinFinishExtraCircles + diffAngle;
+  var finishDurationMs = Math.max(420, Math.round(spinFinishDuration * 1000));
+
+  pointer.css('transition', 'transform ' + (finishDurationMs / 1000) + 's ease-out');
+  pointer.css('transform', 'rotate(' + totalAngle + 'deg)');
+
+  spinCurrentAngle = totalAngle;
+  return finishDurationMs;
+}
+
+function resetPointerSpin(pointer) {
+  stopPendingPointerSpin();
+
+  if (!pointer || !pointer.length) {
+    return;
+  }
+
+  pointer.css('transition', 'transform 0.25s ease-out');
+  pointer.css('transform', 'rotate(' + lastAngle + 'deg)');
+  spinCurrentAngle = lastAngle;
+
+  setTimeout(function() {
+    if (pointer && pointer.length) {
+      pointer.css('transition', 'none');
+      pointer.css('transform', 'rotate(' + lastAngle + 'deg)');
+    }
+  }, 260);
+}
 
 // 点击指针抽奖
 function spinPointer() {
@@ -136,11 +417,7 @@ function spinPointer() {
   // 设置正在抽奖状态
   isSpinning = true;
   var pointer = $('.phs-pointer');
-  // 重置指针状态，清理动画缓存
-  pointer.css('transition', 'none');
-  pointer.css('transform', 'rotate(' + lastAngle + 'deg)');
-  // 强制重排
-  void pointer[0].offsetWidth;
+  startPendingPointerSpin(pointer);
 
   console.log('monsters', monsters);
   var id_index_monsters = {};
@@ -149,12 +426,24 @@ function spinPointer() {
   }
   console.log('id_index_monsters', id_index_monsters);
 
+  var requestId = generateKillDrawRequestId();
+  currentKillDrawRequest = {
+    requestId: requestId,
+    pointer: pointer,
+    idIndexMap: id_index_monsters,
+    resolved: false,
+    startedAt: Date.now(),
+    pendingPayload: null,
+    readyTimer: null
+  };
+
   // 同时请求后端接口
   $.ajax({
     url: hzRequestUrl + 'kill/draw',
     type: 'POST',
     data: {
-      open_id: customer.openid
+      open_id: customer.openid,
+      request_id: requestId
     },
     headers: {
       'boxVersion': '1.0.0',
@@ -162,96 +451,34 @@ function spinPointer() {
     },
     dataType: 'json',
     success: function(res) {
-      if (res && res.data && res.data.monster) {
-        var targetMonsterId = res.data.monster.id;
-        var monsterName = res.data.monster.title || '未知怪物';
-        
-        // 直接创建怪物 ID 到角度的映射
-        var monsterIdToAngle = {
-          1: 0,   // 对应角度索引 1
-          2: 45,   // 对应角度索引 2
-          4: 90,  // 对应角度索引 3
-          7: 135,  // 对应角度索引 4
-          6: 180,  // 对应角度索引 5
-          5: 225,  // 对应角度索引 6
-          3: 270,  // 对应角度索引 7
-          0: 315     // 对应角度索引 0
-        };
-
-        // 获取目标角度
-        console.log('targetMonsterId', targetMonsterId);
-        console.log('id_index', id_index_monsters[targetMonsterId]);
-        var targetAngle = monsterIdToAngle[id_index_monsters[targetMonsterId]] || 0;
-        console.log('monsterIdToAngle', monsterIdToAngle);
-        
-        // 计算最终总角度（当前角度 + 20 圈 + 目标角度）
-        var totalAngle = 720 * 10 + targetAngle;
-        
-        // 应用转动动画
-        if (pointer) {
-          pointer.css('transition', 'transform 3s ease-out');
-          pointer.css('transform', 'rotate(' + totalAngle + 'deg)');
-          
-          // 动画结束后处理
-          setTimeout(function() {
-            // 移除过渡效果
-            if (pointer && pointer[0]) {
-              pointer.css('transition', 'none');
-            }
-
-            lastAngle = targetAngle;
-            
-            // 显示奖励信息
-            var rewards = res.data.rewards;
-            var redBag = res.data.red_bag;
-            showRewards(rewards, monsterName, redBag);
-            
-            // 重置抽奖状态
-            isSpinning = false;
-          }, 4000);
-        } else {
-          // 指针元素不存在，重置状态
-          isSpinning = false;
-          console.log('=== 抽奖结束（指针元素不存在）===');
-        }
-      } else {
-        // 接口返回异常，停止转动
-        if (pointer && pointer[0]) {
-          pointer.css('transition', 'none');
-          // 保持当前角度不变
-          pointer.css('transform', 'rotate(' + lastAngle + 'deg)');
-        }
-        
-        layui.use(['layer'], function() {
-          var layer = layui.layer;
-          layer.msg('抽奖失败');
-        });
-        
-        // 重置抽奖状态
-        isSpinning = false;
+      if (!currentKillDrawRequest) {
+        return;
       }
+
+      if (currentKillDrawRequest.resolved) {
+        return;
+      }
+
+      if (res && res.data && res.data.monster) {
+        processKillDrawResult(res.data);
+        return;
+      }
+
+      failKillDrawRequest('抽奖失败');
     },
     error: function() {
-      // 接口请求失败，停止转动
-      if (pointer && pointer[0]) {
-        pointer.css('transition', 'none');
-        // 保持当前角度不变
-        //pointer.css('transform', 'rotate(' + lastAngle + 'deg)');
+      if (!currentKillDrawRequest || currentKillDrawRequest.resolved) {
+        return;
       }
-      
-      layui.use(['layer'], function() {
-        var layer = layui.layer;
-        layer.msg('抽奖失败');
-      });
-      
-      // 重置抽奖状态
-      isSpinning = false;
+
+      failKillDrawRequest('抽奖失败');
     }
   });
 }
 
 // 显示奖励信息
 function showRewards(rewards, monsterName, redBag) {
+  isKillRewardVisible = true;
   var rewardHtml = '';
   if (rewards && rewards.length > 0) {
     for (var i = 0; i < rewards.length; i++) {
@@ -286,6 +513,8 @@ function showRewards(rewards, monsterName, redBag) {
       zIndex: layer.zIndex + 100,
       btn: ['放入到背包'],
       end: function() {
+        isKillRewardVisible = false;
+        flushPendingKillBagPayload();
         // 关闭奖励框后，刷新背包数据
         loadBagItems();
       },
@@ -474,6 +703,10 @@ function loadBagItems() {
   var customer = getUser();
   if (!customer) return;
 
+  if (!shouldDelayKillBagUpdate() && latestKillBagPayload && latestKillBagPayload.user && latestKillBagPayload.user.open_id === customer.openid) {
+    applyKillBagPayload(latestKillBagPayload);
+  }
+
   $.ajax({
     url: hzRequestUrl + 'kill/bag_list',
     type: 'GET',
@@ -489,50 +722,13 @@ function loadBagItems() {
     success: function(res) {
       console.log('背包数据:', res);
       if (res && res.data) {
-        var items = res.data.list || res.data || [];
-        var redItems = res.data.red_list || [];
-        console.log('物品列表:', items);
-        console.log('红包列表:', redItems);
-        // 存储完整的物品数据
-        bagItemsData = items;
-        // 清空所有格子
-        $('.bag-slot').empty();
-        // 填充物品到格子
-        var currentSlotIndex = 0;
-        
-        // 先填充普通物品
-        for (var i = 0; i < items.length; i++) {
-          var item = items[i];
-          var slot = $('.bag-slot').eq(currentSlotIndex);
-          if (slot.length && item.usable_num > 0) {
-            var itemHtml = `
-              <div class="bag-item" data-id="${item.id}" data-item-id="${item.item_id}" data-exp="${item.exp || 0}" data-mark="${item.mark || ''}" data-num="${item.usable_num}" data-title="${item.item_title || '未知物品'}" data-value-min="${item.value_min || 0}" data-value-max="${item.value_max || 0}" style="width: 100%; height: 100%; position: relative; cursor: pointer;">
-                <img src="${item.item_images || '../statics/images/01.png'}" style="width: 100%; height: 100%;">
-                <div style="position: absolute; bottom: 0; right: 0; background: rgba(0, 0, 0, 0.5); color: #fff; font-size: 10px; padding: 1px 3px;">${item.usable_num}</div>
-              </div>
-            `;
-            slot.html(itemHtml);
-            currentSlotIndex++;
-          }
+        console.log('物品列表:', res.data.list || []);
+        console.log('红包列表:', res.data.red_list || []);
+        if (shouldDelayKillBagUpdate()) {
+          pendingKillBagPayload = res.data;
+          return;
         }
-        
-        // 再填充红包物品
-        for (var j = 0; j < redItems.length; j++) {
-          var redItem = redItems[j];
-          var slot = $('.bag-slot').eq(currentSlotIndex);
-          if (slot.length) {
-            var redHtml = `
-              <div class="bag-item red-bag" data-id="${redItem.id}" data-red="true" data-amount="${redItem.amount || 0}" style="width: 100%; height: 100%; position: relative; cursor: default;">
-                <img src="${redItem.red_image || '../statics/images/01.png'}" style="width: 100%; height: 100%;">
-              </div>
-            `;
-            slot.html(redHtml);
-            currentSlotIndex++;
-          }
-        }
-        
-        // 绑定物品点击事件
-        bindBagItemEvents();
+        applyKillBagPayload(res.data);
       }
     },
     error: function() {

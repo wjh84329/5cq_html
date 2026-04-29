@@ -2122,12 +2122,12 @@
 						// updateFloatCountdown();
 
 						// 监听页面可见性变化，切换回页面时重新获取倒计时状态
-						document.addEventListener('visibilitychange', function () {
-							if (!document.hidden) {
-								// 页面重新可见时，重新获取活动状态
-								updateFloatCountdown();
-							}
-						});
+						// document.addEventListener('visibilitychange', function () {
+						// 	if (!document.hidden) {
+						// 		// 页面重新可见时，重新获取活动状态
+						// 		updateFloatCountdown();
+						// 	}
+						// });
 						var token = window.localStorage ? localStorage.getItem('cq-act-token') : '';
 						// getUserInfo(token, function (userInfo) {
 						// 	// 这里可以使用userInfo做进一步处理
@@ -5428,7 +5428,7 @@
 
 					var uuid = typeof getUUID === 'function' ? getUUID() : '';
 					$.ajax({
-						url: 'https://hz.5cq.net/cq/user/qrcode',
+						url: 'http://192.168.177.129:8000/cq/user/qrcode',
 						type: 'POST',
 						processData: false,
 						contentType: false,
@@ -5449,7 +5449,7 @@
 								formdate.append('key', result.key);
 								formdate.append('up_id', 1);
 								$.ajax({
-									url: 'https://hz.5cq.net/cq/user/get_user_info',
+									url: 'http://192.168.177.129:8000/cq/user/get_user_info',
 									type: 'POST',
 									processData: false,
 									contentType: false,

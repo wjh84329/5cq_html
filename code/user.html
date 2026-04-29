@@ -540,6 +540,11 @@
              </div> 
              <div> 
               <table class="phs-table2 like-games"> 
+               <colgroup>
+                <col class="like-games-col-name">
+                <col class="like-games-col-ip">
+                <col class="like-games-col-action">
+               </colgroup>
                <tbody id="likeGamesTableBody"> 
                 <!-- 数据将通过JS动态填充 --> 
                </tbody> 
@@ -670,13 +675,13 @@
            <div> 
             <h3 style="display: inline-block;">日常任务</h3> 
             <span id="dailyTaskHelp" style="cursor: pointer; color: #999; font-size: 18px; margin-left: 8px;" onclick="showDailyTaskHelp()">❓</span> 
-            <div id="dailyTasks" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 15px;"> 
+            <div id="dailyTasks" class="task-grid"> 
              <!-- 日常任务将通过 JS 动态填充 --> 
             </div> 
            </div> 
            <div style="margin-top: 30px;"> 
             <h3>月度任务</h3> 
-            <div id="monthlyTasks" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 15px;"> 
+            <div id="monthlyTasks" class="task-grid"> 
              <!-- 月度任务将通过JS动态填充 --> 
             </div> 
            </div> 
@@ -1019,20 +1024,238 @@
 
     // 优先从 cookie 读取用户信息进行快速渲染
     function renderUserInfoFromCookie() {
-      var userinfo = $.cookie('userinfo');
-      if (userinfo) {
-        try {
-          var data = $.parseJSON(userinfo);
-          updatePageByUserInfo(data);
-        } catch (e) {
-          console.log('Cookie 用户信息解析失败');
+      var data = null;
+      var runtime = null;
+      var currentOpenId = (typeof getCurrentUserOpenIdFromCookie === 'function')
+        ? getCurrentUserOpenIdFromCookie()
+        : '';
+
+      if (typeof getHzUserInfoCache === 'function') {
+        data = getHzUserInfoCache();
+      }
+      if (typeof getHzUserRuntimeCache === 'function') {
+        runtime = getHzUserRuntimeCache();
+      }
+
+      if (!data) {
+        var userinfo = $.cookie('userinfo');
+        if (userinfo) {
+          try {
+            data = $.parseJSON(userinfo);
+          } catch (e) {
+            console.log('Cookie 用户信息解析失败');
+          }
+        }
+      }
+
+      if (runtime && typeof isHzCacheMatchedCurrentUser === 'function' && !isHzCacheMatchedCurrentUser(runtime, currentOpenId)) {
+        runtime = null;
+      }
+      if (data && typeof isHzCacheMatchedCurrentUser === 'function' && !isHzCacheMatchedCurrentUser(data, currentOpenId)) {
+        data = null;
+      }
+      if (!data && runtime && runtime.data) {
+        data = runtime.data;
+      }
+
+      if (runtime && Array.isArray(runtime.levelInfoList)) {
+        levelInfoList = runtime.levelInfoList;
+      }
+
+      if (data) {
+        hzUserObj = data;
+        time_count = Number(data.time_count || (runtime && runtime.time_count) || 0);
+        time_count_date = Number(data.time_count_date || (runtime && runtime.time_count_date) || 0);
+        updatePageByUserInfo(data);
+        if (typeof updateProgressBar === 'function') {
+          updateProgressBar(time_count / 60);
         }
       }
     }
 
+    var __personHomeRefreshBusy = false;
+    var __personHomeRefreshTimer = null;
+    var __personHomeLastRefreshAt = 0;
+    var __personHomeSnapshotKey = 'hz_person_home_snapshot_v2';
+
+    function isPersonHomeVisible() {
+      return $('#personHome').is(':visible') || $('#home').prop('checked');
+    }
+
+    function savePersonHomeSnapshot() {
+      try {
+        var $personHome = $('#personHome');
+        if (!$personHome.length) {
+          return;
+        }
+
+        var snapshot = {
+          html: $personHome.html() || '',
+          updatedAt: Date.now(),
+          activeMenu: $('.leftSide li.active a').first().text() || '',
+          pathname: window.location.pathname || '',
+          open_id: (typeof getCurrentUserOpenIdFromCookie === 'function')
+            ? getCurrentUserOpenIdFromCookie()
+            : ''
+        };
+
+        if (!snapshot.html || !snapshot.open_id) {
+          return;
+        }
+
+        window.sessionStorage.setItem(__personHomeSnapshotKey, JSON.stringify(snapshot));
+      } catch (e) {
+      }
+    }
+
+    function restorePersonHomeSnapshot() {
+      try {
+        var raw = window.sessionStorage.getItem(__personHomeSnapshotKey);
+        if (!raw) {
+          return false;
+        }
+
+        var snapshot = JSON.parse(raw);
+        var currentOpenId = (typeof getCurrentUserOpenIdFromCookie === 'function')
+          ? getCurrentUserOpenIdFromCookie()
+          : '';
+
+        if (!snapshot || snapshot.pathname !== (window.location.pathname || '') || !snapshot.html) {
+          window.sessionStorage.removeItem(__personHomeSnapshotKey);
+          return false;
+        }
+
+        if (!snapshot.open_id || !currentOpenId || snapshot.open_id !== currentOpenId) {
+          window.sessionStorage.removeItem(__personHomeSnapshotKey);
+          return false;
+        }
+
+        var $personHome = $('#personHome');
+        if (!$personHome.length) {
+          return false;
+        }
+
+        $personHome.html(snapshot.html);
+        $personHome.show();
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function runPersonHomeSilentRefresh(reason) {
+      var now = Date.now();
+      if (__personHomeRefreshBusy || (now - __personHomeLastRefreshAt < 800)) {
+        return;
+      }
+
+      __personHomeRefreshBusy = true;
+      __personHomeLastRefreshAt = now;
+
+      try {
+        renderUserInfoFromCookie();
+
+        if (hzUserObj && typeof updatePageByUserInfo === 'function') {
+          updatePageByUserInfo(hzUserObj);
+        }
+
+        if (typeof updateProgressBar === 'function') {
+          updateProgressBar((Number(time_count) || 0) / 60);
+        }
+
+        if (typeof getSignInfo === 'function') {
+          getSignInfo();
+        }
+
+        if (typeof loadLikeGames === 'function') {
+          loadLikeGames();
+        }
+
+        if (typeof getHzUser === 'function') {
+          getHzUser();
+        }
+
+        if (typeof checkTimeCountMinites === 'function') {
+          setTimeout(function () {
+            checkTimeCountMinites();
+          }, 200);
+        }
+      } finally {
+        setTimeout(function () {
+          __personHomeRefreshBusy = false;
+        }, 1200);
+      }
+    }
+
+    function schedulePersonHomeSilentRefresh(reason, delay) {
+      var customer = (typeof getUser === 'function') ? getUser(0) : null;
+      if (!customer) {
+        return;
+      }
+
+      if (!isPersonHomeVisible() && reason !== 'init') {
+        return;
+      }
+
+      if (__personHomeRefreshTimer) {
+        clearTimeout(__personHomeRefreshTimer);
+      }
+
+      __personHomeRefreshTimer = setTimeout(function () {
+        runPersonHomeSilentRefresh(reason || 'manual');
+      }, typeof delay === 'number' ? delay : 0);
+    }
+
+    function bindPersonHomeHotRefresh() {
+      if (window.__personHomeHotRefreshBound) {
+        return;
+      }
+      window.__personHomeHotRefreshBound = true;
+
+      window.addEventListener('keydown', function (event) {
+        var key = (event.key || '').toLowerCase();
+        var keyCode = event.keyCode || event.which;
+        var isRefreshShortcut = keyCode === 116 || ((event.ctrlKey || event.metaKey) && (key === 'r' || keyCode === 82));
+
+        if (!isRefreshShortcut || !isPersonHomeVisible()) {
+          return;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+        schedulePersonHomeSilentRefresh('shortcut', 0);
+      }, true);
+
+      document.addEventListener('visibilitychange', function () {
+        if (!document.hidden && isPersonHomeVisible()) {
+          schedulePersonHomeSilentRefresh('visibility', 120);
+        }
+      });
+
+      window.addEventListener('pageshow', function (event) {
+        if ((event.persisted || isPersonHomeVisible()) && !document.hidden) {
+          schedulePersonHomeSilentRefresh('pageshow', 80);
+        }
+      });
+
+      window.addEventListener('pagehide', function () {
+        savePersonHomeSnapshot();
+      });
+
+      window.addEventListener('beforeunload', function () {
+        savePersonHomeSnapshot();
+      });
+    }
+
     // 页面加载时先从 cookie 渲染
+    restorePersonHomeSnapshot();
     renderUserInfoFromCookie();
+    bindPersonHomeHotRefresh();
     $(function () {
+      schedulePersonHomeSilentRefresh('init', 100);
+      if (typeof scheduleTaskDetailPreload === 'function') {
+        scheduleTaskDetailPreload('init', 180);
+      }
       $('#signInBtn').off('click.subsidyOrder').on('click.subsidyOrder', function () {
         openSubsidyRecordModal();
       });
@@ -1098,7 +1321,7 @@
         });
 
 
-      var userinfo = $.cookie('userinfo');
+      var userinfo = $.cookie('userinfo') || $.cookie('userInfo');
       // console.log(customer)
       if (userinfo != null) {
         userinfo = $.parseJSON(userinfo);
@@ -1624,6 +1847,9 @@
       $("#mallOrderList").hide();
       $("#taskDetail").hide();
       $('#turntableDetail').hide();
+      if (typeof stopTaskDetailAutoRefresh === 'function') {
+        stopTaskDetailAutoRefresh();
+      }
       if (state == 16) {
         $('#turntableDetail').show();
         initTurntable();
@@ -1650,6 +1876,10 @@
         $("#personHome").show();
         $(that).parent().addClass("active");
         $(that).parent().siblings().removeClass("active");
+        schedulePersonHomeSilentRefresh('tab-switch', 50);
+        if (typeof scheduleTaskDetailPreload === 'function') {
+          scheduleTaskDetailPreload('person-home', 180);
+        }
         return; // 直接结束，避免继续跑到下面其他逻辑
       }
       // 新增：商品列表
@@ -1673,7 +1903,11 @@
         $("#taskDetail").show();
         $(that).parent().addClass("active");
         $(that).parent().siblings().removeClass("active");
-        loadTaskDetail(); // 加载任务明细
+        if (typeof startTaskDetailAutoRefresh === 'function') {
+          startTaskDetailAutoRefresh('tab-enter');
+        } else {
+          loadTaskDetail();
+        }
         return; // 直接结束，避免继续跑到下面其他逻辑
       }
 
@@ -3730,6 +3964,13 @@
                     // 更新用户信息
                     if (typeof hzUserObj !== 'undefined') {
                       hzUserObj.phone = phone;
+                      if (typeof syncHzUserSessionCache === 'function') {
+                        syncHzUserSessionCache(hzUserObj, {
+                          levelInfoList: levelInfoList,
+                          time_count: time_count,
+                          time_count_date: time_count_date
+                        });
+                      }
                     }
                   } else {
                     layer.msg('绑定失败：' + (res.msg || '未知错误'));
@@ -3824,6 +4065,13 @@
                     // 更新按钮状态
                     if (typeof hzUserObj !== 'undefined') {
                       hzUserObj.sfz = idCard;
+                      if (typeof syncHzUserSessionCache === 'function') {
+                        syncHzUserSessionCache(hzUserObj, {
+                          levelInfoList: levelInfoList,
+                          time_count: time_count,
+                          time_count_date: time_count_date
+                        });
+                      }
                     }
                   } else {
                     layer.msg('实名认证失败：' + (res.msg || '未知错误'));

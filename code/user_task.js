@@ -1,437 +1,863 @@
-// ====== 任务中心功能 ======
-function loadTaskDetail() {
-  var customer = getUser(1);
-  if (!customer) return;
+var TASK_DETAIL_STATE = {
+  seq: 0,
+  openId: '',
+  bound: false,
+  autoBound: false,
+  claimedMap: {},
+  snapshotMap: {},
+  lastLoadAt: 0,
+  lastPreloadAt: 0,
+  preloadTimer: null,
+  autoRefreshTimer: null,
+  autoRefreshInterval: 1
+};
 
-  // 检查全局变量operationData是否有值
-  if (Object.keys(operationData).length === 0) {
-      // 如果没有值，调用接口获取
-      admin.req({
-      url: hzRequestUrl + 'business/operation'
-      }).done(function(operationRes) {
-      if (operationRes && operationRes.data) {
-          // 存储到全局变量
-          operationData = operationRes.data;
-          
-          // 获取用户签到天数
-          loadTaskDetailWithOperationData(operationData, customer);
-      }
-      }).fail(function() {
-      console.error('获取任务奖励信息失败');
-      });
-  } else {
-      // 如果有值，直接使用
-      loadTaskDetailWithOperationData(operationData, customer);
+var TASK_DAILY_DEFS = [
+  { id: 7, claimId: null },
+  { id: 1, claimId: 1 },
+  { id: 2, claimId: 2 },
+  { id: 3, claimId: 3 },
+  { id: 4, claimId: 4 },
+  { id: 5, claimId: 5 }
+];
+
+var TASK_MONTHLY_DEFS = [
+  { id: 'a', required: 3, claimId: 'a' },
+  { id: 'b', required: 7, claimId: 'b' },
+  { id: 'c', required: 14, claimId: 'c' },
+  { id: 'd', required: 28, claimId: 'd' }
+];
+
+function getTaskCustomer() {
+  var customer = getUser(1);
+  if (!customer || !customer.openid) {
+    return null;
   }
+  return customer;
 }
 
-// 使用operationData加载任务详情
-function loadTaskDetailWithOperationData(operationData, customer) {
+function getTaskClaimCacheKey(openId, taskId) {
+  return String(openId || '') + ':' + String(taskId);
+}
 
-  // 渲染日常任务
-  renderDailyTasks(operationData);
+function isTaskRequestCurrent(seq, openId) {
+  return seq === TASK_DETAIL_STATE.seq && String(openId || '') === String(TASK_DETAIL_STATE.openId || '');
+}
 
-  // 获取用户签到天数
-  $.ajax({
-    url: hzRequestUrl + 'user/user_report',
-    type: 'GET',
-    dataType: 'json',
-    data: {
-      open_id: customer.openid
-    },
-    headers: {
-      'boxVersion': '1.0.0',
-      'token':$.cookie('hzusertoken')
-    },
-    success: function(reportRes) {
-      var signDay = 0;
-      if (reportRes && reportRes.data && reportRes.data.day) {
-        signDay = reportRes.data.day;
+function getTaskSnapshot(openId) {
+  var finalOpenId = String(openId || TASK_DETAIL_STATE.openId || '');
+  if (!finalOpenId) {
+    return null;
+  }
+
+  return TASK_DETAIL_STATE.snapshotMap[finalOpenId] || null;
+}
+
+function ensureTaskSnapshot(openId) {
+  var finalOpenId = String(openId || TASK_DETAIL_STATE.openId || '');
+  if (!finalOpenId) {
+    return null;
+  }
+
+  if (!TASK_DETAIL_STATE.snapshotMap[finalOpenId] || typeof TASK_DETAIL_STATE.snapshotMap[finalOpenId] !== 'object') {
+    TASK_DETAIL_STATE.snapshotMap[finalOpenId] = {
+      status: {
+        daily: {},
+        monthly: {}
+      },
+      buttons: {}
+    };
+  }
+
+  return TASK_DETAIL_STATE.snapshotMap[finalOpenId];
+}
+
+function hasTaskStatusSnapshot(openId, section, taskId) {
+  var snapshot = getTaskSnapshot(openId);
+  if (!snapshot || !snapshot.status || !snapshot.status[section]) {
+    return false;
+  }
+
+  return Object.prototype.hasOwnProperty.call(snapshot.status[section], String(taskId));
+}
+
+function hasTaskButtonSnapshot(openId, taskId) {
+  var snapshot = getTaskSnapshot(openId);
+  if (!snapshot || !snapshot.buttons) {
+    return false;
+  }
+
+  return Object.prototype.hasOwnProperty.call(snapshot.buttons, String(taskId));
+}
+
+function applyTaskSnapshot(openId) {
+  var snapshot = getTaskSnapshot(openId);
+  if (!snapshot) {
+    return;
+  }
+
+  ['daily', 'monthly'].forEach(function (section) {
+    var sectionMap = snapshot.status && snapshot.status[section] ? snapshot.status[section] : {};
+    Object.keys(sectionMap).forEach(function (taskId) {
+      var item = sectionMap[taskId] || {};
+      setTaskStatus(section, taskId, item.text || '状态：读取中...', !!item.completed, !!item.isLoading);
+    });
+  });
+
+  Object.keys(snapshot.buttons || {}).forEach(function (taskId) {
+    setTaskClaimButton(taskId, snapshot.buttons[taskId] || {});
+  });
+}
+
+function bindTaskDetailEvents() {
+  if (TASK_DETAIL_STATE.bound) {
+    return;
+  }
+
+  TASK_DETAIL_STATE.bound = true;
+
+  $('#dailyTasks, #monthlyTasks')
+    .off('click.taskClaim')
+    .on('click.taskClaim', '.task-card__btn', function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      claimTaskReward($(this).attr('data-claim-id'));
+    });
+
+  $('#dailyTasks')
+    .off('click.taskAction')
+    .on('click.taskAction', '.task-card--clickable', function () {
+      handleTaskCardAction($(this).attr('data-task-id'));
+    });
+}
+
+function ensureOperationDataObject() {
+  if (!window.operationData || typeof window.operationData !== 'object') {
+    window.operationData = {};
+  }
+  return window.operationData;
+}
+
+function getTaskOperationData() {
+  var cached = ensureOperationDataObject();
+  if (Object.keys(cached).length > 0) {
+    return Promise.resolve(cached);
+  }
+
+  return new Promise(function (resolve, reject) {
+    admin.req({
+      url: hzRequestUrl + 'business/operation'
+    }).done(function (res) {
+      if (res && res.data) {
+        window.operationData = res.data;
+        resolve(window.operationData);
+        return;
       }
-      // 渲染月度任务
-      renderMonthlyTasks(operationData, signDay);
-    },
-    error: function() {
-      console.log("渲染日常任务失败");
-      console.error('获取用户签到天数失败');
-      // 即使获取失败，也渲染任务列表
-      renderMonthlyTasks(operationData, 0);
-    }
+      reject(new Error('operation empty'));
+    }).fail(function (err) {
+      reject(err instanceof Error ? err : new Error('operation failed'));
+    });
   });
 }
 
-// 渲染日常任务
-function renderDailyTasks(operationData) {
-  var customer = getUser(1);
-  var lookGameNumber = operationData.lookGameNumber || 10;
-  var dailyTasks = [
-    {
-      id: 7,
-      name: '邀请好友分享链接并识别到点开一次',
-      reward: 10
-    },
-    {
-      id: 1,
-      name: '浏览个人中心的游戏' + lookGameNumber + '次',
-      reward: operationData.lookGame || '0'
-    },
-    {
-      id: 2,
-      name: '游戏在线30分钟[白银宝箱]',
-      reward: operationData.boxCoin30 || '0-0'
-    },
-    {
-      id: 3,
-      name: '游戏在线60分钟[黄金宝箱]',
-      reward: operationData.boxCoin60 || '0-0'
-    },
-    {
-      id: 4,
-      name: '游戏在线120分钟[铂金宝箱]',
-      reward: operationData.boxCoin120 || '0-0'
-    },
-    {
-      id: 5,
-      name: '游戏在线240分钟[钻石宝箱]',
-      reward: operationData.boxCoin240 || '0-0'
-    }
-  ];
-  
-  var html = '';
-  dailyTasks.forEach(function(task) {
-    var rewardText = task.reward;
-    // 处理范围值
-    if (String(task.reward).includes('-')) {
-      var range = String(task.reward).split('-');
-      var min = parseInt(range[0]) / 2;
-      var max = parseInt(range[1]) / 2;
-      rewardText = Math.floor(min) + '-' + Math.floor(max);
-    }
-    
-    // 为不同任务设置不同的点击事件
-    var clickEvent = '';
-    if (task.id === 7) {
-      clickEvent = "leftMenu(this, 11); openInviteFriendModal();";
-    } else if (task.id === 1) {
-      clickEvent = "leftMenu(this, 11); openAllGameModal();";
-    } else if ([2, 3, 4, 5].includes(task.id)) {
-      clickEvent = "window.open('https://hz.5cq.com/', '_blank');";
-    }
-    
-    html += `
-      <div class="task-card" data-task-id="${task.id}" style="border: 1px solid #ff9800; border-radius: 8px; padding: 15px; background: rgba(255, 152, 0, 0.1); transition: all 0.3s ease; cursor: pointer; position: relative;" onclick="${clickEvent}" onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 4px 12px rgba(255, 152, 0, 0.3)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
-        <h4 style="margin-top: 0; margin-bottom: 10px;">${task.name}</h4>
-        <div style="color: #ff6a00; font-weight: bold;">奖励：${rewardText} 金币</div>
-        <div class="bx_status_${task.id}" style="margin-top: 10px; color: #999; font-size: 14px;">状态：进行中</div>
-        <button class="claim-btn-${task.id}" onclick="event.stopPropagation(); claimTaskReward(${task.id})" style="position: absolute; right: 15px; bottom: 15px; background: linear-gradient(135deg, #ff9800, #ff6a00); color: white; border: none; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-size: 13px; font-weight: bold; box-shadow: 0 2px 8px rgba(255, 152, 0, 0.4); display: none;" onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 4px 12px rgba(255, 152, 0, 0.6)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(255, 152, 0, 0.4)';">领取</button>
-      </div>
-    `;
+function getTaskReportResponse() {
+  if (typeof fetchUserReport === 'function') {
+    return fetchUserReport();
+  }
+
+  var customer = getTaskCustomer();
+  if (!customer) {
+    return Promise.reject(new Error('no open_id'));
+  }
+
+  return new Promise(function (resolve, reject) {
+    $.ajax({
+      url: hzRequestUrl + 'user/user_report',
+      type: 'GET',
+      dataType: 'json',
+      data: {
+        open_id: customer.openid
+      },
+      headers: {
+        'boxVersion': '1.0.0',
+        'token': $.cookie('hzusertoken')
+      },
+      success: function (res) {
+        resolve(res || {});
+      },
+      error: function (err) {
+        reject(err instanceof Error ? err : new Error('user_report failed'));
+      }
+    });
   });
-  
-  $('#dailyTasks').html(html);
-  
-  // 获取任务 1 的进度
-  if (customer && customer.openid) {
+}
+
+function getTaskBrowseProgress(customer) {
+  return new Promise(function (resolve, reject) {
     admin.req({
       url: baseUrl + 'ranking/countTodayPublishBrowse',
       data: {
         openid: customer.openid
       },
-      success: function(res) {
-        if (res) {
-          var completedCount = res.data;
-          var statusElement = $('.bx_status_1');
-          var isCompleted = completedCount >= lookGameNumber;
-          var statusText = isCompleted ? '已完成 ✅' : '进行中';
-          var statusClass = isCompleted ? 'color: #22c55e;' : 'color: #999;';
-          statusElement.html(`状态：${statusText} (已浏览 ${completedCount}/${lookGameNumber} 次)`);
-          statusElement.attr('style', `margin-top: 10px; ${statusClass} font-size: 14px;`);
-          
-          // 显示或隐藏领取按钮
-          var claimBtn = $('.claim-btn-1');
-          if (isCompleted) {
-            // 检查是否已领取
-            $.ajax({
-              url: hzRequestUrl + 'user/checkCoin',
-              type: 'GET',
-              headers: {
-                'boxVersion': '1.0.0',
-                'token': $.cookie('hzusertoken')
-              },
-              dataType: 'json',
-              data: {
-                open_id: customer.openid,
-                id: 1
-              },
-              success: function(checkRes) {
-                if (checkRes && checkRes.code === 200 && checkRes.data === true) {
-                  claimBtn.show();
-                  callback(1);
-                } else {
-                  claimBtn.show();
-                }
-              },
-              error: function(err) {
-                console.error('检查任务 1 领取状态失败:', err);
-                claimBtn.show();
-              }
-            });
-          } else {
-            claimBtn.hide();
-          }
-        }
+      success: function (res) {
+        resolve(Number(res && res.data) || 0);
       },
-      error: function(err) {
-        console.error('获取任务 1 进度失败:', err);
+      error: function (err) {
+        reject(err instanceof Error ? err : new Error('browse progress failed'));
       }
     });
-  }
-
-  // 获取任务2的进度
-  var minutes = Number(hzUserObj.yxsc || 0);
-  
-  // 定义任务配置数组
-  var onlineTasks = [
-    { id: 2, requiredMinutes: 30 },
-    { id: 3, requiredMinutes: 60 },
-    { id: 4, requiredMinutes: 120 },
-    { id: 5, requiredMinutes: 240 }
-  ];
-  
-  // 循环处理每个在线时长任务
-  onlineTasks.forEach(function(task) {
-    var taskElement = $('.bx_status_' + task.id);
-    var taskCompleted = minutes >= task.requiredMinutes;
-    var taskText = taskCompleted ? '已完成 ✅' : '进行中';
-    var taskClass = taskCompleted ? 'color: #22c55e;' : 'color: #999;';
-    taskElement.html(`状态：${taskText} (已在线 ${minutes}/${task.requiredMinutes} 分钟)`);
-    taskElement.attr('style', `margin-top: 10px; ${taskClass} font-size: 14px;`);
-    
-    // 显示或隐藏领取按钮
-    var claimBtn = $('.claim-btn-' + task.id);
-    if (taskCompleted) {
-      $.ajax({
-        url: hzRequestUrl + 'user/checkCoin',
-        type: 'GET',
-        headers: {
-          'boxVersion': '1.0.0',
-          'token': $.cookie('hzusertoken')
-        },
-        dataType: 'json',
-        data: {
-          open_id: customer.openid,
-          id: task.id
-        },
-        success: function(checkRes) {
-          if (checkRes && checkRes.code === 200 && checkRes.data === true) {
-            claimBtn.show();
-            callback(task.id);
-          } else {
-            claimBtn.show();
-          }
-        },
-        error: function(err) {
-          console.error('检查任务' + task.id + '领取状态失败:', err);
-          claimBtn.show();
-        }
-      });
-    } else {
-      claimBtn.hide();
-    }
-  });
-
-
-    
-
-
-  // 获取任务七的进度
-  $.ajax({
-    url: hzRequestUrl + 'kill/today_share_count',
-    type: 'GET',
-    headers: {
-        boxVersion: '1.0.0',
-        'token':$.cookie('hzusertoken')
-    },
-    dataType: 'json',
-    data: {
-        open_id: customer.openid
-    },
-    success: function (response) {
-        if (response.code === 200) {
-            var shareCount = Number(response.data.today_share_count);
-            
-            // 更新任务七的状态（10 次分享）
-            var task7Element = $('.bx_status_7');
-            var task7Completed = shareCount >= 10;
-            var task7Text = task7Completed ? '已完成 ✅' : '进行中';
-            var task7Class = task7Completed ? 'color: #22c55e;' : 'color: #999;';
-            task7Element.html(`状态：${task7Text} (已分享 ${shareCount}/10 次)`);
-            task7Element.attr('style', `margin-top: 10px; ${task7Class} font-size: 14px;`);
-            
-            // 显示或隐藏领取按钮
-            var claimBtn7 = $('.claim-btn-7');
-            if (task7Completed) {
-              task7Element.html(`状态：${task7Text} (已分享 ${shareCount}/10 次)[奖励已自动发放]`);
-              //claimBtn7.show();
-            } else {
-              claimBtn7.hide();
-            }
-        } else {
-            console.error('Failed to fetch game time info:', response.message);
-        }
-    },
-    error: function (error) {
-        console.error('Error fetching game time info:', error);
-    }
   });
 }
 
-// 渲染月度任务
-function renderMonthlyTasks(operationData, signDay) {
-  var customer = getUser(1);
-  var monthlyTasks = [
+function getTaskShareProgress(customer) {
+  return new Promise(function (resolve, reject) {
+    $.ajax({
+      url: hzRequestUrl + 'kill/today_share_count',
+      type: 'GET',
+      headers: {
+        'boxVersion': '1.0.0',
+        'token': $.cookie('hzusertoken')
+      },
+      dataType: 'json',
+      data: {
+        open_id: customer.openid
+      },
+      success: function (res) {
+        if (res && Number(res.code) === 200) {
+          resolve(Number(res.data && res.data.today_share_count) || 0);
+          return;
+        }
+        reject(new Error('share progress failed'));
+      },
+      error: function (err) {
+        reject(err instanceof Error ? err : new Error('share progress failed'));
+      }
+    });
+  });
+}
+
+function checkTaskClaimStatus(customer, taskId) {
+  var cacheKey = getTaskClaimCacheKey(customer.openid, taskId);
+  if (Object.prototype.hasOwnProperty.call(TASK_DETAIL_STATE.claimedMap, cacheKey)) {
+    return Promise.resolve(!!TASK_DETAIL_STATE.claimedMap[cacheKey]);
+  }
+
+  return new Promise(function (resolve) {
+    $.ajax({
+      url: hzRequestUrl + 'user/checkCoin',
+      type: 'GET',
+      headers: {
+        'boxVersion': '1.0.0',
+        'token': $.cookie('hzusertoken')
+      },
+      dataType: 'json',
+      data: {
+        open_id: customer.openid,
+        id: taskId
+      },
+      success: function (res) {
+        var claimed = !!(res && Number(res.code) === 200 && res.data === true);
+        TASK_DETAIL_STATE.claimedMap[cacheKey] = claimed;
+        resolve(claimed);
+      },
+      error: function () {
+        resolve(false);
+      }
+    });
+  });
+}
+
+function formatTaskRewardText(reward, isRangeHalf) {
+  var rewardText = reward == null ? '0' : String(reward);
+  if (!isRangeHalf || rewardText.indexOf('-') === -1) {
+    return rewardText;
+  }
+
+  var parts = rewardText.split('-');
+  var min = Math.floor((parseInt(parts[0], 10) || 0) / 2);
+  var max = Math.floor((parseInt(parts[1], 10) || 0) / 2);
+  return min + '-' + max;
+}
+
+function buildDailyTasks(operationData) {
+  var lookGameNumber = Number(operationData.lookGameNumber) || 10;
+  return [
+    {
+      id: 7,
+      title: '邀请好友分享链接并识别到点开一次',
+      rewardText: '10',
+      clickable: true
+    },
+    {
+      id: 1,
+      title: '浏览个人中心的游戏' + lookGameNumber + '次',
+      rewardText: formatTaskRewardText(operationData.lookGame || '0', false),
+      clickable: true,
+      required: lookGameNumber
+    },
+    {
+      id: 2,
+      title: '游戏在线30分钟[白银宝箱]',
+      rewardText: formatTaskRewardText(operationData.boxCoin30 || '0-0', true),
+      clickable: true,
+      required: 30
+    },
+    {
+      id: 3,
+      title: '游戏在线60分钟[黄金宝箱]',
+      rewardText: formatTaskRewardText(operationData.boxCoin60 || '0-0', true),
+      clickable: true,
+      required: 60
+    },
+    {
+      id: 4,
+      title: '游戏在线120分钟[铂金宝箱]',
+      rewardText: formatTaskRewardText(operationData.boxCoin120 || '0-0', true),
+      clickable: true,
+      required: 120
+    },
+    {
+      id: 5,
+      title: '游戏在线240分钟[钻石宝箱]',
+      rewardText: formatTaskRewardText(operationData.boxCoin240 || '0-0', true),
+      clickable: true,
+      required: 240
+    }
+  ];
+}
+
+function buildMonthlyTasks(operationData) {
+  return [
     {
       id: 'a',
-      name: '每月签到 3 天',
-      required: 3,
-      reward: operationData.signlnCoin3 || '0'
+      title: '每月签到 3 天',
+      rewardText: formatTaskRewardText(operationData.signlnCoin3 || '0', false),
+      required: 3
     },
     {
       id: 'b',
-      name: '每月签到 7 天',
-      required: 7,
-      reward: operationData.signlnCoin7 || '0'
+      title: '每月签到 7 天',
+      rewardText: formatTaskRewardText(operationData.signlnCoin7 || '0', false),
+      required: 7
     },
     {
       id: 'c',
-      name: '每月签到 14 天',
-      required: 14,
-      reward: operationData.signlnCoin14 || '0'
+      title: '每月签到 14 天',
+      rewardText: formatTaskRewardText(operationData.signlnCoin14 || '0', false),
+      required: 14
     },
     {
       id: 'd',
-      name: '每月签到 28 天',
-      required: 28,
-      reward: operationData.signlnCoin28 || '0'
+      title: '每月签到 28 天',
+      rewardText: formatTaskRewardText(operationData.signlnCoin28 || '0', false),
+      required: 28
     }
   ];
-  
-  var html = '';
-  monthlyTasks.forEach(function(task) {
-    var isCompleted = signDay >= task.required;
-    var statusText = isCompleted ? '已完成 ✅' : '进行中';
-    var statusClass = isCompleted ? 'color: #22c55e;' : 'color: #999;';
-    
-    html += `
-      <div class="task-card" data-task-id="${task.id}" style="border: 1px solid #ff9800; border-radius: 8px; padding: 15px; background: rgba(255, 152, 0, 0.1); transition: all 0.3s ease; cursor: pointer; position: relative;" onclick="leftMenu(this, 11);" onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 4px 12px rgba(255, 152, 0, 0.3)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
-        <h4 style="margin-top: 0; margin-bottom: 10px;">${task.name}</h4>
-        <div style="color: #ff6a00; font-weight: bold;">奖励：${task.reward} 金币</div>
-        <div style="margin-top: 10px; font-size: 14px; ${statusClass}">状态：${statusText} (已签到 ${signDay}/${task.required} 天)</div>
-        <button class="claim-btn-${task.id}" onclick="event.stopPropagation(); claimTaskReward('${task.id}')" style="display:none;position: absolute; right: 15px; bottom: 15px; background: linear-gradient(135deg, #ff9800, #ff6a00); color: white; border: none; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-size: 13px; font-weight: bold; box-shadow: 0 2px 8px rgba(255, 152, 0, 0.4); " onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 4px 12px rgba(255, 152, 0, 0.6)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(255, 152, 0, 0.4)';">领取</button>
-      </div>
-    `;
+}
+
+function ensureTaskCardSkeleton(containerSelector, tasks, section) {
+  var $container = $(containerSelector);
+  var expectedIds = tasks.map(function (task) {
+    return String(task.id);
+  }).join(',');
+  var currentIds = $container.find('.task-card').map(function () {
+    return String($(this).attr('data-task-id'));
+  }).get().join(',');
+
+  if (currentIds === expectedIds && $container.find('.task-card').length === tasks.length) {
+    return;
+  }
+
+  var html = tasks.map(function (task) {
+    var taskId = String(task.id);
+    var claimId = String(task.id);
+    var clickableClass = task.clickable ? ' task-card--clickable' : '';
+    return [
+      '<div class="task-card' + clickableClass + '" data-section="' + section + '" data-task-id="' + taskId + '">',
+      '  <h4 class="task-card__title"></h4>',
+      '  <div class="task-card__reward"></div>',
+      '  <div class="task-card__status is-loading">状态：读取中...</div>',
+      '  <button type="button" class="task-card__btn claim-btn-' + claimId + '" data-claim-id="' + claimId + '">领取</button>',
+      '</div>'
+    ].join('');
+  }).join('');
+
+  $container.html(html);
+}
+
+function syncTaskCardMeta(containerSelector, tasks) {
+  tasks.forEach(function (task) {
+    var $card = $(containerSelector + ' .task-card[data-task-id="' + task.id + '"]');
+    $card.toggleClass('task-card--clickable', !!task.clickable);
+    $card.find('.task-card__title').text(task.title);
+    $card.find('.task-card__reward').text('奖励：' + task.rewardText + ' 金币');
   });
-  
-  $('#monthlyTasks').html(html);
-  
-  // 为每个已完成的任务检查是否已领取
-  if (customer && customer.openid) {
-    monthlyTasks.forEach(function(task) {
-      var isCompleted = signDay >= task.required;
-      if (isCompleted) {
-        var claimBtn = $('.claim-btn-' + task.id);
-        $.ajax({
-          url: hzRequestUrl + 'user/checkCoin',
-          type: 'GET',
-          headers: {
-            'boxVersion': '1.0.0',
-            'token': $.cookie('hzusertoken')
-          },
-          dataType: 'json',
-          data: {
-            open_id: customer.openid,
-            id: task.id
-          },
-          success: function(checkRes) {
-            if (checkRes && checkRes.code === 200 && checkRes.data === true) {
-              claimBtn.show();
-              callback(task.id);
-            } else {
-              claimBtn.show();
-            }
-          },
-          error: function(err) {
-            console.error('检查月度任务' + task.id + '领取状态失败:', err);
-            claimBtn.show();
-          }
-        });
-      }
-    });
+}
+
+function setTaskStatus(section, taskId, text, completed, isLoading) {
+  var $status = $('.task-card[data-section="' + section + '"][data-task-id="' + taskId + '"] .task-card__status');
+  if (!$status.length) {
+    return;
+  }
+
+  $status.text(text);
+  $status.removeClass('is-done is-loading');
+  if (isLoading) {
+    $status.addClass('is-loading');
+  } else if (completed) {
+    $status.addClass('is-done');
+  }
+
+  var snapshot = ensureTaskSnapshot(TASK_DETAIL_STATE.openId);
+  if (snapshot && snapshot.status && snapshot.status[section]) {
+    snapshot.status[section][String(taskId)] = {
+      text: text,
+      completed: !!completed,
+      isLoading: !!isLoading
+    };
   }
 }
 
-// 显示日常任务说明弹窗
+function setTaskClaimButton(taskId, options) {
+  var $button = $('.claim-btn-' + taskId);
+  if (!$button.length) {
+    return;
+  }
+
+  var visible = !!options.visible;
+  var claimed = !!options.claimed;
+  var disabled = !!options.disabled;
+  var text = options.text || (claimed ? '已领取' : '领取');
+
+  $button.text(text);
+  $button.prop('disabled', disabled || claimed);
+  $button.toggleClass('is-claimed', claimed);
+  $button.css('display', visible ? 'inline-flex' : 'none');
+
+  var snapshot = ensureTaskSnapshot(TASK_DETAIL_STATE.openId);
+  if (snapshot && snapshot.buttons) {
+    snapshot.buttons[String(taskId)] = {
+      visible: visible,
+      claimed: claimed,
+      disabled: disabled,
+      text: text
+    };
+  }
+}
+
+function isTaskStatusLoading(section, taskId) {
+  var $status = $('.task-card[data-section="' + section + '"][data-task-id="' + taskId + '"] .task-card__status');
+  if (!$status.length) {
+    return false;
+  }
+
+  return $status.hasClass('is-loading');
+}
+
+function applyClaimStatus(customer, seq, taskId, buttonVisibleWhenUnclaimed) {
+  var numericTaskId = taskId;
+  checkTaskClaimStatus(customer, numericTaskId).then(function (claimed) {
+    if (!isTaskRequestCurrent(seq, customer.openid)) {
+      return;
+    }
+
+    setTaskClaimButton(taskId, {
+      visible: claimed ? true : buttonVisibleWhenUnclaimed,
+      claimed: claimed,
+      disabled: claimed,
+      text: claimed ? '已领取' : '领取'
+    });
+  });
+}
+
+function renderDailyTaskProgress(seq, customer, operationData) {
+  var dailyTasks = buildDailyTasks(operationData);
+  var openId = customer.openid;
+  dailyTasks.forEach(function (task) {
+    if (!hasTaskButtonSnapshot(openId, task.id)) {
+      setTaskClaimButton(task.id, {
+        visible: false,
+        claimed: false,
+        disabled: false,
+        text: '领取'
+      });
+    }
+    if (!hasTaskStatusSnapshot(openId, 'daily', task.id)) {
+      setTaskStatus('daily', task.id, '状态：读取中...', false, true);
+    }
+  });
+
+  var browseTask = dailyTasks.filter(function (task) {
+    return task.id === 1;
+  })[0];
+
+  getTaskBrowseProgress(customer).then(function (count) {
+    if (!isTaskRequestCurrent(seq, customer.openid)) {
+      return;
+    }
+
+    var done = count >= browseTask.required;
+    setTaskStatus('daily', 1, '状态：' + (done ? '已完成 ✅' : '进行中') + ' (已浏览 ' + count + '/' + browseTask.required + ' 次)', done, false);
+    if (done) {
+      applyClaimStatus(customer, seq, 1, true);
+    } else {
+      setTaskClaimButton(1, { visible: false, claimed: false, disabled: false, text: '领取' });
+    }
+  }).catch(function () {
+    if (!isTaskRequestCurrent(seq, customer.openid)) {
+      return;
+    }
+    if (isTaskStatusLoading('daily', 1)) {
+      setTaskStatus('daily', 1, '状态：读取失败', false, false);
+    }
+  });
+
+  var onlineMinutes = Number(hzUserObj && hzUserObj.yxsc) || 0;
+  [2, 3, 4, 5].forEach(function (taskId) {
+    var task = dailyTasks.filter(function (item) {
+      return item.id === taskId;
+    })[0];
+    var done = onlineMinutes >= task.required;
+    setTaskStatus('daily', taskId, '状态：' + (done ? '已完成 ✅' : '进行中') + ' (已在线 ' + onlineMinutes + '/' + task.required + ' 分钟)', done, false);
+    if (done) {
+      applyClaimStatus(customer, seq, taskId, true);
+    } else {
+      setTaskClaimButton(taskId, { visible: false, claimed: false, disabled: false, text: '领取' });
+    }
+  });
+
+  getTaskShareProgress(customer).then(function (shareCount) {
+    if (!isTaskRequestCurrent(seq, customer.openid)) {
+      return;
+    }
+
+    var done = shareCount >= 10;
+    var text = '状态：' + (done ? '已完成 ✅' : '进行中') + ' (已分享 ' + shareCount + '/10 次)';
+    if (done) {
+      text += ' [奖励已自动发放]';
+    }
+    setTaskStatus('daily', 7, text, done, false);
+    setTaskClaimButton(7, { visible: false, claimed: done, disabled: true, text: done ? '已发放' : '领取' });
+  }).catch(function () {
+    if (!isTaskRequestCurrent(seq, customer.openid)) {
+      return;
+    }
+    if (isTaskStatusLoading('daily', 7)) {
+      setTaskStatus('daily', 7, '状态：读取失败', false, false);
+    }
+  });
+}
+
+function renderMonthlyTaskProgress(seq, customer, operationData, signDay) {
+  var monthlyTasks = buildMonthlyTasks(operationData);
+  monthlyTasks.forEach(function (task) {
+    var done = Number(signDay) >= Number(task.required);
+    setTaskStatus('monthly', task.id, '状态：' + (done ? '已完成 ✅' : '进行中') + ' (已签到 ' + signDay + '/' + task.required + ' 天)', done, false);
+    if (done) {
+      applyClaimStatus(customer, seq, task.id, true);
+    } else {
+      setTaskClaimButton(task.id, { visible: false, claimed: false, disabled: false, text: '领取' });
+    }
+  });
+}
+
+function primeTaskCardPlaceholders(customer, operationData) {
+  if (!customer || !customer.openid) {
+    return;
+  }
+
+  var openId = customer.openid;
+
+  buildDailyTasks(operationData).forEach(function (task) {
+    if (!hasTaskButtonSnapshot(openId, task.id)) {
+      setTaskClaimButton(task.id, {
+        visible: false,
+        claimed: false,
+        disabled: false,
+        text: '领取'
+      });
+    }
+    if (!hasTaskStatusSnapshot(openId, 'daily', task.id)) {
+      setTaskStatus('daily', task.id, '状态：读取中...', false, true);
+    }
+  });
+
+  buildMonthlyTasks(operationData).forEach(function (task) {
+    if (!hasTaskButtonSnapshot(openId, task.id)) {
+      setTaskClaimButton(task.id, {
+        visible: false,
+        claimed: false,
+        disabled: false,
+        text: '领取'
+      });
+    }
+    if (!hasTaskStatusSnapshot(openId, 'monthly', task.id)) {
+      setTaskStatus('monthly', task.id, '状态：读取中...', false, true);
+    }
+  });
+}
+
+function getTaskCachedSignDay(openId) {
+  if (typeof getUserReportCachedResponse !== 'function') {
+    return null;
+  }
+
+  var cached = getUserReportCachedResponse(openId);
+  if (!cached || !cached.data) {
+    return null;
+  }
+
+  var signDay = Number(cached.data.day);
+  return Number.isFinite(signDay) ? signDay : null;
+}
+
+function scheduleTaskDetailPreload(reason, delay) {
+  var customer = getTaskCustomer();
+  if (!customer || !$('#dailyTasks').length || !$('#monthlyTasks').length) {
+    return;
+  }
+
+  if (TASK_DETAIL_STATE.preloadTimer) {
+    clearTimeout(TASK_DETAIL_STATE.preloadTimer);
+  }
+
+  TASK_DETAIL_STATE.preloadTimer = setTimeout(function () {
+    TASK_DETAIL_STATE.preloadTimer = null;
+
+    var now = Date.now();
+    var hasSnapshot = !!getTaskSnapshot(customer.openid);
+    if (
+      hasSnapshot &&
+      String(TASK_DETAIL_STATE.openId || '') === String(customer.openid) &&
+      now - Number(TASK_DETAIL_STATE.lastPreloadAt || 0) < 4000
+    ) {
+      applyTaskSnapshot(customer.openid);
+      return;
+    }
+
+    TASK_DETAIL_STATE.lastPreloadAt = now;
+    loadTaskDetail();
+  }, typeof delay === 'number' ? delay : 0);
+}
+
+function isTaskDetailVisible() {
+  return $('#taskDetail').is(':visible');
+}
+
+function stopTaskDetailAutoRefresh() {
+  if (TASK_DETAIL_STATE.autoRefreshTimer) {
+    clearTimeout(TASK_DETAIL_STATE.autoRefreshTimer);
+    TASK_DETAIL_STATE.autoRefreshTimer = null;
+  }
+}
+
+function scheduleTaskDetailAutoRefresh(reason, delay) {
+  stopTaskDetailAutoRefresh();
+
+  TASK_DETAIL_STATE.autoRefreshTimer = setTimeout(function () {
+    TASK_DETAIL_STATE.autoRefreshTimer = null;
+
+    if (!isTaskDetailVisible() || document.hidden) {
+      return;
+    }
+
+    loadTaskDetail();
+    scheduleTaskDetailAutoRefresh(reason || 'poll', TASK_DETAIL_STATE.autoRefreshInterval);
+  }, typeof delay === 'number' ? delay : TASK_DETAIL_STATE.autoRefreshInterval);
+}
+
+function bindTaskDetailAutoRefresh() {
+  if (TASK_DETAIL_STATE.autoBound) {
+    return;
+  }
+
+  TASK_DETAIL_STATE.autoBound = true;
+
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) {
+      stopTaskDetailAutoRefresh();
+      return;
+    }
+
+    if (isTaskDetailVisible()) {
+      loadTaskDetail();
+      scheduleTaskDetailAutoRefresh('visibility', TASK_DETAIL_STATE.autoRefreshInterval);
+    }
+  });
+
+  window.addEventListener('pageshow', function () {
+    if (!document.hidden && isTaskDetailVisible()) {
+      loadTaskDetail();
+      scheduleTaskDetailAutoRefresh('pageshow', TASK_DETAIL_STATE.autoRefreshInterval);
+    }
+  });
+
+  window.addEventListener('pagehide', function () {
+    stopTaskDetailAutoRefresh();
+  });
+}
+
+function startTaskDetailAutoRefresh(reason) {
+  bindTaskDetailAutoRefresh();
+  loadTaskDetail();
+  scheduleTaskDetailAutoRefresh(reason || 'enter', TASK_DETAIL_STATE.autoRefreshInterval);
+}
+
+function handleTaskCardAction(taskId) {
+  var id = String(taskId);
+  if (id === '7') {
+    if (typeof openInviteFriendModal === 'function') {
+      openInviteFriendModal();
+    }
+    return;
+  }
+
+  if (id === '1') {
+    if (typeof openAllGameModal === 'function') {
+      openAllGameModal();
+    }
+    return;
+  }
+
+  if (id === '2' || id === '3' || id === '4' || id === '5') {
+    window.open('https://hz.5cq.com/', '_blank');
+  }
+}
+
+function loadTaskDetail() {
+  var customer = getTaskCustomer();
+  if (!customer) {
+    return;
+  }
+
+  var now = Date.now();
+  if (
+    String(TASK_DETAIL_STATE.openId || '') === String(customer.openid) &&
+    now - Number(TASK_DETAIL_STATE.lastLoadAt || 0) < 300
+  ) {
+    applyTaskSnapshot(customer.openid);
+    return;
+  }
+
+  bindTaskDetailEvents();
+  TASK_DETAIL_STATE.seq += 1;
+  TASK_DETAIL_STATE.openId = customer.openid;
+  TASK_DETAIL_STATE.lastLoadAt = now;
+  var seq = TASK_DETAIL_STATE.seq;
+
+  getTaskOperationData().then(function (opData) {
+    if (!isTaskRequestCurrent(seq, customer.openid)) {
+      return;
+    }
+
+    var dailyTasks = buildDailyTasks(opData);
+    var monthlyTasks = buildMonthlyTasks(opData);
+    ensureTaskCardSkeleton('#dailyTasks', dailyTasks, 'daily');
+    ensureTaskCardSkeleton('#monthlyTasks', monthlyTasks, 'monthly');
+    syncTaskCardMeta('#dailyTasks', dailyTasks);
+    syncTaskCardMeta('#monthlyTasks', monthlyTasks);
+    applyTaskSnapshot(customer.openid);
+    primeTaskCardPlaceholders(customer, opData);
+
+    var cachedSignDay = getTaskCachedSignDay(customer.openid);
+    if (cachedSignDay !== null) {
+      renderMonthlyTaskProgress(seq, customer, opData, cachedSignDay);
+    }
+
+    renderDailyTaskProgress(seq, customer, opData);
+
+    return getTaskReportResponse().then(function (reportRes) {
+      if (!isTaskRequestCurrent(seq, customer.openid)) {
+        return;
+      }
+      var signDay = Number(reportRes && reportRes.data && reportRes.data.day) || 0;
+      renderMonthlyTaskProgress(seq, customer, opData, signDay);
+    }).catch(function () {
+      if (!isTaskRequestCurrent(seq, customer.openid)) {
+        return;
+      }
+      buildMonthlyTasks(opData).forEach(function (task) {
+        if (isTaskStatusLoading('monthly', task.id)) {
+          setTaskStatus('monthly', task.id, '状态：读取失败', false, false);
+        }
+      });
+    });
+  }).catch(function (err) {
+    console.error('加载任务中心失败:', err);
+  });
+}
+
 function showDailyTaskHelp() {
-  var helpContent = '日常任务是获得金币的主要渠道。<br>任务1需要在个人中心的邀请好友按钮的弹框中完成，每次都可以获得10金币。'; // TODO: 请在此处填写具体的说明内容
-  var html = `
-    <div id="dailyTaskHelpModal" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 10000; display: flex; justify-content: center; align-items: center;" onclick="closeDailyTaskHelp()">
-      <div style="background: #fff; padding: 30px; border-radius: 12px; max-width: 500px; width: 90%; position: relative; box-shadow: 0 4px 20px rgba(0,0,0,0.3);" onclick="event.stopPropagation()">
-        <h3 style="margin-top: 0; color: #ff6a00; border-bottom: 2px solid #ff9800; padding-bottom: 10px;">日常任务说明</h3>
-        <div style="margin: 20px 0; line-height: 1.8; color: #333; font-size: 14px;">
-          ${helpContent}
-        </div>
-        <button onclick="closeDailyTaskHelp()" style="background: #ff9800; color: #fff; border: none; padding: 10px 30px; border-radius: 6px; cursor: pointer; font-size: 14px; margin-top: 15px;">关闭</button>
-      </div>
-    </div>
-  `;
+  var helpContent = '日常任务是获得金币的主要渠道。<br>任务1需要在个人中心的邀请好友按钮的弹框中完成，每次都可以获得10金币。';
+  var html = [
+    '<div id="dailyTaskHelpModal" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 10000; display: flex; justify-content: center; align-items: center;" onclick="closeDailyTaskHelp()">',
+    '  <div style="background: #fff; padding: 30px; border-radius: 12px; max-width: 500px; width: 90%; position: relative; box-shadow: 0 4px 20px rgba(0,0,0,0.3);" onclick="event.stopPropagation()">',
+    '    <h3 style="margin-top: 0; color: #ff6a00; border-bottom: 2px solid #ff9800; padding-bottom: 10px;">日常任务说明</h3>',
+    '    <div style="margin: 20px 0; line-height: 1.8; color: #333; font-size: 14px;">' + helpContent + '</div>',
+    '    <button onclick="closeDailyTaskHelp()" style="background: #ff9800; color: #fff; border: none; padding: 10px 30px; border-radius: 6px; cursor: pointer; font-size: 14px; margin-top: 15px;">关闭</button>',
+    '  </div>',
+    '</div>'
+  ].join('');
   $('body').append(html);
 }
 
-// 关闭日常任务说明弹窗
 function closeDailyTaskHelp() {
   $('#dailyTaskHelpModal').remove();
 }
 
-// 领取任务奖励的统一函数
 function claimTaskReward(taskId) {
+  var normalizedTaskId = String(taskId);
+  var $button = $('.claim-btn-' + normalizedTaskId);
+  if ($button.prop('disabled')) {
+    return;
+  }
 
-  $('.claim-btn-' + taskId).prop('disabled', true);
+  $button.prop('disabled', true);
 
-  if (taskId === 'a') {
-    addCoin(2, callback.bind(null, taskId), callback2.bind(null, taskId));
-  } else if (taskId === 'b') {
-    addCoin(3, callback.bind(null, taskId), callback2.bind(null, taskId));
-  } else if (taskId === 'c') {
-    addCoin(4, callback.bind(null, taskId), callback2.bind(null, taskId));
-  } else if (taskId === 'd') {
-    addCoin(5, callback.bind(null, taskId), callback2.bind(null, taskId));
-  } else if(taskId === 7) {
+  if (normalizedTaskId === 'a') {
+    addCoin(2, callback.bind(null, normalizedTaskId), callback2.bind(null, normalizedTaskId));
+  } else if (normalizedTaskId === 'b') {
+    addCoin(3, callback.bind(null, normalizedTaskId), callback2.bind(null, normalizedTaskId));
+  } else if (normalizedTaskId === 'c') {
+    addCoin(4, callback.bind(null, normalizedTaskId), callback2.bind(null, normalizedTaskId));
+  } else if (normalizedTaskId === 'd') {
+    addCoin(5, callback.bind(null, normalizedTaskId), callback2.bind(null, normalizedTaskId));
+  } else if (normalizedTaskId === '7') {
     layer.msg('系统已自动发放');
-  } else if(taskId === 1) {
-    addCoin(10, callback.bind(null, taskId), callback2.bind(null, taskId)); // 10
-  } else if(taskId === 2) {
-    addCoin(11, callback.bind(null, taskId), callback2.bind(null, taskId));
-  } else if(taskId === 3) {
-    addCoin(12, callback.bind(null, taskId), callback2.bind(null, taskId));
-  } else if(taskId === 4) {
-    addCoin(13, callback.bind(null, taskId), callback2.bind(null, taskId));
-  } else if(taskId === 5) {
-    addCoin(14, callback.bind(null, taskId), callback2.bind(null, taskId));
+    $button.prop('disabled', false);
+  } else if (normalizedTaskId === '1') {
+    addCoin(10, callback.bind(null, normalizedTaskId), callback2.bind(null, normalizedTaskId));
+  } else if (normalizedTaskId === '2') {
+    addCoin(11, callback.bind(null, normalizedTaskId), callback2.bind(null, normalizedTaskId));
+  } else if (normalizedTaskId === '3') {
+    addCoin(12, callback.bind(null, normalizedTaskId), callback2.bind(null, normalizedTaskId));
+  } else if (normalizedTaskId === '4') {
+    addCoin(13, callback.bind(null, normalizedTaskId), callback2.bind(null, normalizedTaskId));
+  } else if (normalizedTaskId === '5') {
+    addCoin(14, callback.bind(null, normalizedTaskId), callback2.bind(null, normalizedTaskId));
+  } else {
+    $button.prop('disabled', false);
   }
 }
 
-function callback2(taskId, response) {
-  $('.claim-btn-' + taskId).prop('disabled', false);
+function callback2(taskId) {
+  var $button = $('.claim-btn-' + taskId);
+  if ($button.hasClass('is-claimed')) {
+    return;
+  }
+  $button.prop('disabled', false);
 }
 
-function callback(taskId, response) {
-  $('.claim-btn-' + taskId).prop('disabled', true);
-  // 领完奖励后，把按钮置灰，不让再点击，把背景颜色改成灰色
-  $('.claim-btn-' + taskId).css('background', '#ccc');
-  // 把 hover 的样式去掉
-  $('.claim-btn-' + taskId).removeAttr('onmouseover').removeAttr('onmouseout');
-  // box-shadow 也去掉
-  $('.claim-btn-' + taskId).css('box-shadow', 'none');
-  // 把领取改成已领取
-  $('.claim-btn-' + taskId).text('已领取');
+function callback(taskId) {
+  var customer = getUser();
+  if (customer && customer.openid) {
+    TASK_DETAIL_STATE.claimedMap[getTaskClaimCacheKey(customer.openid, taskId)] = true;
+  }
+
+  setTaskClaimButton(taskId, {
+    visible: true,
+    claimed: true,
+    disabled: true,
+    text: '已领取'
+  });
 }
