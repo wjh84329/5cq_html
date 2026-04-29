@@ -643,6 +643,7 @@
                 loginPollingTimer = setInterval(function () {
                   var formdate = new FormData();
                   formdate.append("key", key);
+                  formdate.append("device_id", (typeof getHzDeviceId === 'function' ? getHzDeviceId() : (window.localStorage.getItem('hz_device_id') || window.localStorage.getItem('uuid') || '')));
                   if (up_id != '') {
                     formdate.append("up_id", up_id);
                   }
@@ -735,7 +736,8 @@
                                   token: result.token
                                 },
                                 data: {
-                                  open_id: hzUserData.open_id || result.customer.openid || result.customer.open_id || ''
+                                  open_id: hzUserData.open_id || result.customer.openid || result.customer.open_id || '',
+                                  device_id: (typeof getHzDeviceId === 'function' ? getHzDeviceId() : (window.localStorage.getItem('hz_device_id') || window.localStorage.getItem('uuid') || ''))
                                 },
                                 success: function (userInfoRes) {
                                   if (userInfoRes && Number(userInfoRes.code) === 200 && userInfoRes.data) {
@@ -943,10 +945,11 @@
 
     function tuiSp() {
       var pathname = window.location.pathname;
-      if (pathname == "/code/user.html") {
-        location.href = '/index.html'
-      } else {
-        location.reload();
+      if (typeof logoutWhenTokenInvalidOrWsClosed === 'function') {
+        logoutWhenTokenInvalidOrWsClosed('已退出登录', {
+          redirectUrl: pathname == "/code/user.html" ? '/index.html' : window.location.href
+        });
+        return;
       }
       $.removeCookie('user', { path: '/' });
       $.removeCookie('token', { path: '/' });
