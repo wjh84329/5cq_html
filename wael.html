@@ -1315,7 +1315,7 @@
 								5CQ.COM - 玩服<span style="border: 1.1px solid #ffffff;box-sizing: border-box;background: linear-gradient(180deg, #ff2727 0%, #bc1b1b 100%);
 				border-radius: 8.5px;padding: 0 2px 0 2px;font-weight: bold;margin: 0 5px 0 5px;">省</span>钱必备
 							</div>
-							<img onclick="window.open('https://999pk.com/pro.mp4')" src="../statics/5cq/jiaoc.png"
+							<img onclick="window.open('./statics/5cq/pro.mp4')" src="../statics/5cq/jiaoc.png"
 								alt="" style="width: 90px;height: 35px;cursor: pointer;top: -5px;left: -210px;position: relative;">
 						</div>
 
@@ -4237,6 +4237,83 @@
 						}
 					}
 
+					function get999pkCurrentOpenId() {
+						var customer = typeof getUser === 'function' ? getUser() : null;
+						if (!customer) {
+							return '';
+						}
+						return String(customer.openid || customer.open_id || '').trim();
+					}
+
+					function format999pkTimeWindowPart(value) {
+						var text = String(value || '').trim();
+						if (!text) {
+							return '';
+						}
+						var timeTextParts = text.split(' ');
+						text = timeTextParts[timeTextParts.length - 1];
+						var parts = text.split(':');
+						var hour = parseInt(parts[0], 10);
+						if (isNaN(hour)) {
+							return text;
+						}
+						var minute = parts.length > 1 ? parseInt(parts[1], 10) : 0;
+						if (!isNaN(minute) && minute > 0) {
+							return hour + '点' + minute + '分';
+						}
+						return hour + '点';
+					}
+
+					function build999pkSubsidyTimeMessage(timeRangeText) {
+						var rawText = String(timeRangeText || '').trim();
+						if (!rawText) {
+							return '非常抱歉，当前不在补贴领取时间内，请合理安排时间';
+						}
+						var normalizedText = rawText.replace(/\s*至\s*/g, '-').replace(/\s+/g, '');
+						var parts = normalizedText.split('-');
+						if (parts.length >= 2) {
+							return '非常抱歉，本服领取补贴时间为' + format999pkTimeWindowPart(parts[0]) + '-' + format999pkTimeWindowPart(parts[1]) + '，请合理安排时间';
+						}
+						return '非常抱歉，本服领取补贴时间为' + rawText + '，请合理安排时间';
+					}
+
+					function canClaim999pkSubsidyNow() {
+						var openId = get999pkCurrentOpenId();
+						if (!openId) {
+							return false;
+						}
+
+						var allowed = false;
+						$.ajax({
+							url: baseUrl + 'cashier/checkTodayDiscount',
+							type: 'GET',
+							dataType: 'json',
+							async: false,
+							data: {
+								openId: openId
+							},
+							success: function (res) {
+								var code = res ? parseInt(res.code, 10) : NaN;
+								if (res && (code === 0 || res.result === true)) {
+									allowed = true;
+									return;
+								}
+								var message = res && res.msg ? String(res.msg) : '';
+								if (message.indexOf('补贴时间为') !== -1) {
+									layer.msg(build999pkSubsidyTimeMessage(message.replace(/^.*补贴时间为/, '')));
+									allowed = false;
+									return;
+								}
+								layer.msg(message || '当前暂不支持领取补贴');
+							},
+							error: function () {
+								layer.msg('补贴时间校验失败，请稍后重试');
+							}
+						});
+
+						return allowed;
+					}
+
 					// 检查补贴时间并跳转
 					function checkSubsidyTimeAndRedirect(subsidyId, subsidyMin, subsidyMax, payMerchant, isInSubsidyTime, startHour, endHour, startMinute, endMinute) {
 						if (!isInSubsidyTime) {
@@ -4252,15 +4329,25 @@
 						if (!ensure999pkLogin()) {
 							return;
 						}
+						if (!canClaim999pkSubsidyNow()) {
+							return;
+						}
+						var currentOpenId = get999pkCurrentOpenId();
 						var targetUrl = './recharge.html?subsidy_id=' + encodeURIComponent(subsidyId || '') +
 							'&subsidy_min=' + encodeURIComponent(subsidyMin || '') +
 							'&subsidy_max=' + encodeURIComponent(subsidyMax || '') +
 							'&pay_merchant=' + encodeURIComponent(payMerchant || '');
+						if (currentOpenId) {
+							targetUrl += '&open_id=' + encodeURIComponent(currentOpenId);
+						}
 						window.open(targetUrl, '_blank');
 					}
 
 					function goPay(publishId, url, gameName, money) {
 						if (!ensure999pkLogin()) {
+							return;
+						}
+						if (!canClaim999pkSubsidyNow()) {
 							return;
 						}
 
@@ -4281,6 +4368,10 @@
 						}
 						if (decodedMoney !== '') {
 							queryParts.push('money=' + encodeURIComponent(decodedMoney));
+						}
+						var currentOpenId = get999pkCurrentOpenId();
+						if (currentOpenId) {
+							queryParts.push('open_id=' + encodeURIComponent(currentOpenId));
 						}
 
 						var targetUrl = './recharge.html';
@@ -5437,7 +5528,7 @@
 						async: false,
 						dataType: 'json',
 						success: function (result) {
-							if (!result || result.code != 200 || !result.data || !result.key) {
+							if (!result || result.code != 200) {
 								loginOpening999pk = false;
 								$qrBox.html('<div style="padding:40px 0;color:#999;">二维码加载失败</div>');
 								layer.msg(result && result.msg ? result.msg : '获取登录二维码失败');
@@ -5573,7 +5664,13 @@
 					if (decodedMoney !== '') {
 						queryParts.push('money=' + encodeURIComponent(decodedMoney));
 					}
-
+					var currentOpenId = get999pkCurrentOpenId();
+					if (currentOpenId) {
+						queryParts.push('open_id=' + encodeURIComponent(currentOpenId));
+					}
+					if (!canClaim999pkSubsidyNow()) {
+						return;
+					}
 					var targetUrl = './recharge.html';
 					if (queryParts.length) {
 						targetUrl += '?' + queryParts.join('&');
@@ -5588,10 +5685,17 @@
 						});
 						return;
 					}
+					if (!canClaim999pkSubsidyNow()) {
+						return;
+					}
+					var currentOpenId = get999pkCurrentOpenId();
 					var targetUrl = './recharge.html?subsidy_id=' + encodeURIComponent(subsidyId || '') +
 						'&subsidy_min=' + encodeURIComponent(subsidyMin || '') +
 						'&subsidy_max=' + encodeURIComponent(subsidyMax || '') +
 						'&pay_merchant=' + encodeURIComponent(payMerchant || '');
+					if (currentOpenId) {
+						targetUrl += '&open_id=' + encodeURIComponent(currentOpenId);
+					}
 					window.open(targetUrl, '_blank');
 				};
 
@@ -5600,6 +5704,9 @@
 						show999pkLoginQr(function () {
 							open999pkRecharge(publishId, url, gameName, money);
 						});
+						return;
+					}
+					if (!canClaim999pkSubsidyNow()) {
 						return;
 					}
 					open999pkRecharge(publishId, url, gameName, money);

@@ -392,6 +392,14 @@
             </div>
             <div class="form-row">
                 <div class="form-label">
+                    您的QQ：
+                </div>
+                <div class="form-input">
+                    <input type="text" id="qq" placeholder="请输入QQ号">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">
                     充值金额：
                 </div>
                 <div class="form-input">
@@ -791,10 +799,10 @@
                 return;
             }
             if (subsidyBubbleAmountEl) {
-                subsidyBubbleAmountEl.textContent = subsidyValue.toFixed(2);
+                subsidyBubbleAmountEl.textContent = formatWholeYuanDisplay(subsidyValue);
             }
             if (subsidyWelfareAmountEl) {
-                subsidyWelfareAmountEl.textContent = welfareValue.toFixed(2);
+                subsidyWelfareAmountEl.textContent = formatWholeYuanDisplay(welfareValue);
             }
 
             if (wxHongbaoSpanEl) {
@@ -806,9 +814,17 @@
             }
         }
 
+        function formatWholeYuanDisplay(value) {
+            var amountValue = parseFloat(value);
+            if (isNaN(amountValue)) {
+                return '0';
+            }
+            return String(Math.round(amountValue));
+        }
+
         function normalizeAmountValue(value) {
             var amountValue = parseFloat(value);
-            return isNaN(amountValue) ? '' : amountValue.toFixed(2);
+            return isNaN(amountValue) ? '' : String(Math.round(amountValue));
         }
 
         function getLastRechargeInfo() {
@@ -1012,7 +1028,7 @@
                 var gameServerInput = document.getElementById('gameServer');
                 if (gameServerInput) {
                     gameServerInput.value = Name;
-                    gameServerInput.readOnly = true;
+                    // gameServerInput.readOnly = true;
                 }
             }
             if (money) {
@@ -1145,6 +1161,7 @@
             var amount = document.getElementById('amount').value.trim();
             var currencyName = document.getElementById('currencyName').value.trim();
             var phone = document.getElementById('phone').value.trim();
+            var qq = document.getElementById('qq').value.trim();
             var gameServer = document.getElementById('gameServer').value.trim();
 
             var subsidyId = getUrlParam('subsidy_id');
@@ -1171,6 +1188,8 @@
                 type: 'POST',
                 dataType: 'json',
                 data: {
+                    gameName: getUrlParam('server_name') || gameName,
+                    serverName: serverName,
                     localOrderNo: localOrderNo,
                     productName: cashierName || '充值',
                     orderAmount: amount,
@@ -1182,6 +1201,7 @@
                     mark: markValue,
                     remark: '5CQ发起充值',
                     contact: phone,
+                    qq: qq,
                     // type: isNaN(payType) ? 2 : payType
                 },
                 success: function (res) {
@@ -1289,6 +1309,7 @@
             var account = document.getElementById('playerAccount').value.trim();
             var confirmAccount = document.getElementById('confirmAccount').value.trim();
             var phone = document.getElementById('phone').value.trim();
+            var qq = document.getElementById('qq').value.trim();
             var amount = document.getElementById('amount').value.trim();
             var currencyName = document.getElementById('currencyName').value.trim();
             var gameServer = document.getElementById('gameServer').value.trim();
@@ -1308,6 +1329,18 @@
             }
             if (!phone) {
                 layer.msg('请输入手机号');
+                return false;
+            }
+            if (!/^1[3-9]\d{9}$/.test(phone)) {
+                layer.msg('请输入有效的手机号');
+                return false;
+            }
+            if (!qq) {
+                layer.msg('请输入QQ号');
+                return false;
+            }
+            if (!/^[1-9][0-9]{4,}$/.test(qq)) {
+                layer.msg('请输入有效的QQ号');
                 return false;
             }
             if (!amount) {

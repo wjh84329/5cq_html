@@ -3400,6 +3400,105 @@
 				var currentSubsidyAmount = 0;
 				var currentPayType = 'wechat';
 
+				function ensure999pkLogin() {
+					var customer = typeof getUser === 'function' ? getUser() : null;
+					if (customer && (customer.openid || customer.open_id)) {
+						return true;
+					}
+					if (typeof myLogin === 'function') {
+						myLogin(1);
+					} else if (typeof openWXCode === 'function') {
+						openWXCode(1);
+					} else {
+						layer.msg('请先登录');
+					}
+					return false;
+				}
+
+				function safeDecode999pkValue(value) {
+					try {
+						return decodeURIComponent(value || '').trim();
+					} catch (e) {
+						return (value || '').trim();
+					}
+				}
+
+				function get999pkCurrentOpenId() {
+					var customer = typeof getUser === 'function' ? getUser() : null;
+					if (!customer) {
+						return '';
+					}
+					return String(customer.openid || customer.open_id || '').trim();
+				}
+
+				function format999pkTimeWindowPart(value) {
+					var text = String(value || '').trim();
+					if (!text) {
+						return '';
+					}
+					var timeTextParts = text.split(' ');
+					text = timeTextParts[timeTextParts.length - 1];
+					var parts = text.split(':');
+					var hour = parseInt(parts[0], 10);
+					if (isNaN(hour)) {
+						return text;
+					}
+					var minute = parts.length > 1 ? parseInt(parts[1], 10) : 0;
+					if (!isNaN(minute) && minute > 0) {
+						return hour + '点' + minute + '分';
+					}
+					return hour + '点';
+				}
+
+				function build999pkSubsidyTimeMessage(timeRangeText) {
+					var rawText = String(timeRangeText || '').trim();
+					if (!rawText) {
+						return '非常抱歉，当前不在补贴领取时间内，请合理安排时间';
+					}
+					var normalizedText = rawText.replace(/\s*至\s*/g, '-').replace(/\s+/g, '');
+					var parts = normalizedText.split('-');
+					if (parts.length >= 2) {
+						return '非常抱歉，本服领取补贴时间为' + format999pkTimeWindowPart(parts[0]) + '-' + format999pkTimeWindowPart(parts[1]) + '，请合理安排时间';
+					}
+					return '非常抱歉，本服领取补贴时间为' + rawText + '，请合理安排时间';
+				}
+
+				function canClaim999pkSubsidyNow() {
+					var openId = get999pkCurrentOpenId();
+					if (!openId) {
+						return false;
+					}
+
+					var allowed = false;
+					$.ajax({
+						url: baseUrl + 'cashier/checkTodayDiscount',
+						type: 'GET',
+						dataType: 'json',
+						async: false,
+						data: {
+							openId: openId
+						},
+						success: function (res) {
+							var code = res ? parseInt(res.code, 10) : NaN;
+							if (res && (code === 0 || res.result === true)) {
+								allowed = true;
+								return;
+							}
+							var message = res && res.msg ? String(res.msg) : '';
+							if (message.indexOf('补贴时间为') !== -1) {
+								layer.msg(build999pkSubsidyTimeMessage(message.replace(/^.*补贴时间为/, '')));
+								return;
+							}
+							layer.msg(message || '当前暂不支持领取补贴');
+						},
+						error: function () {
+							layer.msg('补贴时间校验失败，请稍后重试');
+						}
+					});
+
+					return allowed;
+				}
+
 				// 检查补贴时间并跳转
 				function checkSubsidyTimeAndRedirect(subsidyId, subsidyMin, subsidyMax, payMerchant, isInSubsidyTime, startHour, endHour, startMinute, endMinute) {
 					if (!isInSubsidyTime) {
@@ -3412,65 +3511,39 @@
 				}
 
 				function checkLoginAndRedirect(subsidyId, subsidyMin, subsidyMax, payMerchant) {
-					var customer = typeof getUser === 'function' ? getUser() : null;
-					if (!customer || !customer.openid) {
-						if (typeof myLogin === 'function') {
-							myLogin(1);
-						} else {
-							layer.msg('请先登录');
-						}
+					if (!ensure999pkLogin()) {
 						return;
 					}
+					if (!canClaim999pkSubsidyNow()) {
+						return;
+					}
+					var currentOpenId = get999pkCurrentOpenId();
 
 					var url = './recharge.html?subsidy_id=' + encodeURIComponent(subsidyId || '') +
 						'&subsidy_min=' + encodeURIComponent(subsidyMin || '') +
 						'&subsidy_max=' + encodeURIComponent(subsidyMax || '') +
 						'&pay_merchant=' + encodeURIComponent(payMerchant || '');
+					if (currentOpenId) {
+						url += '&open_id=' + encodeURIComponent(currentOpenId);
+					}
 					window.open(url, '_blank');
 				}
 
 				function goPay(publishId, url, gameName, money) {
-					var customer = typeof getUser === 'function' ? getUser() : null;
-					if (!customer || !customer.openid) {
-						if (typeof myLogin === 'function') {
-							myLogin(1);
-						} else {
-							layer.msg('请先登录');
-						}
+					if (!ensure999pkLogin()) {
+						return;
+					}
+					if (!canClaim999pkSubsidyNow()) {
 						return;
 					}
 
-					var decodedPublishId = '';
-					var decodedUrl = '';
-					var decodedGameName = '';
-
-					try {
-						decodedPublishId = decodeURIComponent(publishId || '').trim();
-					} catch (e) {
-						decodedPublishId = (publishId || '').trim();
-					}
-
-					try {
-						decodedUrl = decodeURIComponent(url || '').trim();
-					} catch (e) {
-						decodedUrl = (url || '').trim();
-					}
-
-					try {
-						decodedGameName = decodeURIComponent(gameName || '').trim();
-					} catch (e) {
-						decodedGameName = (gameName || '').trim();
-					}
+					var decodedPublishId = safeDecode999pkValue(publishId);
+					var decodedUrl = safeDecode999pkValue(url);
+					var decodedGameName = safeDecode999pkValue(gameName);
 
 					var discountAmount = '';
 					var localOrderNo = '';
-					var decodedMoney = '';
-
-					try {
-						decodedMoney = decodeURIComponent(money || '').trim();
-					} catch (e) {
-						decodedMoney = (money || '').trim();
-					}
+					var decodedMoney = safeDecode999pkValue(money);
 
 					var queryParts = [];
 					if (decodedPublishId) {
@@ -3490,6 +3563,10 @@
 					}
 					if (localOrderNo !== '') {
 						queryParts.push('localOrderNo=' + encodeURIComponent(localOrderNo));
+					}
+					var currentOpenId = get999pkCurrentOpenId();
+					if (currentOpenId) {
+						queryParts.push('open_id=' + encodeURIComponent(currentOpenId));
 					}
 
 					var targetUrl = './recharge.html';

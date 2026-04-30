@@ -1166,16 +1166,18 @@
                 {field: 'customerId', title: '用户ID', width: 80, align: 'center'},
                 {field: 'customerName', title: '用户昵称', width: 120, align: 'center'},
                 {field: 'contact', title: '联系方式', width: 130, align: 'center'},
+                {field: 'qq', title: 'QQ号', width: 110, align: 'center'},
                 {field: 'localOrderNo', title: '订单号', width: 200},
                 {field: 'trxNo', title: '支付平台订单号', width: 200},
                 {
-                    field: 'url', title: 'URL', minWidth: 260, templet: function (d) {
+                    field: 'url', title: '游戏连接', minWidth: 160, templet: function (d) {
                         var url = d.url || d.publishUrl || d.requestUrl || '';
                         if (!url) return '-';
                         return '<a href="' + url + '" target="_blank" style="color:#1E9FFF;">' + url + '</a>';
                     }
                 },
                 {field: 'gameName', title: '游戏名称', minWidth: 160},
+                {field: 'serverName', title: '区服名称', width: 160, align: 'center'},
                 {field: 'currencyName', title: '货币名称', width: 110, align: 'center'},
                 {
                     field: 'orderAmount', title: '订单金额', width: 110, align: 'center', templet: function (d) {

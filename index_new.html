@@ -32,17 +32,17 @@
 
         #adleft {
             left: 0;
-            top: 150px;
+            top: 33%;
         }
 
         #adright {
             right: 0;
-            top: 150px;
+            top: 33%;
         }
 
         #adleft, #adright {
-            width: 250px;
-            height: 313px;
+            width: 300px;
+            height: auto;
             font: 14px/20px arial;
             text-align: center;
             position: absolute;
@@ -50,13 +50,20 @@
             color: #fff;
         }
 
+        #adleft img, #adright img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
         .ows-close {
             position: absolute;
-            left: 118px;
-            bottom: 0px;
+            left: 50%;
+            bottom: -30px;
+            transform: translateX(-50%);
             width: 21px;
             height: 21px;
-            background: url(https://www.5cq.com/static/5cq/ows-close.png) no-repeat center;
+            background: url(./statics/images/new/close.png) no-repeat center;
             cursor: pointer;
         }
 
@@ -880,13 +887,13 @@
     <div style="height:70px;background-color: #fff;"> 
      <img src="/statics/images/rankbar1.gif" style="width:100%; margin:0; padding:0;" height="60" width="1300"> 
     </div> 
-   <div class="siterankbox2 home-rank-tabs"> 
-    <ul id="homeRankbar" style="margin: auto;"> 
-     <li class="chked" data-rank-type="all">总投入排行</li> 
-     <li data-rank-type="cur">今日投入榜</li> 
-     <li data-rank-type="likes">点赞排行榜</li> 
-    </ul> 
-   </div> 
+    <div class="siterankbox2 home-rank-tabs"> 
+     <ul id="homeRankbar" style="margin: auto;"> 
+      <li class="chked" data-rank-type="all">总投入排行</li> 
+      <li data-rank-type="cur">今日投入榜</li> 
+      <li data-rank-type="likes">点赞排行榜</li> 
+     </ul> 
+    </div> 
     <div style="position: relative; display: contents;"> 
      <table cellpadding="0" cellspacing="0" width="100%" class="rankingtable" id="rankingtable"> 
       <tbody id="rankingtableTB" style="border-top: solid 2px #d33f3f;"> 
@@ -1358,14 +1365,14 @@
    <p class="textfoot"> <a style="color: white;text-align: center;width: 100%" target="_blank" id="beian" href="https://beian.miit.gov.cn">Copyright 2019-2027 All Rights Reserved </a><a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank" style="color: #fff"> 信产部ICP备案号：黔ICP备2022005643号　| </a> <span style="color: #fff">营业执照注册证号：91522301MABP8XJ71N </span> <a id="_pingansec_bottomimagesmall_shiming" target="_blank" href="//si.trustutn.org/info?sn=840240419040948778244&amp;certType=1"><img src="//v.trustutn.org/images/cert/realname_small_img.png"></a><script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1281074630'%3E%3C/span%3E%3Cscript src='https://s4.cnzz.com/z.js%3Fid%3D1281074630%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script></p> 
    <p></p>  
   </div> 
-  <!--<div id="adleft"> --> 
-  <!--   <a href="https://www.ahxyol.com/" target="_blank"><img style="width: 250px;" src="https://www.5cq.com/images/xleft.gif"></a> --> 
-  <!--   <span title="关闭" class="ows-close"></span> --> 
-  <!--</div> --> 
-  <div id="adright"> 
+  <div id="adleft"> 
+   <a href="https://www.ahxyol.com/" target="_blank"><img style="width: 250px;" src="https://www.5cq.com/images/xleft.gif"></a> 
+   <span title="关闭" class="ows-close"></span> 
+  </div> 
+  <!--<div id="adright"> -->
    <!--   <a href="https://www.ahxyol.com/" target="_blank"><img style="width: 250px;" src="https://www.5cq.com/images/xleft.gif"></a> --> 
    <!--   <span title="关闭" class="ows-close"></span> --> 
-  </div> 
+  <!--</div> -->
   <div id="openwx" style="display: none"> 
    <img src="/statics/images/wx.jpg" style="width: 258px;"> 
   </div> 
@@ -5702,6 +5709,22 @@
     var adright = document.getElementById("adright");
     var adtop = adleft ? adleft.offsetTop : 0;
 
+    function hideFloatingAds() {
+        if (adleft) {
+            adleft.style.display = "none";
+        }
+        if (adright) {
+            adright.style.display = "none";
+        }
+    }
+
+    function bindFloatingAdCloseEvents() {
+        var closeButtons = document.getElementsByClassName("ows-close");
+        for (var i = 0; i < closeButtons.length; i++) {
+            closeButtons[i].onclick = hideFloatingAds;
+        }
+    }
+
     if (adleft || adright) {
         window.onscroll = function () {
             var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
@@ -5709,28 +5732,13 @@
             if (adright && adright.style) adright.style.top = adtop + scrollTop + "px";
         }
     }
-
-    var close = document.getElementsByClassName("ows-close");
-
-    if (close.length > 0) {
-        if (close[0]) {
-            close[0].onclick = function () {
-                if (adleft) adleft.style.display = "none";
-            }
-        }
-        if (close.length > 1 && close[1]) {
-            close[1].onclick = function () {
-                if (adright) adright.style.display = "none";
-            }
-        }
-    }
+    bindFloatingAdCloseEvents();
 
     var u = navigator.userAgent;
     var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
     var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
     if (isAndroid || isiOS) {
-        adleft.style.display = "none";
-        adright.style.display = "none";
+        hideFloatingAds();
     }
 </script> 
   <script>
@@ -5847,24 +5855,15 @@
                 console.log(res)
                 var html = ''
                 $.each(res.data.data, function (index, item) {
-                    html += `<a href="${item.url}" target="_blank"><img style="width: 250px;" src="./statics/upload/${item.imgurl}"></a>
+                    html += `<a href="${item.url}" target="_blank"><img style="width: 300px;height: 450px;" src="./statics/upload/${item.imgurl}"></a>
                 <span title="关闭" class="ows-close"></span> `
                 })
                 $('#adleft').html(html)
                 $('#adright').html(html)
-                var close = document.getElementsByClassName("ows-close")
-                if(close.length>0){
-                    close[0].onclick = function () {
-                        adleft.style.display = "none";
-                    }
-                    close[1].onclick = function () {
-                        adright.style.display = "none";
-                    }
-                }
+                bindFloatingAdCloseEvents();
                 
                 if (isMobileDevice()) {
-                    $('#adleft').css('display', 'none')
-                    $('#adright').css('display', 'none')
+                    hideFloatingAds()
                     $('.advertising').css('display', 'none')
                 } else {
                     $('#adleft').css('display', 'block')
