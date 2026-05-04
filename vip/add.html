@@ -58,9 +58,16 @@
        <td><span class="tips">根据开始时间和推荐天数自动计算。 </span></td> 
       </tr> 
       <tr> 
-       <th width="150">推荐天数</th> 
-       <td width="170"><input id="days" name="days" value="7" size="21" autocomplete="off" class="txtbox"></td> 
-       <td><span class="tips">请选择广告推荐的天数。 </span></td> 
+        <th width="150">推荐天数</th> 
+        <td width="170">
+          <select id="days" name="days" class="short-droplist">
+            <option value="7" selected>7 天</option>
+            <option value="14">14 天</option>
+            <option value="21">21 天</option>
+            <option value="28">28 天</option>
+          </select>
+        </td> 
+        <td><span class="tips">请选择广告推荐的天数。 </span></td> 
       </tr> 
       <tr> 
        <th>广告推荐</th> 

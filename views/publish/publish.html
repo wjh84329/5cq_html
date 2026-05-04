@@ -67,6 +67,9 @@
     <button lay-event="remove" shiro-event="sys:publish:open-remove" class="layui-btn layui-btn-primary layui-btn-xs"><i
             class="layui-icon">&#xe640;</i>删除
     </button>
+    <button lay-event="reservePause" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe642;</i>操作
+    </button>
 </script>
 
 <!--添加-->
@@ -337,11 +340,52 @@
 
 </div>
 
+<!-- 预约暂停/开启弹窗 -->
+<div id="layui-reserve-pause" hidden>
+   <div class="layui-fluid" style="padding: 0;">
+    <div class="layui-card" style="margin: 0; box-shadow: none;">
+     <div class="layui-card-body" style="padding: 20px 20px 10px; overflow: hidden;">
+      <form class="layui-form" id="layui-form-reserve-pause" lay-filter="layui-form-reserve-pause">
+       <input type="hidden" name="id">
+       <div class="layui-form-item">
+        <label class="layui-form-label" style="width: 90px;">暂停时间</label>
+        <div class="layui-input-block" style="margin-left: 120px;">
+         <input type="text" name="reservePauseTime" id="reservePauseTime" autocomplete="off" lay-verify="required" placeholder="请选择或输入暂停时间" class="layui-input">
+        </div>
+       </div>
+       <div class="layui-form-item">
+        <label class="layui-form-label" style="width: 90px;">开启时间</label>
+        <div class="layui-input-block" style="margin-left: 120px;">
+         <input type="text" name="reserveStartTime" id="reserveStartTime" autocomplete="off" placeholder="不填则只预约暂停" class="layui-input">
+        </div>
+       </div>
+       <div class="layui-form-item">
+        <div class="layui-input-block" style="margin-left: 120px; color: #999;">
+         开启时间选填。不填写时只会预约暂停。
+        </div>
+        <div class="layui-input-block" style="margin-left: 120px; color: #999;">
+         已经暂停的广告，会自动更新暂停时间，填写了开启时间，到了开启时间会自动恢复显示。
+        </div>
+       </div>
+       <div class="layui-form-item">
+        <div class="layui-input-block reserve-status-hint" style="margin-left: 120px;"></div>
+       </div>
+       <div class="layui-form-item">
+        <div class="layui-input-block" style="margin-left: 120px;">
+         <button class="layui-btn" lay-submit lay-filter="submit-reserve-pause">立即提交</button>
+        </div>
+       </div>
+      </form>
+     </div>
+    </div>
+   </div>
+  </div>
+
 <!-- 每日数据预览弹窗 -->
-<div id="layui-month-data" hidden>
-    <div class="layui-fluid">
-        <div class="layui-card">
-            <div class="layui-card-body" style="padding: 15px;">
+<div id="layui-month-data" hidden style="padding: 15px; box-sizing: border-box;">
+    <div class="layui-fluid" style="padding: 0;">
+        <div class="layui-card" style="margin: 0; box-shadow: none;">
+            <div class="layui-card-body" style="padding: 15px; overflow: hidden;">
                 <form class="layui-form">
                     <div class="layui-form-item">
                         <label class="layui-form-label" style="width: 80px;">选择月份</label>
@@ -352,7 +396,9 @@
                         <button type="button" id="month-data-query-btn" class="layui-btn">查询</button>
                     </div>
                 </form>
-                <table class="layui-hide" id="month-data-table" lay-filter="month-data-table"></table>
+                <div id="month-data-table-wrap" style="overflow: hidden;">
+                    <table class="layui-hide" id="month-data-table" lay-filter="month-data-table"></table>
+                </div>
             </div>
         </div>
     </div>
@@ -383,6 +429,24 @@
         var day = ("0" + date.getDate()).slice(-2); // Add leading 0 and slice last 2 digits
         return year + "-" + month + "-" + day;
     }
+
+    function getFormattedDateTime(date) {
+        var currentDate = date || new Date();
+        var year = currentDate.getFullYear();
+        var month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
+        var day = ("0" + currentDate.getDate()).slice(-2);
+        var hours = ("0" + currentDate.getHours()).slice(-2);
+        var minutes = ("0" + currentDate.getMinutes()).slice(-2);
+        var seconds = ("0" + currentDate.getSeconds()).slice(-2);
+        return year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
+    }
+
+    function parseDateTime(dateTimeStr) {
+        if (!dateTimeStr) {
+            return null;
+        }
+        return new Date(dateTimeStr.replace(/-/g, '/'));
+    }
     layui.config({
         base: '../../../layuiadmin/' //静态资源所在路径
     }).extend({
@@ -395,7 +459,7 @@
             form = layui.form,//控制添加修改（同一个弹出层）关闭弹出层的索引
             laydate = layui.laydate,
             upload = layui.upload,
-            layer = layui.layer, closeindex;
+            layer = layui.layer, closeindex, reservePauseLayerIndex;
         laydate.render({
             elem: '#startdate',
             type: 'datetime',
@@ -436,6 +500,108 @@
             }
         });
         
+        // 预约暂停/开启 - 暂停时间选择器
+        laydate.render({
+            elem: '#reservePauseTime',
+            type: 'datetime',
+            format: 'yyyy-MM-dd HH:mm:ss',
+            theme: 'grid',
+            trigger: 'click'
+        });
+
+        // 预约暂停/开启 - 开启时间选择器
+        laydate.render({
+            elem: '#reserveStartTime',
+            type: 'datetime',
+            format: 'yyyy-MM-dd HH:mm:ss',
+            theme: 'grid',
+            trigger: 'click'
+        });
+
+        form.on('submit(submit-reserve-pause)', function(data) {
+            var field = data.field || {};
+            var reservePauseDate = parseDateTime(field.reservePauseTime);
+            var reserveStartDate = parseDateTime(field.reserveStartTime);
+            var now = new Date();
+            // 判断当前是否是已暂停状态（暂停时间为只读，说明是已有的暂停记录）
+            var isAlreadyPaused = $('#reservePauseTime').prop('readonly');
+
+            if (!field.id) {
+                layer.msg('数据异常，缺少ID');
+                return false;
+            }
+
+            if (!reservePauseDate || isNaN(reservePauseDate.getTime())) {
+                layer.msg('请输入正确的暂停时间');
+                return false;
+            }
+
+            if (!field.reservePauseTime) {
+                layer.msg('请填写暂停时间');
+                return false;
+            }
+
+            // 已暂停状态下，暂停时间是历史记录，跳过"必须大于当前时间"的验证
+            if (!isAlreadyPaused && reservePauseDate.getTime() <= now.getTime()) {
+                layer.msg('预约暂停时间必须大于当前时间');
+                return false;
+            }
+
+            // 已暂停状态下，开启时间为必填
+            if (isAlreadyPaused && !field.reserveStartTime) {
+                layer.msg('已暂停的广告，开启时间为必填');
+                return false;
+            }
+
+            if (field.reserveStartTime) {
+                if (!reserveStartDate || isNaN(reserveStartDate.getTime())) {
+                    layer.msg('请输入正确的开启时间');
+                    return false;
+                }
+
+                // 已暂停状态下，开启时间只要大于当前时间即可
+                if (isAlreadyPaused) {
+                    if (reserveStartDate.getTime() <= now.getTime()) {
+                        layer.msg('预约开始时间必须大于当前时间');
+                        return false;
+                    }
+                } else {
+                    if (reserveStartDate.getTime() <= reservePauseDate.getTime()) {
+                        layer.msg('预约开始时间必须大于预约暂停时间');
+                        return false;
+                    }
+                }
+            }
+
+            var payload = {
+                id: field.id,
+                reservePauseTime: field.reservePauseTime
+            };
+
+            if (field.reserveStartTime) {
+                payload.reserveStartTime = field.reserveStartTime;
+            }
+
+            admin.req({
+                url: layui.setter.url + 'publish/reservePause',
+                type: 'POST',
+                data: JSON.stringify(payload),
+                contentType: "application/json",
+                done: function (res) {
+                    layer.msg(res.msg || '操作成功');
+                    if (res && res.code === 0) {
+                        if (reservePauseLayerIndex) {
+                            layer.close(reservePauseLayerIndex);
+                            reservePauseLayerIndex = null;
+                        }
+                        table.reload("auth-table");
+                        $.get({url:layui.setter.url + "ranking/test1"})
+                    }
+                }
+            });
+            return false;
+        });
+
         // 监听是否有礼包滑块事件 - 新增表单
         form.on('switch(hasPacket-switch)', function(data){
             if(data.elem.checked){
@@ -818,6 +984,91 @@
                     layer.msg('该服广告还未开始，无法操作！')
                     return;
                 }
+            }else if(obj.event == 'reservePause'){
+                var isPaused = obj.data.state == 3;
+                var hasPauseExecuted = !!obj.data.pauseStartTime;
+
+                // 暂停时间：
+                //   pauseStartTime 有值 → 暂停已实际执行，显示实际暂停时间，只读
+                //   reservePauseStatus == 0 且 reservePauseTime 有值 → 已预约等待执行，显示预约时间，只读
+                //   其他 → 新建预约，默认当前时间，可编辑
+                var pauseTime;
+                var pauseReadonly = false;
+                var pauseStatusHint = '';
+                if (hasPauseExecuted) {
+                    pauseTime = obj.data.pauseStartTime;
+                    pauseReadonly = true;
+                    pauseStatusHint = '✅ 暂停已于 ' + obj.data.pauseStartTime + ' 执行完成';
+                } else if (obj.data.reservePauseStatus === 0 && obj.data.reservePauseTime) {
+                    pauseTime = obj.data.reservePauseTime;
+                    pauseReadonly = true;
+                    pauseStatusHint = '⏳ 预约暂停待执行，将在指定时间自动暂停';
+                } else if (obj.data.reservePauseStatus === 3) {
+                    pauseTime = getFormattedDateTime();
+                    pauseReadonly = false;
+                    pauseStatusHint = '';
+                } else if (obj.data.reservePauseStatus === 4) {
+                    pauseTime = getFormattedDateTime();
+                    pauseReadonly = false;
+                    pauseStatusHint = '';
+                } else {
+                    pauseTime = getFormattedDateTime();
+                    pauseReadonly = false;
+                    pauseStatusHint = '';
+                }
+
+                // 开启时间：
+                //   reserveStartUpdateTime 有值 → 开启已实际执行，显示开启处理时间，只读
+                //   reserveStartStatus == 0 且 reserveStartTime 有值 → 已预约等待开启，显示预约开启时间，只读
+                //   其他 → 留空
+                var startTime = '';
+                var startTimeReadonly = false;
+                var startStatusHint = '';
+                if (obj.data.reserveStartUpdateTime) {
+                    startTime = obj.data.reserveStartUpdateTime;
+                    startTimeReadonly = true;
+                    startStatusHint = '✅ 开启已于 ' + obj.data.reserveStartUpdateTime + ' 执行完成';
+                } else if (obj.data.reserveStartStatus === 0 && obj.data.reserveStartTime) {
+                    startTime = obj.data.reserveStartTime;
+                    startTimeReadonly = true;
+                    startStatusHint = '⏳ 预约开启待执行，将在指定时间自动恢复';
+                }
+                // 其他情况：留空，可编辑可点击
+
+                form.val('layui-form-reserve-pause', {
+                    id: obj.data.id,
+                    reservePauseTime: pauseTime,
+                    reserveStartTime: startTime
+                });
+
+                // 暂停时间：已执行或已预约情况下只读
+                $('#reservePauseTime').prop('readonly', pauseReadonly).css({
+                    'background': pauseReadonly ? '#f2f2f2' : '',
+                    'pointer-events': pauseReadonly ? 'none' : ''
+                });
+                // 开启时间的只读设置
+                $('#reserveStartTime').prop('readonly', startTimeReadonly).css({
+                    'background': startTimeReadonly ? '#f2f2f2' : '',
+                    'pointer-events': startTimeReadonly ? 'none' : ''
+                });
+                // 显示状态提示
+                var hintHtml = '';
+                if (pauseStatusHint) {
+                    hintHtml += '<div style="margin-left: 120px; color: #1E9FFF; margin-bottom: 5px;">' + pauseStatusHint + '</div>';
+                }
+                if (startStatusHint) {
+                    hintHtml += '<div style="margin-left: 120px; color: #1E9FFF; margin-bottom: 5px;">' + startStatusHint + '</div>';
+                }
+                $('#layui-form-reserve-pause .reserve-status-hint').html(hintHtml);
+
+
+                reservePauseLayerIndex = layer.open({
+                    type: 1,
+                    area: ['560px', 'auto'],
+                    title: '预约暂停/开启',
+                    shadeClose: false,
+                    content: $("#layui-reserve-pause")
+                });
             }
         })
 
@@ -844,6 +1095,14 @@
             });
         })
 
+        function getMonthDataLayerHeight() {
+            return Math.max(520, $(window).height() - 80);
+        }
+
+        function getMonthDataTableHeight() {
+            return Math.max(320, getMonthDataLayerHeight() - 190);
+        }
+
         // 每日数据预览按钮事件
         $("#publish-button-month-data").on("click", function () {
             var currentMonth = getFormattedMonth();
@@ -864,17 +1123,19 @@
                         }
                         // 总行数 = 数据行数 + 1 行合计
                         var totalRows = dataRowCount + 1;
-                        // 动态计算高度：基础高度 200 + 每行 40px * 行数
-                        var dynamicHeight = 200 + totalRows * 40;
+                        var monthDataLayerHeight = getMonthDataLayerHeight();
                         
                         // 数据请求成功后再打开弹窗
                         layer.open({
                             type: 1,
-                            area: ['1200px', dynamicHeight + 'px'],
+                            area: ['1250px', monthDataLayerHeight + 'px'],
                             title: ("每日数据预览"),
                             shadeClose: false,
                             content: $("#layui-month-data"),
                             success: function (index, layero) {
+                                $(layero).find('.layui-layer-content').css('overflow', 'hidden');
+                                $('#layui-month-data').scrollTop(0);
+
                                 // 初始化月份选择器，默认为当前月份
                                 $('#month-picker').val(currentMonth);
                                 
@@ -924,10 +1185,27 @@
             });
         });
 
+        function getDaysInMonth(month) {
+            var parts = (month || '').split('-');
+            if (parts.length !== 2) {
+                return 31;
+            }
+
+            var year = parseInt(parts[0], 10);
+            var monthNumber = parseInt(parts[1], 10);
+
+            if (isNaN(year) || isNaN(monthNumber)) {
+                return 31;
+            }
+
+            return new Date(year, monthNumber, 0).getDate();
+        }
+
         // 渲染月份数据表格
         function renderMonthDataTable(data, month) {
             // 准备表格数据
             var tableData = [];
+            var daysInMonth = getDaysInMonth(month);
             var totals = {
                 moneyTotal: 0,
                 cancelMoneyTotal: 0,
@@ -940,29 +1218,25 @@
                 outerCount: 0
             };
             
-            // 只遍历有数据的日期
-            for (var dayStr in data) {
-                var dayData = data[dayStr];
-                
-                // 只添加有数据的行（allCount 或 payCount 大于 0）
-                if (dayData.allCount > 0 || dayData.payCount > 0 || dayData.moneyTotal > 0) {
-                    var row = {
-                        day: parseInt(dayStr) + '号',
-                        moneyTotal: dayData.moneyTotal || 0,
-                        cancelMoneyTotal: dayData.cancelMoneyTotal || 0,
-                        subMoneyTotal: dayData.subMoneyTotal || 0,
-                        payCount: dayData.payCount || 0,
-                        givedCount: dayData.givedCount || 0,
-                        innerCount: dayData.innerCount || 0,
-                        outerCount: dayData.outerCount || 0,
-                        cancelCount: dayData.cancelCount || 0
-                    };
-                    tableData.push(row);
-                    
-                    // 累加合计
-                    for (var key in totals) {
-                        totals[key] += (dayData[key] || 0);
-                    }
+            // 按所选月份补全每天的数据，没有数据的日期展示为 0
+            for (var day = 1; day <= daysInMonth; day++) {
+                var dayData = data[day] || {};
+                var row = {
+                    day: day + '号',
+                    moneyTotal: dayData.moneyTotal || 0,
+                    cancelMoneyTotal: dayData.cancelMoneyTotal || 0,
+                    subMoneyTotal: dayData.subMoneyTotal || 0,
+                    payCount: dayData.payCount || 0,
+                    givedCount: dayData.givedCount || 0,
+                    innerCount: dayData.innerCount || 0,
+                    outerCount: dayData.outerCount || 0,
+                    cancelCount: dayData.cancelCount || 0
+                };
+                tableData.push(row);
+
+                // 累加合计
+                for (var key in totals) {
+                    totals[key] += (dayData[key] || 0);
                 }
             }
             
@@ -985,11 +1259,15 @@
                 isTotal: true
             });
             
-            // 渲染表格
+            var tableHeight = getMonthDataTableHeight();
+            $('#month-data-table-wrap').css('height', tableHeight + 'px');
+            $('#layui-month-data .layui-table-view').remove();
             table.render({
                 elem: '#month-data-table',
                 data: tableData,
+                height: tableHeight,
                 page: false,
+                limit: tableData.length || 1,
                 cellMinWidth: 80,
                 cols: [[
                     {field: 'day', title: '日期', width: 80},
@@ -1012,8 +1290,8 @@
                     {field: 'cancelCount', title: '撤销条数', width: 90}
                 ]],
                 done: function(res, curr, count) {
-                    // 设置合计行背景色和样式
-                    $('.layui-table-body tr:last').css('background-color', '#f2f2f2').css('font-weight', 'bold');
+                    $('#layui-month-data .layui-table-body').scrollTop(0);
+                    $('#layui-month-data .layui-table-body tr:last').css('background-color', '#f2f2f2').css('font-weight', 'bold');
                 }
             });
         }
@@ -1463,9 +1741,9 @@
             var packetCodeList = [];
             var packetGroups = $(containerId + ' .packet-group');
 
-            packetGroups.each(function() {
+           packetGroups.each(function() {
                 var packetCode = ($(this).find('input[name="packetCode"]').val() || '').trim();
-                var packetContent = ($(this).find('input[name="packetContent"]').val() || '').trim();
+              var packetContent = ($(this).find('input[name="packetContent"]').val() || '').trim();
 
                 if (packetCode && packetContent) {
                     packetCodeList.push({

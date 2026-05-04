@@ -270,6 +270,12 @@
         <div class="layui-input-block" style="color: #999;">
          开启时间选填。不填写时只会预约暂停。
         </div>
+        <div class="layui-input-block" style="color: #999;">
+         已经暂停的广告，会自动更新暂停时间，填写了开启时间，到了开启时间会自动恢复显示。
+        </div>
+       </div>
+       <div class="layui-form-item">
+        <div class="layui-input-block reserve-status-hint" style="color: #1E9FFF;"></div>
        </div>
        <div class="layui-form-item">
         <div class="layui-input-block">
@@ -730,15 +736,19 @@
                         });
                     });
                 }
-            }else if(obj.event == 'zt'){
-                var startDate = new Date(obj.data.startdate.replace(/-/g, '/')); // 注意：某些浏览器可能不支持 'YYYY-MM-DD' 格式，因此使用 '/' 替换 '-'
-                var endDate = new Date(obj.data.enddate.replace(/-/g, '/'));
-                // 获取当前时间
-                var currentTime = new Date();
-                if (currentTime >= endDate) {
-                    layer.msg('该服广告已过期，无法操作！')
-                    return;
-                }
+        }else if(obj.event == 'zt'){
+            var startDate = new Date(obj.data.startdate.replace(/-/g, '/')); // 注意：某些浏览器可能不支持 'YYYY-MM-DD' 格式，因此使用 '/' 替换 '-'
+            var endDate = new Date(obj.data.enddate.replace(/-/g, '/'));
+            // 获取当前时间
+            var currentTime = new Date();
+            // 暂停状态下恢复时，后台会自动延长 enddate，所以跳过过期判断
+            if (obj.data.state != 3 && currentTime >= endDate) {
+                layer.msg('该服广告已过期，无法操作！')
+                return;
+            }
+            if (obj.data.state == 3 && currentTime >= endDate) {
+                // 暂停中的广告，原始结束时间已过，但恢复时后台会自动延长 enddate，允许操作
+            }
                 // 比较两个日期
                 if (currentTime >= startDate) {
                     layer.confirm('确定要'+(obj.data.state==3?'开启':'暂停')+'【' + obj.data.name + '】这个私服吗？', function (index) {
@@ -788,14 +798,85 @@
                     return;
                 }
             }else if(obj.event == 'reservePause'){
+                var isPaused = obj.data.state == 3;
+                var hasPauseExecuted = !!obj.data.pauseStartTime;
+
+                // 暂停时间：
+                //   pauseStartTime 有值 → 暂停已实际执行，显示实际暂停时间，只读
+                //   reservePauseStatus == 0 且 reservePauseTime 有值 → 已预约等待执行，显示预约时间，只读
+                //   其他 → 新建预约，默认当前时间，可编辑
+                var pauseTime;
+                var pauseReadonly = false;
+                var pauseStatusHint = '';
+                if (hasPauseExecuted) {
+                    pauseTime = obj.data.pauseStartTime;
+                    pauseReadonly = true;
+                    pauseStatusHint = '✅ 暂停已于 ' + obj.data.pauseStartTime + ' 执行完成';
+                } else if (obj.data.reservePauseStatus === 0 && obj.data.reservePauseTime) {
+                    pauseTime = obj.data.reservePauseTime;
+                    pauseReadonly = true;
+                    pauseStatusHint = '⏳ 预约暂停待执行，将在指定时间自动暂停';
+                } else if (obj.data.reservePauseStatus === 3) {
+                    pauseTime = getFormattedDateTime();
+                    pauseReadonly = false;
+                    pauseStatusHint = '';
+                } else if (obj.data.reservePauseStatus === 4) {
+                    pauseTime = getFormattedDateTime();
+                    pauseReadonly = false;
+                    pauseStatusHint = '';
+                } else {
+                    pauseTime = getFormattedDateTime();
+                    pauseReadonly = false;
+                    pauseStatusHint = '';
+                }
+
+                // 开启时间：
+                //   reserveStartUpdateTime 有值 → 开启已实际执行，显示开启处理时间，只读
+                //   reserveStartStatus == 0 且 reserveStartTime 有值 → 已预约等待开启，显示预约开启时间，只读
+                //   其他 → 留空
+                var startTime = '';
+                var startTimeReadonly = false;
+                var startStatusHint = '';
+                if (obj.data.reserveStartUpdateTime) {
+                    startTime = obj.data.reserveStartUpdateTime;
+                    startTimeReadonly = true;
+                    startStatusHint = '✅ 开启已于 ' + obj.data.reserveStartUpdateTime + ' 执行完成';
+                } else if (obj.data.reserveStartStatus === 0 && obj.data.reserveStartTime) {
+                    startTime = obj.data.reserveStartTime;
+                    startTimeReadonly = true;
+                    startStatusHint = '⏳ 预约开启待执行，将在指定时间自动恢复';
+                }
+                // 其他情况：留空，可编辑可点击
+
                 form.val('layui-form-reserve-pause', {
                     id: obj.data.id,
-                    reservePauseTime: getFormattedDateTime(),
-                    reserveStartTime: ''
+                    reservePauseTime: pauseTime,
+                    reserveStartTime: startTime
                 });
+
+                // 暂停时间：已执行或已预约情况下只读
+                $('#reservePauseTime').prop('readonly', pauseReadonly).css({
+                    'background': pauseReadonly ? '#f2f2f2' : '',
+                    'pointer-events': pauseReadonly ? 'none' : ''
+                });
+                // 开启时间的只读设置
+                $('#reserveStartTime').prop('readonly', startTimeReadonly).css({
+                    'background': startTimeReadonly ? '#f2f2f2' : '',
+                    'pointer-events': startTimeReadonly ? 'none' : ''
+                });
+                // 显示状态提示
+                var hintHtml = '';
+                if (pauseStatusHint) {
+                    hintHtml += '<div style="color: #1E9FFF; margin-bottom: 5px;">' + pauseStatusHint + '</div>';
+                }
+                if (startStatusHint) {
+                    hintHtml += '<div style="color: #1E9FFF; margin-bottom: 5px;">' + startStatusHint + '</div>';
+                }
+                $('#layui-form-reserve-pause .reserve-status-hint').html(hintHtml);
+
                 reservePauseLayerIndex = layer.open({
                     type: 1,
-                    area: ['560px', '300px'],
+                    area: ['560px', 'auto'],
                     title: '预约暂停/开启',
                     shadeClose: false,
                     content: $("#layui-reserve-pause")
@@ -1061,14 +1142,23 @@
             var reservePauseDate = parseDateTime(field.reservePauseTime);
             var reserveStartDate = parseDateTime(field.reserveStartTime);
             var now = new Date();
+            // 判断当前是否是已暂停状态（暂停时间为只读，说明是已有的暂停记录）
+            var isAlreadyPaused = $('#reservePauseTime').prop('readonly');
 
             if (!reservePauseDate || isNaN(reservePauseDate.getTime())) {
                 layer.msg('请输入正确的暂停时间');
                 return false;
             }
 
-            if (reservePauseDate.getTime() <= now.getTime()) {
+            // 已暂停状态下，暂停时间是历史记录，跳过"必须大于当前时间"的验证
+            if (!isAlreadyPaused && reservePauseDate.getTime() <= now.getTime()) {
                 layer.msg('预约暂停时间必须大于当前时间');
+                return false;
+            }
+
+            // 已暂停状态下，开启时间为必填
+            if (isAlreadyPaused && !field.reserveStartTime) {
+                layer.msg('已暂停的广告，开启时间为必填');
                 return false;
             }
 
@@ -1078,9 +1168,17 @@
                     return false;
                 }
 
-                if (reserveStartDate.getTime() <= reservePauseDate.getTime()) {
-                    layer.msg('预约开始时间必须大于预约暂停时间');
-                    return false;
+                // 已暂停状态下，开启时间只要大于当前时间即可
+                if (isAlreadyPaused) {
+                    if (reserveStartDate.getTime() <= now.getTime()) {
+                        layer.msg('预约开始时间必须大于当前时间');
+                        return false;
+                    }
+                } else {
+                    if (reserveStartDate.getTime() <= reservePauseDate.getTime()) {
+                        layer.msg('预约开始时间必须大于预约暂停时间');
+                        return false;
+                    }
                 }
             }
 
@@ -1131,7 +1229,7 @@
         function showHtml(url, datas) {
 
             //判断是否为FormData
-            var result;
+            var resdong
             $.ajax({
                 //返回相同的session
                 xhrFields: {

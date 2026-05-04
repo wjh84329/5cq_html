@@ -437,10 +437,10 @@
                 delete data.createname
                 delete data.updatename
                 data.money = parseFloat(data.money)-parseFloat(num)
-                if(data.money<0){
-                    layer.msg('输入数量大于当前余额，请重新输入')
-                    return false;
-                }
+                // if(data.money<0){
+                //     layer.msg('输入数量大于当前余额，请重新输入')
+                //     return false;
+                // }
                 var url =layui.setter.url + "user/updatevip";
                 admin.req({
                     url: url,

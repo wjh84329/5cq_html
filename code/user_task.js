@@ -12,20 +12,61 @@ var TASK_DETAIL_STATE = {
   autoRefreshInterval: 1
 };
 
+// localStorage helpers for persisting claimed monthly rewards per user
+function getTaskClaimedStorageKey(openId) {
+  return 'hz_task_claimed_v1:' + String(openId || '');
+}
+
+function loadClaimedMapForOpenId(openId) {
+  try {
+    if (!openId) return;
+    var key = getTaskClaimedStorageKey(openId);
+    var raw = localStorage.getItem(key);
+    if (!raw) return;
+    var obj = JSON.parse(raw) || {};
+    TASK_DETAIL_STATE.claimedMap = TASK_DETAIL_STATE.claimedMap || {};
+    Object.keys(obj).forEach(function (claimType) {
+      var cacheKey = getTaskClaimCacheKey(openId, claimType);
+      TASK_DETAIL_STATE.claimedMap[cacheKey] = !!obj[claimType];
+    });
+  } catch (e) {
+    console.error('loadClaimedMapForOpenId error', e);
+  }
+}
+
+function saveClaimedMapForOpenId(openId) {
+  try {
+    if (!openId) return;
+    var key = getTaskClaimedStorageKey(openId);
+    var map = TASK_DETAIL_STATE.claimedMap || {};
+    var obj = {};
+    var prefix = String(openId) + ':';
+    Object.keys(map).forEach(function (k) {
+      if (String(k).indexOf(prefix) === 0) {
+        var claimType = String(k).slice(prefix.length);
+        obj[claimType] = !!map[k];
+      }
+    });
+    localStorage.setItem(key, JSON.stringify(obj));
+  } catch (e) {
+    console.error('saveClaimedMapForOpenId error', e);
+  }
+}
+
 var TASK_DAILY_DEFS = [
   { id: 7, claimId: null },
-  { id: 1, claimId: 1 },
-  { id: 2, claimId: 2 },
-  { id: 3, claimId: 3 },
-  { id: 4, claimId: 4 },
-  { id: 5, claimId: 5 }
+  { id: 1, claimId: 10 },
+  { id: 2, claimId: 11 },
+  { id: 3, claimId: 12 },
+  { id: 4, claimId: 13 },
+  { id: 5, claimId: 14 }
 ];
 
 var TASK_MONTHLY_DEFS = [
-  { id: 'a', required: 3, claimId: 'a' },
-  { id: 'b', required: 7, claimId: 'b' },
-  { id: 'c', required: 14, claimId: 'c' },
-  { id: 'd', required: 28, claimId: 'd' }
+  { id: 'a', required: 3, claimId: 2 },
+  { id: 'b', required: 7, claimId: 3 },
+  { id: 'c', required: 14, claimId: 4 },
+  { id: 'd', required: 28, claimId: 5 }
 ];
 
 function getTaskCustomer() {
@@ -38,6 +79,21 @@ function getTaskCustomer() {
 
 function getTaskClaimCacheKey(openId, taskId) {
   return String(openId || '') + ':' + String(taskId);
+}
+
+function getTaskClaimType(taskId) {
+  var normalizedTaskId = String(taskId);
+  var dailyTask = TASK_DAILY_DEFS.filter(function (item) {
+    return String(item.id) === normalizedTaskId;
+  })[0];
+  if (dailyTask) {
+    return dailyTask.claimId;
+  }
+
+  var monthlyTask = TASK_MONTHLY_DEFS.filter(function (item) {
+    return String(item.id) === normalizedTaskId;
+  })[0];
+  return monthlyTask ? monthlyTask.claimId : null;
 }
 
 function isTaskRequestCurrent(seq, openId) {
@@ -237,7 +293,12 @@ function getTaskShareProgress(customer) {
 }
 
 function checkTaskClaimStatus(customer, taskId) {
-  var cacheKey = getTaskClaimCacheKey(customer.openid, taskId);
+  var claimType = getTaskClaimType(taskId);
+  if (claimType == null) {
+    return Promise.resolve(false);
+  }
+
+  var cacheKey = getTaskClaimCacheKey(customer.openid, claimType);
   if (Object.prototype.hasOwnProperty.call(TASK_DETAIL_STATE.claimedMap, cacheKey)) {
     return Promise.resolve(!!TASK_DETAIL_STATE.claimedMap[cacheKey]);
   }
@@ -253,7 +314,7 @@ function checkTaskClaimStatus(customer, taskId) {
       dataType: 'json',
       data: {
         open_id: customer.openid,
-        id: taskId
+        id: claimType
       },
       success: function (res) {
         var claimed = !!(res && Number(res.code) === 200 && res.data === true);
@@ -742,6 +803,8 @@ function loadTaskDetail() {
   bindTaskDetailEvents();
   TASK_DETAIL_STATE.seq += 1;
   TASK_DETAIL_STATE.openId = customer.openid;
+  // load persisted claimed state for this user from localStorage
+  try { loadClaimedMapForOpenId(customer.openid); } catch (e) {}
   TASK_DETAIL_STATE.lastLoadAt = now;
   var seq = TASK_DETAIL_STATE.seq;
 
@@ -808,33 +871,18 @@ function closeDailyTaskHelp() {
 function claimTaskReward(taskId) {
   var normalizedTaskId = String(taskId);
   var $button = $('.claim-btn-' + normalizedTaskId);
+  var claimType = getTaskClaimType(normalizedTaskId);
   if ($button.prop('disabled')) {
     return;
   }
 
   $button.prop('disabled', true);
 
-  if (normalizedTaskId === 'a') {
-    addCoin(2, callback.bind(null, normalizedTaskId), callback2.bind(null, normalizedTaskId));
-  } else if (normalizedTaskId === 'b') {
-    addCoin(3, callback.bind(null, normalizedTaskId), callback2.bind(null, normalizedTaskId));
-  } else if (normalizedTaskId === 'c') {
-    addCoin(4, callback.bind(null, normalizedTaskId), callback2.bind(null, normalizedTaskId));
-  } else if (normalizedTaskId === 'd') {
-    addCoin(5, callback.bind(null, normalizedTaskId), callback2.bind(null, normalizedTaskId));
-  } else if (normalizedTaskId === '7') {
+  if (normalizedTaskId === '7') {
     layer.msg('系统已自动发放');
     $button.prop('disabled', false);
-  } else if (normalizedTaskId === '1') {
-    addCoin(10, callback.bind(null, normalizedTaskId), callback2.bind(null, normalizedTaskId));
-  } else if (normalizedTaskId === '2') {
-    addCoin(11, callback.bind(null, normalizedTaskId), callback2.bind(null, normalizedTaskId));
-  } else if (normalizedTaskId === '3') {
-    addCoin(12, callback.bind(null, normalizedTaskId), callback2.bind(null, normalizedTaskId));
-  } else if (normalizedTaskId === '4') {
-    addCoin(13, callback.bind(null, normalizedTaskId), callback2.bind(null, normalizedTaskId));
-  } else if (normalizedTaskId === '5') {
-    addCoin(14, callback.bind(null, normalizedTaskId), callback2.bind(null, normalizedTaskId));
+  } else if (claimType != null) {
+    addCoin(claimType, callback.bind(null, normalizedTaskId), callback2.bind(null, normalizedTaskId));
   } else {
     $button.prop('disabled', false);
   }
@@ -850,9 +898,15 @@ function callback2(taskId) {
 
 function callback(taskId) {
   var customer = getUser();
+  var claimType = getTaskClaimType(taskId);
   if (customer && customer.openid) {
-    TASK_DETAIL_STATE.claimedMap[getTaskClaimCacheKey(customer.openid, taskId)] = true;
+    if (claimType != null) {
+      TASK_DETAIL_STATE.claimedMap[getTaskClaimCacheKey(customer.openid, claimType)] = true;
+    }
   }
+
+  // persist claimed state for this user
+  try { saveClaimedMapForOpenId(customer.openid); } catch (e) {}
 
   setTaskClaimButton(taskId, {
     visible: true,
