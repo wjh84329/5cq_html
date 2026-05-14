@@ -198,7 +198,7 @@
       <a href="javascript:void(0)"> 发布 </a> 
      </div> 
     </div> 
-    <form class="form1"> 
+    <form class="form1" onsubmit="return false;"> 
      <div class="personCommonInput "> 
       <ul class="clearfix"> 
        <li class="input"><span>标题：</span> <input type="text" placeholder="请输入产品标题" maxlength="50" id="ProductName"></li> 
@@ -339,12 +339,13 @@
   <script>
 
 
-    //加载底版
+    // 加载详情页底版 HTML（仅用于拼接 generate 字段）。必须去掉其中所有 script：
+    // baseplate 内含 CNZZ 的 document.write，在已加载页面里执行会整页被清空，导致表单 DOM 丢失、校验误报「标题为空」。
     function initTransaction() {
         $.ajaxSettings.async = false;
         $.get('/code/baseplate/transaction.html', function (data) {
-            $("#generate").html($(data));
-            console.log(data)
+            var html = String(data).replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+            $("#generate").html(html);
         });
     }
 
@@ -810,6 +811,11 @@
 
         var datas = map.get(ProductT);
 
+        if (!datas || !datas.children || !datas.children.length) {
+            $("#PTEwoType").html('');
+            return;
+        }
+
         var children = datas.children;
 
         var chiildProduc = "";
@@ -899,6 +905,20 @@
     }
 
 
+    // 按名称选中一级「交易类型」（option 的 value 为数字 id，不能用 val("交易")）
+    function selectProductTypeByName(name) {
+        var $sel = $("#ProductType");
+        var $opt = $sel.find("option").filter(function () {
+            return $.trim($(this).text()) === name;
+        }).first();
+        if ($opt.length) {
+            $sel.val($opt.val());
+        } else if ($sel.find("option").length) {
+            $sel.prop("selectedIndex", 0);
+        }
+        ProductTypeaa();
+    }
+
     // 点击发布
 
     function releaseTask() {
@@ -909,9 +929,7 @@
 
         $("#IsFace").prop("checked", false);
 
-        $("#ProductType").val("交易");
-
-        ProductTypeaa(2);
+        selectProductTypeByName("交易");
 
         $("#ContactName").val("");
 
@@ -978,14 +996,19 @@
             , shade: 0.01
         });
         var customer = getUser(1);
-        initTransaction();
+        if (customer == null) {
+            layer.closeAll();
+            return;
+        }
         $("#Price").removeAttr("readonly", "readonly");
 
-        var ProductName = $("#ProductName").val();//标题
+        var ProductName = $.trim($("#ProductName").val());//标题
 
         var Price = $("#Price").val();//价格
 
-        var ProductType = $("#ProductType").val();//发布类型
+        var productTypeId = $("#ProductType").val();//一级交易类型 id
+
+        var pteTwo = $("#PTEwoType").val();//二级发布类型 id
 
         var ContactName = $("#ContactName").val();//联系人
 
@@ -993,11 +1016,9 @@
 
         var interview;
 
-        if (ProductName == "" || ProductName == null) {
-
-            layer.msg('标题不可为空', function () {
-            });
-
+        if (ProductName === "" || ProductName == null) {
+            layer.closeAll();
+            layer.msg('标题不可为空', { icon: 0, time: 2000 });
             return;
 
         }
@@ -1006,11 +1027,9 @@
 
             interview = 0
 
-            if (Price == "" || Price == null) {
-
-                layer.msg('价格不可为空', function () {
-                });
-
+            if (Price === "" || Price == null) {
+                layer.closeAll();
+                layer.msg('价格不可为空', { icon: 0, time: 2000 });
                 return;
 
             }
@@ -1021,32 +1040,35 @@
 
         }
 
-        if (ProductType == "" || ProductType == null) {
+        if (productTypeId === "" || productTypeId == null || productTypeId === undefined) {
+            layer.closeAll();
+            layer.msg('交易类型不可为空', { icon: 0, time: 2000 });
+            return;
 
-            layer.msg('发布类型不可为空', function () {
-            });
+        }
 
+        if (pteTwo === "" || pteTwo == null || pteTwo === undefined) {
+            layer.closeAll();
+            layer.msg('发布类型不可为空', { icon: 0, time: 2000 });
             return;
 
         }
 
         if (ContactName == "" || ContactName == null) {
-
-            layer.msg('联系人不可为空', function () {
-            });
-
+            layer.closeAll();
+            layer.msg('联系人不可为空', { icon: 0, time: 2000 });
             return;
 
         }
 
         if (ContactTel == "" || ContactTel == null) {
-
-            layer.msg('联系方式不可为空', function () {
-            });
-
+            layer.closeAll();
+            layer.msg('联系方式不可为空', { icon: 0, time: 2000 });
             return;
 
         }
+
+        initTransaction();
 
         var param = new FormData();
 
@@ -1054,7 +1076,7 @@
 
         param.append('money', Price);
 
-        param.append('transaction_type_id', $("#PTEwoType").val());
+        param.append('transaction_type_id', pteTwo);
 
         param.append('contactsname', ContactName);
 
@@ -1221,29 +1243,33 @@
             async: false,
             done: function (req) {
                 result = req;
+            },
+            complete: function (xhr) {
+                if (result === undefined && xhr.responseJSON) {
+                    result = xhr.responseJSON;
+                }
             }
         })
         //var result=showHtml(baseUrl + 'jax/transaction/add', param);
-        setTimeout(function () {
-            layer.closeAll('loading');
-        }, 1500);
+        layer.closeAll();
 
-        setTimeout(function () {
-            layer.msg(result.msg)
-            if (result.msg == "操作成功") {
+        if (!result) {
+            layer.msg('提交失败，请稍后重试');
+            return;
+        }
+        layer.msg(result.msg || '');
 
-                layer.msg(result.msg);
+        if (result.msg == "操作成功" || result.code === 0) {
 
-                $(".releaseAll").show();
+            $(".releaseAll").show();
 
-                $(".releaseTask").hide();
+            $(".releaseTask").hide();
 
-                $(".infoAllCon").hide();
+            $(".infoAllCon").hide();
 
-                $('.wzAll').show();
-                recuTranInfo();
-            }
-        }, 1500);
+            $('.wzAll').show();
+            recuTranInfo();
+        }
 
     }
 

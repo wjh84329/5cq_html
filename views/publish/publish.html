@@ -14,6 +14,55 @@
         .packet-settings-container-update {
             display: none;
         }
+
+        @media screen and (max-width: 768px) {
+            #layui-publish .layui-card-body,
+            #layui-publish-update .layui-card-body {
+                padding: 12px !important;
+            }
+
+            #layui-publish .layui-form-label,
+            #layui-publish-update .layui-form-label {
+                width: 100% !important;
+                margin-top: 0 !important;
+                padding: 0 0 8px !important;
+                text-align: left !important;
+                float: none !important;
+            }
+
+            #layui-publish .layui-input-block,
+            #layui-publish .layui-input-inline,
+            #layui-publish-update .layui-input-block,
+            #layui-publish-update .layui-input-inline {
+                width: 100% !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                float: none !important;
+                display: block !important;
+            }
+
+            #layui-publish textarea,
+            #layui-publish-update textarea {
+                height: 220px !important;
+            }
+
+            #layui-publish .packet-group,
+            #layui-publish-update .packet-group {
+                display: block !important;
+            }
+
+            #layui-publish .packet-group .layui-input-inline,
+            #layui-publish-update .packet-group .layui-input-inline {
+                width: 100% !important;
+                margin-bottom: 10px;
+            }
+
+            #layui-publish .layui-footer,
+            #layui-publish-update .layui-footer {
+                position: static !important;
+                padding-bottom: 10px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -777,7 +826,7 @@
                 console.log(obj.data)
                 layer.open({
                     type: 1,//弹窗类型
-                    area: ['1200px', 'auto'],
+                    area: getPublishLayerArea(),
                     title: ("编辑私服"),
                     shadeClose: false,
                     content: $("#layui-publish-update"),
@@ -1018,13 +1067,14 @@
                 }
 
                 // 开启时间：
-                //   reserveStartUpdateTime 有值 → 开启已实际执行，显示开启处理时间，只读
+                //   reserveStartStatus == 2（定时任务执行成功）且 reserveStartUpdateTime 有值 → 开启已实际执行，只读
+                //   注意：手动暂停等会写 reserveStartUpdateTime + status=3 表示清除预约，不能当作「已执行」
                 //   reserveStartStatus == 0 且 reserveStartTime 有值 → 已预约等待开启，显示预约开启时间，只读
                 //   其他 → 留空
                 var startTime = '';
                 var startTimeReadonly = false;
                 var startStatusHint = '';
-                if (obj.data.reserveStartUpdateTime) {
+                if (obj.data.reserveStartStatus === 2 && obj.data.reserveStartUpdateTime) {
                     startTime = obj.data.reserveStartUpdateTime;
                     startTimeReadonly = true;
                     startStatusHint = '✅ 开启已于 ' + obj.data.reserveStartUpdateTime + ' 执行完成';
@@ -1304,6 +1354,13 @@
             return year + "-" + month;
         }
 
+        function getPublishLayerArea() {
+            if (window.innerWidth <= 768) {
+                return ['100%', '100%'];
+            }
+            return ['1200px', 'auto'];
+        }
+
         var $ = layui.$, active = {
             getid: function () {
                 var arrx = [];
@@ -1334,7 +1391,7 @@
         $("#publish-button-add").on("click", function () {
             layer.open({
                 type: 1,
-                area: ['1200px', 'auto'],
+                area: getPublishLayerArea(),
                 title: ("新增发布私服"),
                 shadeClose: false,
                 content: $("#layui-publish"),

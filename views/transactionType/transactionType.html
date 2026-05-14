@@ -9,7 +9,18 @@
           content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
     <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
-
+    <style>
+        /* 审核弹层内表格：允许换行完整显示「类型」「标题」等，避免 layui 默认单行省略 */
+        #audit-dialog-wrap .layui-table-view .layui-table-cell {
+            height: auto !important;
+            white-space: normal !important;
+            word-wrap: break-word;
+            word-break: break-word;
+            line-height: 1.5 !important;
+            padding-top: 8px;
+            padding-bottom: 8px;
+        }
+    </style>
 
 </head>
 <body>
@@ -21,8 +32,11 @@
                 <div class="layui-card-header">交易管理</div>
                 <div class="layui-card-body">
                     <div class="test-table-reload-btn" style="margin-bottom: 10px;">
-                        <button id="transactiontype-button-add" shiro-event="jax:transactiontype:open-add" class="layui-btn"><i
+                        <button type="button" id="transactiontype-button-add" shiro-event="jax:transactiontype:open-add" class="layui-btn"><i
                                 class="layui-icon">&#xe654;</i>添加
+                        </button>
+                        <button type="button" id="transactiontype-button-audit" class="layui-btn layui-btn-normal" style="margin-left:8px;"><i
+                                class="layui-icon">&#xe6b2;</i>招聘交易审核
                         </button>
                     </div>
                     <table id="auth-table" class="layui-hide" lay-filter="auth-table"></table>
@@ -31,6 +45,35 @@
         </div>
     </div>
 </div>
+
+<!-- 招聘交易审核弹层内容（与「添加」弹层相同，由 layer 挂载/回收 DOM） -->
+<div id="audit-dialog-wrap" hidden style="padding:4px 8px 12px;">
+    <p style="color:#999;margin:0 0 12px;font-size:12px;line-height:1.5;">以下为用户发布的招聘/交易信息。上方类型树里的「修改/删除」只维护<strong>分类名称</strong>，与这里单条信息无关。</p>
+    <div class="layui-form layui-form-pane" lay-filter="audit-filter" style="margin-bottom: 10px;">
+        <div class="layui-inline">
+            <label class="layui-form-label" style="width: 90px;">审核状态</label>
+            <div class="layui-input-inline" style="width: 140px;">
+                <select name="audit_verify" id="audit_verify" lay-filter="audit_verify">
+                    <option value="">全部</option>
+                    <option value="0" selected>待审核</option>
+                    <option value="2">已通过</option>
+                    <option value="1">已拒绝</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label" style="width: 70px;">标题</label>
+            <div class="layui-input-inline" style="width: 180px;">
+                <input type="text" name="audit_val" id="audit_val" placeholder="关键词" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <button type="button" class="layui-btn layui-btn-sm" id="audit-search-btn">查询</button>
+        </div>
+    </div>
+    <table id="audit-table" class="layui-hide" lay-filter="audit-table"></table>
+</div>
+
 <div id="auth-state" hidden>
     <button lay-event="update" shiro-event="jax:transactiontype:open-update" class="layui-btn layui-btn-primary layui-btn-xs"><i
             class="layui-icon">&#xe642;</i>修改
@@ -146,7 +189,7 @@
     }).extend({
         index: 'lib/index', //主入口模块
         treetable: '../treetable/treetable'
-    }).use(['index','treetable', 'table', 'formgs', 'form', 'security', 'layer', 'upload'], function () {
+    }).use(['index','treetable', 'table', 'formgs', 'form', 'security', 'layer', 'upload', 'util'], function () {
         var $ = layui.jquery,
             admin = layui.admin,
             table = layui.table,
@@ -154,9 +197,186 @@
             form = layui.form,//控制添加修改（同一个弹出层）关闭弹出层的索引
             upload = layui.upload,
             treetable = layui.treetable,
+            util = layui.util,
             layer = layui.layer, closeindex;
 
         var typePtype=[];
+        var auditTableInited = false;
+
+        function auditVerifyText(v) {
+            if (v === 0 || v === '0') return '待审核';
+            if (v === 1 || v === '1') return '已拒绝';
+            if (v === 2 || v === '2') return '已通过';
+            return '-';
+        }
+
+        function openAuditDialog(row) {
+            layer.open({
+                type: 1,
+                title: '招聘交易审核',
+                area: ['380px', '320px'],
+                shadeClose: true,
+                content: '<div style="padding:12px 14px 0;">' +
+                    '<select id="audit-select-verify" class="layui-input" style="height:36px;margin-bottom:10px;">' +
+                    '<option value="pass">审核同意</option>' +
+                    '<option value="reject">审核拒绝</option>' +
+                    '</select>' +
+                    '<textarea id="audit-reason" placeholder="请输入理由" class="layui-textarea" style="min-height:120px;"></textarea>' +
+                    '</div>',
+                btn: ['确定', '取消'],
+                btnAlign: 'c',
+                yes: function (index) {
+                    var pass = $('#audit-select-verify').val() === 'pass';
+                    var reason = ($('#audit-reason').val() || '').trim();
+                    if (pass) {
+                        reason = '同意';
+                    }
+                    if (!reason) {
+                        layer.msg('审核理由不可以为空');
+                        return;
+                    }
+                    var verifyVal = pass ? 2 : 1;
+                    admin.req({
+                        url: layui.setter.url + 'transactiontype/auditTransaction',
+                        data: { id: row.id, verify: verifyVal, reason: reason },
+                        done: function (res) {
+                            if (res.msg === '操作成功' || res.code === 0) {
+                                layer.close(index);
+                                layer.msg(res.msg || '操作成功');
+                                layui.table.reload('audit-table');
+                            } else {
+                                layer.msg(res.msg || '操作失败');
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        function initAuditTable() {
+            table.render({
+                elem: '#audit-table',
+                id: 'audit-table',
+                url: layui.setter.url + 'transactiontype/selectTransactionAudit',
+                title: '招聘交易审核',
+                cellMinWidth: 72,
+                request: { pageName: 'page', limitName: 'num' },
+                where: { sort: 't.create_date DESC', verify: 0 },
+                parseData: function (res) {
+                    if (!res || res.data == null) {
+                        return { code: res ? res.code : -1, data: [], count: 0 };
+                    }
+                    var page = res.data;
+                    return {
+                        code: res.code,
+                        data: page.data || [],
+                        count: page.tnum != null ? page.tnum : 0
+                    };
+                },
+                cols: [[
+                    {
+                        field: 'title', title: '标题', minWidth: 200, templet: function (d) {
+                            var t = util.escape(String(d.title == null ? '' : d.title));
+                            return '<div title="' + t.replace(/"/g, '&quot;') + '">' + t + '</div>';
+                        }
+                    },
+                    {
+                        field: 'typename', title: '类型', minWidth: 260, templet: function (d) {
+                            var t = util.escape(String(d.typename == null ? '' : d.typename));
+                            return '<div title="' + t.replace(/"/g, '&quot;') + '">' + t + '</div>';
+                        }
+                    },
+                    {
+                        field: 'money', title: '薪资', width: 80, templet: function (d) {
+                            return d.money == 0 || d.money == null ? '面议' : util.escape(String(d.money));
+                        }
+                    },
+                    { field: 'cname', title: '发布人', minWidth: 110 },
+                    { field: 'create_date', title: '发布时间', minWidth: 168 },
+                    {
+                        field: 'verify', title: '状态', width: 88, templet: function (d) {
+                            return auditVerifyText(d.verify);
+                        }
+                    },
+                    {
+                        title: '操作', width: 228, align: 'center', templet: function (d) {
+                            var u = d.url || '#';
+                            var html = '<a class="layui-btn layui-btn-primary layui-btn-xs" href="' + u + '" target="_blank" rel="noopener">详情</a> ';
+                            if (d.verify === 0 || d.verify === '0') {
+                                html += '<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="audit_row">审核</a> ';
+                            }
+                            html += '<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del_row">删除</a>';
+                            return html;
+                        }
+                    }
+                ]],
+                page: true,
+                limits: [10, 20, 50],
+                limit: 10,
+                done: function () {
+                    table.resize('audit-table');
+                }
+            });
+        }
+
+        table.on('tool(audit-table)', function (obj) {
+            if (obj.event === 'audit_row') {
+                openAuditDialog(obj.data);
+            } else if (obj.event === 'del_row') {
+                layer.confirm('确定删除该招聘交易？', function (index) {
+                    admin.req({
+                        url: layui.setter.url + 'transactiontype/removeTransaction',
+                        data: { id: obj.data.id },
+                        done: function (res) {
+                            layer.close(index);
+                            layer.msg(res.msg || '');
+                            layui.table.reload('audit-table');
+                        }
+                    });
+                });
+            }
+        });
+
+        $('#audit-search-btn').on('click', function () {
+            var v = $('#audit_verify').val();
+            var q = { sort: 't.create_date DESC' };
+            if (v !== '' && v !== undefined) {
+                q.verify = parseInt(v, 10);
+            }
+            var val = ($('#audit_val').val() || '').trim();
+            if (val) {
+                q.val = val;
+            }
+            table.reload('audit-table', { where: q, page: { curr: 1 } });
+        });
+
+        form.on('select(audit_verify)', function () {
+            $('#audit-search-btn').trigger('click');
+        });
+
+        $('#transactiontype-button-audit').on('click', function () {
+            layer.open({
+                type: 1,
+                title: '招聘交易审核',
+                area: ['96%', '90%'],
+                maxmin: true,
+                shadeClose: true,
+                content: $('#audit-dialog-wrap'),
+                success: function () {
+                    if (!auditTableInited) {
+                        initAuditTable();
+                        auditTableInited = true;
+                    } else {
+                        table.reload('audit-table', { page: { curr: 1 } });
+                    }
+                    form.render('select');
+                    setTimeout(function () {
+                        table.resize('audit-table');
+                    }, 150);
+                }
+            });
+        });
+
         //渲染表格
         var renderTable = function () {
             admin.req({

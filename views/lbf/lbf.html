@@ -341,40 +341,46 @@
     </div>
 </div>
 
-<!-- 预约暂停弹窗 -->
-<div id="layui-reserve-pause" hidden style="padding: 15px; box-sizing: border-box;">
-    <div class="layui-fluid" style="padding: 0;">
-        <div class="layui-card" style="margin: 0; box-shadow: none;">
-            <div class="layui-card-body" style="padding: 15px; overflow: hidden;">
-                <form class="layui-form" lay-filter="layui-form-reserve-pause">
-                    <input type="hidden" name="id">
-                    <div class="layui-form-item">
-                        <label class="layui-form-label" style="width: 120px;">预约暂停时间</label>
-                        <div class="layui-input-inline" style="width: 220px;">
-                            <input type="text" name="reservePauseTime" id="reservePauseTime" readonly
-                                   autocomplete="off" placeholder="预约暂停时间" class="layui-input">
-                        </div>
-                        <div class="layui-form-mid layui-word-aux" id="pauseStatusHint" style="color: #888;"></div>
-                    </div>
-                    <div class="layui-form-item">
-                        <label class="layui-form-label" style="width: 120px;">预约开启时间(可选)</label>
-                        <div class="layui-input-inline" style="width: 220px;">
-                            <input type="text" name="reserveStartTime" id="reserveStartTime" readonly
-                                   autocomplete="off" placeholder="预约开启时间" class="layui-input">
-                        </div>
-                        <div class="layui-form-mid layui-word-aux" id="startStatusHint" style="color: #888;"></div>
-                    </div>
-                    <div class="layui-form-item">
-                        <div class="layui-input-block" style="margin-left: 120px;">
-                            <button type="submit" class="layui-btn" lay-submit lay-filter="submit-reserve-pause">提交</button>
-                            <button type="reset" class="layui-btn layui-btn-primary" id="reset-reserve-pause">重置</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
+<!-- 预约暂停/开启弹窗（与 views/publish/publish.html 一致） -->
+<div id="layui-reserve-pause" hidden>
+   <div class="layui-fluid" style="padding: 0;">
+    <div class="layui-card" style="margin: 0; box-shadow: none;">
+     <div class="layui-card-body" style="padding: 20px 20px 10px; overflow: hidden;">
+      <form class="layui-form" id="layui-form-reserve-pause" lay-filter="layui-form-reserve-pause">
+       <input type="hidden" name="id">
+       <div class="layui-form-item">
+        <label class="layui-form-label" style="width: 90px;">暂停时间</label>
+        <div class="layui-input-block" style="margin-left: 120px;">
+         <input type="text" name="reservePauseTime" id="reservePauseTime" autocomplete="off" lay-verify="required" placeholder="请选择或输入暂停时间" class="layui-input">
         </div>
+       </div>
+       <div class="layui-form-item">
+        <label class="layui-form-label" style="width: 90px;">开启时间</label>
+        <div class="layui-input-block" style="margin-left: 120px;">
+         <input type="text" name="reserveStartTime" id="reserveStartTime" autocomplete="off" placeholder="不填则只预约暂停" class="layui-input">
+        </div>
+       </div>
+       <div class="layui-form-item">
+        <div class="layui-input-block" style="margin-left: 120px; color: #999;">
+         开启时间选填。不填写时只会预约暂停。
+        </div>
+        <div class="layui-input-block" style="margin-left: 120px; color: #999;">
+         已经暂停的广告，会自动更新暂停时间，填写了开启时间，到了开启时间会自动恢复显示。
+        </div>
+       </div>
+       <div class="layui-form-item">
+        <div class="layui-input-block reserve-status-hint" style="margin-left: 120px;"></div>
+       </div>
+       <div class="layui-form-item">
+        <div class="layui-input-block" style="margin-left: 120px;">
+         <button class="layui-btn" lay-submit lay-filter="submit-reserve-pause">立即提交</button>
+        </div>
+       </div>
+      </form>
+     </div>
     </div>
-</div>
+   </div>
+  </div>
 
 <script type="text/html" id="timeTpl">
     <input type="text" id="startdate_{{d.id}}" value="{{d.startdate}}" readonly="readonly"
@@ -471,8 +477,103 @@
                 $textarea.val(newContent);
             }
         });
-        
-        
+
+        // 预约暂停/开启 - 与 publish.html 相同：全局 laydate，避免每次打开弹窗重复绑定
+        laydate.render({
+            elem: '#reservePauseTime',
+            type: 'datetime',
+            format: 'yyyy-MM-dd HH:mm:ss',
+            theme: 'grid',
+            trigger: 'click'
+        });
+        laydate.render({
+            elem: '#reserveStartTime',
+            type: 'datetime',
+            format: 'yyyy-MM-dd HH:mm:ss',
+            theme: 'grid',
+            trigger: 'click'
+        });
+
+        form.on('submit(submit-reserve-pause)', function(data) {
+            var field = data.field || {};
+            var reservePauseDate = parseDateTime(field.reservePauseTime);
+            var reserveStartDate = parseDateTime(field.reserveStartTime);
+            var now = new Date();
+            var isAlreadyPaused = $('#reservePauseTime').prop('readonly');
+
+            if (!field.id) {
+                layer.msg('数据异常，缺少ID');
+                return false;
+            }
+
+            if (!reservePauseDate || isNaN(reservePauseDate.getTime())) {
+                layer.msg('请输入正确的暂停时间');
+                return false;
+            }
+
+            if (!field.reservePauseTime) {
+                layer.msg('请填写暂停时间');
+                return false;
+            }
+
+            if (!isAlreadyPaused && reservePauseDate.getTime() <= now.getTime()) {
+                layer.msg('预约暂停时间必须大于当前时间');
+                return false;
+            }
+
+            if (isAlreadyPaused && !field.reserveStartTime) {
+                layer.msg('已暂停的广告，开启时间为必填');
+                return false;
+            }
+
+            if (field.reserveStartTime) {
+                if (!reserveStartDate || isNaN(reserveStartDate.getTime())) {
+                    layer.msg('请输入正确的开启时间');
+                    return false;
+                }
+
+                if (isAlreadyPaused) {
+                    if (reserveStartDate.getTime() <= now.getTime()) {
+                        layer.msg('预约开始时间必须大于当前时间');
+                        return false;
+                    }
+                } else {
+                    if (reserveStartDate.getTime() <= reservePauseDate.getTime()) {
+                        layer.msg('预约开始时间必须大于预约暂停时间');
+                        return false;
+                    }
+                }
+            }
+
+            var payload = {
+                id: field.id,
+                reservePauseTime: field.reservePauseTime
+            };
+
+            if (field.reserveStartTime) {
+                payload.reserveStartTime = field.reserveStartTime;
+            }
+
+            admin.req({
+                url: layui.setter.url + 'publish/reservePause',
+                type: 'POST',
+                data: JSON.stringify(payload),
+                contentType: "application/json",
+                done: function (res) {
+                    layer.msg(res.msg || '操作成功');
+                    if (res && res.code === 0) {
+                        if (reservePauseLayerIndex) {
+                            layer.close(reservePauseLayerIndex);
+                            reservePauseLayerIndex = null;
+                        }
+                        table.reload("auth-table");
+                        $.get({url:layui.setter.url + "ranking/test1"})
+                    }
+                }
+            });
+            return false;
+        });
+
         initType();
         initPrice();
         if(user.role_id !== 1){
@@ -806,13 +907,25 @@
                     return;
                 }
             }else if(obj.event == 'reservePause'){
-                var isPaused = obj.data.state == 3;
-                // 暂停时间：
+                var hasPauseExecuted = !!obj.data.pauseStartTime;
+
                 var pauseTime;
                 var pauseReadonly = false;
                 var pauseStatusHint = '';
-                if (isPaused) {
-                    pauseTime = '';
+                if (hasPauseExecuted) {
+                    pauseTime = obj.data.pauseStartTime;
+                    pauseReadonly = true;
+                    pauseStatusHint = '✅ 暂停已于 ' + obj.data.pauseStartTime + ' 执行完成';
+                } else if (obj.data.reservePauseStatus === 0 && obj.data.reservePauseTime) {
+                    pauseTime = obj.data.reservePauseTime;
+                    pauseReadonly = true;
+                    pauseStatusHint = '⏳ 预约暂停待执行，将在指定时间自动暂停';
+                } else if (obj.data.reservePauseStatus === 3) {
+                    pauseTime = getFormattedDateTime();
+                    pauseReadonly = false;
+                    pauseStatusHint = '';
+                } else if (obj.data.reservePauseStatus === 4) {
+                    pauseTime = getFormattedDateTime();
                     pauseReadonly = false;
                     pauseStatusHint = '';
                 } else {
@@ -820,54 +933,49 @@
                     pauseReadonly = false;
                     pauseStatusHint = '';
                 }
-                // 开启时间：
+
                 var startTime = '';
                 var startTimeReadonly = false;
                 var startStatusHint = '';
+                if (obj.data.reserveStartStatus === 2 && obj.data.reserveStartUpdateTime) {
+                    startTime = obj.data.reserveStartUpdateTime;
+                    startTimeReadonly = true;
+                    startStatusHint = '✅ 开启已于 ' + obj.data.reserveStartUpdateTime + ' 执行完成';
+                } else if (obj.data.reserveStartStatus === 0 && obj.data.reserveStartTime) {
+                    startTime = obj.data.reserveStartTime;
+                    startTimeReadonly = true;
+                    startStatusHint = '⏳ 预约开启待执行，将在指定时间自动恢复';
+                }
+
                 form.val('layui-form-reserve-pause', {
                     id: obj.data.id,
                     reservePauseTime: pauseTime,
                     reserveStartTime: startTime
                 });
-                $('#pauseStatusHint').text(pauseStatusHint);
-                $('#startStatusHint').text(startStatusHint);
-                // 弹窗标题根据状态不同
-                var popupTitle = isPaused ? '预约开启' : '预约暂停';
+
+                $('#reservePauseTime').prop('readonly', pauseReadonly).css({
+                    'background': pauseReadonly ? '#f2f2f2' : '',
+                    'pointer-events': pauseReadonly ? 'none' : ''
+                });
+                $('#reserveStartTime').prop('readonly', startTimeReadonly).css({
+                    'background': startTimeReadonly ? '#f2f2f2' : '',
+                    'pointer-events': startTimeReadonly ? 'none' : ''
+                });
+                var hintHtml = '';
+                if (pauseStatusHint) {
+                    hintHtml += '<div style="margin-left: 120px; color: #1E9FFF; margin-bottom: 5px;">' + pauseStatusHint + '</div>';
+                }
+                if (startStatusHint) {
+                    hintHtml += '<div style="margin-left: 120px; color: #1E9FFF; margin-bottom: 5px;">' + startStatusHint + '</div>';
+                }
+                $('#layui-form-reserve-pause .reserve-status-hint').html(hintHtml);
+
                 reservePauseLayerIndex = layer.open({
                     type: 1,
                     area: ['560px', 'auto'],
-                    title: popupTitle,
+                    title: '预约暂停/开启',
                     shadeClose: false,
-                    content: $("#layui-reserve-pause"),
-                    success: function (index, layero) {
-                        // 初始化暂停时间选择器
-                        laydate.render({
-                            elem: '#reservePauseTime',
-                            type: 'datetime',
-                            format: 'yyyy-MM-dd HH:mm:ss',
-                            theme: 'grid',
-                            trigger: 'click',
-                            done: function (value, date, endDate) {
-                                // 已暂停状态下，关闭时间选择器后重置表单
-                                if (isPaused) {
-                                    form.val('layui-form-reserve-pause', {
-                                        reservePauseTime: ''
-                                    });
-                                }
-                            }
-                        });
-                        // 初始化开启时间选择器
-                        laydate.render({
-                            elem: '#reserveStartTime',
-                            type: 'datetime',
-                            format: 'yyyy-MM-dd HH:mm:ss',
-                            theme: 'grid',
-                            trigger: 'click'
-                        });
-                        // 设置暂停时间 readonly
-                        $('#reservePauseTime').prop('readonly', pauseReadonly);
-                        form.render();
-                    }
+                    content: $("#layui-reserve-pause")
                 });
             }
         })
@@ -1346,90 +1454,6 @@
             }
             return false;
         });
-        // 预约暂停/开启 表单提交
-        form.on('submit(submit-reserve-pause)', function (field) {
-            // 检查是否已暂停：通过表单中 reservePauseTime 是否为空判断
-            var isAlreadyPaused = !field.reservePauseTime;
-            var reservePauseTimeVal = field.reservePauseTime;
-            var now = new Date();
-
-            if (isAlreadyPaused) {
-                // 已暂停状态：不需要传暂停时间，但必须传开启时间
-                if (!field.reserveStartTime) {
-                    layer.msg('已暂停的广告，开启时间为必填');
-                    return false;
-                }
-            } else {
-                // 投放中状态：必须传暂停时间
-                var reservePauseDate = parseDateTime(reservePauseTimeVal);
-                if (!reservePauseDate || isNaN(reservePauseDate.getTime())) {
-                    layer.msg('请输入正确的暂停时间');
-                    return false;
-                }
-                if (reservePauseDate.getTime() <= now.getTime()) {
-                    layer.msg('预约暂停时间必须大于当前时间');
-                    return false;
-                }
-                // 如果同时也传了开启时间，校验开启时间大于暂停时间
-                if (field.reserveStartTime) {
-                    var reserveStartDate = parseDateTime(field.reserveStartTime);
-                    if (!reserveStartDate || isNaN(reserveStartDate.getTime())) {
-                        layer.msg('请输入正确的开启时间');
-                        return false;
-                    }
-                    if (reserveStartDate.getTime() <= reservePauseDate.getTime()) {
-                        layer.msg('预约开始时间必须大于预约暂停时间');
-                        return false;
-                    }
-                }
-            }
-
-            // 如果已暂停，必须传开启时间
-            if (isAlreadyPaused && field.reserveStartTime) {
-                var reserveStartDate = parseDateTime(field.reserveStartTime);
-                if (!reserveStartDate || isNaN(reserveStartDate.getTime())) {
-                    layer.msg('请输入正确的开启时间');
-                    return false;
-                }
-                if (reserveStartDate.getTime() <= now.getTime()) {
-                    layer.msg('预约开始时间必须大于当前时间');
-                    return false;
-                }
-            }
-
-            var payload = {
-                id: field.id
-            };
-
-            // 已暂停(state=3)不传 reservePauseTime，后端完全忽略
-            if (field.reservePauseTime) {
-                payload.reservePauseTime = field.reservePauseTime;
-            }
-
-            if (field.reserveStartTime) {
-                payload.reserveStartTime = field.reserveStartTime;
-            }
-
-            admin.req({
-                url: layui.setter.url + 'publish/reservePause',
-                type: 'POST',
-                data: JSON.stringify(payload),
-                contentType: "application/json",
-                done: function (res) {
-                    layer.msg(res.msg || '操作成功');
-                    if (res && res.code === 0) {
-                        if (reservePauseLayerIndex) {
-                            layer.close(reservePauseLayerIndex);
-                            reservePauseLayerIndex = null;
-                        }
-                        table.reload("auth-table");
-                        $.get({url:layui.setter.url + "ranking/test1"})
-                    }
-                }
-            });
-            return false;
-        });
-
         $('.test-table-reload-btn .layui-btn').on('click', function () {
             var type = $(this).data('type');
             active[type] ? active[type].call(this) : '';

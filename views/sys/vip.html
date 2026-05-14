@@ -17,6 +17,18 @@
 <style>
     .layadmin-homepage-pad-ver{ padding-top: 15px;padding-bottom: 15px;}
     .layadmin-homepage-pad-img{box-shadow: 0 0 0 4px rgba(0,0,0,0.1);border-radius: 50%;}
+    #vip-money-log-wrap .layui-table-view .layui-table-body td { height: auto; }
+    #vip-money-log-wrap .layui-table-view .layui-table-body .layui-table-cell {
+        height: auto;
+        line-height: 1.8;
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
+    .vip-money-mark { line-height: 1.8; white-space: normal; word-break: break-all; }
+    .vip-money-mark-title { color: #1e9fff; font-weight: bold; }
 </style>
 <div class="layui-fluid">
     <div class="layui-row layui-col-space15">
@@ -54,6 +66,9 @@
     </button>-->
     <button lay-event="read" class="layui-btn layui-btn-primary layui-btn-xs"><i
             class="layui-icon">&#xe702;</i>查看发布
+    </button>
+    <button lay-event="moneylog" class="layui-btn layui-btn-primary layui-btn-xs"><i
+            class="layui-icon">&#xe63c;</i>消费记录
     </button>
     <button lay-event="remove" shiro-event="sys:user:open-remove" class="layui-btn layui-btn-primary layui-btn-xs"><i
             class="layui-icon">&#xe640;</i>删除
@@ -238,6 +253,46 @@
         </div>
     </div>
 </div>
+<div id="vip-money-log-wrap" hidden>
+    <div class="layui-fluid" style="padding: 15px;">
+        <form class="layui-form layui-form-pane" lay-filter="vip-money-log-search" onsubmit="return false;">
+            <div class="layui-form-item" style="margin-bottom: 10px;">
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 90px;">日志类型</label>
+                    <div class="layui-input-inline" style="width: 140px;">
+                        <select id="vip-money-log-code" lay-filter="vip-money-log-code">
+                            <option value="">全部</option>
+                            <option value="1">充值/入账</option>
+                            <option value="2">消费/扣款</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 90px;">开始日期</label>
+                    <div class="layui-input-inline" style="width: 140px;">
+                        <input type="text" class="layui-input" id="vip-money-log-start" placeholder="yyyy-MM-dd" autocomplete="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 90px;">结束日期</label>
+                    <div class="layui-input-inline" style="width: 140px;">
+                        <input type="text" class="layui-input" id="vip-money-log-end" placeholder="yyyy-MM-dd" autocomplete="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 90px;">关键字</label>
+                    <div class="layui-input-inline" style="width: 200px;">
+                        <input type="text" class="layui-input" id="vip-money-log-keyword" placeholder="匹配消费描述" autocomplete="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button type="button" class="layui-btn" id="vip-money-log-search-btn">搜索</button>
+                </div>
+            </div>
+        </form>
+        <table class="layui-hide" id="vip-money-log-table" lay-filter="vip-money-log-table"></table>
+    </div>
+</div>
 <div id="rolediv" hidden>
     <div class="layui-fluid">
         <div class="layui-row layui-col-space15">
@@ -273,14 +328,56 @@
         base: '../../../layuiadmin/' //静态资源所在路径
     }).extend({
         index: 'lib/index', //主入口模块
-    }).use(['index', 'table','formgs','form','security','layer','upload'], function(){
+    }).use(['index', 'table','formgs','form','security','layer','upload','laydate'], function(){
         var $ = layui.jquery,
             admin = layui.admin,
             table = layui.table,
             formgs = layui.formgs,
             form = layui.form,//控制添加修改（同一个弹出层）关闭弹出层的索引
             upload = layui.upload,
+            laydate = layui.laydate,
             layer=layui.layer,closeindex;
+        var vipMoneyLogUserId = null;
+
+        function renderVipMoneyMark(mark) {
+            var text = mark || '';
+            var lines = text.split(/\r?\n/);
+            var firstLine = lines[0] || '';
+            var restLines = lines.slice(1);
+            var html = '<div class="vip-money-mark">';
+            if (firstLine) {
+                html += '<div class="vip-money-mark-title">' + firstLine + '</div>';
+            }
+            for (var i = 0; i < restLines.length; i++) {
+                if (restLines[i]) {
+                    html += '<div>' + restLines[i] + '</div>';
+                }
+            }
+            html += '</div>';
+            return html;
+        }
+
+        function buildVipMoneyLogWhere() {
+            var w = {
+                userid: vipMoneyLogUserId,
+                startDate: $('#vip-money-log-start').val() || undefined,
+                endDate: $('#vip-money-log-end').val() || undefined,
+                keyword: $('#vip-money-log-keyword').val() || undefined
+            };
+            var codeVal = $('#vip-money-log-code').val();
+            if (codeVal !== '' && codeVal != null) {
+                w.code = parseInt(codeVal, 10);
+            }
+            return w;
+        }
+
+        $('#vip-money-log-search-btn').on('click', function () {
+            if (vipMoneyLogUserId == null) return;
+            table.reload('vip-money-log-table', {
+                page: { curr: 1 },
+                where: buildVipMoneyLogWhere()
+            });
+        });
         // layui.setter.url = 'http://localhost:8086/server/'
         table.render({
             elem: '#auth-table'
@@ -461,6 +558,58 @@
                     title: '<span>用户</span><span style="margin-left: 20px;margin-right: 20px;color: red">'+obj.data.name+"</span>发布的内容",
                     shadeClose: false,
                     content: './read.html?id='+obj.data.id
+                });
+            } else if (obj.event === 'moneylog') {
+                vipMoneyLogUserId = obj.data.id;
+                $('#vip-money-log-code').val('');
+                $('#vip-money-log-start').val('');
+                $('#vip-money-log-end').val('');
+                $('#vip-money-log-keyword').val('');
+                layer.open({
+                    type: 1,
+                    area: ['92%', '88%'],
+                    title: '【' + obj.data.name + '】充值/消费记录',
+                    shadeClose: true,
+                    content: $('#vip-money-log-wrap'),
+                    success: function () {
+                        form.render('select');
+                        laydate.render({ elem: '#vip-money-log-start', type: 'date', format: 'yyyy-MM-dd' });
+                        laydate.render({ elem: '#vip-money-log-end', type: 'date', format: 'yyyy-MM-dd' });
+                        table.render({
+                            id: 'vip-money-log-table',
+                            elem: '#vip-money-log-table',
+                            url: layui.setter.url + 'user/selectVipMoneyLog',
+                            title: '充值/消费记录',
+                            where: buildVipMoneyLogWhere(),
+                            cols: [[
+                                {
+                                    field: 'mark',
+                                    title: '消费描述',
+                                    minWidth: 320,
+                                    templet: function (data) {
+                                        return renderVipMoneyMark(data.mark);
+                                    }
+                                },
+                                { field: 'oldmoney', title: '消费/充值前金额', width: 160 },
+                                { field: 'newmoney', title: '消费/充值后金额', width: 160 },
+                                { field: 'dateTime', title: '消费/充值时间', width: 180 },
+                                {
+                                    title: '金额',
+                                    width: 120,
+                                    templet: function (data) {
+                                        if (data.code == 1) {
+                                            return '<span style="color: green">' + data.money + '</span>';
+                                        }
+                                        if (data.code == 2) {
+                                            return '<span style="color: red">' + data.money + '</span>';
+                                        }
+                                        return data.money || '';
+                                    }
+                                }
+                            ]],
+                            page: true
+                        });
+                    }
                 });
             }
             else if(obj.event == 'give'){

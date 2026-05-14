@@ -831,13 +831,14 @@
                 }
 
                 // 开启时间：
-                //   reserveStartUpdateTime 有值 → 开启已实际执行，显示开启处理时间，只读
+                //   reserveStartStatus == 2（定时任务执行成功）且 reserveStartUpdateTime 有值 → 开启已实际执行，只读
+                //   注意：手动暂停等会写 reserveStartUpdateTime + status=3 表示清除预约，不能当作「已执行」
                 //   reserveStartStatus == 0 且 reserveStartTime 有值 → 已预约等待开启，显示预约开启时间，只读
                 //   其他 → 留空
                 var startTime = '';
                 var startTimeReadonly = false;
                 var startStatusHint = '';
-                if (obj.data.reserveStartUpdateTime) {
+                if (obj.data.reserveStartStatus === 2 && obj.data.reserveStartUpdateTime) {
                     startTime = obj.data.reserveStartUpdateTime;
                     startTimeReadonly = true;
                     startStatusHint = '✅ 开启已于 ' + obj.data.reserveStartUpdateTime + ' 执行完成';
