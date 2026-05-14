@@ -3788,24 +3788,14 @@
         });*/
 
     }
-    var searchsiteLayerIndex = null;
-    var searchsiteReportAjax = null;
-    var searchsiteReqSeq = 0;
-    var searchhostLayerIndex = null;
-    var searchhostReportAjax = null;
-    var searchhostReqSeq = 0;
     function searchsite(data, url) {
         var name = data.name
-        var reqId = ++searchsiteReqSeq;
 
         var formdata = new FormData();
         formdata.append('ip', data.ip);
         formdata.append('host', data.host);
         formdata.append('url', data.url);
-        if (searchsiteReportAjax && searchsiteReportAjax.readyState !== 4) {
-            try { searchsiteReportAjax.abort(); } catch (e) {}
-        }
-        searchsiteReportAjax = $.ajax({
+        $.ajax({
 
             //返回相同的session
             url: baseUrl + 'report/selectReportByNameOrDate',
@@ -3823,9 +3813,6 @@
             dataType: 'json',
 
             success: function (data, textStatus, jqXHR) {
-                if (reqId !== searchsiteReqSeq) {
-                    return;
-                }
                 var data = data.DateData;
                 var html = '<th>发布站</th>';
                 html += '<th>广告费</th>'
@@ -3860,27 +3847,17 @@
                 }
                 dataHtml += `<tr><td colspan="2" style="text-align: center">在<span style="font-size: 18px;color: red">${data.length}个</span>发布站投放了广告推广</td></tr>`;
                 $('#searchsitebody').html(dataHtml);
-                if (reqId !== searchsiteReqSeq) {
-                    return;
-                }
-                if (searchsiteLayerIndex !== null && searchsiteLayerIndex !== undefined) {
-                    try { layer.close(searchsiteLayerIndex); } catch (e) {}
-                    searchsiteLayerIndex = null;
-                }
-                searchsiteLayerIndex = layer.open({
+                layer.open({
                     type: 1,
                     title: name,
                     content: $('#opensite'),
-                    shadeClose: true,
-                    end: function () { searchsiteLayerIndex = null; }
+                    shadeClose: true
                 });
 
             },
 
             error: function (xhr, textStatus) {
-                if (textStatus === 'abort') {
-                    return;
-                }
+
                 result = JSON.parse('{"flag":false,"message":"showHtml-ajax-请求连接异常"}');
 
             }
@@ -3889,15 +3866,11 @@
     }
     function searchhost(data, url) {
         var name = data.name
-        var reqId = ++searchhostReqSeq;
         var formdata = new FormData();
         formdata.append('ip', data.ip);
         formdata.append('host', data.host);
         formdata.append('url', data.url);
-        if (searchhostReportAjax && searchhostReportAjax.readyState !== 4) {
-            try { searchhostReportAjax.abort(); } catch (e) {}
-        }
-        searchhostReportAjax = $.ajax({
+        $.ajax({
 
             //返回相同的session
             url: baseUrl + 'report/selectReportByNameOrDate',
@@ -3915,9 +3888,6 @@
             dataType: 'json',
 
             success: function (data, textStatus, jqXHR) {
-                if (reqId !== searchhostReqSeq) {
-                    return;
-                }
                 var iplist = data.iplist;
                 if (iplist.length > 0) {
                     var headhtml = `该服网站IP：<span style="color: white;margin-right: 30px">${iplist[0].ip}</span>同时有<span style="color: white">${iplist.length}</span>个游戏运行在此服务器上`;
@@ -3942,28 +3912,18 @@
                 } else {
                     $('#openiplist').parent().html('')
                 }
-                if (reqId !== searchhostReqSeq) {
-                    return;
-                }
-                if (searchhostLayerIndex !== null && searchhostLayerIndex !== undefined) {
-                    try { layer.close(searchhostLayerIndex); } catch (e) {}
-                    searchhostLayerIndex = null;
-                }
-                searchhostLayerIndex = layer.open({
+                layer.open({
                     type: 1,
                     title: name,
                     shadeClose: true,
                     area: '1380px',
-                    content: $('#openhost'),
-                    end: function () { searchhostLayerIndex = null; }
+                    content: $('#openhost')
                 });
 
             },
 
             error: function (xhr, textStatus) {
-                if (textStatus === 'abort') {
-                    return;
-                }
+
                 result = JSON.parse('{"flag":false,"message":"showHtml-ajax-请求连接异常"}');
 
             }
