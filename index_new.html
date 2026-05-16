@@ -3937,7 +3937,9 @@
         }, 'slow'); // 'slow' 可以替换为具体的毫秒数，如 800
         // url = data.url;
         $("#J_FpLift").hide();
-        var rurl = data.url
+        // UrlList 实时搜索 onclick 为 selectReportByNameOrDate1(1, url)，此时 data 为数字而非对象
+        var fromUrlList = (data == 1);
+        var rurl = fromUrlList ? url : (data && data.url != null ? data.url : url);
         $("#R_FpLift").hide();
 
         $(".divdivds").hide();
@@ -3959,19 +3961,17 @@
         // $("#loding_box").show();
 
         var formdata = new FormData();
-        formdata.append('ip', data.ip);
-        formdata.append('host', data.host);
-
-        if (data != 1) {
-
-            addRecord(data);
-            formdata.append('url', data.url);
-            formdata.append('id', data.id);
-
-
+        if (fromUrlList) {
+            formdata.append('ip', '');
+            formdata.append('host', '');
+            formdata.append('url', url != null ? url : '');
+            formdata.append('id', '');
         } else {
-            formdata.append('url', url);
-            formdata.append('id', data.id);
+            formdata.append('ip', data.ip != null ? data.ip : '');
+            formdata.append('host', data.host != null ? data.host : '');
+            addRecord(data);
+            formdata.append('url', data.url != null ? data.url : '');
+            formdata.append('id', data.id != null ? data.id : '');
         }
         // console.log(url)
         /*formdata.append('url', url);
@@ -3982,10 +3982,11 @@
             formdata.append('url', url);
             formdata.append('id', data.id);
         }*/
+        var reportUrl = baseUrl + (fromUrlList ? 'report/selectReportByNameOrDateReal' : 'report/selectReportByNameOrDate');
         $.ajax({
 
-            //返回相同的session
-            url: baseUrl + 'report/selectReportByNameOrDate',
+            //返回相同的session；实时搜索 UrlList 走 Real（legend_real_view），与 selectLikeHttp 一致
+            url: reportUrl,
 
             type: 'POST',
 

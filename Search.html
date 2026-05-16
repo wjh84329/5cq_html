@@ -675,9 +675,9 @@
     </div> 
     <div class="top-info">
       共匹配到 
-     <span class="highlight-red fbzipnum">16</span> 个发布站中 
-     <span class="highlight-red fbznum">1150</span> 条记录，广告总价: 
-     <span class="highlight-red fbzprice">397048</span> 元 
+     <span class="highlight-red fbzipnum">0</span> 个发布站中 
+     <span class="highlight-red fbznum">0</span> 条记录，广告总价: 
+     <span class="highlight-red fbzprice">0</span> 元 
     </div> 
    </div> 
    <!-- 首页点击  点击查看展示 --> 
@@ -916,11 +916,123 @@
    <script>$("#tcHtml").load("/statics/userinfo.html");</script> 
   </div> 
   <script>
+    var pmdata;
+    /** 榜单图片与顶部汇总、整合数据表同源 */
+    var currentReportForImage = { ready: false, ranking: null, adName: '', totalPrice: 0 };
+    var rankImageLayerIndex = null;
+    var showPkGen = 0;
+
+    function closeRankImageLayer() {
+        if (rankImageLayerIndex != null) {
+            try {
+                layer.close(rankImageLayerIndex);
+            } catch (e) { /* ignore */ }
+            rankImageLayerIndex = null;
+        }
+    }
+
+    /** 与 index_new 实时搜索一致：去掉末尾多余 / */
+    function stripUrlTrailingSlashesSearch(s) {
+        if (!s) return s;
+        var u = String(s).trim();
+        for (var i = 0; i < 10; i++) {
+            if (u.length > 0 && u.substring(u.length - 1).indexOf('/') !== -1) {
+                u = u.substring(0, u.length - 1);
+            } else {
+                break;
+            }
+        }
+        return u;
+    }
+
+    /**
+     * 先请求 report/selectLikeHttp（与首页「实时搜索」同源），再用返回的规范 url 拉 report/selectReportByNameOrDate，
+     * 避免输入地址与库中不完全一致时统计为空。
+     */
+    function loadSearchPageReport(urlRaw, ip, host, id, displayUrlForInit) {
+        var u = stripUrlTrailingSlashesSearch(urlRaw);
+        var fdLike = new FormData();
+        fdLike.append('url', u);
+        $.ajax({
+            url: baseUrl + 'report/selectLikeHttp',
+            type: 'POST',
+            data: fdLike,
+            processData: false,
+            contentType: false,
+            timeout: 10000,
+            dataType: 'json',
+            success: function (likeRes) {
+                var finalUrl = u;
+                var list = (likeRes && likeRes.UrlList) ? likeRes.UrlList : [];
+                if (list.length) {
+                    var nu = normalizeUrlForMatch(u);
+                    var exact = null;
+                    for (var i = 0; i < list.length; i++) {
+                        if (!list[i] || !list[i].url) continue;
+                        if (list[i].url === u || normalizeUrlForMatch(list[i].url) === nu) {
+                            exact = list[i];
+                            break;
+                        }
+                    }
+                    if (exact && exact.url) {
+                        finalUrl = exact.url;
+                    } else if (list[0].url) {
+                        finalUrl = list[0].url;
+                    }
+                }
+                var fd = new FormData();
+                fd.append('url', finalUrl);
+                fd.append('ip', ip || '');
+                fd.append('host', host || '');
+                fd.append('id', id || '');
+                $.ajax({
+                    url: baseUrl + 'report/selectReportByNameOrDate',
+                    type: 'POST',
+                    data: fd,
+                    processData: false,
+                    contentType: false,
+                    timeout: 10000,
+                    dataType: 'json',
+                    success: function (data) {
+                        selectReportByNameOrDateInit(data, displayUrlForInit != null ? displayUrlForInit : finalUrl);
+                    },
+                    error: function () {
+                        layer.msg('报表请求失败，请稍后再试');
+                    }
+                });
+            },
+            error: function () {
+                var fd = new FormData();
+                fd.append('url', u);
+                fd.append('ip', ip || '');
+                fd.append('host', host || '');
+                fd.append('id', id || '');
+                $.ajax({
+                    url: baseUrl + 'report/selectReportByNameOrDate',
+                    type: 'POST',
+                    data: fd,
+                    processData: false,
+                    contentType: false,
+                    timeout: 10000,
+                    dataType: 'json',
+                    success: function (data) {
+                        selectReportByNameOrDateInit(data, displayUrlForInit != null ? displayUrlForInit : u);
+                    },
+                    error: function () {
+                        layer.msg('报表请求失败，请稍后再试');
+                    }
+                });
+            }
+        });
+    }
+
     $(document).ready(function () {
         //优先获取input框中的url参数，如果没有则获取url参数
         var url = getUrlParam('url')
-        var pmdata;
         $('.input-ip').val(url)
+        $('.btn-img').on('click', function () {
+            handleShow(currentReportForImage.ranking);
+        });
         /* var ip = $.cookie('ip_'+encodeURIComponent(url))
          var host = $.cookie('host_'+encodeURIComponent(url))
          var id = $.cookie('id_'+encodeURIComponent(url))
@@ -1109,6 +1221,40 @@
 
     }
 
+    function normalizeUrlForMatch(u) {
+        if (!u) return '';
+        return String(u).replace(/^https?:\/\//i, '').replace(/\/+$/, '').toLowerCase();
+    }
+
+    function resolveAdNameFromReport(result, url) {
+        var target = normalizeUrlForMatch(url);
+        var details = result.DetailsByName;
+        if (details && details.length) {
+            for (var i = 0; i < details.length; i++) {
+                var maps = details[i].tableMap;
+                if (!maps) continue;
+                for (var j = 0; j < maps.length; j++) {
+                    var rowUrl = normalizeUrlForMatch(maps[j].url);
+                    if (rowUrl && target && (rowUrl === target || rowUrl.indexOf(target) >= 0 || target.indexOf(rowUrl) >= 0)) {
+                        if (maps[j].name) return maps[j].name;
+                    }
+                }
+            }
+        }
+        var lists = [result.iplist, result.hostlist];
+        for (var li = 0; li < lists.length; li++) {
+            var list = lists[li];
+            if (!list || !list.length) continue;
+            for (var k = 0; k < list.length; k++) {
+                if (normalizeUrlForMatch(list[k].url) === target && list[k].name) {
+                    return list[k].name;
+                }
+            }
+        }
+        if (pmdata && pmdata.name) return pmdata.name;
+        return '';
+    }
+
     function selectReportByNameOrDateInit(result, url) {
         console.log(url)
         var ZHData = result.ZHData;
@@ -1144,12 +1290,21 @@
 
             }
             
-            //计算ZHData中除开website和zj以外的th、gs、tx、txgd、jp、qth的num总和
-                var totalNum = 0;
-                for (var i = 0; i < ZHData.length; i++) {
-                    totalNum += parseFloat(ZHData[i].thnum) + parseFloat(ZHData[i].gsnum) + parseFloat(ZHData[i].txnum) + parseFloat(ZHData[i].txgdnum) + parseFloat(ZHData[i].jpnum) + parseFloat(ZHData[i].qthnum);
-                }
-                $('.fbznum').text(totalNum);
+            // 顶部汇总与下方「整合数据」表同源，避免 rankings.json 与报表接口不一致
+            var totalNum = 0;
+            for (var i = 0; i < ZHData.length; i++) {
+                totalNum += parseFloat(ZHData[i].thnum || 0) + parseFloat(ZHData[i].gsnum || 0)
+                    + parseFloat(ZHData[i].txnum || 0) + parseFloat(ZHData[i].txgdnum || 0)
+                    + parseFloat(ZHData[i].jpnum || 0) + parseFloat(ZHData[i].qthnum || 0);
+            }
+            $('.fbzipnum').text(ZHData.length);
+            $('.fbznum').text(totalNum);
+            $('.fbzprice').text(num);
+
+            currentReportForImage.ready = true;
+            currentReportForImage.totalPrice = num;
+            currentReportForImage.ranking = result.pm;
+            currentReportForImage.adName = resolveAdNameFromReport(result, url);
 
             html += '<tr><td colspan="8">截止当前广告总价:' + num + '</td></tr>';
 
@@ -1391,9 +1546,9 @@
         })
         dataHtml += '<td>' + moneyCount + '</td>';
         dataHtml += '<td>' + (pm == null ? '未排名' : '总排名第' + pm + '名') + '</td>';
-        $('.btn-img').click(function () {
-            handleShow(pm);
-        })
+        if (pm != null) {
+            currentReportForImage.ranking = pm;
+        }
         dataHtml += '<td>共' + count + '个</td>';
         dataHtml += '</tr>';
         $('#selectDateNameHZTB').html(dataHtml);
@@ -1792,9 +1947,7 @@
                     const data = response.find(item => item.url === url);
                     if (data) {
                         console.log('找到数据:', data);
-                        //将数据展示在页面上
-                        $('.fbzipnum').text(data.ip_count);
-                        $('.fbzprice').text(data.allmoney);
+                        // 发布站数/条数/总价由 selectReportByNameOrDateInit 按报表 ZHData 计算，此处仅更新分享与点赞
                         $('.btn-share').attr('data-url', data.id); //将id存储在分享按钮上，方便后续使用
                         $('.like-count').text(data.likes_count);
                         $('.btn-share').click(function() {
@@ -1994,25 +2147,41 @@
             });
         }
         function handleShow(pm) {
-            var url = $('.input-ip').val();
+            closeRankImageLayer();
+            showPkGen++;
             $("#show").attr("src", './statics/images/wait.gif');
             var date = new Date();
             var dateStr = date.getFullYear().toString() + "年" + (date.getMonth() + 1).toString() + "月" + date.getDate().toString() + "日";
+            var rankVal = (pm != null && pm !== '') ? pm : currentReportForImage.ranking;
+
+            function openRankImage(adName, price, ranking) {
+                showPk({
+                    ranking: (ranking == null || ranking === '') ? '未排名' : ranking,
+                    adName: adName || '',
+                    price: price,
+                    date: dateStr,
+                });
+            }
+
+            if (currentReportForImage.ready) {
+                openRankImage(
+                    currentReportForImage.adName,
+                    currentReportForImage.totalPrice,
+                    rankVal
+                );
+                return;
+            }
+
+            var url = $('.input-ip').val();
             $.ajax({
                 url: './statics/rankings.json',
                 method: 'POST',
                 success: function (response) {
-                    //从json数据中找到匹配的url数据
                     const data = response.find(item => item.url === url);
                     if (data) {
-                        showPk({
-                            ranking: pm,
-                            adName: data.name,
-                            price: data.money,
-                            date: dateStr,
-                        })
+                        openRankImage(data.name, data.money || data.allmoney, rankVal);
                     } else {
-                        layer.msg('未找到相关数据');
+                        layer.msg('请先执行精确查询加载报表数据');
                     }
                 },
                 error: function () {
@@ -2021,6 +2190,9 @@
             });
         }
         function showPk(options) {
+            closeRankImageLayer();
+            showPkGen++;
+            var thisGen = showPkGen;
             var ranking = options.ranking || '';
             var adName = options.adName || '';
             var price = options.price || '';
@@ -2034,6 +2206,9 @@
             img.setAttribute('crossOrigin', 'anonymous');
             img.src = "./statics/images/rank.tpl.png";
             img.onload = function () {
+                if (thisGen !== showPkGen) {
+                    return;
+                }
                 // 背景图片
                 ctx.drawImage(img, 0, 0, 560, 900); // 排名
                 drawText({
@@ -2071,17 +2246,26 @@
                     x: 280,
                     y: 685
                 });
-                layer.open({
+                closeRankImageLayer();
+                rankImageLayerIndex = layer.open({
                     type: 1,
                     area: ['530px', '800px'],
                     title: ("可右键 图片另存为 保存到本地"),
                     shadeClose: true,
                     content: $("#show"),
-                    success: function (index, layero) {
-                        console.log()
+                    success: function (layero, index) {
                         $("#show").attr("src", canvas.toDataURL('image/png'));
                     },
+                    end: function () {
+                        rankImageLayerIndex = null;
+                    }
                 });
+            };
+            img.onerror = function () {
+                if (thisGen !== showPkGen) {
+                    return;
+                }
+                layer.msg('榜单底图加载失败，请稍后重试');
             };
 
             function drawText(obj) {
